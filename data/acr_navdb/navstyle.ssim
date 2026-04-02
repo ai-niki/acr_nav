@@ -16,7 +16,7 @@ acr_navdb.navstyle  navstyle:line_preproc  bold:N  dim:N  reverse:N  fg_color:ma
 acr_navdb.navstyle  navstyle:line_section  bold:Y  dim:N  reverse:N  fg_color:default  comment:"Section headers"
 acr_navdb.navstyle  navstyle:line_string  bold:N  dim:N  reverse:N  fg_color:yellow  comment:"String literals"
 acr_navdb.navstyle  navstyle:sel_focus  bold:N  dim:N  reverse:Y  fg_color:default  comment:"Selected row, focused panel"
-acr_navdb.navstyle  navstyle:sel_nofocus  bold:N  dim:Y  reverse:Y  fg_color:default  comment:"Selected row, unfocused panel"
+acr_navdb.navstyle  navstyle:sel_nofocus  bold:N  dim:Y  reverse:N  fg_color:default  comment:"Selected row, unfocused panel"
 acr_navdb.navstyle  navstyle:statusbar  bold:N  dim:N  reverse:Y  fg_color:default  comment:"Status bar"
 acr_navdb.navstyle  navstyle:title_focus  bold:N  dim:N  reverse:Y  fg_color:default  comment:"Focused panel title bar"
 acr_navdb.navstyle  navstyle:title_nofocus  bold:N  dim:Y  reverse:Y  fg_color:default  comment:"Unfocused panel title bar"
