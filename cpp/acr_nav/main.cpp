@@ -28,13 +28,13 @@
 using acr_nav::WriteStdout;
 using acr_nav::DetectTerminal;
 using acr_nav::SelectedCtype;
-using acr_nav::InvalidateContentCaches;
+using acr_nav::ClearContentCaches;
 using acr_nav::AdjustScroll;
 using acr_nav::RightPanelItemCount;
 using acr_nav::DataRows;
 using acr_nav::BuildLeftItemsReset;
 using acr_nav::BuildLeftItems;
-using acr_nav::PopViewmode;
+using acr_nav::PopOverlay;
 using acr_nav::DismissStartupHelp;
 using acr_nav::PopOverlayOnCtypeChange;
 using acr_nav::PushOverlay;
@@ -252,7 +252,7 @@ static PreActionState SnapshotPreAction() {
     s.prev_sel_ct = SelectedCtype(*left);
     s.prev_viewmode = acr_nav::_db.p_cur_viewmode;
     s.prev_depth = acr_nav::navstack_N();
-    s.prev_overlay_depth = acr_nav::viewmode_stack_N();
+    s.prev_overlay_depth = acr_nav::overlay_stack_N();
     return s;
 }
 
@@ -267,9 +267,9 @@ static void PostAction(PreActionState const &s) {
     bool vm_changed = (acr_nav::_db.p_cur_viewmode != s.prev_viewmode);
     bool ct_changed = (sel_ct != s.prev_sel_ct) || nsdep_ns_changed;
     if (ct_changed && !sel_ct) {
-        InvalidateContentCaches();
+        ClearContentCaches();
     }
-    bool overlay_pop = vm_changed && (acr_nav::viewmode_stack_N() < s.prev_overlay_depth);
+    bool overlay_pop = vm_changed && (acr_nav::overlay_stack_N() < s.prev_overlay_depth);
     if (forward && ((vm_changed && !overlay_pop) || ct_changed)) {
         right->sel_row = 0;
         right->scroll_offset = 0;
@@ -301,7 +301,7 @@ static bool ProcessKey(algo::strptr key_name) {
             bool blocked = na.need_no_overlay && is_overlay;
             if (blocked && acr_nav::_db.startup_help) {
                 acr_nav::_db.startup_help = false;
-                PopViewmode();
+                PopOverlay();
                 blocked = false;
             }
             if (blocked && ch_N(na.dismiss_viewmode) > 0
@@ -558,8 +558,8 @@ static void HeadlessSetView(acr_nav::SetView &cmd) {
             PushOverlay(vm);
         } else {
             // Pop any active overlays first
-            while (!acr_nav::viewmode_stack_EmptyQ()) {
-                PopViewmode();
+            while (!acr_nav::overlay_stack_EmptyQ()) {
+                PopOverlay();
             }
             acr_nav::_db.p_cur_viewmode = vm;
         }
@@ -648,8 +648,8 @@ static void HeadlessNavigate(acr_nav::Navigate &cmd) {
             acr_nav::navaction_filter_cancel();
         }
         // Pop overlays before navigation so GoToCtype's viewmode sticks
-        while (!acr_nav::viewmode_stack_EmptyQ()) {
-            PopViewmode();
+        while (!acr_nav::overlay_stack_EmptyQ()) {
+            PopOverlay();
         }
         PreActionState snap = SnapshotPreAction();
         acr_nav::GoToCtype(cmd.ctype, dest_viewmode);

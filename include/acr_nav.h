@@ -94,7 +94,7 @@ namespace acr_nav { // update-hdr
     void BuildLeftItemsReset();
 
     // Used by show_help toggle, show_detail toggle, and startup help dismiss.
-    void PopViewmode();
+    void PopOverlay();
 
     // Push current viewmode + right-panel state onto overlay stack, switch to target.
     void PushOverlay(acr_nav::FViewmode *target);
@@ -203,11 +203,11 @@ namespace acr_nav { // update-hdr
     // Reset a viewmode to empty: clear lines, spans, nav columns, header, and h-scroll.
     void ResetViewmodeContent(acr_nav::FViewmode &vm);
 
-    // Invalidate cached content for content-loading viewmodes (preview, codegen, graph).
+    // Clear cached content for content-loading viewmodes (preview, codegen, graph).
     // Called when the selected ctype becomes NULL (namespace header row), so stale
     // content from the previous ctype is not displayed.
     // nsdep excluded: caches by namespace, handles NULL selection in RightPanelItemCount.
-    void InvalidateContentCaches();
+    void ClearContentCaches();
 
     // True if the byte range [byte_start, byte_end) in line contains at least one non-space character.
     bool RegionHasContent(algo::strptr line, int byte_start, int byte_end);

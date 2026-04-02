@@ -4128,173 +4128,6 @@ void acr_nav::ind_viewmode_AbsReserve(int n) {
     }
 }
 
-// --- acr_nav.FDb.viewmode_stack.Addary
-// Reserve space (this may move memory). Insert N element at the end.
-// Return aryptr to newly inserted block.
-// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<acr_nav::OverlayEntry> acr_nav::viewmode_stack_Addary(algo::aryptr<acr_nav::OverlayEntry> rhs) {
-    bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.viewmode_stack_elems && rhs.elems < _db.viewmode_stack_elems + _db.viewmode_stack_max;
-    if (UNLIKELY(overlaps)) {
-        FatalErrorExit("acr_nav.tary_alias  field:acr_nav.FDb.viewmode_stack  comment:'alias error: sub-array is being appended to the whole'");
-    }
-    int nnew = rhs.n_elems;
-    viewmode_stack_Reserve(nnew); // reserve space
-    int at = _db.viewmode_stack_n;
-    for (int i = 0; i < nnew; i++) {
-        new (_db.viewmode_stack_elems + at + i) acr_nav::OverlayEntry(rhs[i]);
-        _db.viewmode_stack_n++;
-    }
-    return algo::aryptr<acr_nav::OverlayEntry>(_db.viewmode_stack_elems + at, nnew);
-}
-
-// --- acr_nav.FDb.viewmode_stack.Alloc
-// Reserve space. Insert element at the end
-// The new element is initialized to a default value
-acr_nav::OverlayEntry& acr_nav::viewmode_stack_Alloc() {
-    viewmode_stack_Reserve(1);
-    int n  = _db.viewmode_stack_n;
-    int at = n;
-    acr_nav::OverlayEntry *elems = _db.viewmode_stack_elems;
-    new (elems + at) acr_nav::OverlayEntry(); // construct new element, default initializer
-    _db.viewmode_stack_n = n+1;
-    return elems[at];
-}
-
-// --- acr_nav.FDb.viewmode_stack.AllocAt
-// Reserve space for new element, reallocating the array if necessary
-// Insert new element at specified index. Index must be in range or a fatal error occurs.
-acr_nav::OverlayEntry& acr_nav::viewmode_stack_AllocAt(int at) {
-    viewmode_stack_Reserve(1);
-    int n  = _db.viewmode_stack_n;
-    if (UNLIKELY(u64(at) >= u64(n+1))) {
-        FatalErrorExit("acr_nav.bad_alloc_at  field:acr_nav.FDb.viewmode_stack  comment:'index out of range'");
-    }
-    acr_nav::OverlayEntry *elems = _db.viewmode_stack_elems;
-    memmove(elems + at + 1, elems + at, (n - at) * sizeof(acr_nav::OverlayEntry));
-    new (elems + at) acr_nav::OverlayEntry(); // construct element, default initializer
-    _db.viewmode_stack_n = n+1;
-    return elems[at];
-}
-
-// --- acr_nav.FDb.viewmode_stack.AllocN
-// Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<acr_nav::OverlayEntry> acr_nav::viewmode_stack_AllocN(int n_elems) {
-    viewmode_stack_Reserve(n_elems);
-    int old_n  = _db.viewmode_stack_n;
-    int new_n = old_n + n_elems;
-    acr_nav::OverlayEntry *elems = _db.viewmode_stack_elems;
-    for (int i = old_n; i < new_n; i++) {
-        new (elems + i) acr_nav::OverlayEntry(); // construct new element, default initialize
-    }
-    _db.viewmode_stack_n = new_n;
-    return algo::aryptr<acr_nav::OverlayEntry>(elems + old_n, n_elems);
-}
-
-// --- acr_nav.FDb.viewmode_stack.AllocNAt
-// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
-// Reserve space for new element, reallocating the array if necessary
-// Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::aryptr<acr_nav::OverlayEntry> acr_nav::viewmode_stack_AllocNAt(int n_elems, int at) {
-    viewmode_stack_Reserve(n_elems);
-    int n  = _db.viewmode_stack_n;
-    if (UNLIKELY(u64(at) > u64(n))) {
-        FatalErrorExit("acr_nav.bad_alloc_n_at  field:acr_nav.FDb.viewmode_stack  comment:'index out of range'");
-    }
-    acr_nav::OverlayEntry *elems = _db.viewmode_stack_elems;
-    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(acr_nav::OverlayEntry));
-    for (int i = 0; i < n_elems; i++) {
-        new (elems + at + i) acr_nav::OverlayEntry(); // construct new element, default initialize
-    }
-    _db.viewmode_stack_n = n+n_elems;
-    return algo::aryptr<acr_nav::OverlayEntry>(elems+at,n_elems);
-}
-
-// --- acr_nav.FDb.viewmode_stack.Remove
-// Remove item by index. If index outside of range, do nothing.
-void acr_nav::viewmode_stack_Remove(u32 i) {
-    u32 lim = _db.viewmode_stack_n;
-    acr_nav::OverlayEntry *elems = _db.viewmode_stack_elems;
-    if (i < lim) {
-        elems[i].~OverlayEntry(); // destroy element
-        memmove(elems + i, elems + (i + 1), sizeof(acr_nav::OverlayEntry) * (lim - (i + 1)));
-        _db.viewmode_stack_n = lim - 1;
-    }
-}
-
-// --- acr_nav.FDb.viewmode_stack.RemoveAll
-void acr_nav::viewmode_stack_RemoveAll() {
-    u32 n = _db.viewmode_stack_n;
-    while (n > 0) {
-        n -= 1;
-        _db.viewmode_stack_elems[n].~OverlayEntry();
-        _db.viewmode_stack_n = n;
-    }
-}
-
-// --- acr_nav.FDb.viewmode_stack.RemoveLast
-// Delete last element of array. Do nothing if array is empty.
-void acr_nav::viewmode_stack_RemoveLast() {
-    u64 n = _db.viewmode_stack_n;
-    if (n > 0) {
-        n -= 1;
-        viewmode_stack_qFind(u64(n)).~OverlayEntry();
-        _db.viewmode_stack_n = n;
-    }
-}
-
-// --- acr_nav.FDb.viewmode_stack.AbsReserve
-// Make sure N elements fit in array. Process dies if out of memory
-void acr_nav::viewmode_stack_AbsReserve(int n) {
-    u32 old_max  = _db.viewmode_stack_max;
-    if (n > i32(old_max)) {
-        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
-        void *new_mem = algo_lib::malloc_ReallocMem(_db.viewmode_stack_elems, old_max * sizeof(acr_nav::OverlayEntry), new_max * sizeof(acr_nav::OverlayEntry));
-        if (UNLIKELY(!new_mem)) {
-            FatalErrorExit("acr_nav.tary_nomem  field:acr_nav.FDb.viewmode_stack  comment:'out of memory'");
-        }
-        _db.viewmode_stack_elems = (acr_nav::OverlayEntry*)new_mem;
-        _db.viewmode_stack_max = new_max;
-    }
-}
-
-// --- acr_nav.FDb.viewmode_stack.AllocNVal
-// Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<acr_nav::OverlayEntry> acr_nav::viewmode_stack_AllocNVal(int n_elems, const acr_nav::OverlayEntry& val) {
-    viewmode_stack_Reserve(n_elems);
-    int old_n  = _db.viewmode_stack_n;
-    int new_n = old_n + n_elems;
-    acr_nav::OverlayEntry *elems = _db.viewmode_stack_elems;
-    for (int i = old_n; i < new_n; i++) {
-        new (elems + i) acr_nav::OverlayEntry(val);
-    }
-    _db.viewmode_stack_n = new_n;
-    return algo::aryptr<acr_nav::OverlayEntry>(elems + old_n, n_elems);
-}
-
-// --- acr_nav.FDb.viewmode_stack.Insary
-// Insert array at specific position
-// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-void acr_nav::viewmode_stack_Insary(algo::aryptr<acr_nav::OverlayEntry> rhs, int at) {
-    bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.viewmode_stack_elems && rhs.elems < _db.viewmode_stack_elems + _db.viewmode_stack_max;
-    if (UNLIKELY(overlaps)) {
-        FatalErrorExit("acr_nav.tary_alias  field:acr_nav.FDb.viewmode_stack  comment:'alias error: sub-array is being appended to the whole'");
-    }
-    if (UNLIKELY(u64(at) >= u64(_db.viewmode_stack_elems+1))) {
-        FatalErrorExit("acr_nav.bad_insary  field:acr_nav.FDb.viewmode_stack  comment:'index out of range'");
-    }
-    int nnew = rhs.n_elems;
-    int nmove = _db.viewmode_stack_n - at;
-    viewmode_stack_Reserve(nnew); // reserve space
-    for (int i = nmove-1; i >=0 ; --i) {
-        new (_db.viewmode_stack_elems + at + nnew + i) acr_nav::OverlayEntry(_db.viewmode_stack_elems[at + i]);
-        _db.viewmode_stack_elems[at + i].~OverlayEntry(); // destroy element
-    }
-    for (int i = 0; i < nnew; ++i) {
-        new (_db.viewmode_stack_elems + at + i) acr_nav::OverlayEntry(rhs[i]);
-    }
-    _db.viewmode_stack_n += nnew;
-}
-
 // --- acr_nav.FDb.left_item.Addary
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -4693,6 +4526,173 @@ void acr_nav::ind_filtertarget_AbsReserve(int n) {
     }
 }
 
+// --- acr_nav.FDb.overlay_stack.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<acr_nav::OverlayEntry> acr_nav::overlay_stack_Addary(algo::aryptr<acr_nav::OverlayEntry> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.overlay_stack_elems && rhs.elems < _db.overlay_stack_elems + _db.overlay_stack_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("acr_nav.tary_alias  field:acr_nav.FDb.overlay_stack  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    overlay_stack_Reserve(nnew); // reserve space
+    int at = _db.overlay_stack_n;
+    for (int i = 0; i < nnew; i++) {
+        new (_db.overlay_stack_elems + at + i) acr_nav::OverlayEntry(rhs[i]);
+        _db.overlay_stack_n++;
+    }
+    return algo::aryptr<acr_nav::OverlayEntry>(_db.overlay_stack_elems + at, nnew);
+}
+
+// --- acr_nav.FDb.overlay_stack.Alloc
+// Reserve space. Insert element at the end
+// The new element is initialized to a default value
+acr_nav::OverlayEntry& acr_nav::overlay_stack_Alloc() {
+    overlay_stack_Reserve(1);
+    int n  = _db.overlay_stack_n;
+    int at = n;
+    acr_nav::OverlayEntry *elems = _db.overlay_stack_elems;
+    new (elems + at) acr_nav::OverlayEntry(); // construct new element, default initializer
+    _db.overlay_stack_n = n+1;
+    return elems[at];
+}
+
+// --- acr_nav.FDb.overlay_stack.AllocAt
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+acr_nav::OverlayEntry& acr_nav::overlay_stack_AllocAt(int at) {
+    overlay_stack_Reserve(1);
+    int n  = _db.overlay_stack_n;
+    if (UNLIKELY(u64(at) >= u64(n+1))) {
+        FatalErrorExit("acr_nav.bad_alloc_at  field:acr_nav.FDb.overlay_stack  comment:'index out of range'");
+    }
+    acr_nav::OverlayEntry *elems = _db.overlay_stack_elems;
+    memmove(elems + at + 1, elems + at, (n - at) * sizeof(acr_nav::OverlayEntry));
+    new (elems + at) acr_nav::OverlayEntry(); // construct element, default initializer
+    _db.overlay_stack_n = n+1;
+    return elems[at];
+}
+
+// --- acr_nav.FDb.overlay_stack.AllocN
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<acr_nav::OverlayEntry> acr_nav::overlay_stack_AllocN(int n_elems) {
+    overlay_stack_Reserve(n_elems);
+    int old_n  = _db.overlay_stack_n;
+    int new_n = old_n + n_elems;
+    acr_nav::OverlayEntry *elems = _db.overlay_stack_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) acr_nav::OverlayEntry(); // construct new element, default initialize
+    }
+    _db.overlay_stack_n = new_n;
+    return algo::aryptr<acr_nav::OverlayEntry>(elems + old_n, n_elems);
+}
+
+// --- acr_nav.FDb.overlay_stack.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<acr_nav::OverlayEntry> acr_nav::overlay_stack_AllocNAt(int n_elems, int at) {
+    overlay_stack_Reserve(n_elems);
+    int n  = _db.overlay_stack_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("acr_nav.bad_alloc_n_at  field:acr_nav.FDb.overlay_stack  comment:'index out of range'");
+    }
+    acr_nav::OverlayEntry *elems = _db.overlay_stack_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(acr_nav::OverlayEntry));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) acr_nav::OverlayEntry(); // construct new element, default initialize
+    }
+    _db.overlay_stack_n = n+n_elems;
+    return algo::aryptr<acr_nav::OverlayEntry>(elems+at,n_elems);
+}
+
+// --- acr_nav.FDb.overlay_stack.Remove
+// Remove item by index. If index outside of range, do nothing.
+void acr_nav::overlay_stack_Remove(u32 i) {
+    u32 lim = _db.overlay_stack_n;
+    acr_nav::OverlayEntry *elems = _db.overlay_stack_elems;
+    if (i < lim) {
+        elems[i].~OverlayEntry(); // destroy element
+        memmove(elems + i, elems + (i + 1), sizeof(acr_nav::OverlayEntry) * (lim - (i + 1)));
+        _db.overlay_stack_n = lim - 1;
+    }
+}
+
+// --- acr_nav.FDb.overlay_stack.RemoveAll
+void acr_nav::overlay_stack_RemoveAll() {
+    u32 n = _db.overlay_stack_n;
+    while (n > 0) {
+        n -= 1;
+        _db.overlay_stack_elems[n].~OverlayEntry();
+        _db.overlay_stack_n = n;
+    }
+}
+
+// --- acr_nav.FDb.overlay_stack.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void acr_nav::overlay_stack_RemoveLast() {
+    u64 n = _db.overlay_stack_n;
+    if (n > 0) {
+        n -= 1;
+        overlay_stack_qFind(u64(n)).~OverlayEntry();
+        _db.overlay_stack_n = n;
+    }
+}
+
+// --- acr_nav.FDb.overlay_stack.AbsReserve
+// Make sure N elements fit in array. Process dies if out of memory
+void acr_nav::overlay_stack_AbsReserve(int n) {
+    u32 old_max  = _db.overlay_stack_max;
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::malloc_ReallocMem(_db.overlay_stack_elems, old_max * sizeof(acr_nav::OverlayEntry), new_max * sizeof(acr_nav::OverlayEntry));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("acr_nav.tary_nomem  field:acr_nav.FDb.overlay_stack  comment:'out of memory'");
+        }
+        _db.overlay_stack_elems = (acr_nav::OverlayEntry*)new_mem;
+        _db.overlay_stack_max = new_max;
+    }
+}
+
+// --- acr_nav.FDb.overlay_stack.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<acr_nav::OverlayEntry> acr_nav::overlay_stack_AllocNVal(int n_elems, const acr_nav::OverlayEntry& val) {
+    overlay_stack_Reserve(n_elems);
+    int old_n  = _db.overlay_stack_n;
+    int new_n = old_n + n_elems;
+    acr_nav::OverlayEntry *elems = _db.overlay_stack_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) acr_nav::OverlayEntry(val);
+    }
+    _db.overlay_stack_n = new_n;
+    return algo::aryptr<acr_nav::OverlayEntry>(elems + old_n, n_elems);
+}
+
+// --- acr_nav.FDb.overlay_stack.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void acr_nav::overlay_stack_Insary(algo::aryptr<acr_nav::OverlayEntry> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.overlay_stack_elems && rhs.elems < _db.overlay_stack_elems + _db.overlay_stack_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("acr_nav.tary_alias  field:acr_nav.FDb.overlay_stack  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(_db.overlay_stack_elems+1))) {
+        FatalErrorExit("acr_nav.bad_insary  field:acr_nav.FDb.overlay_stack  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = _db.overlay_stack_n - at;
+    overlay_stack_Reserve(nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (_db.overlay_stack_elems + at + nnew + i) acr_nav::OverlayEntry(_db.overlay_stack_elems[at + i]);
+        _db.overlay_stack_elems[at + i].~OverlayEntry(); // destroy element
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (_db.overlay_stack_elems + at + i) acr_nav::OverlayEntry(rhs[i]);
+    }
+    _db.overlay_stack_n += nnew;
+}
+
 // --- acr_nav.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr acr_nav::trace_RowidFind(int t) {
@@ -4988,9 +4988,6 @@ void acr_nav::FDb_Init() {
     }
     memset(_db.ind_viewmode_buckets_elems, 0, sizeof(acr_nav::FViewmode*)*_db.ind_viewmode_buckets_n); // (acr_nav.FDb.ind_viewmode)
     _db.p_cur_viewmode = NULL;
-    _db.viewmode_stack_elems 	= 0; // (acr_nav.FDb.viewmode_stack)
-    _db.viewmode_stack_n     	= 0; // (acr_nav.FDb.viewmode_stack)
-    _db.viewmode_stack_max   	= 0; // (acr_nav.FDb.viewmode_stack)
     _db.p_preview_ctype = NULL;
     _db.p_default_viewmode = NULL;
     _db.p_detail_field = NULL;
@@ -5033,6 +5030,9 @@ void acr_nav::FDb_Init() {
     _db.sel_nav_col = i32(0);
     _db.sel_nav_col_pending = i32(-1);
     _db.p_pre_nsdep_viewmode = NULL;
+    _db.overlay_stack_elems 	= 0; // (acr_nav.FDb.overlay_stack)
+    _db.overlay_stack_n     	= 0; // (acr_nav.FDb.overlay_stack)
+    _db.overlay_stack_max   	= 0; // (acr_nav.FDb.overlay_stack)
 
     acr_nav::InitReflection();
     navaction_LoadStatic(); // gen:ns_gstatic  gstatic:acr_nav.FDb.navaction  load acr_nav.FNavaction records
@@ -5041,6 +5041,12 @@ void acr_nav::FDb_Init() {
 // --- acr_nav.FDb..Uninit
 void acr_nav::FDb_Uninit() {
     acr_nav::FDb &row = _db; (void)row;
+
+    // acr_nav.FDb.overlay_stack.Uninit (Tary)  //Overlay viewmode save/restore stack
+    // remove all elements from acr_nav.FDb.overlay_stack
+    overlay_stack_RemoveAll();
+    // free memory for Tary acr_nav.FDb.overlay_stack
+    algo_lib::malloc_FreeMem(_db.overlay_stack_elems, sizeof(acr_nav::OverlayEntry)*_db.overlay_stack_max); // (acr_nav.FDb.overlay_stack)
 
     // acr_nav.FDb.ind_filtertarget.Uninit (Thash)  //
     // skip destruction of ind_filtertarget in global scope
@@ -5053,12 +5059,6 @@ void acr_nav::FDb_Uninit() {
     left_item_RemoveAll();
     // free memory for Tary acr_nav.FDb.left_item
     algo_lib::malloc_FreeMem(_db.left_item_elems, sizeof(acr_nav::LeftItem)*_db.left_item_max); // (acr_nav.FDb.left_item)
-
-    // acr_nav.FDb.viewmode_stack.Uninit (Tary)  //Overlay viewmode save/restore stack
-    // remove all elements from acr_nav.FDb.viewmode_stack
-    viewmode_stack_RemoveAll();
-    // free memory for Tary acr_nav.FDb.viewmode_stack
-    algo_lib::malloc_FreeMem(_db.viewmode_stack_elems, sizeof(acr_nav::OverlayEntry)*_db.viewmode_stack_max); // (acr_nav.FDb.viewmode_stack)
 
     // acr_nav.FDb.ind_viewmode.Uninit (Thash)  //
     // skip destruction of ind_viewmode in global scope

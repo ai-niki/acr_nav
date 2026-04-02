@@ -131,9 +131,9 @@ namespace acr_nav { struct _db_navstyle_curs; }
 namespace acr_nav { struct _db_reftypestyle_curs; }
 namespace acr_nav { struct _db_ssimfile_curs; }
 namespace acr_nav { struct _db_viewmode_curs; }
-namespace acr_nav { struct _db_viewmode_stack_curs; }
 namespace acr_nav { struct _db_left_item_curs; }
 namespace acr_nav { struct _db_filtertarget_curs; }
+namespace acr_nav { struct _db_overlay_stack_curs; }
 namespace acr_nav { struct ns_c_ctype_curs; }
 namespace acr_nav { struct viewmode_line_curs; }
 namespace acr_nav { struct viewmode_cspan_curs; }
@@ -478,9 +478,6 @@ struct FDb { // acr_nav.FDb
     i32                        ind_viewmode_buckets_n;           // number of elements in bucket array
     i32                        ind_viewmode_n;                   // number of elements in the hash table
     acr_nav::FViewmode*        p_cur_viewmode;                   // Current right-panel view mode. optional pointer
-    acr_nav::OverlayEntry*     viewmode_stack_elems;             // pointer to elements
-    u32                        viewmode_stack_n;                 // number of elements in array
-    u32                        viewmode_stack_max;               // max. capacity of array before realloc
     acr_nav::FCtype*           p_preview_ctype;                  // Ctype whose preview is cached. optional pointer
     acr_nav::FViewmode*        p_default_viewmode;               // Default viewmode (viewmode:fields). optional pointer
     acr_nav::FField*           p_detail_field;                   // Field being detailed (non-null in detail mode). optional pointer
@@ -513,6 +510,9 @@ struct FDb { // acr_nav.FDb
     algo::cstring              preview_nav_pending;              // Pending pkey match after preview follow-ref navigation
     i32                        sel_nav_col_pending;              //   -1  Pending sel_nav_col for navstack restore (-1 = none)
     acr_nav::FViewmode*        p_pre_nsdep_viewmode;             // Viewmode saved before nsdep context switch. optional pointer
+    acr_nav::OverlayEntry*     overlay_stack_elems;              // pointer to elements
+    u32                        overlay_stack_n;                  // number of elements in array
+    u32                        overlay_stack_max;                // max. capacity of array before realloc
     acr_nav::trace             trace;                            //
 };
 
@@ -1571,76 +1571,6 @@ void                 ind_viewmode_AbsReserve(int n) __attribute__((nothrow));
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-// func:acr_nav.FDb.viewmode_stack.Addary
-algo::aryptr<acr_nav::OverlayEntry> viewmode_stack_Addary(algo::aryptr<acr_nav::OverlayEntry> rhs) __attribute__((nothrow));
-// Reserve space. Insert element at the end
-// The new element is initialized to a default value
-// func:acr_nav.FDb.viewmode_stack.Alloc
-acr_nav::OverlayEntry& viewmode_stack_Alloc() __attribute__((__warn_unused_result__, nothrow));
-// Reserve space for new element, reallocating the array if necessary
-// Insert new element at specified index. Index must be in range or a fatal error occurs.
-// func:acr_nav.FDb.viewmode_stack.AllocAt
-acr_nav::OverlayEntry& viewmode_stack_AllocAt(int at) __attribute__((__warn_unused_result__, nothrow));
-// Reserve space. Insert N elements at the end of the array, return pointer to array
-// func:acr_nav.FDb.viewmode_stack.AllocN
-algo::aryptr<acr_nav::OverlayEntry> viewmode_stack_AllocN(int n_elems) __attribute__((__warn_unused_result__, nothrow));
-// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
-// Reserve space for new element, reallocating the array if necessary
-// Insert new element at specified index. Index must be in range or a fatal error occurs.
-// func:acr_nav.FDb.viewmode_stack.AllocNAt
-algo::aryptr<acr_nav::OverlayEntry> viewmode_stack_AllocNAt(int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
-// Return true if index is empty
-// func:acr_nav.FDb.viewmode_stack.EmptyQ
-inline bool          viewmode_stack_EmptyQ() __attribute__((nothrow));
-// Look up row by row id. Return NULL if out of range
-// func:acr_nav.FDb.viewmode_stack.Find
-inline acr_nav::OverlayEntry* viewmode_stack_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
-// Return array pointer by value
-// func:acr_nav.FDb.viewmode_stack.Getary
-inline algo::aryptr<acr_nav::OverlayEntry> viewmode_stack_Getary() __attribute__((nothrow));
-// Return pointer to last element of array, or NULL if array is empty
-// func:acr_nav.FDb.viewmode_stack.Last
-inline acr_nav::OverlayEntry* viewmode_stack_Last() __attribute__((nothrow, pure));
-// Return max. number of items in the array
-// func:acr_nav.FDb.viewmode_stack.Max
-inline i32           viewmode_stack_Max() __attribute__((nothrow));
-// Return number of items in the array
-// func:acr_nav.FDb.viewmode_stack.N
-inline i32           viewmode_stack_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Remove item by index. If index outside of range, do nothing.
-// func:acr_nav.FDb.viewmode_stack.Remove
-void                 viewmode_stack_Remove(u32 i) __attribute__((nothrow));
-// func:acr_nav.FDb.viewmode_stack.RemoveAll
-void                 viewmode_stack_RemoveAll() __attribute__((nothrow));
-// Delete last element of array. Do nothing if array is empty.
-// func:acr_nav.FDb.viewmode_stack.RemoveLast
-void                 viewmode_stack_RemoveLast() __attribute__((nothrow));
-// Make sure N *more* elements will fit in array. Process dies if out of memory
-// func:acr_nav.FDb.viewmode_stack.Reserve
-inline void          viewmode_stack_Reserve(int n) __attribute__((nothrow));
-// Make sure N elements fit in array. Process dies if out of memory
-// func:acr_nav.FDb.viewmode_stack.AbsReserve
-void                 viewmode_stack_AbsReserve(int n) __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking.
-// func:acr_nav.FDb.viewmode_stack.qFind
-inline acr_nav::OverlayEntry& viewmode_stack_qFind(u64 t) __attribute__((nothrow));
-// Return reference to last element of array. No bounds checking
-// func:acr_nav.FDb.viewmode_stack.qLast
-inline acr_nav::OverlayEntry& viewmode_stack_qLast() __attribute__((nothrow));
-// Return row id of specified element
-// func:acr_nav.FDb.viewmode_stack.rowid_Get
-inline u64           viewmode_stack_rowid_Get(acr_nav::OverlayEntry &elem) __attribute__((nothrow));
-// Reserve space. Insert N elements at the end of the array, return pointer to array
-// func:acr_nav.FDb.viewmode_stack.AllocNVal
-algo::aryptr<acr_nav::OverlayEntry> viewmode_stack_AllocNVal(int n_elems, const acr_nav::OverlayEntry& val) __attribute__((nothrow));
-// Insert array at specific position
-// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-// func:acr_nav.FDb.viewmode_stack.Insary
-void                 viewmode_stack_Insary(algo::aryptr<acr_nav::OverlayEntry> rhs, int at) __attribute__((nothrow));
-
-// Reserve space (this may move memory). Insert N element at the end.
-// Return aryptr to newly inserted block.
-// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
 // func:acr_nav.FDb.left_item.Addary
 algo::aryptr<acr_nav::LeftItem> left_item_Addary(algo::aryptr<acr_nav::LeftItem> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
@@ -1775,6 +1705,76 @@ void                 ind_filtertarget_Reserve(int n) __attribute__((nothrow));
 // Reserve enough room for exacty N elements. Return success code.
 // func:acr_nav.FDb.ind_filtertarget.AbsReserve
 void                 ind_filtertarget_AbsReserve(int n) __attribute__((nothrow));
+
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:acr_nav.FDb.overlay_stack.Addary
+algo::aryptr<acr_nav::OverlayEntry> overlay_stack_Addary(algo::aryptr<acr_nav::OverlayEntry> rhs) __attribute__((nothrow));
+// Reserve space. Insert element at the end
+// The new element is initialized to a default value
+// func:acr_nav.FDb.overlay_stack.Alloc
+acr_nav::OverlayEntry& overlay_stack_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:acr_nav.FDb.overlay_stack.AllocAt
+acr_nav::OverlayEntry& overlay_stack_AllocAt(int at) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:acr_nav.FDb.overlay_stack.AllocN
+algo::aryptr<acr_nav::OverlayEntry> overlay_stack_AllocN(int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:acr_nav.FDb.overlay_stack.AllocNAt
+algo::aryptr<acr_nav::OverlayEntry> overlay_stack_AllocNAt(int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:acr_nav.FDb.overlay_stack.EmptyQ
+inline bool          overlay_stack_EmptyQ() __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+// func:acr_nav.FDb.overlay_stack.Find
+inline acr_nav::OverlayEntry* overlay_stack_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return array pointer by value
+// func:acr_nav.FDb.overlay_stack.Getary
+inline algo::aryptr<acr_nav::OverlayEntry> overlay_stack_Getary() __attribute__((nothrow));
+// Return pointer to last element of array, or NULL if array is empty
+// func:acr_nav.FDb.overlay_stack.Last
+inline acr_nav::OverlayEntry* overlay_stack_Last() __attribute__((nothrow, pure));
+// Return max. number of items in the array
+// func:acr_nav.FDb.overlay_stack.Max
+inline i32           overlay_stack_Max() __attribute__((nothrow));
+// Return number of items in the array
+// func:acr_nav.FDb.overlay_stack.N
+inline i32           overlay_stack_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove item by index. If index outside of range, do nothing.
+// func:acr_nav.FDb.overlay_stack.Remove
+void                 overlay_stack_Remove(u32 i) __attribute__((nothrow));
+// func:acr_nav.FDb.overlay_stack.RemoveAll
+void                 overlay_stack_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:acr_nav.FDb.overlay_stack.RemoveLast
+void                 overlay_stack_RemoveLast() __attribute__((nothrow));
+// Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:acr_nav.FDb.overlay_stack.Reserve
+inline void          overlay_stack_Reserve(int n) __attribute__((nothrow));
+// Make sure N elements fit in array. Process dies if out of memory
+// func:acr_nav.FDb.overlay_stack.AbsReserve
+void                 overlay_stack_AbsReserve(int n) __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:acr_nav.FDb.overlay_stack.qFind
+inline acr_nav::OverlayEntry& overlay_stack_qFind(u64 t) __attribute__((nothrow));
+// Return reference to last element of array. No bounds checking
+// func:acr_nav.FDb.overlay_stack.qLast
+inline acr_nav::OverlayEntry& overlay_stack_qLast() __attribute__((nothrow));
+// Return row id of specified element
+// func:acr_nav.FDb.overlay_stack.rowid_Get
+inline u64           overlay_stack_rowid_Get(acr_nav::OverlayEntry &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:acr_nav.FDb.overlay_stack.AllocNVal
+algo::aryptr<acr_nav::OverlayEntry> overlay_stack_AllocNVal(int n_elems, const acr_nav::OverlayEntry& val) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:acr_nav.FDb.overlay_stack.Insary
+void                 overlay_stack_Insary(algo::aryptr<acr_nav::OverlayEntry> rhs, int at) __attribute__((nothrow));
 
 // cursor points to valid item
 // func:acr_nav.FDb.ctype_curs.Reset
@@ -1956,17 +1956,6 @@ inline void          _db_viewmode_curs_Next(_db_viewmode_curs &curs) __attribute
 // func:acr_nav.FDb.viewmode_curs.Access
 inline acr_nav::FViewmode& _db_viewmode_curs_Access(_db_viewmode_curs &curs) __attribute__((nothrow));
 // proceed to next item
-// func:acr_nav.FDb.viewmode_stack_curs.Next
-inline void          _db_viewmode_stack_curs_Next(_db_viewmode_stack_curs &curs) __attribute__((nothrow));
-// func:acr_nav.FDb.viewmode_stack_curs.Reset
-inline void          _db_viewmode_stack_curs_Reset(_db_viewmode_stack_curs &curs, acr_nav::FDb &parent) __attribute__((nothrow));
-// cursor points to valid item
-// func:acr_nav.FDb.viewmode_stack_curs.ValidQ
-inline bool          _db_viewmode_stack_curs_ValidQ(_db_viewmode_stack_curs &curs) __attribute__((nothrow));
-// item access
-// func:acr_nav.FDb.viewmode_stack_curs.Access
-inline acr_nav::OverlayEntry& _db_viewmode_stack_curs_Access(_db_viewmode_stack_curs &curs) __attribute__((nothrow));
-// proceed to next item
 // func:acr_nav.FDb.left_item_curs.Next
 inline void          _db_left_item_curs_Next(_db_left_item_curs &curs) __attribute__((nothrow));
 // func:acr_nav.FDb.left_item_curs.Reset
@@ -1989,6 +1978,17 @@ inline void          _db_filtertarget_curs_Next(_db_filtertarget_curs &curs) __a
 // item access
 // func:acr_nav.FDb.filtertarget_curs.Access
 inline acr_nav::FFiltertarget& _db_filtertarget_curs_Access(_db_filtertarget_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:acr_nav.FDb.overlay_stack_curs.Next
+inline void          _db_overlay_stack_curs_Next(_db_overlay_stack_curs &curs) __attribute__((nothrow));
+// func:acr_nav.FDb.overlay_stack_curs.Reset
+inline void          _db_overlay_stack_curs_Reset(_db_overlay_stack_curs &curs, acr_nav::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_nav.FDb.overlay_stack_curs.ValidQ
+inline bool          _db_overlay_stack_curs_ValidQ(_db_overlay_stack_curs &curs) __attribute__((nothrow));
+// item access
+// func:acr_nav.FDb.overlay_stack_curs.Access
+inline acr_nav::OverlayEntry& _db_overlay_stack_curs_Access(_db_overlay_stack_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr_nav.FDb..Init
 void                 FDb_Init();
@@ -3167,7 +3167,7 @@ bool                 Navigate_ReadFieldMaybe(acr_nav::Navigate& parent, algo::st
 bool                 Navigate_ReadStrptrMaybe(acr_nav::Navigate &parent, algo::strptr in_str) __attribute__((nothrow));
 
 // --- acr_nav.OverlayEntry
-// create: acr_nav.FDb.viewmode_stack (Tary)
+// create: acr_nav.FDb.overlay_stack (Tary)
 struct OverlayEntry { // acr_nav.OverlayEntry: Overlay stack entry: viewmode name + saved right-panel state
     algo::Smallstr50   viewmode;              // Viewmode name to restore
     i32                saved_sel_row;         //   0  Right-panel sel_row at time of push
@@ -3589,15 +3589,6 @@ struct _db_viewmode_curs {// cursor
 };
 
 
-struct _db_viewmode_stack_curs {// cursor
-    typedef acr_nav::OverlayEntry ChildType;
-    acr_nav::OverlayEntry* elems;
-    int n_elems;
-    int index;
-    _db_viewmode_stack_curs() { elems=NULL; n_elems=0; index=0; }
-};
-
-
 struct _db_left_item_curs {// cursor
     typedef acr_nav::LeftItem ChildType;
     acr_nav::LeftItem* elems;
@@ -3612,6 +3603,15 @@ struct _db_filtertarget_curs {// cursor
     acr_nav::FDb *parent;
     i64 index;
     _db_filtertarget_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_overlay_stack_curs {// cursor
+    typedef acr_nav::OverlayEntry ChildType;
+    acr_nav::OverlayEntry* elems;
+    int n_elems;
+    int index;
+    _db_overlay_stack_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
 

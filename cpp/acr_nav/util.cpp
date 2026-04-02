@@ -197,11 +197,11 @@ void acr_nav::ResetViewmodeContent(acr_nav::FViewmode &vm) {
     vm.preview_h_scroll = 0;
 }
 
-// Invalidate cached content for content-loading viewmodes (preview, codegen, graph).
+// Clear cached content for content-loading viewmodes (preview, codegen, graph).
 // Called when the selected ctype becomes NULL (namespace header row), so stale
 // content from the previous ctype is not displayed.
 // nsdep excluded: caches by namespace, handles NULL selection in RightPanelItemCount.
-void acr_nav::InvalidateContentCaches() {
+void acr_nav::ClearContentCaches() {
     ResetViewmodeContent(*acr_nav::_db.p_preview_viewmode);
     ResetViewmodeContent(*acr_nav::_db.p_codegen_viewmode);
     ResetViewmodeContent(*acr_nav::_db.p_graph_viewmode);
