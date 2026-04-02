@@ -164,7 +164,7 @@ static void FormatPreviewRows(acr_nav::FViewmode &vm, algo_lib::MmapFile &file,
 }
 
 static void LoadPreview(acr_nav::FCtype &ctype) {
-    acr_nav::FViewmode &vm = *acr_nav::_db.p_preview_viewmode;
+    acr_nav::FViewmode &vm = *acr_nav::ind_viewmode_Find("preview");
     tempstr pending(acr_nav::_db.preview_nav_pending);
     acr_nav::_db.preview_nav_pending = "";
     ClearViewmodeLines(vm);
@@ -320,7 +320,7 @@ static void HighlightCppLine(acr_nav::FViewmode &vm, int line_idx, algo::strptr 
 // Load amc-generated C++ struct definition for a ctype into the codegen viewmode.
 // Ctype names come from trusted ssimfile data loaded at startup.
 static void LoadCodegen(acr_nav::FCtype &ctype) {
-    acr_nav::FViewmode &vm = *acr_nav::_db.p_codegen_viewmode;
+    acr_nav::FViewmode &vm = *acr_nav::ind_viewmode_Find("codegen");
     ClearViewmodeLines(vm);
     acr_nav::_db.p_codegen_ctype = &ctype;
     tempstr cmd;
@@ -435,7 +435,7 @@ static void AccumNsDep(NsDep *deps, int &n, int max_n, acr_nav::FNs *ns) {
 // Upstream: namespaces this ns imports from (via field arg references).
 // Downstream: namespaces that import from this ns (via field_arg back-references).
 void acr_nav::LoadNsDep(acr_nav::FNs &ns) {
-    acr_nav::FViewmode &vm = *acr_nav::_db.p_nsdep_viewmode;
+    acr_nav::FViewmode &vm = *acr_nav::ind_viewmode_Find("nsdep");
     ClearViewmodeLines(vm);
     acr_nav::_db.p_nsdep_ns = &ns;
     // Fixed-size accumulator for per-namespace counts
@@ -553,7 +553,7 @@ static void FormatDetailCard(acr_nav::FViewmode &vm, algo::Tuple &tuple, algo::s
 // Re-serializes the dmmeta.field record as the first card, then scans each
 // detailsrc file for matching records (first attribute value == field name).
 void acr_nav::LoadDetail(acr_nav::FField &field) {
-    acr_nav::FViewmode &vm = *acr_nav::_db.p_detail_viewmode;
+    acr_nav::FViewmode &vm = *acr_nav::ind_viewmode_Find("detail");
     ClearViewmodeLines(vm);
     acr_nav::_db.p_detail_field = &field;
     algo::strptr field_name(field.field);
@@ -749,7 +749,7 @@ static tempstr MergePairComments(algo::strptr c1, algo::strptr c2) {
 // Directional pairs (up/down, left/right) are merged into single lines.
 // Arrow keys display as Unicode symbols (↑↓←→).
 void acr_nav::BuildHelpLines() {
-    acr_nav::FViewmode &vm = *acr_nav::_db.p_help_viewmode;
+    acr_nav::FViewmode &vm = *acr_nav::ind_viewmode_Find("help");
     ClearViewmodeLines(vm);
     vm.header = "Keyboard Shortcuts";
     // Collect helpgroups sorted by sort_order

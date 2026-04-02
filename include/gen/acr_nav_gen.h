@@ -465,7 +465,6 @@ struct FDb { // acr_nav.FDb
     acr_nav::FReftypestyle**   ind_reftypestyle_buckets_elems;   // pointer to bucket array
     i32                        ind_reftypestyle_buckets_n;       // number of elements in bucket array
     i32                        ind_reftypestyle_n;               // number of elements in the hash table
-    acr_nav::FViewmode*        p_help_viewmode;                  // Cached pointer to help viewmode. optional pointer
     bool                       startup_help;                     //   false  True on startup; first keypress dismisses help
     acr_nav::FSsimfile*        ssimfile_lary[32];                // level array
     i32                        ssimfile_n;                       // number of elements in array
@@ -481,13 +480,10 @@ struct FDb { // acr_nav.FDb
     acr_nav::FCtype*           p_preview_ctype;                  // Ctype whose preview is cached. optional pointer
     acr_nav::FViewmode*        p_default_viewmode;               // Default viewmode (viewmode:fields). optional pointer
     acr_nav::FField*           p_detail_field;                   // Field being detailed (non-null in detail mode). optional pointer
-    acr_nav::FViewmode*        p_detail_viewmode;                // Detail viewmode (viewmode:detail). optional pointer
-    acr_nav::FViewmode*        p_preview_viewmode;               // Preview viewmode (viewmode:preview). optional pointer
     acr_nav::LeftItem*         left_item_elems;                  // pointer to elements
     u32                        left_item_n;                      // number of elements in array
     u32                        left_item_max;                    // max. capacity of array before realloc
     i32                        n_visible_ctype;                  //   0  Count of visible ctypes (excludes ns headers)
-    acr_nav::FViewmode*        p_codegen_viewmode;               // Codegen viewmode pointer. optional pointer
     acr_nav::FCtype*           p_codegen_ctype;                  // Ctype whose generated code is cached. optional pointer
     acr_nav::FFiltertarget*    filtertarget_lary[32];            // level array
     i32                        filtertarget_n;                   // number of elements in array
@@ -501,10 +497,7 @@ struct FDb { // acr_nav.FDb
     algo::Smallstr50           pre_filter_target;                // Saved filtertarget before entering filter mode
     i32                        pre_filter_sel_row;               //   0  Saved left panel sel_row before entering filter mode
     i32                        pre_filter_scroll_offset;         //   0  Saved left panel scroll_offset before entering filter mode
-    acr_nav::FViewmode*        p_nsdep_viewmode;                 // Cached nsdep viewmode pointer. optional pointer
     acr_nav::FNs*              p_nsdep_ns;                       // Namespace whose deps are currently cached in nsdep view. optional pointer
-    acr_nav::FViewmode*        p_xref_viewmode;                  // Xref viewmode pointer. optional pointer
-    acr_nav::FViewmode*        p_graph_viewmode;                 // Cached graph viewmode pointer. optional pointer
     acr_nav::FCtype*           p_graph_ctype;                    // Ctype whose graph is cached. optional pointer
     i32                        sel_nav_col;                      //   0  Selected navigable column index (into preview_nav)
     algo::cstring              preview_nav_pending;              // Pending pkey match after preview follow-ref navigation
@@ -2667,17 +2660,10 @@ void                 FSsimfile_Uninit(acr_nav::FSsimfile& ssimfile) __attribute_
 
 // --- acr_nav.FViewmode
 // create: acr_nav.FDb.viewmode (Lary)
-// global access: p_help_viewmode (Ptr)
 // global access: viewmode (Lary, by rowid)
 // global access: ind_viewmode (Thash, hash field viewmode)
 // global access: p_cur_viewmode (Ptr)
 // global access: p_default_viewmode (Ptr)
-// global access: p_detail_viewmode (Ptr)
-// global access: p_preview_viewmode (Ptr)
-// global access: p_codegen_viewmode (Ptr)
-// global access: p_nsdep_viewmode (Ptr)
-// global access: p_xref_viewmode (Ptr)
-// global access: p_graph_viewmode (Ptr)
 // global access: p_pre_nsdep_viewmode (Ptr)
 struct FViewmode { // acr_nav.FViewmode
     acr_nav::FViewmode*                     ind_viewmode_next;      // hash next

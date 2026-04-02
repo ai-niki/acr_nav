@@ -390,7 +390,7 @@ static void EmitLeftBlock(acr_nav::FViewmode &vm, GraphEdgeGroup &g, int center_
 // Build amc_vis-style graph lines for the given ctype.
 // Populates the graph viewmode's line_elems array.
 static void LoadGraph(acr_nav::FCtype &ctype) {
-    acr_nav::FViewmode &vm = *acr_nav::_db.p_graph_viewmode;
+    acr_nav::FViewmode &vm = *acr_nav::ind_viewmode_Find("graph");
     ClearViewmodeLines(vm);
     vm.header = ctype.ctype;
     acr_nav::_db.p_graph_ctype = &ctype;

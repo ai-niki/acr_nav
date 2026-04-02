@@ -130,15 +130,15 @@ acr_nav::FNs* acr_nav::SelectedNs() {
 // viewmode records captures overlay state for the hint system; the navaction
 // functions are not unified because their entry guards differ.
 bool acr_nav::IsHelpMode() {
-    return acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_help_viewmode;
+    return acr_nav::_db.p_cur_viewmode == acr_nav::ind_viewmode_Find("help");
 }
 
 bool acr_nav::IsDetailMode() {
-    return acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_detail_viewmode;
+    return acr_nav::_db.p_cur_viewmode == acr_nav::ind_viewmode_Find("detail");
 }
 
 bool acr_nav::IsNsDepMode() {
-    return acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_nsdep_viewmode;
+    return acr_nav::_db.p_cur_viewmode == acr_nav::ind_viewmode_Find("nsdep");
 }
 
 // -----------------------------------------------------------------------------
@@ -202,9 +202,9 @@ void acr_nav::ResetViewmodeContent(acr_nav::FViewmode &vm) {
 // content from the previous ctype is not displayed.
 // nsdep excluded: caches by namespace, handles NULL selection in RightPanelItemCount.
 void acr_nav::ClearContentCaches() {
-    ResetViewmodeContent(*acr_nav::_db.p_preview_viewmode);
-    ResetViewmodeContent(*acr_nav::_db.p_codegen_viewmode);
-    ResetViewmodeContent(*acr_nav::_db.p_graph_viewmode);
+    ResetViewmodeContent(*acr_nav::ind_viewmode_Find("preview"));
+    ResetViewmodeContent(*acr_nav::ind_viewmode_Find("codegen"));
+    ResetViewmodeContent(*acr_nav::ind_viewmode_Find("graph"));
     acr_nav::_db.p_preview_ctype = NULL;
     acr_nav::_db.p_codegen_ctype = NULL;
     acr_nav::_db.p_graph_ctype = NULL;

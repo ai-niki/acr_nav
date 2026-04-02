@@ -1,4 +1,4 @@
-acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Ns  navstack_depth:0  n_sel_ctype:10  n_ctype:1413  n_field:5692  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Ns  navstack_depth:0  n_sel_ctype:10  n_ctype:1413  n_field:5685  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:11  sel_value:dmmeta.Ns
 acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:10  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:dmmeta.Ns  kind:ctype  collapsed:N  n_match:0  n_record:85
@@ -102,7 +102,7 @@ acr_nav.PreviewNavCol  col_start:14  col_wid:8  name_len:6  col_name:nstype  tar
 acr_nav.PreviewNavCol  col_start:24  col_wid:7  name_len:7  col_name:license  target_ctype:dev.License
 acr_nav.PreviewNavCol  col_start:33  col_wid:72  name_len:7  col_name:comment  target_ctype:""
 
-acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Ns  navstack_depth:0  n_sel_ctype:10  n_ctype:1413  n_field:5692  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Ns  navstack_depth:0  n_sel_ctype:10  n_ctype:1413  n_field:5685  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:11  sel_value:dmmeta.Ns
 acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:10  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:dmmeta.Ns  kind:ctype  collapsed:N  n_match:0  n_record:85
@@ -206,7 +206,7 @@ acr_nav.PreviewNavCol  col_start:14  col_wid:8  name_len:6  col_name:nstype  tar
 acr_nav.PreviewNavCol  col_start:24  col_wid:7  name_len:7  col_name:license  target_ctype:dev.License
 acr_nav.PreviewNavCol  col_start:33  col_wid:72  name_len:7  col_name:comment  target_ctype:""
 
-acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Ns  navstack_depth:0  n_sel_ctype:10  n_ctype:1413  n_field:5692  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Ns  navstack_depth:0  n_sel_ctype:10  n_ctype:1413  n_field:5685  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:11  sel_value:dmmeta.Ns
 acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:10  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:dmmeta.Ns  kind:ctype  collapsed:N  n_match:0  n_record:85

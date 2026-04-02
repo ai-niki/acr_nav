@@ -170,26 +170,19 @@ static tempstr ReadKeyName() {
 
 // Resolve well-known viewmode pointers and set ensure-content hooks
 static void ResolveViewmodes() {
-    acr_nav::_db.p_default_viewmode = acr_nav::ind_viewmode_Find("fields");
-    acr_nav::_db.p_preview_viewmode = acr_nav::ind_viewmode_Find("preview");
-    acr_nav::_db.p_help_viewmode = acr_nav::ind_viewmode_Find("help");
-    acr_nav::_db.p_detail_viewmode = acr_nav::ind_viewmode_Find("detail");
-    acr_nav::_db.p_codegen_viewmode = acr_nav::ind_viewmode_Find("codegen");
-    acr_nav::_db.p_nsdep_viewmode = acr_nav::ind_viewmode_Find("nsdep");
-    acr_nav::_db.p_xref_viewmode = acr_nav::ind_viewmode_Find("xref");
-    acr_nav::_db.p_graph_viewmode = acr_nav::ind_viewmode_Find("graph");
-    vrfy(acr_nav::_db.p_default_viewmode, "viewmode 'fields' not found");
-    vrfy(acr_nav::_db.p_preview_viewmode, "viewmode 'preview' not found");
-    vrfy(acr_nav::_db.p_help_viewmode, "viewmode 'help' not found");
-    vrfy(acr_nav::_db.p_detail_viewmode, "viewmode 'detail' not found");
-    vrfy(acr_nav::_db.p_codegen_viewmode, "viewmode 'codegen' not found");
-    vrfy(acr_nav::_db.p_nsdep_viewmode, "viewmode 'nsdep' not found");
-    vrfy(acr_nav::_db.p_xref_viewmode, "viewmode 'xref' not found");
-    vrfy(acr_nav::_db.p_graph_viewmode, "viewmode 'graph' not found");
-    acr_nav::_db.p_preview_viewmode->ensure_content = PreviewEnsureContent;
-    acr_nav::_db.p_codegen_viewmode->ensure_content = CodegenEnsureContent;
-    acr_nav::_db.p_nsdep_viewmode->ensure_content = NsDepEnsureContent;
-    acr_nav::_db.p_graph_viewmode->ensure_content = GraphEnsureContent;
+    vrfy(acr_nav::ind_viewmode_Find("fields"),  "viewmode 'fields' not found");
+    vrfy(acr_nav::ind_viewmode_Find("preview"), "viewmode 'preview' not found");
+    vrfy(acr_nav::ind_viewmode_Find("help"),    "viewmode 'help' not found");
+    vrfy(acr_nav::ind_viewmode_Find("detail"),  "viewmode 'detail' not found");
+    vrfy(acr_nav::ind_viewmode_Find("codegen"), "viewmode 'codegen' not found");
+    vrfy(acr_nav::ind_viewmode_Find("nsdep"),   "viewmode 'nsdep' not found");
+    vrfy(acr_nav::ind_viewmode_Find("xref"),    "viewmode 'xref' not found");
+    vrfy(acr_nav::ind_viewmode_Find("graph"),   "viewmode 'graph' not found");
+    acr_nav::_db.p_default_viewmode                          = acr_nav::ind_viewmode_Find("fields");
+    acr_nav::ind_viewmode_Find("preview")->ensure_content    = PreviewEnsureContent;
+    acr_nav::ind_viewmode_Find("codegen")->ensure_content    = CodegenEnsureContent;
+    acr_nav::ind_viewmode_Find("nsdep")->ensure_content      = NsDepEnsureContent;
+    acr_nav::ind_viewmode_Find("graph")->ensure_content      = GraphEnsureContent;
 }
 
 // -----------------------------------------------------------------------------
@@ -220,7 +213,7 @@ static void InitPanels() {
     } ind_end;
     // Start in help mode so new users see keybindings
     acr_nav::_db.p_cur_viewmode = acr_nav::_db.p_default_viewmode;
-    PushOverlay(acr_nav::_db.p_help_viewmode);
+    PushOverlay(acr_nav::ind_viewmode_Find("help"));
     acr_nav::_db.startup_help = true;
     ResolveStyles();
     vrfy(acr_nav::ind_navstyle_Find("title_focus"),   "navstyle 'title_focus' not found");
@@ -275,7 +268,7 @@ static void PostAction(PreActionState const &s) {
         right->scroll_offset = 0;
     }
     if (forward && ct_changed
-        && acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_graph_viewmode
+        && acr_nav::_db.p_cur_viewmode == acr_nav::ind_viewmode_Find("graph")
         && sel_ct && s.prev_sel_ct && sel_ct != s.prev_sel_ct) {
         int line = GraphFindCtypeLine(*sel_ct, s.prev_sel_ct);
         if (line >= 0) {
@@ -466,8 +459,8 @@ static void EmitVisibleLines(acr_nav::FPanel &right, acr_nav::FCtype *sel_ct) {
         prlog(vl);
     }
     // Emit navigable column metadata for preview mode
-    if (acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_preview_viewmode) {
-        acr_nav::FViewmode &pvm = *acr_nav::_db.p_preview_viewmode;
+    acr_nav::FViewmode &pvm = *acr_nav::ind_viewmode_Find("preview");
+    if (acr_nav::_db.p_cur_viewmode == &pvm) {
         int n_nav = acr_nav::preview_nav_N(pvm);
         for (int i = 0; i < n_nav; i++) {
             prlog(acr_nav::preview_nav_qFind(pvm, i));
@@ -543,9 +536,9 @@ static void HeadlessSetView(acr_nav::SetView &cmd) {
     acr_nav::FViewmode *vm = acr_nav::ind_viewmode_Find(cmd.viewmode);
     if (!vm) {
         EmitAck("acr_nav.SetView", false, tempstr() << "viewmode not found: " << cmd.viewmode);
-    } else if (vm == acr_nav::_db.p_nsdep_viewmode) {
+    } else if (vm == acr_nav::ind_viewmode_Find("nsdep")) {
         EmitAck("acr_nav.SetView", false, "nsdep is context-sensitive");
-    } else if (vm == acr_nav::_db.p_detail_viewmode) {
+    } else if (vm == acr_nav::ind_viewmode_Find("detail")) {
         EmitAck("acr_nav.SetView", false, "use SendKey key:d on a field");
     } else {
         // Cancel filter mode if active
@@ -629,7 +622,7 @@ static void HeadlessNavigate(acr_nav::Navigate &cmd) {
         if (!vm) {
             ok = false;
             err_msg << "viewmode not found: " << cmd.viewmode;
-        } else if (vm == acr_nav::_db.p_nsdep_viewmode) {
+        } else if (vm == acr_nav::ind_viewmode_Find("nsdep")) {
             ok = false;
             err_msg << "nsdep is context-sensitive";
         } else if (vm->is_overlay) {

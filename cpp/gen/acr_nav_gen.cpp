@@ -4947,7 +4947,6 @@ void acr_nav::FDb_Init() {
         FatalErrorExit("out of memory"); // (acr_nav.FDb.ind_reftypestyle)
     }
     memset(_db.ind_reftypestyle_buckets_elems, 0, sizeof(acr_nav::FReftypestyle*)*_db.ind_reftypestyle_buckets_n); // (acr_nav.FDb.ind_reftypestyle)
-    _db.p_help_viewmode = NULL;
     _db.startup_help = bool(false);
     // initialize LAry ssimfile (acr_nav.FDb.ssimfile)
     _db.ssimfile_n = 0;
@@ -4991,13 +4990,10 @@ void acr_nav::FDb_Init() {
     _db.p_preview_ctype = NULL;
     _db.p_default_viewmode = NULL;
     _db.p_detail_field = NULL;
-    _db.p_detail_viewmode = NULL;
-    _db.p_preview_viewmode = NULL;
     _db.left_item_elems 	= 0; // (acr_nav.FDb.left_item)
     _db.left_item_n     	= 0; // (acr_nav.FDb.left_item)
     _db.left_item_max   	= 0; // (acr_nav.FDb.left_item)
     _db.n_visible_ctype = i32(0);
-    _db.p_codegen_viewmode = NULL;
     _db.p_codegen_ctype = NULL;
     // initialize LAry filtertarget (acr_nav.FDb.filtertarget)
     _db.filtertarget_n = 0;
@@ -5022,10 +5018,7 @@ void acr_nav::FDb_Init() {
     _db.p_default_filtertarget = NULL;
     _db.pre_filter_sel_row = i32(0);
     _db.pre_filter_scroll_offset = i32(0);
-    _db.p_nsdep_viewmode = NULL;
     _db.p_nsdep_ns = NULL;
-    _db.p_xref_viewmode = NULL;
-    _db.p_graph_viewmode = NULL;
     _db.p_graph_ctype = NULL;
     _db.sel_nav_col = i32(0);
     _db.sel_nav_col_pending = i32(-1);
