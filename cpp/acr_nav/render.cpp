@@ -24,6 +24,8 @@
 
 static const char* G_VERT    = "\xe2\x94\x82";  // │  single vertical
 static const char* G_CHEVRON = "\xe2\x80\xba";  // ›  breadcrumb separator
+static const char* G_SEP     = " \xe2\x94\x82 ";  // " │ " status bar section separator
+static const int   G_SEP_DISP = 3;                 // display columns for G_SEP
 
 using acr_nav::SelectedNs;
 using acr_nav::RightPanelItemCount;
@@ -54,15 +56,20 @@ static void EmitStyle(cstring &out, acr_nav::FNavstyle &style) {
     }
 }
 
-// Truncate str to max_width display columns, then right-pad with spaces to max_width.
+// Truncate str to (max_width - reserve) display columns, then right-pad with
+// spaces so the total padding + content = max_width - reserve columns.
 // UTF-8-aware: does not split multi-byte characters.
-static void TruncPad(cstring &str, int max_width) {
+static void TruncPad(cstring &str, int max_width, int reserve = 0) {
+    int available = max_width - reserve;
     int display_width = ch_N(str) - Utf8ExtraBytes(strptr(str));
-    if (display_width > max_width) {
-        str.ch_n = DisplayToByte(strptr(str), max_width);
-        display_width = max_width;
+    if (available > 0 && display_width > available) {
+        str.ch_n = DisplayToByte(strptr(str), available);
+        display_width = available;
+    } else if (available <= 0) {
+        str.ch_n = 0;
+        display_width = 0;
     }
-    char_PrintNTimes(' ', str, i32_Max(0, max_width - display_width));
+    char_PrintNTimes(' ', str, i32_Max(0, max_width - reserve - display_width));
 }
 
 // -----------------------------------------------------------------------------
@@ -565,7 +572,7 @@ static void RenderStatusBar(RenderCtx &ctx) {
         acr_nav::FField *fld = NULL;
         GraphInfoAtLine(*acr_nav::_db.p_graph_ctype, cur.sel_row, NULL, &fld);
         if (fld && ch_N(fld->p_reftype->comment) > 0) {
-            status << "  " << fld->p_reftype->comment;
+            status << G_SEP << fld->p_reftype->comment;
         }
     }
     int cur_items = PanelItemCount(cur, ctx.sel_ct);
@@ -575,8 +582,9 @@ static void RenderStatusBar(RenderCtx &ctx) {
     } else {
         pos << "0/0";
     }
-    char_PrintNTimes(' ', status, i32_Max(1, ctx.wid - ch_N(status) - ch_N(pos)));
-    status << pos;
+    int pos_section = G_SEP_DISP + ch_N(pos);
+    TruncPad(status, ctx.wid, pos_section);
+    status << G_SEP << pos;
     ctx.buf << status << "\x1b[0m";
 }
 
