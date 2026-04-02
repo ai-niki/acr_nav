@@ -95,6 +95,7 @@ struct RenderCtx {
     acr_nav::FNavstyle *p_title_nofocus;
     acr_nav::FNavstyle *p_sel_focus;
     acr_nav::FNavstyle *p_sel_nofocus;
+    acr_nav::FNavstyle *p_statusbar;
     RenderCtx(cstring &buf_
               , acr_nav::FCtype *sel_ct_
               , int wid_
@@ -113,7 +114,8 @@ struct RenderCtx {
               , acr_nav::FNavstyle *p_title_focus_
               , acr_nav::FNavstyle *p_title_nofocus_
               , acr_nav::FNavstyle *p_sel_focus_
-              , acr_nav::FNavstyle *p_sel_nofocus_)
+              , acr_nav::FNavstyle *p_sel_nofocus_
+              , acr_nav::FNavstyle *p_statusbar_)
         : buf(buf_), sel_ct(sel_ct_)
         , wid(wid_), left_wid(left_wid_), right_wid(right_wid_)
         , left_focused(left_focused_), show_breadcrumb(show_breadcrumb_), visible(visible_)
@@ -122,6 +124,7 @@ struct RenderCtx {
         , preview_h_scroll(preview_h_scroll_), is_hscroll_preview(is_hscroll_preview_)
         , p_title_focus(p_title_focus_), p_title_nofocus(p_title_nofocus_)
         , p_sel_focus(p_sel_focus_), p_sel_nofocus(p_sel_nofocus_)
+        , p_statusbar(p_statusbar_)
     {}
 };
 
@@ -545,12 +548,11 @@ static void RenderContentArea(RenderCtx &ctx) {
 
 // Render the breadcrumb bar (shown only when navstack is non-empty).
 static void RenderBreadcrumbBar(RenderCtx &ctx) {
-    acr_nav::FNavstyle *statusbar = acr_nav::ind_navstyle_Find("statusbar");
     if (ctx.show_breadcrumb) {
         tempstr bcline;
         bcline << " " << BuildBreadcrumb(ctx.sel_ct);
         TruncPad(bcline, ctx.wid);
-        EmitStyle(ctx.buf, *statusbar);
+        EmitStyle(ctx.buf, *ctx.p_statusbar);
         ctx.buf << bcline << "\x1b[0m\r\n";
     }
 }
@@ -559,8 +561,7 @@ static void RenderBreadcrumbBar(RenderCtx &ctx) {
 
 // Render the status bar: filter text + hints + position indicator.
 static void RenderStatusBar(RenderCtx &ctx) {
-    acr_nav::FNavstyle *statusbar = acr_nav::ind_navstyle_Find("statusbar");
-    EmitStyle(ctx.buf, *statusbar);
+    EmitStyle(ctx.buf, *ctx.p_statusbar);
     tempstr status;
     bool in_filter = (acr_nav::_db.p_cur_mode == acr_nav::_db.p_filter_mode);
     bool has_filter = ch_N(acr_nav::_db.filter) > 0;
@@ -689,6 +690,7 @@ void acr_nav::Render(cstring &buf, acr_nav::FCtype *sel_ct) {
     acr_nav::FNavstyle *p_title_nofocus = acr_nav::ind_navstyle_Find("title_nofocus");
     acr_nav::FNavstyle *p_sel_focus     = acr_nav::ind_navstyle_Find("sel_focus");
     acr_nav::FNavstyle *p_sel_nofocus   = acr_nav::ind_navstyle_Find("sel_nofocus");
+    acr_nav::FNavstyle *p_statusbar     = acr_nav::ind_navstyle_Find("statusbar");
     RenderCtx ctx(buf, sel_ct
                   , wid, left_wid, right_wid
                   , /*left_focused=*/(acr_nav::_db.p_cur_panel == acr_nav::_db.p_left_panel)
@@ -701,7 +703,7 @@ void acr_nav::Render(cstring &buf, acr_nav::FCtype *sel_ct) {
                   , /*scroll=*/acr_nav::_db.p_left_panel->scroll_offset
                   , /*preview_h_scroll=*/preview_h_scroll
                   , /*is_hscroll_preview=*/is_hscroll_preview
-                  , p_title_focus, p_title_nofocus, p_sel_focus, p_sel_nofocus);
+                  , p_title_focus, p_title_nofocus, p_sel_focus, p_sel_nofocus, p_statusbar);
     RenderTitleBar(ctx);
     RenderContentArea(ctx);
     RenderBreadcrumbBar(ctx);
