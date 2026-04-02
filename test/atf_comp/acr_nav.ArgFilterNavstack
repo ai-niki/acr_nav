@@ -1,4 +1,4 @@
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:cstring  navstack_depth:0  n_sel_ctype:254  n_ctype:1413  n_field:5710  viewmode:fields  breadcrumb:""  filtertarget:arg  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:cstring  navstack_depth:0  n_sel_ctype:254  n_ctype:1413  n_field:5692  viewmode:fields  breadcrumb:""  filtertarget:arg  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:313  sel_value:abt.FBuilddir
 acr_nav.VisibleLeftItem  row:0  value:abt  kind:ns  collapsed:N  n_match:6  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt.FBuilddir  kind:ctype  collapsed:N  n_match:0  n_record:0
@@ -321,7 +321,7 @@ acr_nav.VisibleField  row:3  field:abt.FBuilddir.lockfile  arg:algo_lib.FLockfil
 acr_nav.VisibleField  row:4  field:abt.FBuilddir.R  arg:algo_lib.Replscope  reftype:Val  style:field_val  navigable:Y  match:N
 acr_nav.VisibleField  row:5  field:abt.FBuilddir.p_compiler  arg:abt.FCompiler  reftype:Upptr  style:field_upref  navigable:Y  match:N
 
-acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:1  n_sel_ctype:1412  n_ctype:1413  n_field:5710  viewmode:fields  breadcrumb:"abt.FBuilddir › dev.Builddir"  filtertarget:ctype  hints:"↑↓←→  Backspace:back  Enter:follow  Tab:view  d:detail  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:1  n_sel_ctype:1412  n_ctype:1413  n_field:5692  viewmode:fields  breadcrumb:"abt.FBuilddir › dev.Builddir"  filtertarget:ctype  hints:"↑↓←→  Backspace:back  Enter:follow  Tab:view  d:detail  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:848  scroll_offset:0  n_items:1298  sel_value:dev.Builddir
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:N  n_match:19  n_record:0
@@ -1271,7 +1271,7 @@ acr_nav.VisibleLeftItem  row:944  value:dmmeta.Fdec  kind:ctype  collapsed:N  n_
 acr_nav.VisibleLeftItem  row:945  value:dmmeta.Fdelay  kind:ctype  collapsed:N  n_match:0  n_record:4
 acr_nav.VisibleLeftItem  row:946  value:dmmeta.Ffast  kind:ctype  collapsed:N  n_match:0  n_record:0
 acr_nav.VisibleLeftItem  row:947  value:dmmeta.Fflag  kind:ctype  collapsed:N  n_match:0  n_record:2
-acr_nav.VisibleLeftItem  row:948  value:dmmeta.Field  kind:ctype  collapsed:N  n_match:0  n_record:5710
+acr_nav.VisibleLeftItem  row:948  value:dmmeta.Field  kind:ctype  collapsed:N  n_match:0  n_record:5692
 acr_nav.VisibleLeftItem  row:949  value:dmmeta.Findrem  kind:ctype  collapsed:N  n_match:0  n_record:2
 acr_nav.VisibleLeftItem  row:950  value:dmmeta.Finput  kind:ctype  collapsed:N  n_match:0  n_record:317
 acr_nav.VisibleLeftItem  row:951  value:dmmeta.Fkafka  kind:ctype  collapsed:N  n_match:0  n_record:0
@@ -1629,7 +1629,7 @@ acr_nav.VisibleField  row:3  field:dev.Builddir.cfg  arg:dev.Cfg  reftype:Pkey  
 acr_nav.VisibleField  row:4  field:dev.Builddir.arch  arg:dev.Arch  reftype:Pkey  style:field_upref  navigable:Y  match:N
 acr_nav.VisibleField  row:5  field:dev.Builddir.comment  arg:algo.Comment  reftype:Val  style:field_val  navigable:Y  match:N
 
-acr_nav.Screen  mode:browse  focus:content  filter:cstring  navstack_depth:0  n_sel_ctype:254  n_ctype:1413  n_field:5710  viewmode:fields  breadcrumb:""  filtertarget:arg  hints:"↑↓←→  Enter:follow  Tab:view  d:detail  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:content  filter:cstring  navstack_depth:0  n_sel_ctype:254  n_ctype:1413  n_field:5692  viewmode:fields  breadcrumb:""  filtertarget:arg  hints:"↑↓←→  Enter:follow  Tab:view  d:detail  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:313  sel_value:abt.FBuilddir
 acr_nav.VisibleLeftItem  row:0  value:abt  kind:ns  collapsed:N  n_match:6  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt.FBuilddir  kind:ctype  collapsed:N  n_match:0  n_record:0
@@ -1952,7 +1952,7 @@ acr_nav.VisibleField  row:3  field:abt.FBuilddir.lockfile  arg:algo_lib.FLockfil
 acr_nav.VisibleField  row:4  field:abt.FBuilddir.R  arg:algo_lib.Replscope  reftype:Val  style:field_val  navigable:Y  match:N
 acr_nav.VisibleField  row:5  field:abt.FBuilddir.p_compiler  arg:abt.FCompiler  reftype:Upptr  style:field_upref  navigable:Y  match:N
 
-acr_nav.Screen  mode:browse  focus:content  filter:cstring  navstack_depth:0  n_sel_ctype:254  n_ctype:1413  n_field:5710  viewmode:fields  breadcrumb:""  filtertarget:arg  hints:"↑↓←→  Enter:follow  Tab:view  d:detail  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:content  filter:cstring  navstack_depth:0  n_sel_ctype:254  n_ctype:1413  n_field:5692  viewmode:fields  breadcrumb:""  filtertarget:arg  hints:"↑↓←→  Enter:follow  Tab:view  d:detail  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:313  sel_value:abt.FBuilddir
 acr_nav.VisibleLeftItem  row:0  value:abt  kind:ns  collapsed:N  n_match:6  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt.FBuilddir  kind:ctype  collapsed:N  n_match:0  n_record:0

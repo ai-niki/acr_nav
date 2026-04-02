@@ -4996,11 +4996,6 @@ void acr_nav::FDb_Init() {
     _db.p_detail_field = NULL;
     _db.p_detail_viewmode = NULL;
     _db.p_preview_viewmode = NULL;
-    _db.p_title_focus = NULL;
-    _db.p_title_nofocus = NULL;
-    _db.p_sel_focus = NULL;
-    _db.p_sel_nofocus = NULL;
-    _db.p_statusbar = NULL;
     _db.left_item_elems 	= 0; // (acr_nav.FDb.left_item)
     _db.left_item_n     	= 0; // (acr_nav.FDb.left_item)
     _db.left_item_max   	= 0; // (acr_nav.FDb.left_item)
@@ -5028,29 +5023,16 @@ void acr_nav::FDb_Init() {
     memset(_db.ind_filtertarget_buckets_elems, 0, sizeof(acr_nav::FFiltertarget*)*_db.ind_filtertarget_buckets_n); // (acr_nav.FDb.ind_filtertarget)
     _db.p_cur_filtertarget = NULL;
     _db.p_default_filtertarget = NULL;
-    _db.p_filter_match = NULL;
     _db.pre_filter_sel_row = i32(0);
     _db.pre_filter_scroll_offset = i32(0);
-    _db.p_line_comment = NULL;
-    _db.p_line_keyword = NULL;
-    _db.p_line_string = NULL;
-    _db.p_line_preproc = NULL;
-    _db.p_line_section = NULL;
-    _db.p_line_key = NULL;
     _db.p_nsdep_viewmode = NULL;
     _db.p_nsdep_ns = NULL;
     _db.p_xref_viewmode = NULL;
     _db.p_graph_viewmode = NULL;
     _db.p_graph_ctype = NULL;
-    _db.p_graph_ctype_style = NULL;
-    _db.p_graph_neighbor = NULL;
-    _db.p_graph_arrow = NULL;
     _db.sel_nav_col = i32(0);
-    _db.p_line_nav_header = NULL;
-    _db.p_line_nav_cell = NULL;
     _db.sel_nav_col_pending = i32(-1);
     _db.p_pre_nsdep_viewmode = NULL;
-    _db.p_line_nav_cell_nofk = NULL;
 
     acr_nav::InitReflection();
     navaction_LoadStatic(); // gen:ns_gstatic  gstatic:acr_nav.FDb.navaction  load acr_nav.FNavaction records

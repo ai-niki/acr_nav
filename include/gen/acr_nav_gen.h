@@ -486,11 +486,6 @@ struct FDb { // acr_nav.FDb
     acr_nav::FField*           p_detail_field;                   // Field being detailed (non-null in detail mode). optional pointer
     acr_nav::FViewmode*        p_detail_viewmode;                // Detail viewmode (viewmode:detail). optional pointer
     acr_nav::FViewmode*        p_preview_viewmode;               // Preview viewmode (viewmode:preview). optional pointer
-    acr_nav::FNavstyle*        p_title_focus;                    // Cached pointer to title_focus navstyle. optional pointer
-    acr_nav::FNavstyle*        p_title_nofocus;                  // Cached pointer to title_nofocus navstyle. optional pointer
-    acr_nav::FNavstyle*        p_sel_focus;                      // Cached pointer to sel_focus navstyle. optional pointer
-    acr_nav::FNavstyle*        p_sel_nofocus;                    // Cached pointer to sel_nofocus navstyle. optional pointer
-    acr_nav::FNavstyle*        p_statusbar;                      // Cached pointer to statusbar navstyle. optional pointer
     acr_nav::LeftItem*         left_item_elems;                  // pointer to elements
     u32                        left_item_n;                      // number of elements in array
     u32                        left_item_max;                    // max. capacity of array before realloc
@@ -504,33 +499,20 @@ struct FDb { // acr_nav.FDb
     i32                        ind_filtertarget_n;               // number of elements in the hash table
     acr_nav::FFiltertarget*    p_cur_filtertarget;               // Current filter target. optional pointer
     acr_nav::FFiltertarget*    p_default_filtertarget;           // Cached pointer to ctype filtertarget. optional pointer
-    acr_nav::FNavstyle*        p_filter_match;                   // Cached pointer to filter_match navstyle. optional pointer
     algo_lib::Regx             filter_regx;                      // Cached compiled filter regex
     algo::cstring              pre_filter_text;                  // Saved filter text before entering filter mode
     algo::Smallstr50           pre_filter_target;                // Saved filtertarget before entering filter mode
     i32                        pre_filter_sel_row;               //   0  Saved left panel sel_row before entering filter mode
     i32                        pre_filter_scroll_offset;         //   0  Saved left panel scroll_offset before entering filter mode
-    acr_nav::FNavstyle*        p_line_comment;                   // Cached style: code comments. optional pointer
-    acr_nav::FNavstyle*        p_line_keyword;                   // Cached style: language keywords. optional pointer
-    acr_nav::FNavstyle*        p_line_string;                    // Cached style: string literals. optional pointer
-    acr_nav::FNavstyle*        p_line_preproc;                   // Cached style: preprocessor directives. optional pointer
-    acr_nav::FNavstyle*        p_line_section;                   // Cached style: section headers. optional pointer
-    acr_nav::FNavstyle*        p_line_key;                       // Cached style: attribute keys. optional pointer
     acr_nav::FViewmode*        p_nsdep_viewmode;                 // Cached nsdep viewmode pointer. optional pointer
     acr_nav::FNs*              p_nsdep_ns;                       // Namespace whose deps are currently cached in nsdep view. optional pointer
     acr_nav::FViewmode*        p_xref_viewmode;                  // Xref viewmode pointer. optional pointer
     acr_nav::FViewmode*        p_graph_viewmode;                 // Cached graph viewmode pointer. optional pointer
     acr_nav::FCtype*           p_graph_ctype;                    // Ctype whose graph is cached. optional pointer
-    acr_nav::FNavstyle*        p_graph_ctype_style;              // Cached style: graph center type. optional pointer
-    acr_nav::FNavstyle*        p_graph_neighbor;                 // Cached style: graph neighbor types. optional pointer
-    acr_nav::FNavstyle*        p_graph_arrow;                    // Cached style: graph arrows. optional pointer
     i32                        sel_nav_col;                      //   0  Selected navigable column index (into preview_nav)
     algo::cstring              preview_nav_pending;              // Pending pkey match after preview follow-ref navigation
-    acr_nav::FNavstyle*        p_line_nav_header;                // Cached: navigable column header style. optional pointer
-    acr_nav::FNavstyle*        p_line_nav_cell;                  // Cached: selected navigable cell style. optional pointer
     i32                        sel_nav_col_pending;              //   -1  Pending sel_nav_col for navstack restore (-1 = none)
     acr_nav::FViewmode*        p_pre_nsdep_viewmode;             // Viewmode saved before nsdep context switch. optional pointer
-    acr_nav::FNavstyle*        p_line_nav_cell_nofk;             // Non-FK column cell highlight. optional pointer
     acr_nav::trace             trace;                            //
 };
 
@@ -2342,24 +2324,6 @@ void                 FNavmode_Uninit(acr_nav::FNavmode& navmode) __attribute__((
 // create: acr_nav.FDb.navstyle (Lary)
 // global access: navstyle (Lary, by rowid)
 // global access: ind_navstyle (Thash, hash field navstyle)
-// global access: p_title_focus (Ptr)
-// global access: p_title_nofocus (Ptr)
-// global access: p_sel_focus (Ptr)
-// global access: p_sel_nofocus (Ptr)
-// global access: p_statusbar (Ptr)
-// global access: p_filter_match (Ptr)
-// global access: p_line_comment (Ptr)
-// global access: p_line_keyword (Ptr)
-// global access: p_line_string (Ptr)
-// global access: p_line_preproc (Ptr)
-// global access: p_line_section (Ptr)
-// global access: p_line_key (Ptr)
-// global access: p_graph_ctype_style (Ptr)
-// global access: p_graph_neighbor (Ptr)
-// global access: p_graph_arrow (Ptr)
-// global access: p_line_nav_header (Ptr)
-// global access: p_line_nav_cell (Ptr)
-// global access: p_line_nav_cell_nofk (Ptr)
 // access: acr_nav.FReftypestyle.p_navstyle (Upptr)
 // access: acr_nav.LineColorSpan.p_navstyle (Upptr)
 struct FNavstyle { // acr_nav.FNavstyle

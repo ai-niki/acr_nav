@@ -169,12 +169,14 @@ void acr_nav::BuildStatusHint(cstring &out) {
 
 // Render the title bar: left panel title | right panel title.
 static void RenderTitleBar(RenderCtx &ctx) {
+    acr_nav::FNavstyle *title_focus   = acr_nav::ind_navstyle_Find("title_focus");
+    acr_nav::FNavstyle *title_nofocus = acr_nav::ind_navstyle_Find("title_nofocus");
     // Left panel
     {
         tempstr ltitle;
         ltitle << " " << acr_nav::_db.p_left_panel->title << " (" << acr_nav::_db.n_visible_ctype << ")";
         TruncPad(ltitle, ctx.left_wid - 1);
-        EmitStyle(ctx.buf, ctx.left_focused ? *acr_nav::_db.p_title_focus : *acr_nav::_db.p_title_nofocus);
+        EmitStyle(ctx.buf, ctx.left_focused ? *title_focus : *title_nofocus);
         ctx.buf << ltitle << "\x1b[0m";
     }
     ctx.buf << G_VERT;
@@ -198,7 +200,7 @@ static void RenderTitleBar(RenderCtx &ctx) {
                    << " (" << RightPanelItemCount(ctx.sel_ct) << ")";
         }
         TruncPad(rtitle, ctx.right_wid);
-        EmitStyle(ctx.buf, !ctx.left_focused ? *acr_nav::_db.p_title_focus : *acr_nav::_db.p_title_nofocus);
+        EmitStyle(ctx.buf, !ctx.left_focused ? *title_focus : *title_nofocus);
         ctx.buf << rtitle << "\x1b[0m";
     }
     ctx.buf << "\r\n";
@@ -234,8 +236,9 @@ static void EmitStyledPreviewHeader(cstring &buf, algo::strptr hdr, acr_nav::FVi
             buf << algo::strptr(hdr.elems + prev_end, adj_start - prev_end);
         }
         // Cyan-styled nav column name
-        if (acr_nav::_db.p_line_nav_header) {
-            EmitStyle(buf, *acr_nav::_db.p_line_nav_header);
+        acr_nav::FNavstyle *line_nav_header = acr_nav::ind_navstyle_Find("line_nav_header");
+        if (line_nav_header) {
+            EmitStyle(buf, *line_nav_header);
         }
         buf << algo::strptr(hdr.elems + adj_start, adj_end - adj_start);
         buf << "\x1b[0m";
@@ -379,7 +382,9 @@ static void RenderColumnHeader(RenderCtx &ctx) {
         hdr << "reftype";
     }
     TruncPad(hdr, ctx.right_wid);
-    acr_nav::FNavstyle &base_hdr_style = !ctx.left_focused ? *acr_nav::_db.p_title_focus : *acr_nav::_db.p_title_nofocus;
+    acr_nav::FNavstyle *title_focus   = acr_nav::ind_navstyle_Find("title_focus");
+    acr_nav::FNavstyle *title_nofocus = acr_nav::ind_navstyle_Find("title_nofocus");
+    acr_nav::FNavstyle &base_hdr_style = !ctx.left_focused ? *title_focus : *title_nofocus;
     EmitStyle(ctx.buf, base_hdr_style);
     if (!ctx.has_fields && acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_preview_viewmode
         && acr_nav::preview_nav_N(*acr_nav::_db.p_cur_viewmode) > 0) {
@@ -423,7 +428,9 @@ static void RenderLeftCell(RenderCtx &ctx, int row) {
     }
     TruncPad(left_cell, ctx.left_wid - 1);
     if (left_sel) {
-        EmitStyle(ctx.buf, ctx.left_focused ? *acr_nav::_db.p_sel_focus : *acr_nav::_db.p_sel_nofocus);
+        acr_nav::FNavstyle *sel_focus   = acr_nav::ind_navstyle_Find("sel_focus");
+        acr_nav::FNavstyle *sel_nofocus = acr_nav::ind_navstyle_Find("sel_nofocus");
+        EmitStyle(ctx.buf, ctx.left_focused ? *sel_focus : *sel_nofocus);
     }
     ctx.buf << left_cell << "\x1b[0m" << G_VERT;
 }
@@ -450,8 +457,8 @@ static void DetectPreviewOverlay(RenderCtx &ctx, int right_data_idx, int skip_by
             ov_start = ov_raw_s - skip_bytes;
             ov_end = ov_raw_e - skip_bytes;
             ov_style = ch_N(nc.target_ctype) > 0
-                ? acr_nav::_db.p_line_nav_cell
-                : acr_nav::_db.p_line_nav_cell_nofk;
+                ? acr_nav::ind_navstyle_Find("line_nav_cell")
+                : acr_nav::ind_navstyle_Find("line_nav_cell_nofk");
         }
     }
 }
@@ -460,6 +467,8 @@ static void DetectPreviewOverlay(RenderCtx &ctx, int right_data_idx, int skip_by
 // or empty message.  Applies selection, reftype color, filter-match highlight,
 // and dispatches to EmitStyledLine for span-mode content.
 static void RenderRightCell(RenderCtx &ctx, int row, int &span_cursor) {
+    acr_nav::FNavstyle *sel_focus   = acr_nav::ind_navstyle_Find("sel_focus");
+    acr_nav::FNavstyle *filter_match = acr_nav::ind_navstyle_Find("filter_match");
     tempstr right_cell;
     bool right_sel = false;
     int right_data_idx = acr_nav::_db.p_right_panel->scroll_offset + row;
@@ -491,7 +500,7 @@ static void RenderRightCell(RenderCtx &ctx, int row, int &span_cursor) {
     }
     TruncPad(right_cell, ctx.right_wid);
     if (right_sel && !ctx.left_focused) {
-        EmitStyle(ctx.buf, *acr_nav::_db.p_sel_focus);
+        EmitStyle(ctx.buf, *sel_focus);
     }
     if (fld && fld->p_reftype->c_reftypestyle) {
         EmitStyle(ctx.buf, *fld->p_reftype->c_reftypestyle->p_navstyle);
@@ -503,7 +512,7 @@ static void RenderRightCell(RenderCtx &ctx, int row, int &span_cursor) {
         field_match = FieldMatchesFilter(*fld, acr_nav::_db.filter_regx, *acr_nav::_db.p_cur_filtertarget);
     }
     if (field_match) {
-        EmitStyle(ctx.buf, *acr_nav::_db.p_filter_match);
+        EmitStyle(ctx.buf, *filter_match);
     }
     if (!ctx.has_fields && acr_nav::cspan_N(*acr_nav::_db.p_cur_viewmode) > 0) {
         bool right_focused_sel = right_sel && !ctx.left_focused;
@@ -511,7 +520,7 @@ static void RenderRightCell(RenderCtx &ctx, int row, int &span_cursor) {
         int ov_end = -1;
         acr_nav::FNavstyle *ov_style = nullptr;
         DetectPreviewOverlay(ctx, right_data_idx, skip_bytes, right_sel, ov_start, ov_end, ov_style);
-        EmitStyledLine(ctx.buf, strptr(right_cell), right_focused_sel, *acr_nav::_db.p_cur_viewmode, right_data_idx, span_cursor, right_focused_sel ? acr_nav::_db.p_sel_focus : nullptr, ov_start, ov_end, ov_style, skip_bytes);
+        EmitStyledLine(ctx.buf, strptr(right_cell), right_focused_sel, *acr_nav::_db.p_cur_viewmode, right_data_idx, span_cursor, right_focused_sel ? sel_focus : nullptr, ov_start, ov_end, ov_style, skip_bytes);
         ctx.buf << "\x1b[0m\x1b[K\r\n";
     } else {
         ctx.buf << right_cell << "\x1b[0m\x1b[K\r\n";
@@ -537,7 +546,7 @@ static void RenderBreadcrumbBar(RenderCtx &ctx) {
         tempstr bcline;
         bcline << " " << BuildBreadcrumb(ctx.sel_ct);
         TruncPad(bcline, ctx.wid);
-        EmitStyle(ctx.buf, *acr_nav::_db.p_statusbar);
+        EmitStyle(ctx.buf, *acr_nav::ind_navstyle_Find("statusbar"));
         ctx.buf << bcline << "\x1b[0m\r\n";
     }
 }
@@ -546,7 +555,7 @@ static void RenderBreadcrumbBar(RenderCtx &ctx) {
 
 // Render the status bar: filter text + hints + position indicator.
 static void RenderStatusBar(RenderCtx &ctx) {
-    EmitStyle(ctx.buf, *acr_nav::_db.p_statusbar);
+    EmitStyle(ctx.buf, *acr_nav::ind_navstyle_Find("statusbar"));
     tempstr status;
     bool in_filter = (acr_nav::_db.p_cur_mode == acr_nav::_db.p_filter_mode);
     bool has_filter = ch_N(acr_nav::_db.filter) > 0;

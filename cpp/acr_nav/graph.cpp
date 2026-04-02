@@ -258,6 +258,7 @@ static void MeasureGraphWidths(GraphEdgeGroup *groups, int n_group,
 
 // Emit the center ctype open line (line 0 of the graph).
 static void EmitCenterOpen(acr_nav::FViewmode &vm, int center_x, acr_nav::FCtype &ctype) {
+    acr_nav::FNavstyle *ctype_style = acr_nav::ind_navstyle_Find("graph_ctype");
     GLine gl;
     gl.PadTo(center_x);
     gl.Utf8(G_DBL_TL);
@@ -266,12 +267,13 @@ static void EmitCenterOpen(acr_nav::FViewmode &vm, int center_x, acr_nav::FCtype
     gl.Ascii(ctype.ctype);
     int name_end = gl.BytePos();
     acr_nav::line_Alloc(vm) = gl.str;
-    AddSpan(vm, acr_nav::line_N(vm) - 1, name_start, name_end,
-            acr_nav::_db.p_graph_ctype_style);
+    AddSpan(vm, acr_nav::line_N(vm) - 1, name_start, name_end, ctype_style);
 }
 
 // Emit a right-column block: field lines with labels/arrows, followed by a spine-only close line.
 static void EmitRightBlock(acr_nav::FViewmode &vm, GraphEdgeGroup &g, int center_x, int max_right_label) {
+    acr_nav::FNavstyle *neighbor_style = acr_nav::ind_navstyle_Find("graph_neighbor");
+    acr_nav::FNavstyle *arrow_style    = acr_nav::ind_navstyle_Find("graph_arrow");
     for (int fi = 0; fi < g.n_field; fi++) {
         acr_nav::FField &fld = *g.fields[fi];
         tempstr label;
@@ -305,11 +307,9 @@ static void EmitRightBlock(acr_nav::FViewmode &vm, GraphEdgeGroup &g, int center
             AddSpan(vm, line_idx, label_start, label_end,
                     fld.p_reftype->c_reftypestyle->p_navstyle);
         }
-        AddSpan(vm, line_idx, arrow_start, arrow_end,
-                acr_nav::_db.p_graph_arrow);
+        AddSpan(vm, line_idx, arrow_start, arrow_end, arrow_style);
         if (fi == 0) {
-            AddSpan(vm, line_idx, name_start, name_end,
-                    acr_nav::_db.p_graph_neighbor);
+            AddSpan(vm, line_idx, name_start, name_end, neighbor_style);
         }
     }
     // Close line: just spine (clean separator)
@@ -323,6 +323,7 @@ static void EmitRightBlock(acr_nav::FViewmode &vm, GraphEdgeGroup &g, int center
 
 // Emit a single left-column edge line: arrow, dashes, tee, and field label.
 static void EmitLeftEdgeLine(acr_nav::FViewmode &vm, acr_nav::FField &fld, int name_x, int center_x) {
+    acr_nav::FNavstyle *arrow_style = acr_nav::ind_navstyle_Find("graph_arrow");
     tempstr label;
     label << fld.reftype << " " << name_Get(fld);
     GLine gl;
@@ -340,8 +341,7 @@ static void EmitLeftEdgeLine(acr_nav::FViewmode &vm, acr_nav::FField &fld, int n
     int label_end = gl.BytePos();
     acr_nav::line_Alloc(vm) = gl.str;
     int line_idx = acr_nav::line_N(vm) - 1;
-    AddSpan(vm, line_idx, arrow_start, arrow_end,
-            acr_nav::_db.p_graph_arrow);
+    AddSpan(vm, line_idx, arrow_start, arrow_end, arrow_style);
     if (fld.p_reftype->c_reftypestyle) {
         AddSpan(vm, line_idx, label_start, label_end,
                 fld.p_reftype->c_reftypestyle->p_navstyle);
@@ -351,6 +351,7 @@ static void EmitLeftEdgeLine(acr_nav::FViewmode &vm, acr_nav::FField &fld, int n
 // Emit a left-column block: neighbor open line, edge lines, and close line.
 // is_last controls whether the close line terminates the spine (G_DBL_BL) or continues it (G_DBL_VERT).
 static void EmitLeftBlock(acr_nav::FViewmode &vm, GraphEdgeGroup &g, int center_x, int max_left_label, bool is_last) {
+    acr_nav::FNavstyle *neighbor_style = acr_nav::ind_navstyle_Find("graph_neighbor");
     int left_x = center_x - max_left_label - 3;
     int neighbor_display_len = ch_N(g.p_neighbor->ctype);
     {
@@ -374,8 +375,7 @@ static void EmitLeftBlock(acr_nav::FViewmode &vm, GraphEdgeGroup &g, int center_
         gl.PadTo(center_x);
         gl.Utf8(G_DBL_TEE_L);
         acr_nav::line_Alloc(vm) = gl.str;
-        AddSpan(vm, acr_nav::line_N(vm) - 1, nb_start, nb_end,
-                acr_nav::_db.p_graph_neighbor);
+        AddSpan(vm, acr_nav::line_N(vm) - 1, nb_start, nb_end, neighbor_style);
     }
     // Edge lines
     for (int fi = 0; fi < g.n_field; fi++) {

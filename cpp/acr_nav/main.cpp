@@ -194,36 +194,11 @@ static void ResolveViewmodes() {
 
 // -----------------------------------------------------------------------------
 
-// Resolve navstyle, filtertarget, and syntax highlight pointers
+// Resolve filtertarget pointers
 static void ResolveStyles() {
-    acr_nav::_db.p_title_focus = acr_nav::ind_navstyle_Find("title_focus");
-    acr_nav::_db.p_title_nofocus = acr_nav::ind_navstyle_Find("title_nofocus");
-    acr_nav::_db.p_sel_focus = acr_nav::ind_navstyle_Find("sel_focus");
-    acr_nav::_db.p_sel_nofocus = acr_nav::ind_navstyle_Find("sel_nofocus");
-    acr_nav::_db.p_statusbar = acr_nav::ind_navstyle_Find("statusbar");
-    vrfy(acr_nav::_db.p_title_focus && acr_nav::_db.p_title_nofocus
-         && acr_nav::_db.p_sel_focus && acr_nav::_db.p_sel_nofocus
-         && acr_nav::_db.p_statusbar, "required navstyle records missing");
     acr_nav::_db.p_default_filtertarget = acr_nav::ind_filtertarget_Find("ctype");
     vrfy(acr_nav::_db.p_default_filtertarget, "filtertarget 'ctype' not found");
     acr_nav::_db.p_cur_filtertarget = acr_nav::_db.p_default_filtertarget;
-    acr_nav::_db.p_filter_match = acr_nav::ind_navstyle_Find("filter_match");
-    vrfy(acr_nav::_db.p_filter_match, "navstyle 'filter_match' not found");
-    // Syntax highlight styles (optional -- null degrades to no highlighting via AddSpan guard)
-    acr_nav::_db.p_line_comment = acr_nav::ind_navstyle_Find("line_comment");
-    acr_nav::_db.p_line_keyword = acr_nav::ind_navstyle_Find("line_keyword");
-    acr_nav::_db.p_line_string = acr_nav::ind_navstyle_Find("line_string");
-    acr_nav::_db.p_line_preproc = acr_nav::ind_navstyle_Find("line_preproc");
-    acr_nav::_db.p_line_section = acr_nav::ind_navstyle_Find("line_section");
-    acr_nav::_db.p_line_key = acr_nav::ind_navstyle_Find("line_key");
-    // Graph view styles (optional)
-    acr_nav::_db.p_graph_ctype_style = acr_nav::ind_navstyle_Find("graph_ctype");
-    acr_nav::_db.p_graph_neighbor = acr_nav::ind_navstyle_Find("graph_neighbor");
-    acr_nav::_db.p_graph_arrow = acr_nav::ind_navstyle_Find("graph_arrow");
-    // Preview follow-ref styles (optional)
-    acr_nav::_db.p_line_nav_header = acr_nav::ind_navstyle_Find("line_nav_header");
-    acr_nav::_db.p_line_nav_cell = acr_nav::ind_navstyle_Find("line_nav_cell");
-    acr_nav::_db.p_line_nav_cell_nofk = acr_nav::ind_navstyle_Find("line_nav_cell_nofk");
 }
 
 // -----------------------------------------------------------------------------
@@ -248,6 +223,13 @@ static void InitPanels() {
     PushOverlay(acr_nav::_db.p_help_viewmode);
     acr_nav::_db.startup_help = true;
     ResolveStyles();
+    vrfy(acr_nav::ind_navstyle_Find("title_focus")
+         && acr_nav::ind_navstyle_Find("title_nofocus")
+         && acr_nav::ind_navstyle_Find("sel_focus")
+         && acr_nav::ind_navstyle_Find("sel_nofocus")
+         && acr_nav::ind_navstyle_Find("statusbar")
+         && acr_nav::ind_navstyle_Find("filter_match"),
+         "required navstyle records missing");
     BuildHelpLines();
     SwitchToBrowse();
     acr_nav::_db.p_left_panel->sel_row = 0;

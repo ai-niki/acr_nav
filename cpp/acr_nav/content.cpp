@@ -154,10 +154,10 @@ static void FormatPreviewRows(acr_nav::FViewmode &vm, algo_lib::MmapFile &file,
             int li = acr_nav::line_N(vm) - 1;
             if (n_col > 0) {
                 int pkey_end = (n_col > 1) ? col_byte_pos[1] - 2 : ch_N(row);
-                AddSpan(vm, li, 0, pkey_end, acr_nav::_db.p_line_key);
+                AddSpan(vm, li, 0, pkey_end, acr_nav::ind_navstyle_Find("line_key"));
             }
             if (comment_col >= 0) {
-                AddSpan(vm, li, col_byte_pos[comment_col], ch_N(row), acr_nav::_db.p_line_comment);
+                AddSpan(vm, li, col_byte_pos[comment_col], ch_N(row), acr_nav::ind_navstyle_Find("line_comment"));
             }
         }
     } ind_end;
@@ -246,7 +246,7 @@ static void HighlightCppLine(acr_nav::FViewmode &vm, int line_idx, algo::strptr 
         pp++;
     }
     if (pp < len && line.elems[pp] == '#') {
-        AddSpan(vm, line_idx, 0, len, acr_nav::_db.p_line_preproc);
+        AddSpan(vm, line_idx, 0, len, acr_nav::ind_navstyle_Find("line_preproc"));
         pos = len; // done with this line
     }
     while (pos < len) {
@@ -254,7 +254,7 @@ static void HighlightCppLine(acr_nav::FViewmode &vm, int line_idx, algo::strptr 
         // Check for // line comment
         bool is_comment = (c == '/' && pos + 1 < len && line.elems[pos + 1] == '/');
         if (is_comment) {
-            AddSpan(vm, line_idx, pos, len, acr_nav::_db.p_line_comment);
+            AddSpan(vm, line_idx, pos, len, acr_nav::ind_navstyle_Find("line_comment"));
             pos = len; // done with this line
         }
         // Check for string literal
@@ -273,7 +273,7 @@ static void HighlightCppLine(acr_nav::FViewmode &vm, int line_idx, algo::strptr 
                     pos++;
                 }
             }
-            AddSpan(vm, line_idx, start, pos, acr_nav::_db.p_line_string);
+            AddSpan(vm, line_idx, start, pos, acr_nav::ind_navstyle_Find("line_string"));
         }
         // Check for identifier (potential keyword)
         if (pos < len) {
@@ -307,7 +307,7 @@ static void HighlightCppLine(acr_nav::FViewmode &vm, int line_idx, algo::strptr 
                 if (before_ok && after_ok) {
                     algo::strptr word(line.elems + start, pos - start);
                     if (IsKw(word)) {
-                        AddSpan(vm, line_idx, start, pos, acr_nav::_db.p_line_keyword);
+                        AddSpan(vm, line_idx, start, pos, acr_nav::ind_navstyle_Find("line_keyword"));
                     }
                 }
             } else {
@@ -357,7 +357,7 @@ static void FormatNsDepSection(acr_nav::FViewmode &vm, algo::strptr header,
         tempstr hdr;
         hdr << header;
         acr_nav::line_Alloc(vm) = hdr;
-        AddSpan(vm, acr_nav::line_N(vm) - 1, 0, ch_N(hdr), acr_nav::_db.p_line_section);
+        AddSpan(vm, acr_nav::line_N(vm) - 1, 0, ch_N(hdr), acr_nav::ind_navstyle_Find("line_section"));
     }
     if (n == 0) {
         acr_nav::line_Alloc(vm) = "  (none)";
@@ -384,7 +384,7 @@ static void FormatNsDepSection(acr_nav::FViewmode &vm, algo::strptr header,
         row << cnt;
         row << (cnt == 1 ? " field" : " fields");
         acr_nav::line_Alloc(vm) = row;
-        AddSpan(vm, acr_nav::line_N(vm) - 1, ns_start, ns_end, acr_nav::_db.p_line_key);
+        AddSpan(vm, acr_nav::line_N(vm) - 1, ns_start, ns_end, acr_nav::ind_navstyle_Find("line_key"));
     }
 }
 
@@ -392,13 +392,14 @@ static void FormatNsDepSection(acr_nav::FViewmode &vm, algo::strptr header,
 // color span (which highlights the namespace name) and looking up the namespace.
 // Returns NULL for header, separator, or "(none)" lines.
 acr_nav::FNs* acr_nav::NsDepNsAtLine(acr_nav::FViewmode &vm, int line_idx) {
+    acr_nav::FNavstyle *line_key_style = acr_nav::ind_navstyle_Find("line_key");
     acr_nav::FNs *ret = NULL;
     if (line_idx >= 0 && line_idx < acr_nav::line_N(vm)) {
         algo::strptr line_text = acr_nav::line_qFind(vm, line_idx);
         bool found = false;
         for (int si = 0; si < acr_nav::cspan_N(vm) && !found; si++) {
             acr_nav::LineColorSpan &span = acr_nav::cspan_qFind(vm, si);
-            if (span.line_idx == line_idx && span.p_navstyle == acr_nav::_db.p_line_key) {
+            if (span.line_idx == line_idx && span.p_navstyle == line_key_style) {
                 int end = i32_Min(span.col_end, elems_N(line_text));
                 if (span.col_start < end) {
                     algo::strptr name(line_text.elems + span.col_start, end - span.col_start);
@@ -508,7 +509,7 @@ static void EmitSectionHeader(acr_nav::FViewmode &vm, algo::strptr title) {
     int fill = i32_Max(0, 36 - display_width);
     for (int i = 0; i < fill; i++) hdr << G_HORIZ;
     acr_nav::line_Alloc(vm) = hdr;
-    AddSpan(vm, acr_nav::line_N(vm) - 1, 0, ch_N(hdr), acr_nav::_db.p_line_section);
+    AddSpan(vm, acr_nav::line_N(vm) - 1, 0, ch_N(hdr), acr_nav::ind_navstyle_Find("line_section"));
 }
 
 // Format a single ssim record as a vertical card: section header + one key:value per line.
@@ -540,7 +541,7 @@ static void FormatDetailCard(acr_nav::FViewmode &vm, algo::Tuple &tuple, algo::s
             SanitizeForDisplay(safe);
             row << safe;
             acr_nav::line_Alloc(vm) = row;
-            AddSpan(vm, acr_nav::line_N(vm) - 1, 2, 2 + ch_N(attr.name), acr_nav::_db.p_line_key);
+            AddSpan(vm, acr_nav::line_N(vm) - 1, 2, 2 + ch_N(attr.name), acr_nav::ind_navstyle_Find("line_key"));
         }
         ai++;
     } ind_end;
@@ -815,8 +816,8 @@ void acr_nav::BuildHelpLines() {
             line << comment;
             acr_nav::line_Alloc(vm) = line;
             int li = acr_nav::line_N(vm) - 1;
-            AddSpan(vm, li, 2, keys_end, acr_nav::_db.p_line_key);
-            AddSpan(vm, li, comment_start, ch_N(line), acr_nav::_db.p_line_comment);
+            AddSpan(vm, li, 2, keys_end, acr_nav::ind_navstyle_Find("line_key"));
+            AddSpan(vm, li, comment_start, ch_N(line), acr_nav::ind_navstyle_Find("line_comment"));
         }
     }
 }
