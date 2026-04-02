@@ -48,6 +48,67 @@ using acr_nav::PopOverlayOnCtypeChange;
 using acr_nav::DismissStartupHelp;
 using acr_nav::BuildLeftItemsReset;
 
+// Scan left_item array for a ctype match. Returns index or -1.
+static int FindLeftItemByCtype(algo::strptr ctype_key) {
+    int result = -1;
+    for (int i = 0; i < acr_nav::left_item_N(); i++) {
+        if (acr_nav::left_item_qFind(i).ctype == ctype_key) {
+            result = i;
+            break;
+        }
+    }
+    return result;
+}
+
+// Scan left_item for namespace header match (ns == key AND ctype is empty). Returns index or -1.
+static int FindLeftItemByNsHeader(algo::strptr ns_key) {
+    int result = -1;
+    for (int i = 0; i < acr_nav::left_item_N(); i++) {
+        if (acr_nav::left_item_qFind(i).ns == ns_key
+            && ch_N(acr_nav::left_item_qFind(i).ctype) == 0) {
+            result = i;
+            break;
+        }
+    }
+    return result;
+}
+
+// -----------------------------------------------------------------------------
+
+// Collect namespaces that have at least one ctype matching the filter.
+static void CollectMatchingNamespaces(acr_nav::FNs **ns_arr, int &n_ns,
+                                       algo_lib::Regx &filter_regx, bool has_filter,
+                                       acr_nav::FFiltertarget &ft) {
+    n_ns = 0;
+    ind_beg(acr_nav::_db_ns_curs, ns, acr_nav::_db) {
+        int n_match = 0;
+        for (int i = 0; i < acr_nav::c_ctype_N(ns); i++) {
+            acr_nav::FCtype *ct = acr_nav::c_ctype_Find(ns, i);
+            if (ct && ch_N(ct->ctype) > 0) {
+                bool match = !has_filter || CtypeMatchesFilter(*ct, filter_regx, ft);
+                n_match += match;
+            }
+        }
+        ns.n_match = n_match;
+        if (n_match > 0 && n_ns < 256) {
+            ns_arr[n_ns++] = &ns;
+        }
+    } ind_end;
+}
+
+// Insertion sort namespace array by name.
+static void InsertionSortNsByName(acr_nav::FNs **ns_arr, int n_ns) {
+    for (int i = 1; i < n_ns; i++) {
+        acr_nav::FNs *tmp = ns_arr[i];
+        int j = i;
+        while (j > 0 && algo::strptr_Cmp(ns_arr[j - 1]->ns, tmp->ns) > 0) {
+            ns_arr[j] = ns_arr[j - 1];
+            j--;
+        }
+        ns_arr[j] = tmp;
+    }
+}
+
 // -----------------------------------------------------------------------------
 
 void acr_nav::BuildLeftItems() {
@@ -68,30 +129,8 @@ void acr_nav::BuildLeftItems() {
     // stable display regardless of load order.
     acr_nav::FNs *ns_arr[256]; // fixed capacity; silently truncates if exceeded
     int n_ns = 0;
-    ind_beg(acr_nav::_db_ns_curs, ns, acr_nav::_db) {
-        int n_match = 0;
-        for (int i = 0; i < acr_nav::c_ctype_N(ns); i++) {
-            acr_nav::FCtype *ct = acr_nav::c_ctype_Find(ns, i);
-            if (ct && ch_N(ct->ctype) > 0) {
-                bool match = !has_filter || CtypeMatchesFilter(*ct, filter_regx, ft);
-                n_match += match;
-            }
-        }
-        ns.n_match = n_match;
-        if (n_match > 0 && n_ns < 256) {
-            ns_arr[n_ns++] = &ns;
-        }
-    } ind_end;
-    // Insertion sort by namespace name
-    for (int i = 1; i < n_ns; i++) {
-        acr_nav::FNs *tmp = ns_arr[i];
-        int j = i;
-        while (j > 0 && algo::strptr_Cmp(ns_arr[j - 1]->ns, tmp->ns) > 0) {
-            ns_arr[j] = ns_arr[j - 1];
-            j--;
-        }
-        ns_arr[j] = tmp;
-    }
+    CollectMatchingNamespaces(ns_arr, n_ns, filter_regx, has_filter, ft);
+    InsertionSortNsByName(ns_arr, n_ns);
     // Build display list
     for (int ni = 0; ni < n_ns; ni++) {
         acr_nav::FNs &ns = *ns_arr[ni];
@@ -269,11 +308,9 @@ static void NavigateToTarget(acr_nav::FCtype *sel_ct, acr_nav::FCtype *target, a
     SwitchToBrowse();
     target->p_ns->collapsed = false;
     BuildLeftItems();
-    for (int i = 0; i < acr_nav::left_item_N(); i++) {
-        if (acr_nav::left_item_qFind(i).ctype == target->ctype) {
-            left->sel_row = i;
-            break;
-        }
+    int idx = FindLeftItemByCtype(target->ctype);
+    if (idx >= 0) {
+        left->sel_row = idx;
     }
 }
 
@@ -298,11 +335,9 @@ acr_nav::FCtype* acr_nav::GoToCtype(algo::strptr ctype_key, acr_nav::FViewmode *
             acr_nav::_db.p_cur_filtertarget = acr_nav::_db.p_default_filtertarget;
             SwitchToBrowse();
             BuildLeftItems();
-            for (int i = 0; i < acr_nav::left_item_N(); i++) {
-                if (acr_nav::left_item_qFind(i).ctype == target->ctype) {
-                    left->sel_row = i;
-                    break;
-                }
+            int idx = FindLeftItemByCtype(target->ctype);
+            if (idx >= 0) {
+                left->sel_row = idx;
             }
             acr_nav::_db.p_cur_viewmode = dest_viewmode;
         }
@@ -434,12 +469,9 @@ static void FollowRefNsDep(acr_nav::FPanel &panel, acr_nav::FPanel *left, acr_na
         acr_nav::_db.p_cur_filtertarget = acr_nav::_db.p_default_filtertarget;
         SwitchToBrowse();
         BuildLeftItems();
-        for (int i = 0; i < acr_nav::left_item_N(); i++) {
-            if (acr_nav::left_item_qFind(i).ns == target_ns->ns
-                && ch_N(acr_nav::left_item_qFind(i).ctype) == 0) {
-                left->sel_row = i;
-                break;
-            }
+        int idx = FindLeftItemByNsHeader(target_ns->ns);
+        if (idx >= 0) {
+            left->sel_row = idx;
         }
     }
 }
@@ -525,24 +557,29 @@ void acr_nav::navaction_go_bottom() {
     panel.sel_row = last;
 }
 
+// Restore filter, viewmode, navmode, and filtertarget from a navstack entry.
+static void RestoreNavstackState(acr_nav::Naventry &entry) {
+    acr_nav::_db.filter = entry.filter;
+    acr_nav::FViewmode *vm = acr_nav::ind_viewmode_Find(entry.viewmode);
+    if (vm) {
+        acr_nav::_db.p_cur_viewmode = vm;
+    }
+    acr_nav::FNavmode *mode = acr_nav::ind_navmode_Find(entry.navmode);
+    if (mode) {
+        acr_nav::_db.p_cur_mode = mode;
+    }
+    acr_nav::FFiltertarget *ft = acr_nav::ind_filtertarget_Find(entry.filtertarget);
+    if (ft) {
+        acr_nav::_db.p_cur_filtertarget = ft;
+    }
+}
+
 // -----------------------------------------------------------------------------
 
 void acr_nav::navaction_go_back() {
     if (!acr_nav::navstack_EmptyQ()) {
         acr_nav::Naventry *entry = acr_nav::navstack_Last();
-        acr_nav::_db.filter = entry->filter;
-        acr_nav::FViewmode *vm = acr_nav::ind_viewmode_Find(entry->viewmode);
-        if (vm) {
-            acr_nav::_db.p_cur_viewmode = vm;
-        }
-        acr_nav::FNavmode *mode = acr_nav::ind_navmode_Find(entry->navmode);
-        if (mode) {
-            acr_nav::_db.p_cur_mode = mode;
-        }
-        acr_nav::FFiltertarget *ft = acr_nav::ind_filtertarget_Find(entry->filtertarget);
-        if (ft) {
-            acr_nav::_db.p_cur_filtertarget = ft;
-        }
+        RestoreNavstackState(*entry);
         // Ensure target namespace is expanded so the ctype is findable
         acr_nav::FCtype *target_ct = acr_nav::ind_ctype_Find(entry->ctype);
         if (target_ct) {
@@ -553,23 +590,18 @@ void acr_nav::navaction_go_back() {
         acr_nav::_db.p_left_panel->sel_row = 0;
         acr_nav::_db.p_left_panel->scroll_offset = 0;
         if (target_ct) {
-            for (int i = 0; i < acr_nav::left_item_N(); i++) {
-                if (acr_nav::left_item_qFind(i).ctype == entry->ctype) {
-                    acr_nav::_db.p_left_panel->sel_row = i;
-                    break;
-                }
+            int idx = FindLeftItemByCtype(entry->ctype);
+            if (idx >= 0) {
+                acr_nav::_db.p_left_panel->sel_row = idx;
             }
         } else {
             // No ctype match (nsdep namespace jump) — scan for namespace header
             // entry->ctype holds NsDisplayName: "other" for empty ns, else the ns key
             algo::strptr saved_name(entry->ctype);
             algo::strptr ns_key = (saved_name == "other") ? algo::strptr("") : saved_name;
-            for (int i = 0; i < acr_nav::left_item_N(); i++) {
-                if (acr_nav::left_item_qFind(i).ns == ns_key
-                    && ch_N(acr_nav::left_item_qFind(i).ctype) == 0) {
-                    acr_nav::_db.p_left_panel->sel_row = i;
-                    break;
-                }
+            int idx = FindLeftItemByNsHeader(ns_key);
+            if (idx >= 0) {
+                acr_nav::_db.p_left_panel->sel_row = idx;
             }
         }
         acr_nav::_db.p_left_panel->scroll_offset = entry->scroll_offset;

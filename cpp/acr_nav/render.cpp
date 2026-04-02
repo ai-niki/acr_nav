@@ -77,6 +77,13 @@ struct RenderCtx {
     bool                left_focused;
     bool                show_breadcrumb;
     int                 visible;
+    bool                has_fields;
+    bool                in_xref;
+    int                 n_left;
+    int                 n_right;
+    int                 scroll;
+    int                 preview_h_scroll;
+    bool                is_hscroll_preview;
     RenderCtx(cstring &buf_
               , acr_nav::FCtype *sel_ct_
               , int wid_
@@ -84,10 +91,20 @@ struct RenderCtx {
               , int right_wid_
               , bool left_focused_
               , bool show_breadcrumb_
-              , int visible_)
+              , int visible_
+              , bool has_fields_
+              , bool in_xref_
+              , int n_left_
+              , int n_right_
+              , int scroll_
+              , int preview_h_scroll_
+              , bool is_hscroll_preview_)
         : buf(buf_), sel_ct(sel_ct_)
         , wid(wid_), left_wid(left_wid_), right_wid(right_wid_)
         , left_focused(left_focused_), show_breadcrumb(show_breadcrumb_), visible(visible_)
+        , has_fields(has_fields_), in_xref(in_xref_)
+        , n_left(n_left_), n_right(n_right_), scroll(scroll_)
+        , preview_h_scroll(preview_h_scroll_), is_hscroll_preview(is_hscroll_preview_)
     {}
 };
 
@@ -329,170 +346,179 @@ static void EmitStyledLine(cstring &buf, algo::strptr right_cell, bool right_sel
 
 // -----------------------------------------------------------------------------
 
-// Render the content area: dual-panel data rows.
-static void RenderContentArea(RenderCtx &ctx) {
-    int n_left = acr_nav::left_item_N();
-    int scroll = acr_nav::_db.p_left_panel->scroll_offset;
-    int n_right = RightPanelItemCount(ctx.sel_ct);
-    bool has_fields = acr_nav::_db.p_cur_viewmode->has_fields;
-    bool in_xref = acr_nav::_db.p_cur_viewmode->is_reverse;
-    int visible = ctx.visible;
-
-    int preview_h_scroll = 0;
-    bool is_hscroll_preview = (!has_fields
-        && acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_preview_viewmode
-        && acr_nav::_db.p_preview_viewmode->preview_h_scroll > 0);
-    if (is_hscroll_preview) {
-        preview_h_scroll = acr_nav::_db.p_preview_viewmode->preview_h_scroll;
-    }
-
-    // Column header row -- rendered when content exists for visual stability
-    // (cursor on namespace header has no sel_ct, but layout must not shift).
-    // Suppressed when no ctype is selected (all namespace-level browsing).
-    {
-        tempstr left_cell;
-        char_PrintNTimes(' ', left_cell, ctx.left_wid - 1);
-        ctx.buf << left_cell << "\x1b[0m" << G_VERT;
-        tempstr hdr;
-        if (!has_fields) {
-            algo::strptr line_header = RightPanelLineHeader();
-            if (ch_N(line_header) > 0) {
-                if (is_hscroll_preview) {
-                    int hdr_skip = DisplayToByte(line_header, preview_h_scroll);
-                    hdr << " " << algo::strptr(line_header.elems + hdr_skip,
-                                                line_header.n_elems - hdr_skip);
-                } else {
-                    hdr << " " << line_header;
-                }
+// Render column header row above data: line-mode header with h-scroll,
+// field-mode header with field/arg/reftype columns, or empty.
+static void RenderColumnHeader(RenderCtx &ctx) {
+    tempstr left_cell;
+    char_PrintNTimes(' ', left_cell, ctx.left_wid - 1);
+    ctx.buf << left_cell << "\x1b[0m" << G_VERT;
+    tempstr hdr;
+    if (!ctx.has_fields) {
+        algo::strptr line_header = RightPanelLineHeader();
+        if (ch_N(line_header) > 0) {
+            if (ctx.is_hscroll_preview) {
+                int hdr_skip = DisplayToByte(line_header, ctx.preview_h_scroll);
+                hdr << " " << algo::strptr(line_header.elems + hdr_skip,
+                                            line_header.n_elems - hdr_skip);
+            } else {
+                hdr << " " << line_header;
             }
-        } else if (ctx.sel_ct) {
-            hdr << " field";
-            char_PrintNTimes(' ', hdr, i32_Max(1, 24 - ch_N(hdr)));
-            hdr << (in_xref ? "ctype" : "arg");
-            char_PrintNTimes(' ', hdr, i32_Max(1, 48 - ch_N(hdr)));
-            hdr << "reftype";
         }
-        TruncPad(hdr, ctx.right_wid);
-        acr_nav::FNavstyle &base_hdr_style = !ctx.left_focused ? *acr_nav::_db.p_title_focus : *acr_nav::_db.p_title_nofocus;
-        EmitStyle(ctx.buf, base_hdr_style);
-        if (!has_fields && acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_preview_viewmode
-            && acr_nav::preview_nav_N(*acr_nav::_db.p_cur_viewmode) > 0) {
-            EmitStyledPreviewHeader(ctx.buf, strptr(hdr), *acr_nav::_db.p_cur_viewmode, base_hdr_style, preview_h_scroll);
+    } else if (ctx.sel_ct) {
+        hdr << " field";
+        char_PrintNTimes(' ', hdr, i32_Max(1, 24 - ch_N(hdr)));
+        hdr << (ctx.in_xref ? "ctype" : "arg");
+        char_PrintNTimes(' ', hdr, i32_Max(1, 48 - ch_N(hdr)));
+        hdr << "reftype";
+    }
+    TruncPad(hdr, ctx.right_wid);
+    acr_nav::FNavstyle &base_hdr_style = !ctx.left_focused ? *acr_nav::_db.p_title_focus : *acr_nav::_db.p_title_nofocus;
+    EmitStyle(ctx.buf, base_hdr_style);
+    if (!ctx.has_fields && acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_preview_viewmode
+        && acr_nav::preview_nav_N(*acr_nav::_db.p_cur_viewmode) > 0) {
+        EmitStyledPreviewHeader(ctx.buf, strptr(hdr), *acr_nav::_db.p_cur_viewmode, base_hdr_style, ctx.preview_h_scroll);
+    } else {
+        ctx.buf << hdr;
+    }
+    ctx.buf << "\x1b[0m\x1b[K\r\n";
+}
+
+// Render one left-panel cell: namespace header with collapse icon + count,
+// or ctype row with indented name + record count.  Applies selection highlight.
+static void RenderLeftCell(RenderCtx &ctx, int row) {
+    tempstr left_cell;
+    bool left_sel = false;
+    int left_idx = ctx.scroll + row;
+    if (left_idx < ctx.n_left) {
+        left_sel = (left_idx == acr_nav::_db.p_left_panel->sel_row);
+        acr_nav::LeftItem &item = acr_nav::left_item_qFind(left_idx);
+        if (ch_N(item.ctype) == 0) {
+            // Namespace header row
+            acr_nav::FNs *ns = acr_nav::ind_ns_Find(item.ns);
+            int count = ns ? ns->n_match : 0;
+            left_cell << (ns && ns->collapsed ? " \xe2\x96\xb8 " : " \xe2\x96\xbe ");
+            left_cell << (ns ? NsDisplayName(*ns) : algo::strptr("other"));
+            left_cell << " (" << count << ")";
         } else {
-            ctx.buf << hdr;
+            // Ctype row: indented, namespace prefix stripped
+            algo::strptr full(item.ctype);
+            algo::strptr stripped = algo::Pathcomp(full, ".LR");
+            // Dot-less ctypes (extern types): use full key as name
+            if (elems_N(stripped) == 0) {
+                stripped = full;
+            }
+            left_cell << "    " << stripped;
+            acr_nav::FCtype *ct = acr_nav::ind_ctype_Find(item.ctype);
+            if (ct) {
+                PrintRecordCount(left_cell, *ct);
+            }
         }
+    }
+    TruncPad(left_cell, ctx.left_wid - 1);
+    if (left_sel) {
+        EmitStyle(ctx.buf, ctx.left_focused ? *acr_nav::_db.p_sel_focus : *acr_nav::_db.p_sel_nofocus);
+    }
+    ctx.buf << left_cell << "\x1b[0m" << G_VERT;
+}
+
+// Compute the preview nav-cell overlay region for the selected row.
+// Sets ov_start/ov_end to byte offsets within the right cell, ov_style to the
+// overlay style.  When no overlay applies, ov_start and ov_end remain -1.
+static void DetectPreviewOverlay(RenderCtx &ctx, int right_data_idx, int skip_bytes,
+                                  bool right_sel,
+                                  int &ov_start, int &ov_end,
+                                  acr_nav::FNavstyle *&ov_style) {
+    ov_start = -1;
+    ov_end = -1;
+    ov_style = nullptr;
+    if (right_sel && !ctx.left_focused
+        && acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_preview_viewmode) {
+        acr_nav::FViewmode &pvm = *acr_nav::_db.p_preview_viewmode;
+        int n_nav = acr_nav::preview_nav_N(pvm);
+        if (n_nav > 0 && acr_nav::_db.sel_nav_col < n_nav) {
+            acr_nav::PreviewNavCol &nc = acr_nav::preview_nav_qFind(pvm, acr_nav::_db.sel_nav_col);
+            algo::strptr data_line = RightPanelLineFind(right_data_idx);
+            int ov_raw_s = DisplayToByte(data_line, nc.col_start);
+            int ov_raw_e = DisplayToByte(data_line, nc.col_start + nc.col_wid);
+            ov_start = ov_raw_s - skip_bytes;
+            ov_end = ov_raw_e - skip_bytes;
+            ov_style = ch_N(nc.target_ctype) > 0
+                ? acr_nav::_db.p_line_nav_cell
+                : acr_nav::_db.p_line_nav_cell_nofk;
+        }
+    }
+}
+
+// Render one right-panel cell: line-mode with h-scroll, field-mode columns,
+// or empty message.  Applies selection, reftype color, filter-match highlight,
+// and dispatches to EmitStyledLine for span-mode content.
+static void RenderRightCell(RenderCtx &ctx, int row, int &span_cursor) {
+    tempstr right_cell;
+    bool right_sel = false;
+    int right_data_idx = acr_nav::_db.p_right_panel->scroll_offset + row;
+    int skip_bytes = 0;
+    acr_nav::FField *fld = nullptr;
+    if ((ctx.sel_ct || !ctx.has_fields) && right_data_idx < ctx.n_right) {
+        right_sel = (right_data_idx == acr_nav::_db.p_right_panel->sel_row);
+        if (!ctx.has_fields) {
+            algo::strptr orig_line = RightPanelLineFind(right_data_idx);
+            if (ctx.is_hscroll_preview) {
+                skip_bytes = DisplayToByte(orig_line, ctx.preview_h_scroll);
+                right_cell << " " << algo::strptr(orig_line.elems + skip_bytes,
+                                                   orig_line.n_elems - skip_bytes);
+            } else {
+                right_cell << " " << orig_line;
+            }
+        } else {
+            fld = RightPanelFieldFind(ctx.sel_ct, right_data_idx);
+            if (fld) {
+                right_cell << " " << name_Get(*fld);
+                char_PrintNTimes(' ', right_cell, i32_Max(1, 24 - ch_N(right_cell)));
+                right_cell << (ctx.in_xref ? fld->p_ctype->ctype : fld->p_arg->ctype);
+                char_PrintNTimes(' ', right_cell, i32_Max(1, 48 - ch_N(right_cell)));
+                right_cell << fld->p_reftype->reftype;
+            }
+        }
+    } else if ((ctx.sel_ct || !ctx.has_fields) && ctx.n_right == 0 && right_data_idx == 0) {
+        right_cell << " (" << acr_nav::_db.p_cur_viewmode->empty_msg << ")";
+    }
+    TruncPad(right_cell, ctx.right_wid);
+    if (right_sel && !ctx.left_focused) {
+        EmitStyle(ctx.buf, *acr_nav::_db.p_sel_focus);
+    }
+    if (fld && fld->p_reftype->c_reftypestyle) {
+        EmitStyle(ctx.buf, *fld->p_reftype->c_reftypestyle->p_navstyle);
+    }
+    bool field_match = false;
+    if (fld && !ctx.in_xref
+        && acr_nav::_db.p_cur_filtertarget->has_field_criteria
+        && ch_N(acr_nav::_db.filter) > 0) {
+        field_match = FieldMatchesFilter(*fld, acr_nav::_db.filter_regx, *acr_nav::_db.p_cur_filtertarget);
+    }
+    if (field_match) {
+        EmitStyle(ctx.buf, *acr_nav::_db.p_filter_match);
+    }
+    if (!ctx.has_fields && acr_nav::cspan_N(*acr_nav::_db.p_cur_viewmode) > 0) {
+        bool right_focused_sel = right_sel && !ctx.left_focused;
+        int ov_start = -1;
+        int ov_end = -1;
+        acr_nav::FNavstyle *ov_style = nullptr;
+        DetectPreviewOverlay(ctx, right_data_idx, skip_bytes, right_sel, ov_start, ov_end, ov_style);
+        EmitStyledLine(ctx.buf, strptr(right_cell), right_focused_sel, *acr_nav::_db.p_cur_viewmode, right_data_idx, span_cursor, right_focused_sel ? acr_nav::_db.p_sel_focus : nullptr, ov_start, ov_end, ov_style, skip_bytes);
         ctx.buf << "\x1b[0m\x1b[K\r\n";
-        visible--;
+    } else {
+        ctx.buf << right_cell << "\x1b[0m\x1b[K\r\n";
     }
+}
 
+// Render the content area: column header + dual-panel data rows.
+static void RenderContentArea(RenderCtx &ctx) {
+    RenderColumnHeader(ctx);
+    int data_rows = ctx.visible - 1;
     int span_cursor = 0;
-    for (int row = 0; row < visible; row++) {
-        // Left cell
-        tempstr left_cell;
-        bool left_sel = false;
-        int left_idx = scroll + row;
-        if (left_idx < n_left) {
-            left_sel = (left_idx == acr_nav::_db.p_left_panel->sel_row);
-            acr_nav::LeftItem &item = acr_nav::left_item_qFind(left_idx);
-            if (ch_N(item.ctype) == 0) {
-                // Namespace header row
-                acr_nav::FNs *ns = acr_nav::ind_ns_Find(item.ns);
-                int count = ns ? ns->n_match : 0;
-                left_cell << (ns && ns->collapsed ? " \xe2\x96\xb8 " : " \xe2\x96\xbe ");
-                left_cell << (ns ? NsDisplayName(*ns) : algo::strptr("other"));
-                left_cell << " (" << count << ")";
-            } else {
-                // Ctype row: indented, namespace prefix stripped
-                algo::strptr full(item.ctype);
-                algo::strptr stripped = algo::Pathcomp(full, ".LR");
-                // Dot-less ctypes (extern types): use full key as name
-                if (elems_N(stripped) == 0) {
-                    stripped = full;
-                }
-                left_cell << "    " << stripped;
-                acr_nav::FCtype *ct = acr_nav::ind_ctype_Find(item.ctype);
-                if (ct) {
-                    PrintRecordCount(left_cell, *ct);
-                }
-            }
-        }
-        TruncPad(left_cell, ctx.left_wid - 1);
-        if (left_sel) {
-            EmitStyle(ctx.buf, ctx.left_focused ? *acr_nav::_db.p_sel_focus : *acr_nav::_db.p_sel_nofocus);
-        }
-        ctx.buf << left_cell << "\x1b[0m" << G_VERT;
-
-        // Right cell
-        tempstr right_cell;
-        bool right_sel = false;
-        int right_data_idx = acr_nav::_db.p_right_panel->scroll_offset + row;
-        int skip_bytes = 0;
-        acr_nav::FField *fld = nullptr;
-        if ((ctx.sel_ct || !has_fields) && right_data_idx < n_right) {
-            right_sel = (right_data_idx == acr_nav::_db.p_right_panel->sel_row);
-            if (!has_fields) {
-                algo::strptr orig_line = RightPanelLineFind(right_data_idx);
-                if (is_hscroll_preview) {
-                    skip_bytes = DisplayToByte(orig_line, preview_h_scroll);
-                    right_cell << " " << algo::strptr(orig_line.elems + skip_bytes,
-                                                       orig_line.n_elems - skip_bytes);
-                } else {
-                    right_cell << " " << orig_line;
-                }
-            } else {
-                fld = RightPanelFieldFind(ctx.sel_ct, right_data_idx);
-                if (fld) {
-                    right_cell << " " << name_Get(*fld);
-                    char_PrintNTimes(' ', right_cell, i32_Max(1, 24 - ch_N(right_cell)));
-                    right_cell << (in_xref ? fld->p_ctype->ctype : fld->p_arg->ctype);
-                    char_PrintNTimes(' ', right_cell, i32_Max(1, 48 - ch_N(right_cell)));
-                    right_cell << fld->p_reftype->reftype;
-                }
-            }
-        } else if ((ctx.sel_ct || !has_fields) && n_right == 0 && right_data_idx == 0) {
-            right_cell << " (" << acr_nav::_db.p_cur_viewmode->empty_msg << ")";
-        }
-        TruncPad(right_cell, ctx.right_wid);
-        if (right_sel && !ctx.left_focused) {
-            EmitStyle(ctx.buf, *acr_nav::_db.p_sel_focus);
-        }
-        if (fld && fld->p_reftype->c_reftypestyle) {
-            EmitStyle(ctx.buf, *fld->p_reftype->c_reftypestyle->p_navstyle);
-        }
-        bool field_match = false;
-        if (fld && !in_xref
-            && acr_nav::_db.p_cur_filtertarget->has_field_criteria
-            && ch_N(acr_nav::_db.filter) > 0) {
-            field_match = FieldMatchesFilter(*fld, acr_nav::_db.filter_regx, *acr_nav::_db.p_cur_filtertarget);
-        }
-        if (field_match) {
-            EmitStyle(ctx.buf, *acr_nav::_db.p_filter_match);
-        }
-        if (!has_fields && acr_nav::cspan_N(*acr_nav::_db.p_cur_viewmode) > 0) {
-            bool right_focused_sel = right_sel && !ctx.left_focused;
-            int ov_start = -1;
-            int ov_end = -1;
-            acr_nav::FNavstyle *ov_style = nullptr;
-            if (right_focused_sel && acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_preview_viewmode) {
-                acr_nav::FViewmode &pvm = *acr_nav::_db.p_preview_viewmode;
-                int n_nav = acr_nav::preview_nav_N(pvm);
-                if (n_nav > 0 && acr_nav::_db.sel_nav_col < n_nav) {
-                    acr_nav::PreviewNavCol &nc = acr_nav::preview_nav_qFind(pvm, acr_nav::_db.sel_nav_col);
-                    algo::strptr data_line = RightPanelLineFind(right_data_idx);
-                    int ov_raw_s = DisplayToByte(data_line, nc.col_start);
-                    int ov_raw_e = DisplayToByte(data_line, nc.col_start + nc.col_wid);
-                    ov_start = ov_raw_s - skip_bytes;
-                    ov_end = ov_raw_e - skip_bytes;
-                    ov_style = ch_N(nc.target_ctype) > 0
-                        ? acr_nav::_db.p_line_nav_cell
-                        : acr_nav::_db.p_line_nav_cell_nofk;
-                }
-            }
-            EmitStyledLine(ctx.buf, strptr(right_cell), right_focused_sel, *acr_nav::_db.p_cur_viewmode, right_data_idx, span_cursor, right_focused_sel ? acr_nav::_db.p_sel_focus : nullptr, ov_start, ov_end, ov_style, skip_bytes);
-            ctx.buf << "\x1b[0m\x1b[K\r\n";
-        } else {
-            ctx.buf << right_cell << "\x1b[0m\x1b[K\r\n";
-        }
+    for (int row = 0; row < data_rows; row++) {
+        RenderLeftCell(ctx, row);
+        RenderRightCell(ctx, row, span_cursor);
     }
 }
 
@@ -629,11 +655,26 @@ void acr_nav::Render(cstring &buf, acr_nav::FCtype *sel_ct) {
     int left_wid = i32_Max(min_left, i32_Min(max_name + 2, wid * 40 / 100));
     int right_wid = i32_Max(1, wid - left_wid);
     AdjustPreviewHScroll(right_wid);
+    bool has_fields = acr_nav::_db.p_cur_viewmode->has_fields;
+    int preview_h_scroll = 0;
+    bool is_hscroll_preview = (!has_fields
+        && acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_preview_viewmode
+        && acr_nav::_db.p_preview_viewmode->preview_h_scroll > 0);
+    if (is_hscroll_preview) {
+        preview_h_scroll = acr_nav::_db.p_preview_viewmode->preview_h_scroll;
+    }
     RenderCtx ctx(buf, sel_ct
                   , wid, left_wid, right_wid
                   , /*left_focused=*/(acr_nav::_db.p_cur_panel == acr_nav::_db.p_left_panel)
                   , /*show_breadcrumb=*/(acr_nav::navstack_N() > 0)
-                  , /*visible=*/VisibleRows());
+                  , /*visible=*/VisibleRows()
+                  , /*has_fields=*/has_fields
+                  , /*in_xref=*/acr_nav::_db.p_cur_viewmode->is_reverse
+                  , /*n_left=*/acr_nav::left_item_N()
+                  , /*n_right=*/RightPanelItemCount(sel_ct)
+                  , /*scroll=*/acr_nav::_db.p_left_panel->scroll_offset
+                  , /*preview_h_scroll=*/preview_h_scroll
+                  , /*is_hscroll_preview=*/is_hscroll_preview);
     RenderTitleBar(ctx);
     RenderContentArea(ctx);
     RenderBreadcrumbBar(ctx);

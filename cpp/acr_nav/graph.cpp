@@ -146,6 +146,21 @@ static int CollectGraphEdges(acr_nav::FCtype &center, GraphEdgeGroup *groups, in
     return n_group;
 }
 
+// Partition edge groups into right-column and left-column index arrays.
+static void PartitionEdgeGroups(GraphEdgeGroup *groups, int n_group,
+                                int *right_groups, int &n_right,
+                                int *left_groups, int &n_left) {
+    n_right = 0;
+    n_left = 0;
+    for (int i = 0; i < n_group; i++) {
+        if (groups[i].is_left) {
+            left_groups[n_left++] = i;
+        } else {
+            right_groups[n_right++] = i;
+        }
+    }
+}
+
 // Map a graph line index to the neighbor ctype and (optionally) the field on that line.
 // Returns neighbor ctype via p_node_out, field via p_field_out (both nullable).
 // Center open/close lines return NULL for both. Neighbor open/close lines return node but NULL field.
@@ -154,35 +169,27 @@ void acr_nav::GraphInfoAtLine(acr_nav::FCtype &center, int line_idx, acr_nav::FC
     acr_nav::FField *field = NULL;
     GraphEdgeGroup groups[64];
     int n_group = CollectGraphEdges(center, groups, 64);
-    int right_groups[64], n_right = 0;
-    int left_groups[64], n_left = 0;
-    for (int i = 0; i < n_group; i++) {
-        if (groups[i].is_left) {
-            left_groups[n_left++] = i;
-        } else {
-            right_groups[n_right++] = i;
-        }
-    }
+    int right_groups[64], n_right;
+    int left_groups[64], n_left;
+    PartitionEdgeGroups(groups, n_group, right_groups, n_right, left_groups, n_left);
     int cur_line = 1;  // line 0 is center open
-    // Right-column blocks
+    // Right-column blocks: field lines only (exclude trailing spine separator)
     for (int ri = 0; ri < n_right; ri++) {
         GraphEdgeGroup &g = groups[right_groups[ri]];
         int block_lines = g.n_field + 1;
-        if (line_idx >= cur_line && line_idx < cur_line + block_lines) {
+        if (line_idx >= cur_line && line_idx < cur_line + g.n_field) {
             node = g.p_neighbor;
             int fi = line_idx - cur_line;
-            if (fi < g.n_field) {
-                field = g.fields[fi];
-            }
+            field = g.fields[fi];
         }
         cur_line += block_lines;
     }
-    // Left-column blocks
+    // Left-column blocks: open + field lines only (exclude close lines)
     for (int li = 0; li < n_left; li++) {
         GraphEdgeGroup &g = groups[left_groups[li]];
         int block_lines = g.n_field + 2;
-        if (li == n_left - 1 && line_idx == cur_line + 1 + g.n_field) {
-            // combined close -- node stays NULL
+        if (line_idx == cur_line + 1 + g.n_field) {
+            // close line (structural) -- node stays NULL
         } else if (line_idx >= cur_line && line_idx < cur_line + block_lines) {
             node = g.p_neighbor;
             int fi = line_idx - cur_line - 1;
@@ -202,15 +209,9 @@ int acr_nav::GraphFindCtypeLine(acr_nav::FCtype &center, acr_nav::FCtype *target
     int result = -1;
     GraphEdgeGroup groups[64];
     int n_group = CollectGraphEdges(center, groups, 64);
-    int right_groups[64], n_right = 0;
-    int left_groups[64], n_left = 0;
-    for (int i = 0; i < n_group; i++) {
-        if (groups[i].is_left) {
-            left_groups[n_left++] = i;
-        } else {
-            right_groups[n_right++] = i;
-        }
-    }
+    int right_groups[64], n_right;
+    int left_groups[64], n_left;
+    PartitionEdgeGroups(groups, n_group, right_groups, n_right, left_groups, n_left);
     int cur_line = 1; // line 0 is center open
     for (int ri = 0; ri < n_right && result < 0; ri++) {
         GraphEdgeGroup &g = groups[right_groups[ri]];
@@ -229,6 +230,168 @@ int acr_nav::GraphFindCtypeLine(acr_nav::FCtype &center, acr_nav::FCtype *target
     return result;
 }
 
+// Measure maximum label and name widths across all edge groups for column positioning.
+static void MeasureGraphWidths(GraphEdgeGroup *groups, int n_group,
+                               int &max_left_name, int &max_left_label, int &max_right_label) {
+    max_left_name = 0;
+    max_left_label = 0;
+    max_right_label = 0;
+    for (int i = 0; i < n_group; i++) {
+        GraphEdgeGroup &g = groups[i];
+        for (int fi = 0; fi < g.n_field; fi++) {
+            acr_nav::FField &fld = *g.fields[fi];
+            int label_len = ch_N(fld.reftype) + 1 + ch_N(name_Get(fld));
+            if (g.is_left) {
+                int name_len = ch_N(g.p_neighbor->ctype);
+                {
+                    tempstr tmp;
+                    name_len += PrintRecordCount(tmp, *g.p_neighbor);
+                }
+                max_left_name = i32_Max(max_left_name, name_len);
+                max_left_label = i32_Max(max_left_label, label_len);
+            } else {
+                max_right_label = i32_Max(max_right_label, label_len);
+            }
+        }
+    }
+}
+
+// Emit the center ctype open line (line 0 of the graph).
+static void EmitCenterOpen(acr_nav::FViewmode &vm, int center_x, acr_nav::FCtype &ctype) {
+    GLine gl;
+    gl.PadTo(center_x);
+    gl.Utf8(G_DBL_TL);
+    gl.Ascii(" ");
+    int name_start = gl.BytePos();
+    gl.Ascii(ctype.ctype);
+    int name_end = gl.BytePos();
+    acr_nav::line_Alloc(vm) = gl.str;
+    AddSpan(vm, acr_nav::line_N(vm) - 1, name_start, name_end,
+            acr_nav::_db.p_graph_ctype_style);
+}
+
+// Emit a right-column block: field lines with labels/arrows, followed by a spine-only close line.
+static void EmitRightBlock(acr_nav::FViewmode &vm, GraphEdgeGroup &g, int center_x, int max_right_label) {
+    for (int fi = 0; fi < g.n_field; fi++) {
+        acr_nav::FField &fld = *g.fields[fi];
+        tempstr label;
+        label << fld.reftype << " " << name_Get(fld);
+        GLine gl;
+        gl.PadTo(center_x);
+        gl.Utf8(G_DBL_TEE_R);
+        gl.Ascii(" ");
+        int label_start = gl.BytePos();
+        gl.Ascii(label);
+        int label_end = gl.BytePos();
+        gl.Ascii(" ");
+        int arrow_start = gl.BytePos();
+        int arrow_pad = max_right_label - ch_N(label);
+        gl.RepeatUtf8(G_HORIZ, arrow_pad);
+        gl.Utf8(G_ARR_R);
+        int arrow_end = gl.BytePos();
+        int name_start = 0, name_end = 0;
+        if (fi == 0) {
+            gl.Ascii(" ");
+            name_start = gl.BytePos();
+            gl.Ascii(g.p_neighbor->ctype);
+            name_end = gl.BytePos();
+            PrintRecordCount(gl.str, *g.p_neighbor);
+        } else {
+            gl.Utf8(G_VERT);
+        }
+        acr_nav::line_Alloc(vm) = gl.str;
+        int line_idx = acr_nav::line_N(vm) - 1;
+        if (fld.p_reftype->c_reftypestyle) {
+            AddSpan(vm, line_idx, label_start, label_end,
+                    fld.p_reftype->c_reftypestyle->p_navstyle);
+        }
+        AddSpan(vm, line_idx, arrow_start, arrow_end,
+                acr_nav::_db.p_graph_arrow);
+        if (fi == 0) {
+            AddSpan(vm, line_idx, name_start, name_end,
+                    acr_nav::_db.p_graph_neighbor);
+        }
+    }
+    // Close line: just spine (clean separator)
+    {
+        GLine gl;
+        gl.PadTo(center_x);
+        gl.Utf8(G_DBL_VERT);
+        acr_nav::line_Alloc(vm) = gl.str;
+    }
+}
+
+// Emit a single left-column edge line: arrow, dashes, tee, and field label.
+static void EmitLeftEdgeLine(acr_nav::FViewmode &vm, acr_nav::FField &fld, int name_x, int center_x) {
+    tempstr label;
+    label << fld.reftype << " " << name_Get(fld);
+    GLine gl;
+    gl.PadTo(name_x);
+    gl.Utf8(G_VERT);
+    int arrow_start = gl.BytePos();
+    gl.Utf8(G_ARR_L);
+    int dash_len = center_x - name_x - 2;
+    gl.RepeatUtf8(G_HORIZ, dash_len);
+    int arrow_end = gl.BytePos();
+    gl.Utf8(G_DBL_TEE_L);
+    gl.Ascii(" ");
+    int label_start = gl.BytePos();
+    gl.Ascii(label);
+    int label_end = gl.BytePos();
+    acr_nav::line_Alloc(vm) = gl.str;
+    int line_idx = acr_nav::line_N(vm) - 1;
+    AddSpan(vm, line_idx, arrow_start, arrow_end,
+            acr_nav::_db.p_graph_arrow);
+    if (fld.p_reftype->c_reftypestyle) {
+        AddSpan(vm, line_idx, label_start, label_end,
+                fld.p_reftype->c_reftypestyle->p_navstyle);
+    }
+}
+
+// Emit a left-column block: neighbor open line, edge lines, and close line.
+// is_last controls whether the close line terminates the spine (G_DBL_BL) or continues it (G_DBL_VERT).
+static void EmitLeftBlock(acr_nav::FViewmode &vm, GraphEdgeGroup &g, int center_x, int max_left_label, bool is_last) {
+    int left_x = center_x - max_left_label - 3;
+    int neighbor_display_len = ch_N(g.p_neighbor->ctype);
+    {
+        tempstr tmp;
+        neighbor_display_len += PrintRecordCount(tmp, *g.p_neighbor);
+    }
+    int name_x = left_x - neighbor_display_len - 2;
+    if (name_x < 0) {
+        name_x = 0;
+    }
+    // Open line: neighbor name
+    {
+        GLine gl;
+        gl.PadTo(name_x);
+        gl.Utf8(G_ROUND_TL);
+        gl.Ascii(" ");
+        int nb_start = gl.BytePos();
+        gl.Ascii(g.p_neighbor->ctype);
+        int nb_end = gl.BytePos();
+        PrintRecordCount(gl.str, *g.p_neighbor);
+        gl.PadTo(center_x);
+        gl.Utf8(G_DBL_TEE_L);
+        acr_nav::line_Alloc(vm) = gl.str;
+        AddSpan(vm, acr_nav::line_N(vm) - 1, nb_start, nb_end,
+                acr_nav::_db.p_graph_neighbor);
+    }
+    // Edge lines
+    for (int fi = 0; fi < g.n_field; fi++) {
+        EmitLeftEdgeLine(vm, *g.fields[fi], name_x, center_x);
+    }
+    // Close line: spine terminates on last block, continues otherwise
+    {
+        GLine gl;
+        gl.PadTo(name_x);
+        gl.Utf8(G_ROUND_BL);
+        gl.PadTo(center_x);
+        gl.Utf8(is_last ? G_DBL_BL : G_DBL_VERT);
+        acr_nav::line_Alloc(vm) = gl.str;
+    }
+}
+
 // Build amc_vis-style graph lines for the given ctype.
 // Populates the graph viewmode's line_elems array.
 static void LoadGraph(acr_nav::FCtype &ctype) {
@@ -241,185 +404,22 @@ static void LoadGraph(acr_nav::FCtype &ctype) {
     int n_group = CollectGraphEdges(ctype, groups, 64);
     // Zero groups: emit nothing, let empty_msg render "no access paths"
     if (n_group > 0) {
-        // Separate right and left groups
-        int right_groups[64], n_right = 0;
-        int left_groups[64], n_left = 0;
-        for (int i = 0; i < n_group; i++) {
-            if (groups[i].is_left) {
-                left_groups[n_left++] = i;
-            } else {
-                right_groups[n_right++] = i;
-            }
-        }
-        // Measure widths for column positioning
-        int max_left_name = 0;
-        int max_left_label = 0;
-        int max_right_label = 0;
-        for (int i = 0; i < n_group; i++) {
-            GraphEdgeGroup &g = groups[i];
-            for (int fi = 0; fi < g.n_field; fi++) {
-                acr_nav::FField &fld = *g.fields[fi];
-                int label_len = ch_N(fld.reftype) + 1 + ch_N(name_Get(fld));
-                if (g.is_left) {
-                    int name_len = ch_N(g.p_neighbor->ctype);
-                    {
-                        tempstr tmp;
-                        name_len += PrintRecordCount(tmp, *g.p_neighbor);
-                    }
-                    max_left_name = i32_Max(max_left_name, name_len);
-                    max_left_label = i32_Max(max_left_label, label_len);
-                } else {
-                    max_right_label = i32_Max(max_right_label, label_len);
-                }
-            }
-        }
+        int right_groups[64], n_right;
+        int left_groups[64], n_left;
+        PartitionEdgeGroups(groups, n_group, right_groups, n_right, left_groups, n_left);
+        int max_left_name, max_left_label, max_right_label;
+        MeasureGraphWidths(groups, n_group, max_left_name, max_left_label, max_right_label);
         // Column positions
         int center_x = 0;
         if (n_left > 0) {
             center_x = max_left_name + 2 + max_left_label + 3;
         }
-        // Line 0: center open
-        {
-            GLine gl;
-            gl.PadTo(center_x);
-            gl.Utf8(G_DBL_TL);
-            gl.Ascii(" ");
-            int name_start = gl.BytePos();
-            gl.Ascii(ctype.ctype);
-            int name_end = gl.BytePos();
-            acr_nav::line_Alloc(vm) = gl.str;
-            AddSpan(vm, acr_nav::line_N(vm) - 1, name_start, name_end,
-                    acr_nav::_db.p_graph_ctype_style);
-        }
-        // Right-column blocks
+        EmitCenterOpen(vm, center_x, ctype);
         for (int ri = 0; ri < n_right; ri++) {
-            GraphEdgeGroup &g = groups[right_groups[ri]];
-            for (int fi = 0; fi < g.n_field; fi++) {
-                acr_nav::FField &fld = *g.fields[fi];
-                tempstr label;
-                label << fld.reftype << " " << name_Get(fld);
-                GLine gl;
-                gl.PadTo(center_x);
-                gl.Utf8(G_DBL_TEE_R);
-                gl.Ascii(" ");
-                int label_start = gl.BytePos();
-                gl.Ascii(label);
-                int label_end = gl.BytePos();
-                gl.Ascii(" ");
-                int arrow_start = gl.BytePos();
-                int arrow_pad = max_right_label - ch_N(label);
-                gl.RepeatUtf8(G_HORIZ, arrow_pad);
-                gl.Utf8(G_ARR_R);
-                int arrow_end = gl.BytePos();
-                int name_start = 0, name_end = 0;
-                if (fi == 0) {
-                    gl.Ascii(" ");
-                    name_start = gl.BytePos();
-                    gl.Ascii(g.p_neighbor->ctype);
-                    name_end = gl.BytePos();
-                    PrintRecordCount(gl.str, *g.p_neighbor);
-                } else {
-                    gl.Utf8(G_VERT);
-                }
-                acr_nav::line_Alloc(vm) = gl.str;
-                int line_idx = acr_nav::line_N(vm) - 1;
-                if (fld.p_reftype->c_reftypestyle) {
-                    AddSpan(vm, line_idx, label_start, label_end,
-                            fld.p_reftype->c_reftypestyle->p_navstyle);
-                }
-                AddSpan(vm, line_idx, arrow_start, arrow_end,
-                        acr_nav::_db.p_graph_arrow);
-                if (fi == 0) {
-                    AddSpan(vm, line_idx, name_start, name_end,
-                            acr_nav::_db.p_graph_neighbor);
-                }
-            }
-            // Close line: just spine (clean separator)
-            {
-                GLine gl;
-                gl.PadTo(center_x);
-                gl.Utf8(G_DBL_VERT);
-                acr_nav::line_Alloc(vm) = gl.str;
-            }
+            EmitRightBlock(vm, groups[right_groups[ri]], center_x, max_right_label);
         }
-        // Left-column blocks
         for (int li = 0; li < n_left; li++) {
-            GraphEdgeGroup &g = groups[left_groups[li]];
-            int left_x = center_x - max_left_label - 3;
-            int neighbor_display_len = ch_N(g.p_neighbor->ctype);
-            {
-                tempstr tmp;
-                neighbor_display_len += PrintRecordCount(tmp, *g.p_neighbor);
-            }
-            int name_x = left_x - neighbor_display_len - 2;
-            if (name_x < 0) {
-                name_x = 0;
-            }
-            // Open line: neighbor name
-            {
-                GLine gl;
-                gl.PadTo(name_x);
-                gl.Utf8(G_ROUND_TL);
-                gl.Ascii(" ");
-                int nb_start = gl.BytePos();
-                gl.Ascii(g.p_neighbor->ctype);
-                int nb_end = gl.BytePos();
-                PrintRecordCount(gl.str, *g.p_neighbor);
-                gl.PadTo(center_x);
-                gl.Utf8(G_DBL_TEE_L);
-                acr_nav::line_Alloc(vm) = gl.str;
-                AddSpan(vm, acr_nav::line_N(vm) - 1, nb_start, nb_end,
-                        acr_nav::_db.p_graph_neighbor);
-            }
-            // Edge lines
-            for (int fi = 0; fi < g.n_field; fi++) {
-                acr_nav::FField &fld = *g.fields[fi];
-                tempstr label;
-                label << fld.reftype << " " << name_Get(fld);
-                GLine gl;
-                gl.PadTo(name_x);
-                gl.Utf8(G_VERT);
-                int arrow_start = gl.BytePos();
-                gl.Utf8(G_ARR_L);
-                int dash_len = center_x - name_x - 2;
-                gl.RepeatUtf8(G_HORIZ, dash_len);
-                int arrow_end = gl.BytePos();
-                gl.Utf8(G_DBL_TEE_L);
-                gl.Ascii(" ");
-                int label_start = gl.BytePos();
-                gl.Ascii(label);
-                int label_end = gl.BytePos();
-                acr_nav::line_Alloc(vm) = gl.str;
-                int line_idx = acr_nav::line_N(vm) - 1;
-                AddSpan(vm, line_idx, arrow_start, arrow_end,
-                        acr_nav::_db.p_graph_arrow);
-                if (fld.p_reftype->c_reftypestyle) {
-                    AddSpan(vm, line_idx, label_start, label_end,
-                            fld.p_reftype->c_reftypestyle->p_navstyle);
-                }
-            }
-            // Close lines
-            if (li == n_left - 1) {
-                // Combined close: neighbor ends + spine ends on same line
-                {
-                    GLine gl;
-                    gl.PadTo(name_x);
-                    gl.Utf8(G_ROUND_BL);
-                    gl.PadTo(center_x);
-                    gl.Utf8(G_DBL_BL);
-                    acr_nav::line_Alloc(vm) = gl.str;
-                }
-            } else {
-                // Non-last left close: neighbor ends, spine continues
-                {
-                    GLine gl;
-                    gl.PadTo(name_x);
-                    gl.Utf8(G_ROUND_BL);
-                    gl.PadTo(center_x);
-                    gl.Utf8(G_DBL_VERT);
-                    acr_nav::line_Alloc(vm) = gl.str;
-                }
-            }
+            EmitLeftBlock(vm, groups[left_groups[li]], center_x, max_left_label, li == n_left - 1);
         }
         // If no left blocks, close center with standalone line
         if (n_left == 0) {

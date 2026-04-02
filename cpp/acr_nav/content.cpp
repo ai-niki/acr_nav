@@ -65,6 +65,104 @@ static void FormatPreviewRow(cstring &out, algo::Tuple &tuple, int *display_wid,
     }
 }
 
+// First-pass scan of mmap'd ssimfile: determine column names from the first tuple,
+// compute max display widths across all rows.
+static void MeasurePreviewColumns(algo_lib::MmapFile &file, algo::cstring *col_name,
+                                   int *display_wid, int &n_col) {
+    n_col = 0;
+    ind_beg(Line_curs, line, file.text) {
+        algo::Tuple tuple;
+        if (algo::Tuple_ReadStrptr(tuple, line, false)) {
+            if (n_col == 0) {
+                ind_beg(algo::Tuple_attrs_curs, attr, tuple) {
+                    if (n_col < 64) {
+                        col_name[n_col] = attr.name;
+                        display_wid[n_col] = ch_N(attr.name);
+                        n_col++;
+                    }
+                } ind_end;
+            }
+            int ci = 0;
+            ind_beg(algo::Tuple_attrs_curs, attr, tuple) {
+                if (ci < n_col) {
+                    display_wid[ci] = i32_Max(display_wid[ci], ch_N(attr.value) - Utf8ExtraBytes(strptr(attr.value)));
+                    ci++;
+                }
+            } ind_end;
+        }
+    } ind_end;
+}
+
+// Build PreviewNavCol entries for each column, detect FK targets for navigable columns.
+static void DetectNavColumns(acr_nav::FViewmode &vm, acr_nav::FCtype *field_base,
+                              algo::cstring *col_name, int *display_wid, int n_col) {
+    int col_pos = 0;
+    for (int c = 0; c < n_col; c++) {
+        if (c > 0) {
+            col_pos += 2; // separator
+        }
+        acr_nav::PreviewNavCol &nc = acr_nav::preview_nav_Alloc(vm);
+        nc.col_start = col_pos;
+        nc.col_wid = display_wid[c];
+        nc.name_len = ch_N(col_name[c]);
+        nc.col_name = col_name[c];
+        tempstr qname;
+        qname << field_base->ctype << "." << col_name[c];
+        acr_nav::FField *fld = acr_nav::ind_field_Find(qname);
+        if (fld && fld->p_reftype->up && FindSsimfile(*fld->p_arg)) {
+            nc.target_ctype = fld->p_arg->ctype;
+        }
+        col_pos += display_wid[c];
+    }
+    vm.total_content_wid = col_pos;
+}
+
+// Find comment column index, build aligned header string from column names.
+static void BuildPreviewHeader(acr_nav::FViewmode &vm, algo::cstring *col_name,
+                                int *display_wid, int n_col, int &comment_col) {
+    comment_col = -1;
+    for (int c = 0; c < n_col; c++) {
+        if (algo::strptr_Eq(strptr(col_name[c]), "comment")) {
+            comment_col = c;
+            break;
+        }
+    }
+    if (n_col > 0) {
+        tempstr hdr;
+        for (int c = 0; c < n_col; c++) {
+            if (c > 0) {
+                hdr << "  ";
+            }
+            hdr << col_name[c];
+            char_PrintNTimes(' ', hdr, display_wid[c] - ch_N(col_name[c]));
+        }
+        vm.header = hdr;
+    }
+}
+
+// Second-pass scan of mmap'd ssimfile: format data rows with aligned columns,
+// add color spans for pkey and comment columns.
+static void FormatPreviewRows(acr_nav::FViewmode &vm, algo_lib::MmapFile &file,
+                                int *display_wid, int n_col, int comment_col) {
+    ind_beg(Line_curs, line, file.text) {
+        algo::Tuple tuple;
+        if (algo::Tuple_ReadStrptr(tuple, line, false)) {
+            tempstr row;
+            int col_byte_pos[64];
+            FormatPreviewRow(row, tuple, display_wid, n_col, col_byte_pos);
+            acr_nav::line_Alloc(vm) = row;
+            int li = acr_nav::line_N(vm) - 1;
+            if (n_col > 0) {
+                int pkey_end = (n_col > 1) ? col_byte_pos[1] - 2 : ch_N(row);
+                AddSpan(vm, li, 0, pkey_end, acr_nav::_db.p_line_key);
+            }
+            if (comment_col >= 0) {
+                AddSpan(vm, li, col_byte_pos[comment_col], ch_N(row), acr_nav::_db.p_line_comment);
+            }
+        }
+    } ind_end;
+}
+
 static void LoadPreview(acr_nav::FCtype &ctype) {
     acr_nav::FViewmode &vm = *acr_nav::_db.p_preview_viewmode;
     tempstr pending(acr_nav::_db.preview_nav_pending);
@@ -80,95 +178,15 @@ static void LoadPreview(acr_nav::FCtype &ctype) {
              << name_Get(*ssimfile) << ".ssim";
         algo_lib::MmapFile file;
         if (algo_lib::MmapFile_Load(file, path)) {
-            // First pass: determine columns and display widths
             int n_col = 0;
             int display_wid[64];
             algo::cstring col_name[64];
-            ind_beg(Line_curs, line, file.text) {
-                algo::Tuple tuple;
-                if (algo::Tuple_ReadStrptr(tuple, line, false)) {
-                    if (n_col == 0) {
-                        ind_beg(algo::Tuple_attrs_curs, attr, tuple) {
-                            if (n_col < 64) {
-                                col_name[n_col] = attr.name;
-                                display_wid[n_col] = ch_N(attr.name);
-                                n_col++;
-                            }
-                        } ind_end;
-                    }
-                    int ci = 0;
-                    ind_beg(algo::Tuple_attrs_curs, attr, tuple) {
-                        if (ci < n_col) {
-                            display_wid[ci] = i32_Max(display_wid[ci], ch_N(attr.value) - Utf8ExtraBytes(strptr(attr.value)));
-                            ci++;
-                        }
-                    } ind_end;
-                }
-            } ind_end;
-            // Detect navigable columns (already cleared by ClearViewmodeLines above)
-            acr_nav::FCtype *field_base = ssimfile->p_ctype;
-            {
-                int col_pos = 0;
-                for (int c = 0; c < n_col; c++) {
-                    if (c > 0) {
-                        col_pos += 2; // separator
-                    }
-                    acr_nav::PreviewNavCol &nc = acr_nav::preview_nav_Alloc(vm);
-                    nc.col_start = col_pos;
-                    nc.col_wid = display_wid[c];
-                    nc.name_len = ch_N(col_name[c]);
-                    nc.col_name = col_name[c];
-                    tempstr qname;
-                    qname << field_base->ctype << "." << col_name[c];
-                    acr_nav::FField *fld = acr_nav::ind_field_Find(qname);
-                    if (fld && fld->p_reftype->up && FindSsimfile(*fld->p_arg)) {
-                        nc.target_ctype = fld->p_arg->ctype;
-                    }
-                    col_pos += display_wid[c];
-                }
-                vm.total_content_wid = col_pos;
-            }
+            MeasurePreviewColumns(file, col_name, display_wid, n_col);
+            DetectNavColumns(vm, ssimfile->p_ctype, col_name, display_wid, n_col);
             vm.pkey_wid = (n_col > 0) ? display_wid[0] : 0;
-            // Find comment column
             int comment_col = -1;
-            for (int c = 0; c < n_col; c++) {
-                if (algo::strptr_Eq(strptr(col_name[c]), "comment")) {
-                    comment_col = c;
-                    break;
-                }
-            }
-            // Build header from column names
-            if (n_col > 0) {
-                tempstr hdr;
-                for (int c = 0; c < n_col; c++) {
-                    if (c > 0) {
-                        hdr << "  ";
-                    }
-                    hdr << col_name[c];
-                    char_PrintNTimes(' ', hdr, display_wid[c] - ch_N(col_name[c]));
-                }
-                vm.header = hdr;
-            }
-            // Second pass: format data rows directly into preview_line
-            ind_beg(Line_curs, line, file.text) {
-                algo::Tuple tuple;
-                if (algo::Tuple_ReadStrptr(tuple, line, false)) {
-                    tempstr row;
-                    int col_byte_pos[64];
-                    FormatPreviewRow(row, tuple, display_wid, n_col, col_byte_pos);
-                    acr_nav::line_Alloc(vm) = row;
-                    int li = acr_nav::line_N(vm) - 1;
-                    // Dim pkey column (column 0)
-                    if (n_col > 0) {
-                        int pkey_end = (n_col > 1) ? col_byte_pos[1] - 2 : ch_N(row);
-                        AddSpan(vm, li, 0, pkey_end, acr_nav::_db.p_line_key);
-                    }
-                    // Highlight comment column
-                    if (comment_col >= 0) {
-                        AddSpan(vm, li, col_byte_pos[comment_col], ch_N(row), acr_nav::_db.p_line_comment);
-                    }
-                }
-            } ind_end;
+            BuildPreviewHeader(vm, col_name, display_wid, n_col, comment_col);
+            FormatPreviewRows(vm, file, display_wid, n_col, comment_col);
             // Apply deferred follow-ref match
             if (ch_N(pending) > 0 && vm.pkey_wid > 0) {
                 int n_lines = acr_nav::line_N(vm);
