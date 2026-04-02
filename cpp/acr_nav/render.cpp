@@ -91,6 +91,10 @@ struct RenderCtx {
     int                 scroll;
     int                 preview_h_scroll;
     bool                is_hscroll_preview;
+    acr_nav::FNavstyle *p_title_focus;
+    acr_nav::FNavstyle *p_title_nofocus;
+    acr_nav::FNavstyle *p_sel_focus;
+    acr_nav::FNavstyle *p_sel_nofocus;
     RenderCtx(cstring &buf_
               , acr_nav::FCtype *sel_ct_
               , int wid_
@@ -105,13 +109,19 @@ struct RenderCtx {
               , int n_right_
               , int scroll_
               , int preview_h_scroll_
-              , bool is_hscroll_preview_)
+              , bool is_hscroll_preview_
+              , acr_nav::FNavstyle *p_title_focus_
+              , acr_nav::FNavstyle *p_title_nofocus_
+              , acr_nav::FNavstyle *p_sel_focus_
+              , acr_nav::FNavstyle *p_sel_nofocus_)
         : buf(buf_), sel_ct(sel_ct_)
         , wid(wid_), left_wid(left_wid_), right_wid(right_wid_)
         , left_focused(left_focused_), show_breadcrumb(show_breadcrumb_), visible(visible_)
         , has_fields(has_fields_), in_xref(in_xref_)
         , n_left(n_left_), n_right(n_right_), scroll(scroll_)
         , preview_h_scroll(preview_h_scroll_), is_hscroll_preview(is_hscroll_preview_)
+        , p_title_focus(p_title_focus_), p_title_nofocus(p_title_nofocus_)
+        , p_sel_focus(p_sel_focus_), p_sel_nofocus(p_sel_nofocus_)
     {}
 };
 
@@ -169,14 +179,12 @@ void acr_nav::BuildStatusHint(cstring &out) {
 
 // Render the title bar: left panel title | right panel title.
 static void RenderTitleBar(RenderCtx &ctx) {
-    acr_nav::FNavstyle *title_focus   = acr_nav::ind_navstyle_Find("title_focus");
-    acr_nav::FNavstyle *title_nofocus = acr_nav::ind_navstyle_Find("title_nofocus");
     // Left panel
     {
         tempstr ltitle;
         ltitle << " " << acr_nav::_db.p_left_panel->title << " (" << acr_nav::_db.n_visible_ctype << ")";
         TruncPad(ltitle, ctx.left_wid - 1);
-        EmitStyle(ctx.buf, ctx.left_focused ? *title_focus : *title_nofocus);
+        EmitStyle(ctx.buf, ctx.left_focused ? *ctx.p_title_focus : *ctx.p_title_nofocus);
         ctx.buf << ltitle << "\x1b[0m";
     }
     ctx.buf << G_VERT;
@@ -200,7 +208,7 @@ static void RenderTitleBar(RenderCtx &ctx) {
                    << " (" << RightPanelItemCount(ctx.sel_ct) << ")";
         }
         TruncPad(rtitle, ctx.right_wid);
-        EmitStyle(ctx.buf, !ctx.left_focused ? *title_focus : *title_nofocus);
+        EmitStyle(ctx.buf, !ctx.left_focused ? *ctx.p_title_focus : *ctx.p_title_nofocus);
         ctx.buf << rtitle << "\x1b[0m";
     }
     ctx.buf << "\r\n";
@@ -276,7 +284,7 @@ static void EmitRegionWithOverlay(cstring &buf, algo::strptr right_cell,
         rs = seg_end;
     }
     // Inside overlay
-    if (rs >= ov_start && rs < ov_end && rs < re) {
+    if (rs >= ov_start && rs < ov_end && rs < re && overlay_style) {
         int seg_end = i32_Min(ov_end, re);
         buf << "\x1b[0m";
         EmitStyle(buf, *overlay_style);
@@ -382,9 +390,7 @@ static void RenderColumnHeader(RenderCtx &ctx) {
         hdr << "reftype";
     }
     TruncPad(hdr, ctx.right_wid);
-    acr_nav::FNavstyle *title_focus   = acr_nav::ind_navstyle_Find("title_focus");
-    acr_nav::FNavstyle *title_nofocus = acr_nav::ind_navstyle_Find("title_nofocus");
-    acr_nav::FNavstyle &base_hdr_style = !ctx.left_focused ? *title_focus : *title_nofocus;
+    acr_nav::FNavstyle &base_hdr_style = !ctx.left_focused ? *ctx.p_title_focus : *ctx.p_title_nofocus;
     EmitStyle(ctx.buf, base_hdr_style);
     if (!ctx.has_fields && acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_preview_viewmode
         && acr_nav::preview_nav_N(*acr_nav::_db.p_cur_viewmode) > 0) {
@@ -428,9 +434,7 @@ static void RenderLeftCell(RenderCtx &ctx, int row) {
     }
     TruncPad(left_cell, ctx.left_wid - 1);
     if (left_sel) {
-        acr_nav::FNavstyle *sel_focus   = acr_nav::ind_navstyle_Find("sel_focus");
-        acr_nav::FNavstyle *sel_nofocus = acr_nav::ind_navstyle_Find("sel_nofocus");
-        EmitStyle(ctx.buf, ctx.left_focused ? *sel_focus : *sel_nofocus);
+        EmitStyle(ctx.buf, ctx.left_focused ? *ctx.p_sel_focus : *ctx.p_sel_nofocus);
     }
     ctx.buf << left_cell << "\x1b[0m" << G_VERT;
 }
@@ -467,7 +471,6 @@ static void DetectPreviewOverlay(RenderCtx &ctx, int right_data_idx, int skip_by
 // or empty message.  Applies selection, reftype color, filter-match highlight,
 // and dispatches to EmitStyledLine for span-mode content.
 static void RenderRightCell(RenderCtx &ctx, int row, int &span_cursor) {
-    acr_nav::FNavstyle *sel_focus   = acr_nav::ind_navstyle_Find("sel_focus");
     acr_nav::FNavstyle *filter_match = acr_nav::ind_navstyle_Find("filter_match");
     tempstr right_cell;
     bool right_sel = false;
@@ -500,7 +503,7 @@ static void RenderRightCell(RenderCtx &ctx, int row, int &span_cursor) {
     }
     TruncPad(right_cell, ctx.right_wid);
     if (right_sel && !ctx.left_focused) {
-        EmitStyle(ctx.buf, *sel_focus);
+        EmitStyle(ctx.buf, *ctx.p_sel_focus);
     }
     if (fld && fld->p_reftype->c_reftypestyle) {
         EmitStyle(ctx.buf, *fld->p_reftype->c_reftypestyle->p_navstyle);
@@ -520,7 +523,7 @@ static void RenderRightCell(RenderCtx &ctx, int row, int &span_cursor) {
         int ov_end = -1;
         acr_nav::FNavstyle *ov_style = nullptr;
         DetectPreviewOverlay(ctx, right_data_idx, skip_bytes, right_sel, ov_start, ov_end, ov_style);
-        EmitStyledLine(ctx.buf, strptr(right_cell), right_focused_sel, *acr_nav::_db.p_cur_viewmode, right_data_idx, span_cursor, right_focused_sel ? sel_focus : nullptr, ov_start, ov_end, ov_style, skip_bytes);
+        EmitStyledLine(ctx.buf, strptr(right_cell), right_focused_sel, *acr_nav::_db.p_cur_viewmode, right_data_idx, span_cursor, right_focused_sel ? ctx.p_sel_focus : nullptr, ov_start, ov_end, ov_style, skip_bytes);
         ctx.buf << "\x1b[0m\x1b[K\r\n";
     } else {
         ctx.buf << right_cell << "\x1b[0m\x1b[K\r\n";
@@ -542,11 +545,12 @@ static void RenderContentArea(RenderCtx &ctx) {
 
 // Render the breadcrumb bar (shown only when navstack is non-empty).
 static void RenderBreadcrumbBar(RenderCtx &ctx) {
+    acr_nav::FNavstyle *statusbar = acr_nav::ind_navstyle_Find("statusbar");
     if (ctx.show_breadcrumb) {
         tempstr bcline;
         bcline << " " << BuildBreadcrumb(ctx.sel_ct);
         TruncPad(bcline, ctx.wid);
-        EmitStyle(ctx.buf, *acr_nav::ind_navstyle_Find("statusbar"));
+        EmitStyle(ctx.buf, *statusbar);
         ctx.buf << bcline << "\x1b[0m\r\n";
     }
 }
@@ -555,7 +559,8 @@ static void RenderBreadcrumbBar(RenderCtx &ctx) {
 
 // Render the status bar: filter text + hints + position indicator.
 static void RenderStatusBar(RenderCtx &ctx) {
-    EmitStyle(ctx.buf, *acr_nav::ind_navstyle_Find("statusbar"));
+    acr_nav::FNavstyle *statusbar = acr_nav::ind_navstyle_Find("statusbar");
+    EmitStyle(ctx.buf, *statusbar);
     tempstr status;
     bool in_filter = (acr_nav::_db.p_cur_mode == acr_nav::_db.p_filter_mode);
     bool has_filter = ch_N(acr_nav::_db.filter) > 0;
@@ -680,6 +685,10 @@ void acr_nav::Render(cstring &buf, acr_nav::FCtype *sel_ct) {
     if (is_hscroll_preview) {
         preview_h_scroll = acr_nav::_db.p_preview_viewmode->preview_h_scroll;
     }
+    acr_nav::FNavstyle *p_title_focus   = acr_nav::ind_navstyle_Find("title_focus");
+    acr_nav::FNavstyle *p_title_nofocus = acr_nav::ind_navstyle_Find("title_nofocus");
+    acr_nav::FNavstyle *p_sel_focus     = acr_nav::ind_navstyle_Find("sel_focus");
+    acr_nav::FNavstyle *p_sel_nofocus   = acr_nav::ind_navstyle_Find("sel_nofocus");
     RenderCtx ctx(buf, sel_ct
                   , wid, left_wid, right_wid
                   , /*left_focused=*/(acr_nav::_db.p_cur_panel == acr_nav::_db.p_left_panel)
@@ -691,7 +700,8 @@ void acr_nav::Render(cstring &buf, acr_nav::FCtype *sel_ct) {
                   , /*n_right=*/RightPanelItemCount(sel_ct)
                   , /*scroll=*/acr_nav::_db.p_left_panel->scroll_offset
                   , /*preview_h_scroll=*/preview_h_scroll
-                  , /*is_hscroll_preview=*/is_hscroll_preview);
+                  , /*is_hscroll_preview=*/is_hscroll_preview
+                  , p_title_focus, p_title_nofocus, p_sel_focus, p_sel_nofocus);
     RenderTitleBar(ctx);
     RenderContentArea(ctx);
     RenderBreadcrumbBar(ctx);

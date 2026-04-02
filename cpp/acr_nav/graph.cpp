@@ -257,8 +257,7 @@ static void MeasureGraphWidths(GraphEdgeGroup *groups, int n_group,
 }
 
 // Emit the center ctype open line (line 0 of the graph).
-static void EmitCenterOpen(acr_nav::FViewmode &vm, int center_x, acr_nav::FCtype &ctype) {
-    acr_nav::FNavstyle *ctype_style = acr_nav::ind_navstyle_Find("graph_ctype");
+static void EmitCenterOpen(acr_nav::FViewmode &vm, int center_x, acr_nav::FCtype &ctype, acr_nav::FNavstyle *ctype_style) {
     GLine gl;
     gl.PadTo(center_x);
     gl.Utf8(G_DBL_TL);
@@ -271,9 +270,7 @@ static void EmitCenterOpen(acr_nav::FViewmode &vm, int center_x, acr_nav::FCtype
 }
 
 // Emit a right-column block: field lines with labels/arrows, followed by a spine-only close line.
-static void EmitRightBlock(acr_nav::FViewmode &vm, GraphEdgeGroup &g, int center_x, int max_right_label) {
-    acr_nav::FNavstyle *neighbor_style = acr_nav::ind_navstyle_Find("graph_neighbor");
-    acr_nav::FNavstyle *arrow_style    = acr_nav::ind_navstyle_Find("graph_arrow");
+static void EmitRightBlock(acr_nav::FViewmode &vm, GraphEdgeGroup &g, int center_x, int max_right_label, acr_nav::FNavstyle *neighbor_style, acr_nav::FNavstyle *arrow_style) {
     for (int fi = 0; fi < g.n_field; fi++) {
         acr_nav::FField &fld = *g.fields[fi];
         tempstr label;
@@ -322,8 +319,7 @@ static void EmitRightBlock(acr_nav::FViewmode &vm, GraphEdgeGroup &g, int center
 }
 
 // Emit a single left-column edge line: arrow, dashes, tee, and field label.
-static void EmitLeftEdgeLine(acr_nav::FViewmode &vm, acr_nav::FField &fld, int name_x, int center_x) {
-    acr_nav::FNavstyle *arrow_style = acr_nav::ind_navstyle_Find("graph_arrow");
+static void EmitLeftEdgeLine(acr_nav::FViewmode &vm, acr_nav::FField &fld, int name_x, int center_x, acr_nav::FNavstyle *arrow_style) {
     tempstr label;
     label << fld.reftype << " " << name_Get(fld);
     GLine gl;
@@ -350,8 +346,7 @@ static void EmitLeftEdgeLine(acr_nav::FViewmode &vm, acr_nav::FField &fld, int n
 
 // Emit a left-column block: neighbor open line, edge lines, and close line.
 // is_last controls whether the close line terminates the spine (G_DBL_BL) or continues it (G_DBL_VERT).
-static void EmitLeftBlock(acr_nav::FViewmode &vm, GraphEdgeGroup &g, int center_x, int max_left_label, bool is_last) {
-    acr_nav::FNavstyle *neighbor_style = acr_nav::ind_navstyle_Find("graph_neighbor");
+static void EmitLeftBlock(acr_nav::FViewmode &vm, GraphEdgeGroup &g, int center_x, int max_left_label, bool is_last, acr_nav::FNavstyle *neighbor_style, acr_nav::FNavstyle *arrow_style) {
     int left_x = center_x - max_left_label - 3;
     int neighbor_display_len = ch_N(g.p_neighbor->ctype);
     {
@@ -379,7 +374,7 @@ static void EmitLeftBlock(acr_nav::FViewmode &vm, GraphEdgeGroup &g, int center_
     }
     // Edge lines
     for (int fi = 0; fi < g.n_field; fi++) {
-        EmitLeftEdgeLine(vm, *g.fields[fi], name_x, center_x);
+        EmitLeftEdgeLine(vm, *g.fields[fi], name_x, center_x, arrow_style);
     }
     // Close line: spine terminates on last block, continues otherwise
     {
@@ -399,6 +394,9 @@ static void LoadGraph(acr_nav::FCtype &ctype) {
     ClearViewmodeLines(vm);
     vm.header = ctype.ctype;
     acr_nav::_db.p_graph_ctype = &ctype;
+    acr_nav::FNavstyle *ctype_style     = acr_nav::ind_navstyle_Find("graph_ctype");
+    acr_nav::FNavstyle *neighbor_style  = acr_nav::ind_navstyle_Find("graph_neighbor");
+    acr_nav::FNavstyle *arrow_style     = acr_nav::ind_navstyle_Find("graph_arrow");
     // Collect edge groups
     GraphEdgeGroup groups[64];
     int n_group = CollectGraphEdges(ctype, groups, 64);
@@ -414,12 +412,12 @@ static void LoadGraph(acr_nav::FCtype &ctype) {
         if (n_left > 0) {
             center_x = max_left_name + 2 + max_left_label + 3;
         }
-        EmitCenterOpen(vm, center_x, ctype);
+        EmitCenterOpen(vm, center_x, ctype, ctype_style);
         for (int ri = 0; ri < n_right; ri++) {
-            EmitRightBlock(vm, groups[right_groups[ri]], center_x, max_right_label);
+            EmitRightBlock(vm, groups[right_groups[ri]], center_x, max_right_label, neighbor_style, arrow_style);
         }
         for (int li = 0; li < n_left; li++) {
-            EmitLeftBlock(vm, groups[left_groups[li]], center_x, max_left_label, li == n_left - 1);
+            EmitLeftBlock(vm, groups[left_groups[li]], center_x, max_left_label, li == n_left - 1, neighbor_style, arrow_style);
         }
         // If no left blocks, close center with standalone line
         if (n_left == 0) {

@@ -223,13 +223,12 @@ static void InitPanels() {
     PushOverlay(acr_nav::_db.p_help_viewmode);
     acr_nav::_db.startup_help = true;
     ResolveStyles();
-    vrfy(acr_nav::ind_navstyle_Find("title_focus")
-         && acr_nav::ind_navstyle_Find("title_nofocus")
-         && acr_nav::ind_navstyle_Find("sel_focus")
-         && acr_nav::ind_navstyle_Find("sel_nofocus")
-         && acr_nav::ind_navstyle_Find("statusbar")
-         && acr_nav::ind_navstyle_Find("filter_match"),
-         "required navstyle records missing");
+    vrfy(acr_nav::ind_navstyle_Find("title_focus"),   "navstyle 'title_focus' not found");
+    vrfy(acr_nav::ind_navstyle_Find("title_nofocus"), "navstyle 'title_nofocus' not found");
+    vrfy(acr_nav::ind_navstyle_Find("sel_focus"),     "navstyle 'sel_focus' not found");
+    vrfy(acr_nav::ind_navstyle_Find("sel_nofocus"),   "navstyle 'sel_nofocus' not found");
+    vrfy(acr_nav::ind_navstyle_Find("statusbar"),     "navstyle 'statusbar' not found");
+    vrfy(acr_nav::ind_navstyle_Find("filter_match"),  "navstyle 'filter_match' not found");
     BuildHelpLines();
     SwitchToBrowse();
     acr_nav::_db.p_left_panel->sel_row = 0;
