@@ -337,7 +337,7 @@ struct NsDep { acr_nav::FNs *ns; int count; };
 // Per-namespace field group for LoadNsDepDetail accumulation.
 struct NsFieldGroup {
     acr_nav::FNs *ns;
-    acr_nav::FField *fields[256];
+    acr_nav::FField *fields[256]; // fixed capacity; silently truncates if exceeded
     int n_field;
 };
 
@@ -580,6 +580,24 @@ void acr_nav::viewmode_help_ensure_content(acr_nav::FCtype &) {
 void acr_nav::viewmode_detail_ensure_content(acr_nav::FCtype &) {
 }
 
+// Add a field to the namespace field group matching 'ns'.
+// Creates a new group if none exists and capacity allows.
+static void AddNsFieldGroup(NsFieldGroup *groups, int &n_group, int max_groups,
+                            acr_nav::FNs *ns, acr_nav::FField &field) {
+    int gi = -1;
+    for (int i = 0; i < n_group; i++) {
+        if (groups[i].ns == ns) { gi = i; break; }
+    }
+    if (gi < 0 && n_group < max_groups) {
+        gi = n_group++;
+        groups[gi].ns = ns;
+        groups[gi].n_field = 0;
+    }
+    if (gi >= 0 && groups[gi].n_field < 256) {  // NsFieldGroup.fields[] capacity
+        groups[gi].fields[groups[gi].n_field++] = &field;
+    }
+}
+
 // Per-field cross-namespace dependency detail.
 // Groups fields by foreign namespace, showing the actual field→arg references.
 static void LoadNsDepDetail(acr_nav::FNs &ns) {
@@ -596,19 +614,7 @@ static void LoadNsDepDetail(acr_nav::FNs &ns) {
     ind_beg(acr_nav::ns_c_ctype_curs, ct, ns) {
         ind_beg(acr_nav::ctype_c_field_curs, fld, ct) {
             if (fld.p_arg && fld.p_arg->p_ns != &ns) {
-                acr_nav::FNs *target_ns = fld.p_arg->p_ns;
-                int gi = -1;
-                for (int i = 0; i < n_up; i++) {
-                    if (up_groups[i].ns == target_ns) { gi = i; break; }
-                }
-                if (gi < 0 && n_up < 64) {
-                    gi = n_up++;
-                    up_groups[gi].ns = target_ns;
-                    up_groups[gi].n_field = 0;
-                }
-                if (gi >= 0 && up_groups[gi].n_field < 256) {
-                    up_groups[gi].fields[up_groups[gi].n_field++] = &fld;
-                }
+                AddNsFieldGroup(up_groups, n_up, 64, fld.p_arg->p_ns, fld);
             }
         } ind_end;
     } ind_end;
@@ -616,19 +622,7 @@ static void LoadNsDepDetail(acr_nav::FNs &ns) {
     ind_beg(acr_nav::ns_c_ctype_curs, ct, ns) {
         ind_beg(acr_nav::ctype_c_field_arg_curs, fld, ct) {
             if (fld.p_ctype->p_ns != &ns) {
-                acr_nav::FNs *source_ns = fld.p_ctype->p_ns;
-                int gi = -1;
-                for (int i = 0; i < n_down; i++) {
-                    if (down_groups[i].ns == source_ns) { gi = i; break; }
-                }
-                if (gi < 0 && n_down < 64) {
-                    gi = n_down++;
-                    down_groups[gi].ns = source_ns;
-                    down_groups[gi].n_field = 0;
-                }
-                if (gi >= 0 && down_groups[gi].n_field < 256) {
-                    down_groups[gi].fields[down_groups[gi].n_field++] = &fld;
-                }
+                AddNsFieldGroup(down_groups, n_down, 64, fld.p_ctype->p_ns, fld);
             }
         } ind_end;
     } ind_end;

@@ -294,21 +294,29 @@ static void PushNaventry(algo::strptr entry_ctype) {
 
 // -----------------------------------------------------------------------------
 
-// Push navstack, navigate to target ctype, set dest_viewmode.
-// Shared by field/xref follow and graph follow.
-static void NavigateToTarget(acr_nav::FCtype *sel_ct, acr_nav::FCtype *target, acr_nav::FViewmode *dest_viewmode) {
+// Clear filter/browse state and select a ctype in the left panel.
+// Does not modify viewmode or navstack — callers handle those.
+static void RevealCtype(acr_nav::FCtype *target) {
     acr_nav::FPanel *left = acr_nav::_db.p_left_panel;
-    PushNaventry(sel_ct->ctype);
-    acr_nav::_db.p_cur_viewmode = dest_viewmode;
+    target->p_ns->collapsed = false;
     acr_nav::_db.filter = "";
     acr_nav::_db.p_cur_filtertarget = acr_nav::_db.p_default_filtertarget;
     SwitchToBrowse();
-    target->p_ns->collapsed = false;
     BuildLeftItems();
     int idx = FindLeftItemByCtype(target->ctype);
     if (idx >= 0) {
         left->sel_row = idx;
     }
+}
+
+// -----------------------------------------------------------------------------
+
+// Push navstack, navigate to target ctype, set dest_viewmode.
+// Shared by field/xref follow and graph follow.
+static void NavigateToTarget(acr_nav::FCtype *sel_ct, acr_nav::FCtype *target, acr_nav::FViewmode *dest_viewmode) {
+    PushNaventry(sel_ct->ctype);
+    RevealCtype(target);
+    acr_nav::_db.p_cur_viewmode = dest_viewmode;
 }
 
 // -----------------------------------------------------------------------------
@@ -320,22 +328,13 @@ static void NavigateToTarget(acr_nav::FCtype *sel_ct, acr_nav::FCtype *target, a
 acr_nav::FCtype* acr_nav::GoToCtype(algo::strptr ctype_key, acr_nav::FViewmode *dest_viewmode) {
     acr_nav::FCtype *target = acr_nav::ind_ctype_Find(ctype_key);
     if (target) {
-        acr_nav::FPanel *left = acr_nav::_db.p_left_panel;
-        acr_nav::FCtype *sel_ct = SelectedCtype(*left);
+        acr_nav::FCtype *sel_ct = SelectedCtype(*acr_nav::_db.p_left_panel);
         if (sel_ct) {
             // Already viewing a ctype — push navstack and navigate
             NavigateToTarget(sel_ct, target, dest_viewmode);
         } else {
             // Initial state (cursor on namespace header) — navigate without pushing navstack
-            target->p_ns->collapsed = false;
-            acr_nav::_db.filter = "";
-            acr_nav::_db.p_cur_filtertarget = acr_nav::_db.p_default_filtertarget;
-            SwitchToBrowse();
-            BuildLeftItems();
-            int idx = FindLeftItemByCtype(target->ctype);
-            if (idx >= 0) {
-                left->sel_row = idx;
-            }
+            RevealCtype(target);
             acr_nav::_db.p_cur_viewmode = dest_viewmode;
         }
     }

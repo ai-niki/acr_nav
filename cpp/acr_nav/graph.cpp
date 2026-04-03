@@ -74,7 +74,7 @@ static bool GraphSkipQ(acr_nav::FField &field) {
 // Edge group: one neighbor ctype with one or more connecting fields.
 struct GraphEdgeGroup {
     acr_nav::FCtype *p_neighbor;
-    acr_nav::FField *fields[64];
+    acr_nav::FField *fields[64]; // fixed capacity; silently truncates if exceeded
     int n_field;
     bool is_left;  // true = left column (up:Y dep), false = right column
 };
@@ -105,7 +105,7 @@ static void AddDepEdge(GraphEdgeGroup *groups, int &n_group, int max_groups, acr
 static int CollectGraphEdges(acr_nav::FCtype &center, GraphEdgeGroup *groups, int max_groups) {
     int n_group = 0;
     // Track Val creation targets for first-wins dedup
-    acr_nav::FCtype *val_targets[64];
+    acr_nav::FCtype *val_targets[64]; // fixed capacity; silently truncates if exceeded
     int n_val_target = 0;
     ind_beg(acr_nav::ctype_c_field_curs, field, center) {
         if (GraphSkipQ(field)) {
