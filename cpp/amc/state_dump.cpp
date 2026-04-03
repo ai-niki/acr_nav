@@ -21,9 +21,31 @@
 
 #include "include/amc.h"
 
+// Determine if a field should appear in state dump output.
+// Structural check only — HasStringPrintQ is checked at emission time,
+// matching GenPrintField's pattern (cpp/amc/print.cpp:136).
+static bool StateDumpFieldQ(amc::FField& field) {
+    bool good = false;
+    good = good || field.reftype == dmmeta_Reftype_reftype_Val;
+    good = good || field.reftype == dmmeta_Reftype_reftype_Smallstr;
+    good = good || field.reftype == dmmeta_Reftype_reftype_Bitfld;
+    good = good || field.reftype == dmmeta_Reftype_reftype_Regx;
+    good = good && field.reftype != dmmeta_Reftype_reftype_Base;
+    good = good && field.arg != "pad_byte";
+    good = good && !field.c_substr;
+    good = good && (!field.c_cppfunc || field.c_cppfunc->print);
+    good = good && !field.c_pmaskfld;
+    good = good && !field.c_typefld;
+    good = good && !GetLenfld(field);
+    bool source = !bh_bitfld_EmptyQ(field);
+    good = good && !source;  // exclude bitfield backing fields in Tuple mode
+    return good;
+}
+
 // For each namespace with an nsdump record, generate a StateDump function
-// that emits a pool census (record count per pool) plus filtered record dump
-// for pools whose arg ctype has a cfmt with print:Y.
+// that emits a pool census (record count per pool) plus filtered record dump.
+// Pools whose arg ctype has a cfmt with print:Y use the cfmt printer.
+// Pools without cfmt get field-by-field serialization.
 // Only Lary and Inlary pools are covered — Tpool/Lpool/Sbrk have no cursor.
 void amc::gen_ns_state_dump() {
     amc::FNs &ns = *amc::_db.c_ns;
@@ -64,6 +86,46 @@ void amc::gen_ns_state_dump() {
                     Ins(&R, func.body, "        out << '\\n';");
                     Ins(&R, func.body, "    }ind_end;");
                     Ins(&R, func.body, "}");
+                } else {
+                    // Field-by-field serialization for pools without cfmt
+                    // Count emittable fields at generation time
+                    int n_emittable = 0;
+                    ind_beg(amc::ctype_c_field_curs, inner_field, *field.p_arg) {
+                        if (StateDumpFieldQ(inner_field)) {
+                            amc::FFunc* count_print = amc::ind_func_Find(dmmeta::Func_Concat_field_name(inner_field.field, "Print"));
+                            bool has_custom_print = count_print && !count_print->ismacro;
+                            bool has_type_print = amc::HasStringPrintQ(*inner_field.p_arg);
+                            if (has_custom_print || has_type_print) {
+                                n_emittable++;
+                            }
+                        }
+                    }ind_end;
+                    if (n_emittable > 0) {
+                        Ins(&R, func.body, "if (Regx_Match(filter, strptr(\"$ctype\"))) {");
+                        Ins(&R, func.body, "    ind_beg($ns::_db_$name_curs, rec, $ns::_db) {");
+                        Ins(&R, func.body, "        algo::tempstr temp;");
+                        Ins(&R, func.body, "        out << \"$ctype\";");
+                        ind_beg(amc::ctype_c_field_curs, inner_field, *field.p_arg) {
+                            if (StateDumpFieldQ(inner_field)) {
+                                Set(R, "$fname", name_Get(inner_field));
+                                amc::FFunc* custom_print = amc::ind_func_Find(dmmeta::Func_Concat_field_name(inner_field.field, "Print"));
+                                if (custom_print && !custom_print->ismacro) {
+                                    Set(R, "$fns", ns_Get(*field.p_arg));
+                                    Ins(&R, func.body, "        $fns::$fname_Print(rec, temp);");
+                                    Ins(&R, func.body, "        PrintAttrSpaceReset(out, \"$fname\", temp);");
+                                } else if (amc::HasStringPrintQ(*inner_field.p_arg)) {
+                                    Set(R, "$Ftype", inner_field.p_arg->cpp_type);
+                                    tempstr access(FieldvalExpr(field.p_arg, inner_field, "rec"));
+                                    Set(R, "$access", access);
+                                    Ins(&R, func.body, "        $Ftype_Print($access, temp);");
+                                    Ins(&R, func.body, "        PrintAttrSpaceReset(out, \"$fname\", temp);");
+                                }
+                            }
+                        }ind_end;
+                        Ins(&R, func.body, "        out << '\\n';");
+                        Ins(&R, func.body, "    }ind_end;");
+                        Ins(&R, func.body, "}");
+                    }
                 }
             }
         }ind_end;

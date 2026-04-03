@@ -7273,62 +7273,355 @@ void acr_nav::StateDump(algo::cstring& out, algo_lib::Regx& filter) {
     census.n_record = acr_nav::ctype_N();
     report::PoolCensus_Print(census, out);
     out << '\n';
+    if (Regx_Match(filter, strptr("acr_nav.FCtype"))) {
+        ind_beg(acr_nav::_db_ctype_curs, rec, acr_nav::_db) {
+            algo::tempstr temp;
+            out << "acr_nav.FCtype";
+            algo::Smallstr100_Print(rec.ctype, temp);
+            PrintAttrSpaceReset(out, "ctype", temp);
+            algo::Comment_Print(rec.comment, temp);
+            PrintAttrSpaceReset(out, "comment", temp);
+            bool_Print(rec.ns_c_ctype_in_ary, temp);
+            PrintAttrSpaceReset(out, "ns_c_ctype_in_ary", temp);
+            out << '\n';
+        }ind_end;
+    }
     census.ctype = "acr_nav.FDetailsrc";
     census.n_record = acr_nav::detailsrc_N();
     report::PoolCensus_Print(census, out);
     out << '\n';
+    if (Regx_Match(filter, strptr("acr_nav.FDetailsrc"))) {
+        ind_beg(acr_nav::_db_detailsrc_curs, rec, acr_nav::_db) {
+            algo::tempstr temp;
+            out << "acr_nav.FDetailsrc";
+            algo::Smallstr50_Print(rec.detailsrc, temp);
+            PrintAttrSpaceReset(out, "detailsrc", temp);
+            algo::Comment_Print(rec.comment, temp);
+            PrintAttrSpaceReset(out, "comment", temp);
+            out << '\n';
+        }ind_end;
+    }
     census.ctype = "acr_nav.FHelpgroup";
     census.n_record = acr_nav::helpgroup_N();
     report::PoolCensus_Print(census, out);
     out << '\n';
+    if (Regx_Match(filter, strptr("acr_nav.FHelpgroup"))) {
+        ind_beg(acr_nav::_db_helpgroup_curs, rec, acr_nav::_db) {
+            algo::tempstr temp;
+            out << "acr_nav.FHelpgroup";
+            algo::Smallstr50_Print(rec.helpgroup, temp);
+            PrintAttrSpaceReset(out, "helpgroup", temp);
+            i32_Print(rec.sort_order, temp);
+            PrintAttrSpaceReset(out, "sort_order", temp);
+            algo::Comment_Print(rec.comment, temp);
+            PrintAttrSpaceReset(out, "comment", temp);
+            out << '\n';
+        }ind_end;
+    }
     census.ctype = "acr_nav.FField";
     census.n_record = acr_nav::field_N();
     report::PoolCensus_Print(census, out);
     out << '\n';
+    if (Regx_Match(filter, strptr("acr_nav.FField"))) {
+        ind_beg(acr_nav::_db_field_curs, rec, acr_nav::_db) {
+            algo::tempstr temp;
+            out << "acr_nav.FField";
+            algo::Smallstr100_Print(rec.field, temp);
+            PrintAttrSpaceReset(out, "field", temp);
+            algo::Smallstr100_Print(rec.arg, temp);
+            PrintAttrSpaceReset(out, "arg", temp);
+            algo::Smallstr50_Print(rec.reftype, temp);
+            PrintAttrSpaceReset(out, "reftype", temp);
+            algo::CppExpr_Print(rec.dflt, temp);
+            PrintAttrSpaceReset(out, "dflt", temp);
+            algo::Comment_Print(rec.comment, temp);
+            PrintAttrSpaceReset(out, "comment", temp);
+            bool_Print(rec.ctype_c_field_in_ary, temp);
+            PrintAttrSpaceReset(out, "ctype_c_field_in_ary", temp);
+            bool_Print(rec.ctype_c_field_arg_in_ary, temp);
+            PrintAttrSpaceReset(out, "ctype_c_field_arg_in_ary", temp);
+            out << '\n';
+        }ind_end;
+    }
     census.ctype = "acr_nav.FNs";
     census.n_record = acr_nav::ns_N();
     report::PoolCensus_Print(census, out);
     out << '\n';
+    if (Regx_Match(filter, strptr("acr_nav.FNs"))) {
+        ind_beg(acr_nav::_db_ns_curs, rec, acr_nav::_db) {
+            algo::tempstr temp;
+            out << "acr_nav.FNs";
+            algo::Smallstr16_Print(rec.ns, temp);
+            PrintAttrSpaceReset(out, "ns", temp);
+            algo::Smallstr50_Print(rec.nstype, temp);
+            PrintAttrSpaceReset(out, "nstype", temp);
+            algo::Smallstr50_Print(rec.license, temp);
+            PrintAttrSpaceReset(out, "license", temp);
+            algo::Comment_Print(rec.comment, temp);
+            PrintAttrSpaceReset(out, "comment", temp);
+            bool_Print(rec.collapsed, temp);
+            PrintAttrSpaceReset(out, "collapsed", temp);
+            i32_Print(rec.n_match, temp);
+            PrintAttrSpaceReset(out, "n_match", temp);
+            bool_Print(rec.auto_expanded, temp);
+            PrintAttrSpaceReset(out, "auto_expanded", temp);
+            out << '\n';
+        }ind_end;
+    }
     census.ctype = "acr_nav.FReftype";
     census.n_record = acr_nav::reftype_N();
     report::PoolCensus_Print(census, out);
     out << '\n';
+    if (Regx_Match(filter, strptr("acr_nav.FReftype"))) {
+        ind_beg(acr_nav::_db_reftype_curs, rec, acr_nav::_db) {
+            algo::tempstr temp;
+            out << "acr_nav.FReftype";
+            algo::Smallstr50_Print(rec.reftype, temp);
+            PrintAttrSpaceReset(out, "reftype", temp);
+            bool_Print(rec.isval, temp);
+            PrintAttrSpaceReset(out, "isval", temp);
+            bool_Print(rec.cascins, temp);
+            PrintAttrSpaceReset(out, "cascins", temp);
+            bool_Print(rec.usebasepool, temp);
+            PrintAttrSpaceReset(out, "usebasepool", temp);
+            bool_Print(rec.cancopy, temp);
+            PrintAttrSpaceReset(out, "cancopy", temp);
+            bool_Print(rec.isxref, temp);
+            PrintAttrSpaceReset(out, "isxref", temp);
+            bool_Print(rec.del, temp);
+            PrintAttrSpaceReset(out, "del", temp);
+            bool_Print(rec.up, temp);
+            PrintAttrSpaceReset(out, "up", temp);
+            bool_Print(rec.isnew, temp);
+            PrintAttrSpaceReset(out, "isnew", temp);
+            bool_Print(rec.hasalloc, temp);
+            PrintAttrSpaceReset(out, "hasalloc", temp);
+            bool_Print(rec.inst, temp);
+            PrintAttrSpaceReset(out, "inst", temp);
+            bool_Print(rec.varlen, temp);
+            PrintAttrSpaceReset(out, "varlen", temp);
+            algo::Comment_Print(rec.comment, temp);
+            PrintAttrSpaceReset(out, "comment", temp);
+            out << '\n';
+        }ind_end;
+    }
     census.ctype = "acr_nav.FNavaction";
     census.n_record = acr_nav::navaction_N();
     report::PoolCensus_Print(census, out);
     out << '\n';
+    if (Regx_Match(filter, strptr("acr_nav.FNavaction"))) {
+        ind_beg(acr_nav::_db_navaction_curs, rec, acr_nav::_db) {
+            algo::tempstr temp;
+            out << "acr_nav.FNavaction";
+            algo::Smallstr50_Print(rec.navaction, temp);
+            PrintAttrSpaceReset(out, "navaction", temp);
+            algo::Smallstr50_Print(rec.helpgroup, temp);
+            PrintAttrSpaceReset(out, "helpgroup", temp);
+            i32_Print(rec.sort_order, temp);
+            PrintAttrSpaceReset(out, "sort_order", temp);
+            bool_Print(rec.passive, temp);
+            PrintAttrSpaceReset(out, "passive", temp);
+            bool_Print(rec.need_no_overlay, temp);
+            PrintAttrSpaceReset(out, "need_no_overlay", temp);
+            algo::Smallstr50_Print(rec.dismiss_viewmode, temp);
+            PrintAttrSpaceReset(out, "dismiss_viewmode", temp);
+            algo::Smallstr50_Print(rec.target_viewmode, temp);
+            PrintAttrSpaceReset(out, "target_viewmode", temp);
+            algo::Comment_Print(rec.comment, temp);
+            PrintAttrSpaceReset(out, "comment", temp);
+            out << '\n';
+        }ind_end;
+    }
     census.ctype = "acr_nav.FKeybind";
     census.n_record = acr_nav::keybind_N();
     report::PoolCensus_Print(census, out);
     out << '\n';
+    if (Regx_Match(filter, strptr("acr_nav.FKeybind"))) {
+        ind_beg(acr_nav::_db_keybind_curs, rec, acr_nav::_db) {
+            algo::tempstr temp;
+            out << "acr_nav.FKeybind";
+            algo::Smallstr50_Print(rec.keybind, temp);
+            PrintAttrSpaceReset(out, "keybind", temp);
+            algo::Smallstr50_Print(rec.navaction, temp);
+            PrintAttrSpaceReset(out, "navaction", temp);
+            algo::Comment_Print(rec.comment, temp);
+            PrintAttrSpaceReset(out, "comment", temp);
+            out << '\n';
+        }ind_end;
+    }
     census.ctype = "acr_nav.FPanel";
     census.n_record = acr_nav::panel_N();
     report::PoolCensus_Print(census, out);
     out << '\n';
+    if (Regx_Match(filter, strptr("acr_nav.FPanel"))) {
+        ind_beg(acr_nav::_db_panel_curs, rec, acr_nav::_db) {
+            algo::tempstr temp;
+            out << "acr_nav.FPanel";
+            algo::Smallstr50_Print(rec.panel, temp);
+            PrintAttrSpaceReset(out, "panel", temp);
+            algo::cstring_Print(rec.title, temp);
+            PrintAttrSpaceReset(out, "title", temp);
+            i32_Print(rec.position, temp);
+            PrintAttrSpaceReset(out, "position", temp);
+            i32_Print(rec.min_width, temp);
+            PrintAttrSpaceReset(out, "min_width", temp);
+            algo::Comment_Print(rec.comment, temp);
+            PrintAttrSpaceReset(out, "comment", temp);
+            i32_Print(rec.scroll_offset, temp);
+            PrintAttrSpaceReset(out, "scroll_offset", temp);
+            i32_Print(rec.sel_row, temp);
+            PrintAttrSpaceReset(out, "sel_row", temp);
+            out << '\n';
+        }ind_end;
+    }
     census.ctype = "acr_nav.FNavmode";
     census.n_record = acr_nav::navmode_N();
     report::PoolCensus_Print(census, out);
     out << '\n';
+    if (Regx_Match(filter, strptr("acr_nav.FNavmode"))) {
+        ind_beg(acr_nav::_db_navmode_curs, rec, acr_nav::_db) {
+            algo::tempstr temp;
+            out << "acr_nav.FNavmode";
+            algo::Smallstr50_Print(rec.navmode, temp);
+            PrintAttrSpaceReset(out, "navmode", temp);
+            algo::Smallstr200_Print(rec.status_hint, temp);
+            PrintAttrSpaceReset(out, "status_hint", temp);
+            algo::Comment_Print(rec.comment, temp);
+            PrintAttrSpaceReset(out, "comment", temp);
+            out << '\n';
+        }ind_end;
+    }
     census.ctype = "acr_nav.FNavstyle";
     census.n_record = acr_nav::navstyle_N();
     report::PoolCensus_Print(census, out);
     out << '\n';
+    if (Regx_Match(filter, strptr("acr_nav.FNavstyle"))) {
+        ind_beg(acr_nav::_db_navstyle_curs, rec, acr_nav::_db) {
+            algo::tempstr temp;
+            out << "acr_nav.FNavstyle";
+            algo::Smallstr50_Print(rec.navstyle, temp);
+            PrintAttrSpaceReset(out, "navstyle", temp);
+            bool_Print(rec.bold, temp);
+            PrintAttrSpaceReset(out, "bold", temp);
+            bool_Print(rec.dim, temp);
+            PrintAttrSpaceReset(out, "dim", temp);
+            bool_Print(rec.reverse, temp);
+            PrintAttrSpaceReset(out, "reverse", temp);
+            algo::TermColor_Print(rec.fg_color, temp);
+            PrintAttrSpaceReset(out, "fg_color", temp);
+            algo::Comment_Print(rec.comment, temp);
+            PrintAttrSpaceReset(out, "comment", temp);
+            out << '\n';
+        }ind_end;
+    }
     census.ctype = "acr_nav.FReftypestyle";
     census.n_record = acr_nav::reftypestyle_N();
     report::PoolCensus_Print(census, out);
     out << '\n';
+    if (Regx_Match(filter, strptr("acr_nav.FReftypestyle"))) {
+        ind_beg(acr_nav::_db_reftypestyle_curs, rec, acr_nav::_db) {
+            algo::tempstr temp;
+            out << "acr_nav.FReftypestyle";
+            algo::Smallstr50_Print(rec.reftypestyle, temp);
+            PrintAttrSpaceReset(out, "reftypestyle", temp);
+            algo::Comment_Print(rec.comment, temp);
+            PrintAttrSpaceReset(out, "comment", temp);
+            out << '\n';
+        }ind_end;
+    }
     census.ctype = "acr_nav.FSsimfile";
     census.n_record = acr_nav::ssimfile_N();
     report::PoolCensus_Print(census, out);
     out << '\n';
+    if (Regx_Match(filter, strptr("acr_nav.FSsimfile"))) {
+        ind_beg(acr_nav::_db_ssimfile_curs, rec, acr_nav::_db) {
+            algo::tempstr temp;
+            out << "acr_nav.FSsimfile";
+            algo::Smallstr50_Print(rec.ssimfile, temp);
+            PrintAttrSpaceReset(out, "ssimfile", temp);
+            algo::Smallstr100_Print(rec.ctype, temp);
+            PrintAttrSpaceReset(out, "ctype", temp);
+            i32_Print(rec.n_record, temp);
+            PrintAttrSpaceReset(out, "n_record", temp);
+            out << '\n';
+        }ind_end;
+    }
     census.ctype = "acr_nav.FViewmode";
     census.n_record = acr_nav::viewmode_N();
     report::PoolCensus_Print(census, out);
     out << '\n';
+    if (Regx_Match(filter, strptr("acr_nav.FViewmode"))) {
+        ind_beg(acr_nav::_db_viewmode_curs, rec, acr_nav::_db) {
+            algo::tempstr temp;
+            out << "acr_nav.FViewmode";
+            algo::Smallstr50_Print(rec.viewmode, temp);
+            PrintAttrSpaceReset(out, "viewmode", temp);
+            algo::Smallstr50_Print(rec.title, temp);
+            PrintAttrSpaceReset(out, "title", temp);
+            algo::Smallstr50_Print(rec.next, temp);
+            PrintAttrSpaceReset(out, "next", temp);
+            algo::Smallstr50_Print(rec.empty_msg, temp);
+            PrintAttrSpaceReset(out, "empty_msg", temp);
+            bool_Print(rec.has_fields, temp);
+            PrintAttrSpaceReset(out, "has_fields", temp);
+            bool_Print(rec.is_overlay, temp);
+            PrintAttrSpaceReset(out, "is_overlay", temp);
+            bool_Print(rec.need_ssimfile, temp);
+            PrintAttrSpaceReset(out, "need_ssimfile", temp);
+            bool_Print(rec.is_reverse, temp);
+            PrintAttrSpaceReset(out, "is_reverse", temp);
+            algo::Smallstr200_Print(rec.status_hint, temp);
+            PrintAttrSpaceReset(out, "status_hint", temp);
+            bool_Print(rec.scope_ns, temp);
+            PrintAttrSpaceReset(out, "scope_ns", temp);
+            algo::Comment_Print(rec.comment, temp);
+            PrintAttrSpaceReset(out, "comment", temp);
+            algo::cstring_Print(rec.header, temp);
+            PrintAttrSpaceReset(out, "header", temp);
+            i32_Print(rec.pkey_wid, temp);
+            PrintAttrSpaceReset(out, "pkey_wid", temp);
+            i32_Print(rec.preview_h_scroll, temp);
+            PrintAttrSpaceReset(out, "preview_h_scroll", temp);
+            i32_Print(rec.total_content_wid, temp);
+            PrintAttrSpaceReset(out, "total_content_wid", temp);
+            algo::cstring_Print(rec.cached_key, temp);
+            PrintAttrSpaceReset(out, "cached_key", temp);
+            out << '\n';
+        }ind_end;
+    }
     census.ctype = "acr_nav.FFiltertarget";
     census.n_record = acr_nav::filtertarget_N();
     report::PoolCensus_Print(census, out);
     out << '\n';
+    if (Regx_Match(filter, strptr("acr_nav.FFiltertarget"))) {
+        ind_beg(acr_nav::_db_filtertarget_curs, rec, acr_nav::_db) {
+            algo::tempstr temp;
+            out << "acr_nav.FFiltertarget";
+            algo::Smallstr50_Print(rec.filtertarget, temp);
+            PrintAttrSpaceReset(out, "filtertarget", temp);
+            algo::Smallstr16_Print(rec.label, temp);
+            PrintAttrSpaceReset(out, "label", temp);
+            algo::Smallstr50_Print(rec.next, temp);
+            PrintAttrSpaceReset(out, "next", temp);
+            algo::Smallstr50_Print(rec.description, temp);
+            PrintAttrSpaceReset(out, "description", temp);
+            bool_Print(rec.match_ctype_name, temp);
+            PrintAttrSpaceReset(out, "match_ctype_name", temp);
+            bool_Print(rec.match_field_name, temp);
+            PrintAttrSpaceReset(out, "match_field_name", temp);
+            bool_Print(rec.match_comment, temp);
+            PrintAttrSpaceReset(out, "match_comment", temp);
+            bool_Print(rec.match_arg, temp);
+            PrintAttrSpaceReset(out, "match_arg", temp);
+            bool_Print(rec.match_reftype, temp);
+            PrintAttrSpaceReset(out, "match_reftype", temp);
+            bool_Print(rec.has_field_criteria, temp);
+            PrintAttrSpaceReset(out, "has_field_criteria", temp);
+            algo::Comment_Print(rec.comment, temp);
+            PrintAttrSpaceReset(out, "comment", temp);
+            out << '\n';
+        }ind_end;
+    }
 }
 
 // --- acr_nav...main
