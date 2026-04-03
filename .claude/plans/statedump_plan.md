@@ -40,6 +40,8 @@ dmmeta.cfmt   cfmt:report.PoolCensus.String  printfmt:Tuple  read:Y  print:Y  se
 
 cfmt record is required — without it, `PoolCensus_Print()` won't be generated. Format matches all existing report cfmt records exactly (`report.abt.String`, `report.acr.String`, etc.).
 
+**Naming decision:** existing `report.*` ctypes are program-specific exit summaries (`report.abt`, `report.acr`). `report.PoolCensus` is the first shared/cross-program type in this namespace. This is intentional — `report` is already `nstype:protocol`, making it the right home for shared output types. Alternative would be `dmmeta.PoolCensus` but that conflates schema metadata with runtime output. Keep `report.PoolCensus`.
+
 ### 3. amc internal: load nsdump records
 
 ```ssim
@@ -107,16 +109,29 @@ void ns::StateDump(algo::cstring& out, algo_lib::Regx& filter) {
 | Reftype | Generated accessor | Coverage |
 |---------|-------------------|----------|
 | Lary | `ns::pool_N()` → reads `_db.pool_n` | ~116 pools |
-| Inlary | `ns::pool_N()` → reads `_db.pool_n` or returns `$max` (fixed) | ~1 pool |
-| Tpool | **Skipped** — no count variable, no cursor | ~1 pool |
-| Lpool | **Skipped** — no cursor | ~1 pool |
-| Sbrk | **Skipped** — no count, no cursor | ~1 pool |
+| Inlary | `ns::pool_N()` → reads `_db.pool_n` (variable) or constant (when `dmmeta.inlary min==max`) | ~1 pool |
+| Tpool | **Skipped** — free-list allocator, no count variable, no cursor | ~1 pool |
+| Lpool | **Skipped** — raw byte allocator, no record type, no cursor | ~1 pool |
+| Sbrk | **Skipped** — bump allocator, no count, no cursor | ~1 pool |
+
+Generator uses an explicit allow-list `{Lary, Inlary}` — all other `inst:Y` reftypes (Tpool, Lpool, Sbrk, Blkpool, Malloc, Cppstack) are skipped silently at generation time. The generator condition is `if (reftype != Lary && reftype != Inlary) continue;` with a comment explaining why.
 
 ### cfmt detection (generation-time check)
 
-For each pool's arg ctype, the generator checks `zs_cfmt` (Llist on `amc::FCtype`):
-- Has cfmt with `print:Y` → emit both census line AND record dump block
-- No cfmt or print:N → emit census line only (count is always available)
+For each pool's arg ctype, the generator iterates the full `zs_cfmt` Llist to find any cfmt with `print:Y`:
+
+```cpp
+// Correct generator code — zs_cfmt_First is a FREE FUNCTION, not a method
+bool printable = false;
+ind_beg(amc::FCtype_zs_cfmt_curs, cfmt, *field.p_arg) {
+    if (cfmt.print) { printable = true; break; }
+}ind_end;
+```
+
+- Has any cfmt with `print:Y` → emit census line AND record dump block
+- No cfmt or none with `print:Y` → emit census line only (count is always available)
+
+Note: `zs_cfmt_First(*field.p_arg)` (free function, not method) only finds the first cfmt. A ctype can have multiple cfmts — must iterate to find one with `print:Y`.
 
 ### CLI trigger integration
 

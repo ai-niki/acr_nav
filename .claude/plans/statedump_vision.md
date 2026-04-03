@@ -22,7 +22,16 @@ amc knows every pool in FDb via the `zd_inst` linked list (discovery in `cpp/amc
 
 ## Consumer-side filtering
 
-The dump output is ssim: labeled key:value pairs, one record per line, type-prefixed. Filterable at the consumer with no server-side query language:
+The dump output is ssim: labeled key:value pairs, one record per line, type-prefixed:
+
+```
+report.PoolCensus  ctype:acr_nav.FCtype    n_record:42
+report.PoolCensus  ctype:acr_nav.FPanel    n_record:2
+acr_nav.FCtype     ctype:dmmeta.Field      comment:""  ...
+acr_nav.FPanel     side:left  sel:7  ...
+```
+
+Filterable at the consumer with no server-side query language:
 
 ```bash
 acr_nav -dump:".*" | grep "^acr_nav.FCtype"       # filter by ctype
@@ -47,7 +56,7 @@ dmmeta.rtquery  rtquery:acr_nav.Navigate      → generates dispatch case  — i
 
 amc would generate the dispatch scaffolding (try-deserialize-call-handler loop); the handler bodies remain hand-written. Value: the interface becomes machine-readable -- `acr dmmeta.rtquery ns:acr_nav` tells an agent what commands a program accepts without reading source code.
 
-**Check first:** `dmmeta.dispatch` + `dmmeta.dispatch_case` may already cover this. The dispatch system generates exactly this kind of "try each message type" loop. `rtquery` might just be a semantic marker (flagging cases as "agent interface") rather than a new mechanism.
+**Check first, before creating any schema records:** `dmmeta.dispatch` + `dmmeta.dispatch_case` may already cover this. The dispatch system generates exactly this kind of "try each message type" loop — verified: `atf_amc.Ssimfiles` uses dispatch with `read:Y` and generates `_ReadStrptrMaybe` dispatch identical to what `rtquery` would produce. `rtquery` might be nothing more than a semantic marker (flagging dispatch cases as "agent interface") on an existing mechanism. Do not design a new table before exhausting `dmmeta.dispatch`.
 
 ## Where the value is highest
 
@@ -116,9 +125,13 @@ acr_nav already consumes ssim as its data model -- schema records ARE ssim (dmme
 
 acr_nav could load a state dump as a live data layer alongside the schema: same navigator, two views -- schema structure on the left, live instances on the right. "FCtype has 42 records at runtime -- navigate into them." The tool already knows how to display ctypes and their fields; live data populates the counts with real numbers.
 
-acr_nav for schema structure + acr_nav+statedump for runtime instances = one tool, complete picture. The format unification (nsdump emits the same ssim format acr_nav already reads) makes this nearly free once the generator exists.
+acr_nav for schema structure + acr_nav+statedump for runtime instances = one tool, complete picture.
 
-The recursive case: one acr_nav inspecting another running acr_nav. B displays A's FPanel, FNavstack, FFilter records live. B already knows these types -- they're its own schema. The inspector and the inspected share the same type system.
+**What's actually free:** acr_nav loads all of dmmeta at startup -- every program's ctypes, not just its own. So B already knows `acr_nav.FPanel`, `acr_nav.FNavstack`, `acr_nav.FCtype` etc. No dynamic schema loading needed. The format is the same ssim that acr_nav already parses.
+
+**What's real work:** a new "live data" viewmode in acr_nav that displays live records alongside schema records. Currently acr_nav shows schema structure; it doesn't have a view for "here are the live instances of this type." That viewmode is the implementation cost -- not schema loading, not format conversion.
+
+The recursive case: one acr_nav inspecting another running acr_nav. B displays A's FPanel, FNavstack, FFilter records live. B already knows these types -- they're its own schema. The inspector and the inspected share the same type system. This is the cheapest case -- same program, schema trivially shared.
 
 ## Phased implementation
 
