@@ -838,11 +838,26 @@ int acr_nav::PanelItemCount(acr_nav::FPanel &panel, acr_nav::FCtype *sel_ct) {
 
 // Append key display name, mapping arrow keys to Unicode symbols.
 static void AppendKeyDisplay(cstring &out, algo::strptr key) {
-    if (key == "Up")         { out << "\xe2\x86\x91"; }
-    else if (key == "Down")  { out << "\xe2\x86\x93"; }
-    else if (key == "Left")  { out << "\xe2\x86\x90"; }
-    else if (key == "Right") { out << "\xe2\x86\x92"; }
-    else { out << key; }
+    bool mapped = false;
+    if (key == "Up") {
+        out << "\xe2\x86\x91";
+        mapped = true;
+    }
+    if (!mapped && key == "Down") {
+        out << "\xe2\x86\x93";
+        mapped = true;
+    }
+    if (!mapped && key == "Left") {
+        out << "\xe2\x86\x90";
+        mapped = true;
+    }
+    if (!mapped && key == "Right") {
+        out << "\xe2\x86\x92";
+        mapped = true;
+    }
+    if (!mapped) {
+        out << key;
+    }
 }
 
 // Collect browse-mode keybinds for one action into a single key string.
