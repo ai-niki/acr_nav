@@ -59,8 +59,8 @@ dmmeta.nsdump  ns:acr_nav
 
 Any amc program becomes agent-inspectable at runtime — one generator, one opt-in record per namespace.
 
-- General idea: [`.claude/plans/runtime_state_inspection.md`](.claude/plans/runtime_state_inspection.md)
-- MVP plan: [`.claude/plans/state_dump_plan.md`](.claude/plans/state_dump_plan.md)
+- Vision: [`.claude/plans/statedump_vision.md`](.claude/plans/statedump_vision.md)
+- MVP plan: [`.claude/plans/statedump_plan.md`](.claude/plans/statedump_plan.md)
 
 ## Getting Started
 

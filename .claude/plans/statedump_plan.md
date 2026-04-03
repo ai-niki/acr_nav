@@ -8,13 +8,13 @@ OpenACR programs are in-memory databases. amc knows every pool via `gen_detectin
 
 | Decision | Choice | Rationale |
 |----------|--------|-----------|
-| Consumer | AI agent | Structured output for programmatic consumption |
+| Consumer | AI agent (filters client-side) | Dump is structured ssim text -- agent or unix tools filter/query; no server-side query engine needed |
 | Scope | General, any amc program | amc generator, opt-in via schema record |
 | Opt-in | `dmmeta.nsdump ns:<ns>` | Namespace-level, follows `dmmeta.main` / `dmmeta.nsx` pattern |
 | Output | Census (all pools) + record dump (cfmt-only) | Census for visibility, dump for inspection |
 | Format | Ssim tuples using `report.PoolCensus` ctype | Follows existing `report.*` protocol (`nstype:protocol`) |
 | CLI trigger | `-dump` field on `command.<ns>` | Developer adds field manually; dump call in user-written Main() |
-| Stdin trigger | Program-specific | Programs with stdin loops add dispatch manually (follows acr_nav headless pattern) |
+| Stdin trigger | Program-specific (headless) | Programs with stdin loops add dispatch manually (follows acr_nav headless pattern) |
 | Reftype coverage | Lary + Inlary (MVP) | Covers ~117 of ~120 pools. Tpool has no count variable and no cursor — deferred. |
 
 ## Schema Additions
@@ -68,6 +68,7 @@ amcdb.gen  gen:ns_state_dump  perns:Y  comment:"Generate FDb state dump function
 ```ssim
 dev.targsrc  targsrc:amc/cpp/amc/state_dump.cpp  comment:""
 ```
+
 
 ## Generated Code
 
