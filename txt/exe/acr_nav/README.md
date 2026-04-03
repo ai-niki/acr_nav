@@ -114,14 +114,18 @@ one `keybind` record, and one C++ handler function.
 |---|---|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
 |[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
+|[acr_navdb.detailsrc](/txt/ssimdb/acr_navdb/detailsrc.md)|Ssimfile to scan for field detail metadata|
 |[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
+|[acr_navdb.filtertarget](/txt/ssimdb/acr_navdb/filtertarget.md)||
+|[acr_navdb.helpgroup](/txt/ssimdb/acr_navdb/helpgroup.md)|Help panel group category|
 |[acr_navdb.keybind](/txt/ssimdb/acr_navdb/keybind.md)|Key-to-action mapping for acr_nav|
 |[acr_navdb.navmode](/txt/ssimdb/acr_navdb/navmode.md)|UI mode for acr_nav|
-|[acr_navdb.navstyle](/txt/ssimdb/acr_navdb/navstyle.md)||
+|[acr_navdb.navstyle](/txt/ssimdb/acr_navdb/navstyle.md)|Terminal visual style for acr_nav UI elements|
 |[dmmeta.ns](/txt/ssimdb/dmmeta/ns.md)|Namespace (for in-memory database, protocol, etc)|
 |[acr_navdb.panel](/txt/ssimdb/acr_navdb/panel.md)|Panel definition for acr_nav TUI layout|
 |[dmmeta.reftype](/txt/ssimdb/dmmeta/reftype.md)|Field type constructor (e.g. reference type)|
-|[acr_navdb.reftypestyle](/txt/ssimdb/acr_navdb/reftypestyle.md)||
+|[acr_navdb.reftypestyle](/txt/ssimdb/acr_navdb/reftypestyle.md)|Mapping from reftype to navstyle for field coloring|
+|[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 
