@@ -4,7 +4,7 @@ A TUI for exploring OpenACR schema.
 
 ## Demo
 
-<!-- video -->
+https://github.com/user-attachments/assets/a044cf31-97d4-401a-9070-c2f6d4aa1975
 
 ## Origin
 
