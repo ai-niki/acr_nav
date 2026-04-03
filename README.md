@@ -13,11 +13,11 @@ I was learning the OpenACR schema through `acr` queries. After a while I wanted 
 ## What It Does
 
 - **Two-panel layout** — ctypes on the left, fields for the selected ctype on the right
-- **Navigation** — `Enter` follows a field reference, `Backspace` pops the stack; breadcrumb bar shows where you are
-- **Filter** — live filter by ctype name; `Tab` switches to field name/comment search
-- **Viewmodes** — fields, reverse xrefs, ssimfile preview, codegen, access path graph, namespace deps, field detail drilldown
-- **Namespace tree** — collapsible groups with record counts
-- **Graph view** — interactive access path diagram, reftype-colored edges, bidirectional (forward fields + reverse xrefs)
+- **Navigation** — `Enter` follows a field reference, `Backspace` pops the stack; breadcrumb bar shows where you are; vim keys (j/k/h/l/g/G) work throughout
+- **Filter** — live filter; `Tab` cycles target: ctype, field, arg, reftype, or all
+- **Viewmodes** — fields, reverse xrefs, ssimfile preview (navigable FK columns), codegen (syntax highlighted), access path graph, namespace deps, per-field dep detail, field detail drilldown
+- **Namespace tree** — collapsible groups with record counts; `?` opens keybinding help
+- **Graph view** — interactive access path diagram, reftype-colored fields, bidirectional (forward fields + reverse xrefs)
 - **Headless protocol** — stdin/stdout ssim interface for agent-driven use (see below)
 
 ## Headless Protocol
