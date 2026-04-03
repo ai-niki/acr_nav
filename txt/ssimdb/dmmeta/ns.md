@@ -83,6 +83,7 @@ These ssimfiles reference dmmeta.ns
 * [acr_compl](/txt/exe/acr_compl/internals.md) as [acr_compl.FNs](/txt/exe/acr_compl/internals.md#acr_compl-fns)
 * [acr_ed](/txt/exe/acr_ed/internals.md) as [acr_ed.FNs](/txt/exe/acr_ed/internals.md#acr_ed-fns)
 * [acr_in](/txt/exe/acr_in/internals.md) as [acr_in.FNs](/txt/exe/acr_in/internals.md#acr_in-fns)
+* [acr_nav](/txt/exe/acr_nav/internals.md) as [acr_nav.FNs](/txt/exe/acr_nav/internals.md#acr_nav-fns)
 * [amc](/txt/exe/amc/internals.md) as [amc.FNs](/txt/exe/amc/internals.md#amc-fns)
 * [apm](/txt/exe/apm/internals.md) as [apm.FNs](/txt/exe/apm/internals.md#apm-fns)
 * [atf_ci](/txt/exe/atf_ci/internals.md) as [atf_ci.FNs](/txt/exe/atf_ci/internals.md#atf_ci-fns)

@@ -9,6 +9,7 @@ The following source files are part of this tool:
 
 |Source File|Comment|
 |---|---|
+|[cpp/gen/acr_navdb_gen.cpp](/cpp/gen/acr_navdb_gen.cpp)||
 |[cpp/gen/ams_gen.cpp](/cpp/gen/ams_gen.cpp)||
 |[cpp/gen/amsdb_gen.cpp](/cpp/gen/amsdb_gen.cpp)||
 |[cpp/gen/atf_gen.cpp](/cpp/gen/atf_gen.cpp)||
@@ -24,6 +25,8 @@ The following source files are part of this tool:
 |[cpp/gen/sampdb_gen.cpp](/cpp/gen/sampdb_gen.cpp)||
 |[cpp/gen/ws_gen.cpp](/cpp/gen/ws_gen.cpp)||
 |[cpp/gen/wsdb_gen.cpp](/cpp/gen/wsdb_gen.cpp)||
+|[include/gen/acr_navdb_gen.h](/include/gen/acr_navdb_gen.h)||
+|[include/gen/acr_navdb_gen.inl.h](/include/gen/acr_navdb_gen.inl.h)||
 |[include/gen/ams_gen.h](/include/gen/ams_gen.h)||
 |[include/gen/ams_gen.inl.h](/include/gen/ams_gen.inl.h)||
 |[include/gen/amsdb_gen.h](/include/gen/amsdb_gen.h)||

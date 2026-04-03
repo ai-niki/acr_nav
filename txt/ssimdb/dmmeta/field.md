@@ -136,6 +136,7 @@ These ssimfiles reference dmmeta.field
 * [acr_compl](/txt/exe/acr_compl/internals.md) as [acr_compl.FField](/txt/exe/acr_compl/internals.md#acr_compl-ffield)
 * [acr_ed](/txt/exe/acr_ed/internals.md) as [acr_ed.FField](/txt/exe/acr_ed/internals.md#acr_ed-ffield)
 * [acr_in](/txt/exe/acr_in/internals.md) as [acr_in.FField](/txt/exe/acr_in/internals.md#acr_in-ffield)
+* [acr_nav](/txt/exe/acr_nav/internals.md) as [acr_nav.FField](/txt/exe/acr_nav/internals.md#acr_nav-ffield)
 * [amc](/txt/exe/amc/internals.md) as [amc.FField](/txt/exe/amc/internals.md#amc-ffield)
 * [amc_vis](/txt/exe/amc_vis/internals.md) as [amc_vis.FField](/txt/exe/amc_vis/internals.md#amc_vis-ffield)
 * [apm](/txt/exe/apm/internals.md) as [apm.FField](/txt/exe/apm/internals.md#apm-ffield)
