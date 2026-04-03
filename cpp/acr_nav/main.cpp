@@ -677,7 +677,6 @@ static void DispatchHeadlessCommand(algo::strptr line, int lineno) {
 
 static void HeadlessMain() {
     InitPanels();
-    acr_nav::_db.term_hei = 100000;
     acr_nav::_db.running = true;
     algo::LineBuf linebuf;
     bool eof = false;

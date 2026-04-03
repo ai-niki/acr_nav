@@ -7,7 +7,7 @@ description: Interactive demo of AI-driven testing. Plants a real bug in acr_nav
 
 Interactive demonstration of AI-driven testing of acr_nav through its headless protocol. The headline act: plant a real, previously-fixed bug, rebuild, then launch a subagent that finds it blind.
 
-This is an orchestrator's playbook. Subagents receive only `references/protocol.md`.
+This is an orchestrator's playbook. Subagents receive only `references/protocol.md` (symlink to `../agent-test/references/protocol.md`; requires symlink-capable git checkouts).
 
 ## Prerequisite
 

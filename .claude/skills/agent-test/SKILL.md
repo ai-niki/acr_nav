@@ -9,6 +9,8 @@ Exploratory testing of acr_nav through its headless protocol. The value is uncon
 
 This is an orchestrator's playbook. Subagents receive `references/protocol.md` — they never see this file.
 
+The demo skill’s `references/protocol.md` is a **symlink** to this file; keep `git config core.symlinks true` so clones preserve it (otherwise copy `agent-test/references/protocol.md` manually).
+
 ## Prerequisite
 
 Verify headless mode works:
@@ -74,12 +76,19 @@ Suggestions — combine, split, skip, or invent areas based on what regression t
 
 ## Subagent Guidelines
 
+- **Summary is the default** — use it for all state checks (4 lines / ~400 bytes).
+- **Screenshot is opt-in** — use only when you need to verify visible row-level content (~tens of lines / low single-digit KB with the default viewport; larger if you expand with `SetTermSize`).
+- **SetTermSize to paginate** — default headless viewport is 40×120; expand explicitly when you need more items in frame.
+- **EOF auto-screenshot** — one **full** `HeadlessOutput()` runs at process exit **after** all stdin commands, so stdout can contain **Summary** (4 lines) **plus** a second full screenshot block; parse block-by-block or expect duplicate `Screen` / doubled visible-row counts when using `wc -l` / `grep -c` on the whole stream.
 - **Don't hardcode counts.** Read initial state (auto-screenshot on launch) as baseline. Verify relative changes, not absolute values.
 - **Don't repeat regression tests.** If `acr_nav.Filter` already tests basic filtering, explore filter + other features instead.
 - **Run `acr acr_navdb.%`** to discover the full capability surface (keybinds, viewmodes, navactions, navstyles).
 - **Follow surprises.** When something unexpected happens, send more commands and investigate. The most valuable findings come from following anomalies.
 - **Cross-validate with `acr`.** Verify field counts, xref counts, and record counts against `acr dmmeta.field -where:...` queries.
-- **Prefer Summary over Screenshot** for state checks. Summary returns 4 lines (~400 bytes) vs Screenshot's 100+ lines (~10KB). Use Screenshot only when you need item-level details (VisibleField, VisibleLine content).
+
+## Safe golden capture (regression tests)
+
+When updating `test/atf_comp/acr_nav.*` expected output: run `atf_comp acr_nav.%` **without** `-capture` first and confirm behavior; review diffs before commit. Prefer capturing a single test (`atf_comp acr_nav.SomeTest -capture`) when only one scenario changed. Never `-capture` on a known-failing or unreviewed run — a bad capture encodes bugs as truth.
 
 ## Synthesis
 

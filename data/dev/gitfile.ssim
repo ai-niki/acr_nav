@@ -181,6 +181,12 @@ dev.gitfile  gitfile:cpp/acr_in/acr_in.cpp
 dev.gitfile  gitfile:cpp/acr_in/data.cpp
 dev.gitfile  gitfile:cpp/acr_my/acr_my.cpp
 dev.gitfile  gitfile:cpp/acr_nav/acr_nav.cpp
+dev.gitfile  gitfile:cpp/acr_nav/content.cpp
+dev.gitfile  gitfile:cpp/acr_nav/graph.cpp
+dev.gitfile  gitfile:cpp/acr_nav/main.cpp
+dev.gitfile  gitfile:cpp/acr_nav/nav.cpp
+dev.gitfile  gitfile:cpp/acr_nav/render.cpp
+dev.gitfile  gitfile:cpp/acr_nav/util.cpp
 dev.gitfile  gitfile:cpp/amc/alias.cpp
 dev.gitfile  gitfile:cpp/amc/amc_gc.cpp
 dev.gitfile  gitfile:cpp/amc/amc_vis.cpp

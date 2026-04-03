@@ -4990,8 +4990,8 @@ void acr_nav::FDb_Init() {
     _db.p_cur_mode = NULL;
     _db.p_filter_mode = NULL;
     _db.running = bool(true);
-    _db.term_hei = i32(0);
-    _db.term_wid = i32(0);
+    _db.term_hei = i32(40);
+    _db.term_wid = i32(120);
     // initialize LAry navstyle (acr_nav.FDb.navstyle)
     _db.navstyle_n = 0;
     memset(_db.navstyle_lary, 0, sizeof(_db.navstyle_lary)); // zero out all level pointers

@@ -137,17 +137,18 @@ Left      switch_panel_left     Right     switch_panel_right
 
 ## Behavioral Notes
 
-- **EOF auto-screenshot**: a final screenshot is auto-emitted when stdin closes, even without an explicit Screenshot command
+- **EOF auto-screenshot**: when stdin closes, `HeadlessMain` always calls `HeadlessOutput()` once — a **full** Screenshot-style block (same record sequence as `acr_nav.Screenshot`), even if you never sent `Screenshot`. This block is **in addition to** any output already printed for earlier commands (e.g. `Summary`, `Ack`, or an explicit `Screenshot`). Parsers should either read **block-by-block** (records until a blank line, repeated) or expect roughly **two** full snapshots when the script had one explicit `Screenshot` plus EOF
 - **Empty input lines**: treated as ssim field separators, silently ignored (NOT errors)
 - **Startup help**: initial viewmode is `help`. First successful keypress (matching a keybind) dismisses it, changing viewmode to `fields`
-- **Default term_hei**: headless sets `term_hei=100000` (all items visible, no pagination). Use `SetTermSize` to test scroll behavior at realistic sizes
+- **Default headless viewport**: `term_hei` 40 and `term_wid` 120 from `acr_nav.FDb` field defaults (`dmmeta.field`). Use `SetTermSize` to expand further. Prefer `Summary` for state checks; use `Screenshot` when row-level content matters. Sizes in docs are order-of-magnitude; EOF still emits one bounded full snapshot
+- **Full-list screenshots (regression / harness)**: To capture essentially all left-panel rows in one shot (old default behavior), use `acr_nav.SetTermSize  term_hei:100000  term_wid:120` as the first stdin line. The height is intentionally large, not a product default; `acr_nav.LeftItems` and `acr_nav.FilterCycleComplete` use this pattern in `atfdb.tmsg` (`099990.in`). External scripts that assumed unbounded height should add the same line
 - **Filter matching**: SQL glob (`%filter%`), case-insensitive. Not regex.
 - **Navstack**: follow_ref pushes state (filter, selection, viewmode, scroll). Backspace pops and restores all state.
 - **Namespace headers**: Enter on a namespace header toggles collapse/expand (not follow_ref). Collapsed namespaces are skipped by j/k.
 - **v2 commands dismiss startup help**: All semantic commands (except Summary) clear the startup help overlay
 - **v2 commands cancel filter mode**: If filter mode is active when a semantic command runs, filter is cancelled first
 - **Navigate pushes navstack unconditionally**: Navigating to the same ctype you're already on pushes a new navstack entry (consistent with v1 follow_ref)
-- **Summary output**: Screen + left PanelState + right PanelState + blank line (4 lines total, ~400 bytes)
+- **Summary output** (one block, when `acr_nav.Summary` is processed): `Screen` + left `PanelState` + right `PanelState` + blank line (**4 lines**, ~400 bytes). **Total stdout for a one-line stdin script** `printf 'acr_nav.Summary\n' | acr_nav -headless` is **not** 4 lines: you get this Summary block **and then** the EOF full snapshot above — so line count and `grep -c VisibleLeftItem` reflect **both** blocks unless you stop parsing after the first blank-terminated block
 
 ## Common Patterns
 
@@ -155,7 +156,7 @@ Left      switch_panel_left     Right     switch_panel_right
 # Navigate and check state (minimal tokens):
 acr_nav.Navigate  ctype:dmmeta.Ctype
 acr_nav.Summary
-# -> Ack shows ok:Y, Summary shows 3 state records
+# -> Ack ok:Y; then Summary block (Screen + 2x PanelState); then EOF emits another full screenshot block
 
 # v1/v2 equivalence test:
 # v2: Navigate + Summary -> extract Screen line

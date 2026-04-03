@@ -280,6 +280,7 @@ atfdb.tmsg  tmsg:acr_nav.FilterAccept/100020.in  istuple:N  msg:"acr_nav.SendKey
 atfdb.tmsg  tmsg:acr_nav.FilterAccept/100030.in  istuple:N  msg:"acr_nav.SendKey  key:c"
 atfdb.tmsg  tmsg:acr_nav.FilterAccept/100040.in  istuple:N  msg:"acr_nav.SendKey  key:Enter"
 atfdb.tmsg  tmsg:acr_nav.FilterAccept/100050.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.FilterCycleComplete/099990.in  istuple:N  msg:"acr_nav.SetTermSize  term_hei:100000  term_wid:120"
 atfdb.tmsg  tmsg:acr_nav.FilterCycleComplete/100000.in  istuple:N  msg:"acr_nav.SendKey  key:/"
 atfdb.tmsg  tmsg:acr_nav.FilterCycleComplete/100010.in  istuple:N  msg:acr_nav.Screenshot
 atfdb.tmsg  tmsg:acr_nav.FilterCycleComplete/100020.in  istuple:N  msg:"acr_nav.SendKey  key:Tab"
@@ -340,6 +341,7 @@ atfdb.tmsg  tmsg:acr_nav.Help/100030.in  istuple:N  msg:"acr_nav.SendKey  key:?"
 atfdb.tmsg  tmsg:acr_nav.Help/100040.in  istuple:N  msg:acr_nav.Screenshot
 atfdb.tmsg  tmsg:acr_nav.Help/100050.in  istuple:N  msg:"acr_nav.SendKey  key:?"
 atfdb.tmsg  tmsg:acr_nav.Help/100060.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.LeftItems/099990.in  istuple:N  msg:"acr_nav.SetTermSize  term_hei:100000  term_wid:120"
 atfdb.tmsg  tmsg:acr_nav.LeftItems/100000.in  istuple:N  msg:acr_nav.Screenshot
 atfdb.tmsg  tmsg:acr_nav.LeftItems/100010.in  istuple:N  msg:"acr_nav.SendKey  key:Home"
 atfdb.tmsg  tmsg:acr_nav.LeftItems/100020.in  istuple:N  msg:"acr_nav.SendKey  key:Enter"
