@@ -1,11 +1,25 @@
-acr_nav.Ack  ack:acr_nav.Navigate  ok:Y  ctype:dmmeta.Ctype  viewmode:xref  navstack_depth:0  msg:""
+acr_nav.Ack  ack:acr_nav.Navigate  ok:Y  ctype:dmmeta.Ctype  viewmode:fields  navstack_depth:0  msg:""
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1413  n_ctype:1414  n_field:5687  viewmode:xref  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1413  n_ctype:1414  n_field:5687  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:59  scroll_offset:0  n_items:211  sel_value:dmmeta.Ctype
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:64  sel_value:abt_md.FCtype.base
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:4  sel_value:dmmeta.Ctype.ctype
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1413  n_ctype:1414  n_field:5687  viewmode:xref  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
-acr_nav.PanelState  panel:ctype_list  sel_row:59  scroll_offset:0  n_items:211  sel_value:dmmeta.Ctype
+acr_nav.Ack  ack:acr_nav.Navigate  ok:Y  ctype:dmmeta.Anonfld  viewmode:fields  navstack_depth:1  msg:""
+
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:1  n_sel_ctype:1413  n_ctype:1414  n_field:5687  viewmode:nsdep  breadcrumb:"dmmeta.Ctype › dmmeta"  filtertarget:ctype  hints:"↑↓←→  Backspace:back  /:filter  ?:help  q:quit"  sel_nav_col:0
+acr_nav.PanelState  panel:ctype_list  sel_row:37  scroll_offset:0  n_items:211  sel_value:dmmeta
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:36  sel_value:"Upstream (dmmeta imports from):"
+
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:1  n_sel_ctype:1413  n_ctype:1414  n_field:5687  viewmode:nsdep_detail  breadcrumb:"dmmeta.Ctype › dmmeta"  filtertarget:ctype  hints:"↑↓←→  Backspace:back  /:filter  ?:help  q:quit"  sel_nav_col:0
+acr_nav.PanelState  panel:ctype_list  sel_row:37  scroll_offset:0  n_items:211  sel_value:dmmeta
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:609  sel_value:"Upstream (dmmeta imports from): 312 fields, 4 namespaces"
+
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:1  n_sel_ctype:1413  n_ctype:1414  n_field:5687  viewmode:nsdep  breadcrumb:"dmmeta.Ctype › dmmeta"  filtertarget:ctype  hints:"↑↓←→  Backspace:back  /:filter  ?:help  q:quit"  sel_nav_col:0
+acr_nav.PanelState  panel:ctype_list  sel_row:37  scroll_offset:0  n_items:211  sel_value:dmmeta
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:36  sel_value:"Upstream (dmmeta imports from):"
+
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:1  n_sel_ctype:1413  n_ctype:1414  n_field:5687  viewmode:nsdep  breadcrumb:"dmmeta.Ctype › dmmeta"  filtertarget:ctype  hints:"↑↓←→  Backspace:back  /:filter  ?:help  q:quit"  sel_nav_col:0
+acr_nav.PanelState  panel:ctype_list  sel_row:37  scroll_offset:0  n_items:211  sel_value:dmmeta
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
 acr_nav.VisibleLeftItem  row:2  value:abt_md  kind:ns  collapsed:Y  n_match:29  n_record:0
@@ -217,69 +231,41 @@ acr_nav.VisibleLeftItem  row:207  value:strconv  kind:ns  collapsed:Y  n_match:1
 acr_nav.VisibleLeftItem  row:208  value:sv2ssim  kind:ns  collapsed:Y  n_match:4  n_record:0
 acr_nav.VisibleLeftItem  row:209  value:ws  kind:ns  collapsed:Y  n_match:16  n_record:0
 acr_nav.VisibleLeftItem  row:210  value:wsdb  kind:ns  collapsed:Y  n_match:1  n_record:0
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:64  sel_value:abt_md.FCtype.base
-acr_nav.VisibleField  row:0  field:abt_md.FCtype.base  arg:abt_md.FCtype  reftype:Base  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:1  field:acr.FCtype.base  arg:acr.FCtype  reftype:Base  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:2  field:acr.RecSortkey.ctype  arg:acr.RecSortkey  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:3  field:acr_compl.FCtype.msghdr  arg:acr_compl.FCtype  reftype:Base  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:4  field:acr_ed.FCtype.msghdr  arg:acr_ed.FCtype  reftype:Base  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:5  field:acr_in.FCtype.msghdr  arg:acr_in.FCtype  reftype:Base  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:6  field:acr_nav.FCtype.base  arg:acr_nav.FCtype  reftype:Base  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:7  field:algo.Imtable.elem_type  arg:algo.Imtable  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:8  field:amc.FCtype.msghdr  arg:amc.FCtype  reftype:Base  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:9  field:amc.FStatictuple.ctype  arg:amc.FStatictuple  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:10  field:amc_vis.FCtype.msghdr  arg:amc_vis.FCtype  reftype:Base  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:11  field:amcdb.Bltin.ctype  arg:amcdb.Bltin  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:12  field:apm.FCtype.base  arg:apm.FCtype  reftype:Base  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:13  field:command.acr_ed.ctype  arg:command.acr_ed  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:14  field:command.acr_ed.subset  arg:command.acr_ed  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:15  field:command.acr_ed.subset2  arg:command.acr_ed  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:16  field:command.acr_ed.arg  arg:command.acr_ed  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:17  field:command.amc_vis.ctype  arg:command.amc_vis  reftype:RegxSql  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:18  field:command.atf_cmdline.dregx  arg:command.atf_cmdline  reftype:RegxSql  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:19  field:command.atf_cmdline.dpkey  arg:command.atf_cmdline  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:20  field:dmmeta.Argvtype.ctype  arg:dmmeta.Argvtype  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:21  field:dmmeta.Cafter.ctype  arg:dmmeta.Cafter  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:22  field:dmmeta.Cafter.after  arg:dmmeta.Cafter  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:23  field:dmmeta.Ccmp.ctype  arg:dmmeta.Ccmp  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:24  field:dmmeta.Cdflt.ctype  arg:dmmeta.Cdflt  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:25  field:dmmeta.Cextern.ctype  arg:dmmeta.Cextern  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:26  field:dmmeta.Cfast.ctype  arg:dmmeta.Cfast  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:27  field:dmmeta.Cfmt.ctype  arg:dmmeta.Cfmt  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:28  field:dmmeta.Cget.ctype  arg:dmmeta.Cget  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:29  field:dmmeta.Chash.ctype  arg:dmmeta.Chash  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:30  field:dmmeta.Ckafka.ctype  arg:dmmeta.Ckafka  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:31  field:dmmeta.Cpptype.ctype  arg:dmmeta.Cpptype  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:32  field:dmmeta.Csize.ctype  arg:dmmeta.Csize  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:33  field:dmmeta.Cstr.ctype  arg:dmmeta.Cstr  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:34  field:dmmeta.Ctypelen.ctype  arg:dmmeta.Ctypelen  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:35  field:dmmeta.DispatchMsg.ctype  arg:dmmeta.DispatchMsg  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:36  field:dmmeta.Dispctx.ctype  arg:dmmeta.Dispctx  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:37  field:dmmeta.Fcurs.ctype  arg:dmmeta.Fcurs  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:38  field:dmmeta.Ffast.ctype  arg:dmmeta.Ffast  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:39  field:dmmeta.Field.ctype  arg:dmmeta.Field  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:40  field:dmmeta.Field.arg  arg:dmmeta.Field  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:41  field:dmmeta.Floadtuples.ctype  arg:dmmeta.Floadtuples  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:42  field:dmmeta.Func.ctype  arg:dmmeta.Func  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:43  field:dmmeta.Fwddecl.ctype  arg:dmmeta.Fwddecl  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:44  field:dmmeta.Gconst.namefldctyp  arg:dmmeta.Gconst  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:45  field:dmmeta.Gsymbol.symboltype  arg:dmmeta.Gsymbol  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:46  field:dmmeta.Jstype.ctype  arg:dmmeta.Jstype  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:47  field:dmmeta.Lenfld.ctype  arg:dmmeta.Lenfld  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:48  field:dmmeta.Msgtype.ctype  arg:dmmeta.Msgtype  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:49  field:dmmeta.Nossimfile.ctype  arg:dmmeta.Nossimfile  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:50  field:dmmeta.Numstr.numtype  arg:dmmeta.Numstr  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:51  field:dmmeta.Pack.ctype  arg:dmmeta.Pack  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:52  field:dmmeta.Pmaskfld.ctype  arg:dmmeta.Pmaskfld  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:53  field:dmmeta.Pnew.ctype  arg:dmmeta.Pnew  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:54  field:dmmeta.Smallstr.ctype  arg:dmmeta.Smallstr  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:55  field:dmmeta.Sqltype.ctype  arg:dmmeta.Sqltype  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:56  field:dmmeta.Ssimfile.ctype  arg:dmmeta.Ssimfile  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:57  field:dmmeta.Ssimreq.parent_ctype  arg:dmmeta.Ssimreq  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:58  field:dmmeta.Svtype.ctype  arg:dmmeta.Svtype  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:59  field:dmmeta.Typefld.ctype  arg:dmmeta.Typefld  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:60  field:lib_ctype.FCtype.msghdr  arg:lib_ctype.FCtype  reftype:Base  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:61  field:lib_sqlite.FCtype.base  arg:lib_sqlite.FCtype  reftype:Base  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:62  field:ssim2mysql.FCtype.msghdr  arg:ssim2mysql.FCtype  reftype:Base  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:63  field:sv2ssim.FField.ctype  arg:sv2ssim.FField  reftype:Pkey  style:field_upref  navigable:Y  match:N
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:36  sel_value:"Upstream (dmmeta imports from):"
+acr_nav.VisibleLine  row:0  value:"Upstream (dmmeta imports from):"
+acr_nav.VisibleLine  row:1  value:"   algo    199 fields"
+acr_nav.VisibleLine  row:2  value:"  other    109 fields"
+acr_nav.VisibleLine  row:3  value:"  amcdb      3 fields"
+acr_nav.VisibleLine  row:4  value:"    dev      1 field"
+acr_nav.VisibleLine  row:5  value:""
+acr_nav.VisibleLine  row:6  value:"Downstream (imports from dmmeta):"
+acr_nav.VisibleLine  row:7  value:"         amc    110 fields"
+acr_nav.VisibleLine  row:8  value:"     command     25 fields"
+acr_nav.VisibleLine  row:9  value:"      acr_ed     15 fields"
+acr_nav.VisibleLine  row:10  value:"         acr     13 fields"
+acr_nav.VisibleLine  row:11  value:"      abt_md     13 fields"
+acr_nav.VisibleLine  row:12  value:"   lib_ctype     11 fields"
+acr_nav.VisibleLine  row:13  value:"   acr_compl     10 fields"
+acr_nav.VisibleLine  row:14  value:"      acr_in      9 fields"
+acr_nav.VisibleLine  row:15  value:"  ssim2mysql      7 fields"
+acr_nav.VisibleLine  row:16  value:"         apm      6 fields"
+acr_nav.VisibleLine  row:17  value:"  lib_sqlite      6 fields"
+acr_nav.VisibleLine  row:18  value:"     acr_nav      5 fields"
+acr_nav.VisibleLine  row:19  value:"     amc_vis      5 fields"
+acr_nav.VisibleLine  row:20  value:"        algo      2 fields"
+acr_nav.VisibleLine  row:21  value:"     sv2ssim      2 fields"
+acr_nav.VisibleLine  row:22  value:"    src_func      2 fields"
+acr_nav.VisibleLine  row:23  value:"    algo_lib      2 fields"
+acr_nav.VisibleLine  row:24  value:"         dev      2 fields"
+acr_nav.VisibleLine  row:25  value:"       amsdb      2 fields"
+acr_nav.VisibleLine  row:26  value:"      atf_ci      2 fields"
+acr_nav.VisibleLine  row:27  value:"       atfdb      2 fields"
+acr_nav.VisibleLine  row:28  value:"     src_hdr      2 fields"
+acr_nav.VisibleLine  row:29  value:"      acr_my      2 fields"
+acr_nav.VisibleLine  row:30  value:"       amcdb      1 field"
+acr_nav.VisibleLine  row:31  value:"        gcli      1 field"
+acr_nav.VisibleLine  row:32  value:"      gclidb      1 field"
+acr_nav.VisibleLine  row:33  value:"     atf_amc      1 field"
+acr_nav.VisibleLine  row:34  value:"         abt      1 field"
+acr_nav.VisibleLine  row:35  value:"   acr_navdb      1 field"
 

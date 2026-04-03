@@ -225,9 +225,9 @@ static void RenderTitleBar(RenderCtx &ctx) {
 static void EmitStyledPreviewHeader(cstring &buf, algo::strptr hdr, acr_nav::FViewmode &vm, acr_nav::FNavstyle &base_style, int h_scroll = 0) {
     int prev_end = 0;
     int hdr_n = elems_N(hdr);
-    int n_nav = acr_nav::preview_nav_N(vm);
+    int n_nav = acr_nav::nav_col_N(vm);
     for (int ni = 0; ni < n_nav; ni++) {
-        acr_nav::PreviewNavCol &nc = acr_nav::preview_nav_qFind(vm, ni);
+        acr_nav::PreviewNavCol &nc = acr_nav::nav_col_qFind(vm, ni);
         if (ch_N(nc.target_ctype) == 0) {
             continue;  // non-FK column, no highlight -- inside loop, not function return
         }
@@ -396,7 +396,7 @@ static void RenderColumnHeader(RenderCtx &ctx) {
     acr_nav::FNavstyle &base_hdr_style = !ctx.left_focused ? *ctx.p_title_focus : *ctx.p_title_nofocus;
     EmitStyle(ctx.buf, base_hdr_style);
     if (!ctx.has_fields && acr_nav::_db.p_cur_viewmode == acr_nav::ind_viewmode_Find("preview")
-        && acr_nav::preview_nav_N(*acr_nav::_db.p_cur_viewmode) > 0) {
+        && acr_nav::nav_col_N(*acr_nav::_db.p_cur_viewmode) > 0) {
         EmitStyledPreviewHeader(ctx.buf, strptr(hdr), *acr_nav::_db.p_cur_viewmode, base_hdr_style, ctx.preview_h_scroll);
     } else {
         ctx.buf << hdr;
@@ -455,9 +455,9 @@ static void DetectPreviewOverlay(RenderCtx &ctx, int right_data_idx, int skip_by
     acr_nav::FViewmode &pvm = *acr_nav::ind_viewmode_Find("preview");
     if (right_sel && !ctx.left_focused
         && acr_nav::_db.p_cur_viewmode == &pvm) {
-        int n_nav = acr_nav::preview_nav_N(pvm);
+        int n_nav = acr_nav::nav_col_N(pvm);
         if (n_nav > 0 && acr_nav::_db.sel_nav_col < n_nav) {
-            acr_nav::PreviewNavCol &nc = acr_nav::preview_nav_qFind(pvm, acr_nav::_db.sel_nav_col);
+            acr_nav::PreviewNavCol &nc = acr_nav::nav_col_qFind(pvm, acr_nav::_db.sel_nav_col);
             algo::strptr data_line = RightPanelLineFind(right_data_idx);
             int ov_raw_s = DisplayToByte(data_line, nc.col_start);
             int ov_raw_e = DisplayToByte(data_line, nc.col_start + nc.col_wid);
@@ -581,11 +581,14 @@ static void RenderStatusBar(RenderCtx &ctx) {
     }
     BuildStatusHint(status);
     acr_nav::FPanel &cur = *acr_nav::_db.p_cur_panel;
-    if (acr_nav::_db.p_cur_viewmode == acr_nav::ind_viewmode_Find("graph")
-        && acr_nav::_db.p_graph_ctype
+    acr_nav::FViewmode &graph_vm = *acr_nav::ind_viewmode_Find("graph");
+    acr_nav::FCtype *graph_ct = ch_N(graph_vm.cached_key) > 0
+        ? acr_nav::ind_ctype_Find(graph_vm.cached_key) : nullptr;
+    if (acr_nav::_db.p_cur_viewmode == &graph_vm
+        && graph_ct
         && cur.position == 1) {
         acr_nav::FField *fld = NULL;
-        GraphInfoAtLine(*acr_nav::_db.p_graph_ctype, cur.sel_row, NULL, &fld);
+        GraphInfoAtLine(*graph_ct, cur.sel_row, NULL, &fld);
         if (fld && ch_N(fld->p_reftype->comment) > 0) {
             status << G_SEP << fld->p_reftype->comment;
         }
@@ -612,10 +615,10 @@ static void AdjustPreviewHScroll(int right_wid) {
     int h = pvm.preview_h_scroll;
     if (acr_nav::_db.p_cur_viewmode == &pvm) {
         int avail = right_wid - 1;  // -1 for leading space in right_cell
-        int n_nav = acr_nav::preview_nav_N(pvm);
+        int n_nav = acr_nav::nav_col_N(pvm);
         if (pvm.total_content_wid > avail && avail > 0 && n_nav > 0) {
             int sel = i32_Min(acr_nav::_db.sel_nav_col, n_nav - 1);
-            acr_nav::PreviewNavCol &nc = acr_nav::preview_nav_qFind(pvm, sel);
+            acr_nav::PreviewNavCol &nc = acr_nav::nav_col_qFind(pvm, sel);
             // Selected column off-screen left: snap to its start
             if (nc.col_start < h) {
                 h = nc.col_start;
@@ -626,7 +629,7 @@ static void AdjustPreviewHScroll(int right_wid) {
                 int min_start = nc.col_start + nc.col_wid - avail;
                 h = nc.col_start;  // fallback: start at selected column
                 for (int i = 0; i < n_nav; i++) {
-                    int cs = acr_nav::preview_nav_qFind(pvm, i).col_start;
+                    int cs = acr_nav::nav_col_qFind(pvm, i).col_start;
                     if (cs >= min_start) {
                         h = i32_Min(cs, nc.col_start);
                         break;

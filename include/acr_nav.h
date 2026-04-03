@@ -45,9 +45,11 @@ namespace acr_nav { // update-hdr
 
     // Ensure-content wrappers for hook dispatch.
     // Each normalizes the lazy-load check to the ensure_content hook signature.
-    void PreviewEnsureContent(void *, acr_nav::FCtype &ct);
-    void CodegenEnsureContent(void *, acr_nav::FCtype &ct);
-    void NsDepEnsureContent(void *, acr_nav::FCtype &ct);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void viewmode_preview_ensure_content(acr_nav::FCtype &ct); // gstatic/acr_navdb.viewmode:preview
+    // void viewmode_codegen_ensure_content(acr_nav::FCtype &ct); // gstatic/acr_navdb.viewmode:codegen
+    // void viewmode_nsdep_ensure_content(acr_nav::FCtype &ct); // gstatic/acr_navdb.viewmode:nsdep
+    // void viewmode_nsdep_detail_ensure_content(acr_nav::FCtype &ct); // gstatic/acr_navdb.viewmode:nsdep_detail
 
     // Load metadata records for a single field from detailsrc ssimfiles.
     // Re-serializes the dmmeta.field record as the first card, then scans each
@@ -79,7 +81,8 @@ namespace acr_nav { // update-hdr
     // Reverse of GraphInfoAtLine: given a neighbor ctype, return its first line in the graph.
     // Returns -1 if not found.
     int GraphFindCtypeLine(acr_nav::FCtype &center, acr_nav::FCtype *target);
-    void GraphEnsureContent(void *, acr_nav::FCtype &ct);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void viewmode_graph_ensure_content(acr_nav::FCtype &ct); // gstatic/acr_navdb.viewmode:graph
 
     // -------------------------------------------------------------------
     // cpp/acr_nav/main.cpp
@@ -128,6 +131,8 @@ namespace acr_nav { // update-hdr
     // void navaction_go_back(); // gstatic/acr_navdb.navaction:go_back
     // void navaction_quit(); // gstatic/acr_navdb.navaction:quit
     // void navaction_cycle_viewmode(); // gstatic/acr_navdb.navaction:cycle_viewmode
+    void ToggleViewmode(acr_nav::FViewmode *target);
+    //     (user-implemented function, prototype is in amc-generated header)
     // void navaction_filter_accept(); // gstatic/acr_navdb.navaction:filter_accept
     // void navaction_filter_start(); // gstatic/acr_navdb.navaction:filter_start
     // void navaction_filter_cancel(); // gstatic/acr_navdb.navaction:filter_cancel
@@ -203,10 +208,9 @@ namespace acr_nav { // update-hdr
     // Reset a viewmode to empty: clear lines, spans, nav columns, header, and h-scroll.
     void ResetViewmodeContent(acr_nav::FViewmode &vm);
 
-    // Clear cached content for content-loading viewmodes (preview, codegen, graph).
+    // Clear cached content for all viewmodes with non-empty cached_key.
     // Called when the selected ctype becomes NULL (namespace header row), so stale
     // content from the previous ctype is not displayed.
-    // nsdep excluded: caches by namespace, handles NULL selection in RightPanelItemCount.
     void ClearContentCaches();
 
     // True if the byte range [byte_start, byte_end) in line contains at least one non-space character.
@@ -214,7 +218,7 @@ namespace acr_nav { // update-hdr
 
     // Add a color span to a viewmode. Positions are 0-based relative to stored line text.
     // Spans must be emitted in line_idx then col_start order. No overlapping spans.
-    // Caller must ensure line_idx < line_N(vm).
+    // Caller must ensure line_idx < content_row_N(vm).
     // Whitespace-only regions are silently skipped.
     void AddSpan(acr_nav::FViewmode &vm, int line_idx, int col_start, int col_end, acr_nav::FNavstyle *p_style);
 

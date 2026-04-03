@@ -1,6 +1,7 @@
 acr_navdb.keybind  keybind:browse./  navaction:filter_start  comment:""
 acr_navdb.keybind  keybind:"browse.?"  navaction:show_help  comment:""
 acr_navdb.keybind  keybind:browse.Backspace  navaction:go_back  comment:""
+acr_navdb.keybind  keybind:browse.D  navaction:toggle_nsdep_detail  comment:""
 acr_navdb.keybind  keybind:browse.Down  navaction:move_down  comment:""
 acr_navdb.keybind  keybind:browse.End  navaction:go_bottom  comment:""
 acr_navdb.keybind  keybind:browse.Enter  navaction:follow_ref  comment:""

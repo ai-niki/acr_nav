@@ -1,12 +1,12 @@
-acr_nav.Ack  ack:acr_nav.SetView  ok:N  ctype:""  viewmode:help  navstack_depth:0  msg:"nsdep is context-sensitive"
+acr_nav.Ack  ack:acr_nav.SetView  ok:N  ctype:""  viewmode:help  navstack_depth:0  msg:"namespace-scoped viewmode is context-sensitive"
 
 acr_nav.Ack  ack:acr_nav.SetView  ok:N  ctype:""  viewmode:help  navstack_depth:0  msg:"use SendKey key:d on a field"
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1412  n_ctype:1413  n_field:5685  viewmode:help  breadcrumb:""  filtertarget:ctype  hints:"Esc/?:dismiss  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1413  n_ctype:1414  n_field:5687  viewmode:help  breadcrumb:""  filtertarget:ctype  hints:"Esc/?:dismiss  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:83  sel_value:""
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:22  sel_value:"── Movement keys ───────────────────"
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:23  sel_value:"── Movement keys ───────────────────"
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1412  n_ctype:1413  n_field:5685  viewmode:help  breadcrumb:""  filtertarget:ctype  hints:"Esc/?:dismiss  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1413  n_ctype:1414  n_field:5687  viewmode:help  breadcrumb:""  filtertarget:ctype  hints:"Esc/?:dismiss  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:83  sel_value:""
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
@@ -17,7 +17,7 @@ acr_nav.VisibleLeftItem  row:5  value:acr_dm  kind:ns  collapsed:Y  n_match:6  n
 acr_nav.VisibleLeftItem  row:6  value:acr_ed  kind:ns  collapsed:Y  n_match:19  n_record:0
 acr_nav.VisibleLeftItem  row:7  value:acr_in  kind:ns  collapsed:Y  n_match:12  n_record:0
 acr_nav.VisibleLeftItem  row:8  value:acr_my  kind:ns  collapsed:Y  n_match:3  n_record:0
-acr_nav.VisibleLeftItem  row:9  value:acr_nav  kind:ns  collapsed:Y  n_match:36  n_record:0
+acr_nav.VisibleLeftItem  row:9  value:acr_nav  kind:ns  collapsed:Y  n_match:37  n_record:0
 acr_nav.VisibleLeftItem  row:10  value:acr_navdb  kind:ns  collapsed:Y  n_match:10  n_record:0
 acr_nav.VisibleLeftItem  row:11  value:algo  kind:ns  collapsed:Y  n_match:225  n_record:0
 acr_nav.VisibleLeftItem  row:12  value:algo_lib  kind:ns  collapsed:Y  n_match:35  n_record:0
@@ -91,7 +91,7 @@ acr_nav.VisibleLeftItem  row:79  value:strconv  kind:ns  collapsed:Y  n_match:1 
 acr_nav.VisibleLeftItem  row:80  value:sv2ssim  kind:ns  collapsed:Y  n_match:4  n_record:0
 acr_nav.VisibleLeftItem  row:81  value:ws  kind:ns  collapsed:Y  n_match:16  n_record:0
 acr_nav.VisibleLeftItem  row:82  value:wsdb  kind:ns  collapsed:Y  n_match:1  n_record:0
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:22  sel_value:"── Movement keys ───────────────────"
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:23  sel_value:"── Movement keys ───────────────────"
 acr_nav.VisibleLine  row:0  value:"── Movement keys ───────────────────"
 acr_nav.VisibleLine  row:1  value:"  ↑/k/↓/j             Move selection up/down"
 acr_nav.VisibleLine  row:2  value:"  PgUp/b/PgDown/Space  Page up/down"
@@ -108,10 +108,11 @@ acr_nav.VisibleLine  row:12  value:"  c                   Toggle generated code 
 acr_nav.VisibleLine  row:13  value:"  f                   Toggle fields view"
 acr_nav.VisibleLine  row:14  value:"  v                   Toggle access path graph view"
 acr_nav.VisibleLine  row:15  value:"  x                   Toggle cross-reference view"
-acr_nav.VisibleLine  row:16  value:"── Search and filter keys ──────────"
-acr_nav.VisibleLine  row:17  value:"  /                   Enter filter input mode"
-acr_nav.VisibleLine  row:18  value:"  Escape              Dismiss overlay or clear filter"
-acr_nav.VisibleLine  row:19  value:"── Help and quit ───────────────────"
-acr_nav.VisibleLine  row:20  value:"  ?                   Toggle help panel"
-acr_nav.VisibleLine  row:21  value:"  q                   Exit acr_nav"
+acr_nav.VisibleLine  row:16  value:"  D                   Toggle detailed namespace dependency view"
+acr_nav.VisibleLine  row:17  value:"── Search and filter keys ──────────"
+acr_nav.VisibleLine  row:18  value:"  /                   Enter filter input mode"
+acr_nav.VisibleLine  row:19  value:"  Escape              Dismiss overlay or clear filter"
+acr_nav.VisibleLine  row:20  value:"── Help and quit ───────────────────"
+acr_nav.VisibleLine  row:21  value:"  ?                   Toggle help panel"
+acr_nav.VisibleLine  row:22  value:"  q                   Exit acr_nav"
 

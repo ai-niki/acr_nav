@@ -36,7 +36,6 @@ using acr_nav::NsDisplayName;
 using acr_nav::RightPanelLineFind;
 using acr_nav::RightPanelFieldFind;
 using acr_nav::DisplayToByte;
-using acr_nav::GraphInfoAtLine;
 using acr_nav::DataRows;
 using acr_nav::FindSsimfile;
 using acr_nav::LoadNsDep;
@@ -229,7 +228,12 @@ bool acr_nav::PopOverlayOnCtypeChange(acr_nav::FCtype *prev_sel_ct, acr_nav::FCt
         } else {
             acr_nav::FNs *ns = SelectedNs();
             if (ns && ns != acr_nav::_db.p_nsdep_ns) {
-                LoadNsDep(*ns);
+                acr_nav::FCtype *proxy = acr_nav::c_ctype_N(*ns) > 0
+                    ? acr_nav::c_ctype_Find(*ns, 0) : nullptr;
+                if (proxy) {
+                    acr_nav::ensure_content_Call(*acr_nav::_db.p_cur_viewmode, *proxy);
+                }
+                acr_nav::_db.p_nsdep_ns = ns;
                 nsdep_changed = true;
             }
         }
@@ -251,7 +255,7 @@ bool acr_nav::PopOverlayOnCtypeChange(acr_nav::FCtype *prev_sel_ct, acr_nav::FCt
             nsdep_changed = true;
         }
     }
-    // Auto-activate nsdep when landing on a namespace-header row
+    // Auto-activate scope_ns when landing on a namespace-header row
     if (!IsNsDepMode() && !sel_ct && !acr_nav::_db.p_cur_viewmode->is_overlay) {
         acr_nav::FNs *ns = SelectedNs();
         if (ns) {
@@ -381,8 +385,7 @@ void acr_nav::navaction_page_down() {
 void acr_nav::navaction_switch_panel_left() {
     acr_nav::FPanel &panel = *acr_nav::_db.p_cur_panel;
     if (panel.position > acr_nav::_db.p_left_panel->position) {
-        acr_nav::FViewmode &pvm = *acr_nav::_db.p_cur_viewmode;
-        int n_nav = acr_nav::preview_nav_N(pvm);
+        int n_nav = acr_nav::nav_col_N(*acr_nav::_db.p_cur_viewmode);
         if (n_nav > 0 && acr_nav::_db.sel_nav_col > 0) {
             acr_nav::_db.sel_nav_col = acr_nav::_db.sel_nav_col - 1;
         } else {
@@ -395,15 +398,13 @@ void acr_nav::navaction_switch_panel_left() {
 
 void acr_nav::navaction_switch_panel_right() {
     acr_nav::FPanel &panel = *acr_nav::_db.p_cur_panel;
-    acr_nav::FViewmode &pvm = *acr_nav::ind_viewmode_Find("preview");
     if (panel.position < acr_nav::_db.p_right_panel->position) {
-        // Filter is a left-panel concern; leaving left panel accepts the filter
         if (acr_nav::_db.p_cur_mode == acr_nav::_db.p_filter_mode) {
             SwitchToBrowse();
         }
         acr_nav::_db.p_cur_panel = acr_nav::_db.p_right_panel;
-    } else if (acr_nav::_db.p_cur_viewmode == &pvm) {
-        int n_nav = acr_nav::preview_nav_N(pvm);
+    } else {
+        int n_nav = acr_nav::nav_col_N(*acr_nav::_db.p_cur_viewmode);
         if (n_nav > 0 && acr_nav::_db.sel_nav_col < n_nav - 1) {
             acr_nav::_db.sel_nav_col = acr_nav::_db.sel_nav_col + 1;
         }
@@ -440,21 +441,10 @@ static void FollowRefLeftPanel(acr_nav::FPanel *left) {
 
 // -----------------------------------------------------------------------------
 
-// Graph mode Enter: navigate to the neighbor ctype on the selected line.
-static void FollowRefGraph(acr_nav::FPanel &panel, acr_nav::FCtype *sel_ct) {
-    acr_nav::FCtype *target = NULL;
-    GraphInfoAtLine(*sel_ct, panel.sel_row, &target, NULL);
-    if (target && target != sel_ct) {
-        NavigateToTarget(sel_ct, target, acr_nav::ind_viewmode_Find("graph"));
-    }
-}
-
-// -----------------------------------------------------------------------------
-
 // NsDep mode Enter: jump to the namespace on the selected line.
 // Keeps the target namespace collapsed and selects its header row.
 static void FollowRefNsDep(acr_nav::FPanel &panel, acr_nav::FPanel *left, acr_nav::FCtype *sel_ct) {
-    acr_nav::FViewmode &vm = *acr_nav::ind_viewmode_Find("nsdep");
+    acr_nav::FViewmode &vm = *acr_nav::_db.p_cur_viewmode;
     acr_nav::FNs *target_ns = NsDepNsAtLine(vm, panel.sel_row);
     if (target_ns) {
         PushNaventry(sel_ct ? algo::strptr(sel_ct->ctype)
@@ -467,33 +457,6 @@ static void FollowRefNsDep(acr_nav::FPanel &panel, acr_nav::FPanel *left, acr_na
         int idx = FindLeftItemByNsHeader(target_ns->ns);
         if (idx >= 0) {
             left->sel_row = idx;
-        }
-    }
-}
-
-// -----------------------------------------------------------------------------
-
-// Preview mode Enter: extract cell value from the selected navigable column
-// and follow the foreign-key reference to the target ctype.
-static void FollowRefPreview(acr_nav::FPanel &panel, acr_nav::FCtype *sel_ct) {
-    acr_nav::FViewmode &pvm = *acr_nav::ind_viewmode_Find("preview");
-    int n_nav = acr_nav::preview_nav_N(pvm);
-    if (n_nav > 0 && acr_nav::_db.sel_nav_col < n_nav
-        && panel.sel_row < acr_nav::line_N(pvm)) {
-        acr_nav::PreviewNavCol &nc = acr_nav::preview_nav_qFind(pvm, acr_nav::_db.sel_nav_col);
-        algo::strptr row_text = RightPanelLineFind(panel.sel_row);
-        int start = DisplayToByte(row_text, nc.col_start);
-        int end = i32_Min(DisplayToByte(row_text, nc.col_start + nc.col_wid), elems_N(row_text));
-        tempstr cell_value;
-        if (start < elems_N(row_text)) {
-            algo::strptr raw_cell(row_text.elems + start, end - start);
-            cell_value << algo::TrimmedRight(raw_cell);
-        }
-        acr_nav::FCtype *target = ch_N(nc.target_ctype) > 0
-            ? acr_nav::ind_ctype_Find(nc.target_ctype) : nullptr;
-        if (target && target != sel_ct && ch_N(cell_value) > 0) {
-            acr_nav::_db.preview_nav_pending = cell_value;
-            NavigateToTarget(sel_ct, target, acr_nav::ind_viewmode_Find("preview"));
         }
     }
 }
@@ -521,17 +484,49 @@ void acr_nav::navaction_follow_ref() {
     acr_nav::FCtype *sel_ct = SelectedCtype(*left);
     if (panel.position == 0) {
         FollowRefLeftPanel(left);
-    } else if (panel.position == 1 && sel_ct
-               && acr_nav::_db.p_cur_viewmode == acr_nav::ind_viewmode_Find("graph")) {
-        FollowRefGraph(panel, sel_ct);
-    } else if (panel.position == 1 && IsNsDepMode()) {
-        FollowRefNsDep(panel, left, sel_ct);
-    } else if (panel.position == 1 && sel_ct
-               && acr_nav::_db.p_cur_viewmode == acr_nav::ind_viewmode_Find("preview")) {
-        FollowRefPreview(panel, sel_ct);
-    } else if (panel.position == 1 && acr_nav::_db.p_cur_viewmode->has_fields
-               && sel_ct && panel.sel_row < RightPanelItemCount(sel_ct)) {
+    } else if (acr_nav::_db.p_cur_viewmode->has_fields && sel_ct
+               && panel.sel_row < RightPanelItemCount(sel_ct)) {
         FollowRefFields(panel, sel_ct);
+    } else if (acr_nav::nav_col_N(*acr_nav::_db.p_cur_viewmode) > 0
+               && panel.sel_row < acr_nav::content_row_N(*acr_nav::_db.p_cur_viewmode)) {
+        acr_nav::ContentRow &row = acr_nav::content_row_qFind(*acr_nav::_db.p_cur_viewmode, panel.sel_row);
+        int col = i32_Min(acr_nav::_db.sel_nav_col, acr_nav::nav_col_N(*acr_nav::_db.p_cur_viewmode) - 1);
+        acr_nav::PreviewNavCol &nc = acr_nav::nav_col_qFind(*acr_nav::_db.p_cur_viewmode, col);
+        algo::strptr target_key;
+        if (acr_nav::nav_target_N(row) > 0 && col < acr_nav::nav_target_N(row)) {
+            target_key = acr_nav::nav_target_qFind(row, col);
+        } else if (acr_nav::nav_target_N(row) == 0) {
+            target_key = nc.target_ctype;
+        }
+        if (ch_N(target_key) > 0) {
+            acr_nav::FCtype *target = acr_nav::ind_ctype_Find(target_key);
+            if (target && target != sel_ct) {
+                tempstr cell_value;
+                if (nc.col_wid > 0) {
+                    algo::strptr row_text = RightPanelLineFind(panel.sel_row);
+                    int start = DisplayToByte(row_text, nc.col_start);
+                    int end = i32_Min(DisplayToByte(row_text, nc.col_start + nc.col_wid), elems_N(row_text));
+                    if (start < elems_N(row_text)) {
+                        algo::strptr raw_cell(row_text.elems + start, end - start);
+                        cell_value << algo::TrimmedRight(raw_cell);
+                    }
+                }
+                bool has_cell = ch_N(cell_value) > 0 || acr_nav::nav_target_N(row) > 0;
+                if (has_cell && sel_ct) {
+                    if (acr_nav::_db.p_cur_viewmode->pkey_wid > 0) {
+                        acr_nav::_db.preview_nav_pending = cell_value;
+                    }
+                    NavigateToTarget(sel_ct, target, acr_nav::_db.p_cur_viewmode);
+                } else if (has_cell) {
+                    PushNaventry(acr_nav::_db.p_nsdep_ns
+                        ? NsDisplayName(*acr_nav::_db.p_nsdep_ns)
+                        : algo::strptr(""));
+                    GoToCtype(target->ctype, acr_nav::_db.p_default_viewmode);
+                }
+            }
+        }
+    } else if (acr_nav::_db.p_cur_viewmode->scope_ns) {
+        FollowRefNsDep(panel, left, sel_ct);
     }
 }
 
@@ -616,7 +611,7 @@ void acr_nav::navaction_cycle_viewmode() {
 
 // -----------------------------------------------------------------------------
 
-static void ToggleViewmode(acr_nav::FViewmode *target) {
+void acr_nav::ToggleViewmode(acr_nav::FViewmode *target) {
     bool in_target = (acr_nav::_db.p_cur_viewmode == target);
     bool can_enter = !in_target;
     if (can_enter && target->need_ssimfile) {
@@ -626,23 +621,12 @@ static void ToggleViewmode(acr_nav::FViewmode *target) {
     acr_nav::_db.p_cur_viewmode = can_enter ? target : acr_nav::_db.p_default_viewmode;
 }
 
-void acr_nav::navaction_toggle_preview() { ToggleViewmode(acr_nav::ind_viewmode_Find("preview")); }
-
-// -----------------------------------------------------------------------------
-
-void acr_nav::navaction_toggle_codegen() { ToggleViewmode(acr_nav::ind_viewmode_Find("codegen")); }
-
-// -----------------------------------------------------------------------------
-
-void acr_nav::navaction_toggle_fields() { ToggleViewmode(acr_nav::_db.p_default_viewmode); }
-
-// -----------------------------------------------------------------------------
-
-void acr_nav::navaction_toggle_xref()    { ToggleViewmode(acr_nav::ind_viewmode_Find("xref")); }
-
-// -----------------------------------------------------------------------------
-
-void acr_nav::navaction_toggle_graph()   { ToggleViewmode(acr_nav::ind_viewmode_Find("graph")); }
+void acr_nav::navaction_toggle_preview() {}
+void acr_nav::navaction_toggle_codegen() {}
+void acr_nav::navaction_toggle_fields() {}
+void acr_nav::navaction_toggle_xref() {}
+void acr_nav::navaction_toggle_graph() {}
+void acr_nav::navaction_toggle_nsdep_detail() {}
 
 // -----------------------------------------------------------------------------
 

@@ -101,7 +101,7 @@ static void DetectNavColumns(acr_nav::FViewmode &vm, acr_nav::FCtype *field_base
         if (c > 0) {
             col_pos += 2; // separator
         }
-        acr_nav::PreviewNavCol &nc = acr_nav::preview_nav_Alloc(vm);
+        acr_nav::PreviewNavCol &nc = acr_nav::nav_col_Alloc(vm);
         nc.col_start = col_pos;
         nc.col_wid = display_wid[c];
         nc.name_len = ch_N(col_name[c]);
@@ -150,8 +150,8 @@ static void FormatPreviewRows(acr_nav::FViewmode &vm, algo_lib::MmapFile &file,
             tempstr row;
             int col_byte_pos[64];
             FormatPreviewRow(row, tuple, display_wid, n_col, col_byte_pos);
-            acr_nav::line_Alloc(vm) = row;
-            int li = acr_nav::line_N(vm) - 1;
+            acr_nav::content_row_Alloc(vm).text = row;
+            int li = acr_nav::content_row_N(vm) - 1;
             if (n_col > 0) {
                 int pkey_end = (n_col > 1) ? col_byte_pos[1] - 2 : ch_N(row);
                 AddSpan(vm, li, 0, pkey_end, acr_nav::ind_navstyle_Find("line_key"));
@@ -170,7 +170,7 @@ static void LoadPreview(acr_nav::FCtype &ctype) {
     ClearViewmodeLines(vm);
     vm.header = "";
     vm.preview_h_scroll = 0;
-    acr_nav::_db.p_preview_ctype = &ctype;
+    vm.cached_key = ctype.ctype;
     acr_nav::FSsimfile *ssimfile = FindSsimfile(ctype);
     if (ssimfile) {
         tempstr path;
@@ -189,9 +189,9 @@ static void LoadPreview(acr_nav::FCtype &ctype) {
             FormatPreviewRows(vm, file, display_wid, n_col, comment_col);
             // Apply deferred follow-ref match
             if (ch_N(pending) > 0 && vm.pkey_wid > 0) {
-                int n_lines = acr_nav::line_N(vm);
+                int n_lines = acr_nav::content_row_N(vm);
                 for (int i = 0; i < n_lines; i++) {
-                    algo::strptr row = acr_nav::line_qFind(vm, i);
+                    algo::strptr row = acr_nav::content_row_qFind(vm, i).text;
                     int end = i32_Min(DisplayToByte(row, vm.pkey_wid), elems_N(row));
                     algo::strptr pkey_raw(row.elems, end);
                     tempstr pkey;
@@ -322,15 +322,15 @@ static void HighlightCppLine(acr_nav::FViewmode &vm, int line_idx, algo::strptr 
 static void LoadCodegen(acr_nav::FCtype &ctype) {
     acr_nav::FViewmode &vm = *acr_nav::ind_viewmode_Find("codegen");
     ClearViewmodeLines(vm);
-    acr_nav::_db.p_codegen_ctype = &ctype;
+    vm.cached_key = ctype.ctype;
     tempstr cmd;
     cmd << "amc '" << ctype.ctype << "'";
     vm.header = cmd;
     tempstr output = SysEval(cmd, FailokQ(true), 64*1024);
     ind_beg(Line_curs, line, output) {
         if (!StartsWithQ(line, "report.")) {
-            acr_nav::line_Alloc(vm) = line;
-            HighlightCppLine(vm, acr_nav::line_N(vm) - 1, line);
+            acr_nav::content_row_Alloc(vm).text = line;
+            HighlightCppLine(vm, acr_nav::content_row_N(vm) - 1, line);
         }
     } ind_end;
 }
@@ -356,11 +356,11 @@ static void FormatNsDepSection(acr_nav::FViewmode &vm, algo::strptr header,
     {
         tempstr hdr;
         hdr << header;
-        acr_nav::line_Alloc(vm) = hdr;
-        AddSpan(vm, acr_nav::line_N(vm) - 1, 0, ch_N(hdr), acr_nav::ind_navstyle_Find("line_section"));
+        acr_nav::content_row_Alloc(vm).text = hdr;
+        AddSpan(vm, acr_nav::content_row_N(vm) - 1, 0, ch_N(hdr), acr_nav::ind_navstyle_Find("line_section"));
     }
     if (n == 0) {
-        acr_nav::line_Alloc(vm) = "  (none)";
+        acr_nav::content_row_Alloc(vm).text = "  (none)";
     }
     // Find max ns name width for alignment
     int max_wid = 0;
@@ -383,8 +383,8 @@ static void FormatNsDepSection(acr_nav::FViewmode &vm, algo::strptr header,
         char_PrintNTimes(' ', row, i32_Max(0, 5 - digs));
         row << cnt;
         row << (cnt == 1 ? " field" : " fields");
-        acr_nav::line_Alloc(vm) = row;
-        AddSpan(vm, acr_nav::line_N(vm) - 1, ns_start, ns_end, acr_nav::ind_navstyle_Find("line_key"));
+        acr_nav::content_row_Alloc(vm).text = row;
+        AddSpan(vm, acr_nav::content_row_N(vm) - 1, ns_start, ns_end, acr_nav::ind_navstyle_Find("line_key"));
     }
 }
 
@@ -394,8 +394,8 @@ static void FormatNsDepSection(acr_nav::FViewmode &vm, algo::strptr header,
 acr_nav::FNs* acr_nav::NsDepNsAtLine(acr_nav::FViewmode &vm, int line_idx) {
     acr_nav::FNavstyle *line_key_style = acr_nav::ind_navstyle_Find("line_key");
     acr_nav::FNs *ret = NULL;
-    if (line_idx >= 0 && line_idx < acr_nav::line_N(vm)) {
-        algo::strptr line_text = acr_nav::line_qFind(vm, line_idx);
+    if (line_idx >= 0 && line_idx < acr_nav::content_row_N(vm)) {
+        algo::strptr line_text = acr_nav::content_row_qFind(vm, line_idx).text;
         bool found = false;
         for (int si = 0; si < acr_nav::cspan_N(vm) && !found; si++) {
             acr_nav::LineColorSpan &span = acr_nav::cspan_qFind(vm, si);
@@ -438,10 +438,11 @@ void acr_nav::LoadNsDep(acr_nav::FNs &ns) {
     acr_nav::FViewmode &vm = *acr_nav::ind_viewmode_Find("nsdep");
     ClearViewmodeLines(vm);
     acr_nav::_db.p_nsdep_ns = &ns;
+    vm.cached_key = ns.ns;
     // Fixed-size accumulator for per-namespace counts
     NsDep deps[256];
     if (acr_nav::ns_N() > 256) {
-        acr_nav::line_Alloc(vm) = "(too many namespaces)";
+        acr_nav::content_row_Alloc(vm).text = "(too many namespaces)";
     } else {
         // --- Upstream: fields in this ns whose arg is in another ns ---
         int n_up = 0;
@@ -470,7 +471,7 @@ void acr_nav::LoadNsDep(acr_nav::FNs &ns) {
             } ind_end;
         } ind_end;
         // Blank separator
-        acr_nav::line_Alloc(vm) = "";
+        acr_nav::content_row_Alloc(vm).text = "";
         // Format downstream section
         {
             tempstr hdr;
@@ -483,21 +484,236 @@ void acr_nav::LoadNsDep(acr_nav::FNs &ns) {
 
 // Ensure-content wrappers for hook dispatch.
 // Each normalizes the lazy-load check to the ensure_content hook signature.
-void acr_nav::PreviewEnsureContent(void *, acr_nav::FCtype &ct) {
-    if (acr_nav::_db.p_preview_ctype != &ct) {
+void acr_nav::viewmode_preview_ensure_content(acr_nav::FCtype &ct) {
+    acr_nav::FViewmode &vm = *acr_nav::ind_viewmode_Find("preview");
+    if (vm.cached_key != ct.ctype) {
         LoadPreview(ct);
     }
 }
 
-void acr_nav::CodegenEnsureContent(void *, acr_nav::FCtype &ct) {
-    if (acr_nav::_db.p_codegen_ctype != &ct) {
+void acr_nav::viewmode_codegen_ensure_content(acr_nav::FCtype &ct) {
+    acr_nav::FViewmode &vm = *acr_nav::ind_viewmode_Find("codegen");
+    if (vm.cached_key != ct.ctype) {
         LoadCodegen(ct);
     }
 }
 
-void acr_nav::NsDepEnsureContent(void *, acr_nav::FCtype &ct) {
-    if (acr_nav::_db.p_nsdep_ns != ct.p_ns) {
+void acr_nav::viewmode_nsdep_ensure_content(acr_nav::FCtype &ct) {
+    acr_nav::FViewmode &vm = *acr_nav::ind_viewmode_Find("nsdep");
+    if (vm.cached_key != ct.p_ns->ns) {
         LoadNsDep(*ct.p_ns);
+    }
+}
+
+void acr_nav::viewmode_fields_ensure_content(acr_nav::FCtype &) {}
+void acr_nav::viewmode_xref_ensure_content(acr_nav::FCtype &) {}
+void acr_nav::viewmode_help_ensure_content(acr_nav::FCtype &) {}
+void acr_nav::viewmode_detail_ensure_content(acr_nav::FCtype &) {}
+
+// Per-field cross-namespace dependency detail.
+// Groups fields by foreign namespace, showing the actual field→arg references.
+static void LoadNsDepDetail(acr_nav::FNs &ns) {
+    acr_nav::FViewmode &vm = *acr_nav::ind_viewmode_Find("nsdep_detail");
+    ClearViewmodeLines(vm);
+    vm.cached_key = ns.ns;
+    acr_nav::_db.p_nsdep_ns = &ns;
+    algo::strptr display_name = NsDisplayName(ns);
+    // Fixed-size accumulators for per-namespace field lists
+    struct NsFieldGroup {
+        acr_nav::FNs *ns;
+        acr_nav::FField *fields[256];
+        int n_field;
+    };
+    NsFieldGroup up_groups[64];
+    int n_up = 0;
+    NsFieldGroup down_groups[64];
+    int n_down = 0;
+    // Upstream: fields in this ns whose arg is in another ns
+    ind_beg(acr_nav::ns_c_ctype_curs, ct, ns) {
+        ind_beg(acr_nav::ctype_c_field_curs, fld, ct) {
+            if (fld.p_arg && fld.p_arg->p_ns != &ns) {
+                acr_nav::FNs *target_ns = fld.p_arg->p_ns;
+                int gi = -1;
+                for (int i = 0; i < n_up; i++) {
+                    if (up_groups[i].ns == target_ns) { gi = i; break; }
+                }
+                if (gi < 0 && n_up < 64) {
+                    gi = n_up++;
+                    up_groups[gi].ns = target_ns;
+                    up_groups[gi].n_field = 0;
+                }
+                if (gi >= 0 && up_groups[gi].n_field < 256) {
+                    up_groups[gi].fields[up_groups[gi].n_field++] = &fld;
+                }
+            }
+        } ind_end;
+    } ind_end;
+    // Downstream: fields from other ns whose arg is a ctype in this ns
+    ind_beg(acr_nav::ns_c_ctype_curs, ct, ns) {
+        ind_beg(acr_nav::ctype_c_field_arg_curs, fld, ct) {
+            if (fld.p_ctype->p_ns != &ns) {
+                acr_nav::FNs *source_ns = fld.p_ctype->p_ns;
+                int gi = -1;
+                for (int i = 0; i < n_down; i++) {
+                    if (down_groups[i].ns == source_ns) { gi = i; break; }
+                }
+                if (gi < 0 && n_down < 64) {
+                    gi = n_down++;
+                    down_groups[gi].ns = source_ns;
+                    down_groups[gi].n_field = 0;
+                }
+                if (gi >= 0 && down_groups[gi].n_field < 256) {
+                    down_groups[gi].fields[down_groups[gi].n_field++] = &fld;
+                }
+            }
+        } ind_end;
+    } ind_end;
+    // Measure column widths
+    int max_field_wid = 5;  // "field" header
+    int max_arg_wid = 3;    // "arg" header
+    int max_ref_wid = 7;    // "reftype" header
+    for (int d = 0; d < 2; d++) {
+        NsFieldGroup *groups = d == 0 ? up_groups : down_groups;
+        int n = d == 0 ? n_up : n_down;
+        for (int gi = 0; gi < n; gi++) {
+            for (int fi = 0; fi < groups[gi].n_field; fi++) {
+                acr_nav::FField &fld = *groups[gi].fields[fi];
+                max_field_wid = i32_Max(max_field_wid, ch_N(fld.field));
+                max_arg_wid = i32_Max(max_arg_wid, ch_N(fld.p_arg->ctype));
+                max_ref_wid = i32_Max(max_ref_wid, ch_N(fld.reftype));
+            }
+        }
+    }
+    int arg_col = max_field_wid + 2;
+    int ref_col = arg_col + max_arg_wid + 2;
+    // Add nav_col for the arg column
+    acr_nav::PreviewNavCol &nc = acr_nav::nav_col_Alloc(vm);
+    nc.col_start = arg_col;
+    nc.col_wid = max_arg_wid;
+    nc.col_name = "arg";
+    nc.target_ctype = "";
+    // Sort groups by field count descending (insertion sort)
+    for (int d = 0; d < 2; d++) {
+        NsFieldGroup *groups = d == 0 ? up_groups : down_groups;
+        int n = d == 0 ? n_up : n_down;
+        for (int i = 1; i < n; i++) {
+            NsFieldGroup tmp = groups[i];
+            int j = i - 1;
+            while (j >= 0 && groups[j].n_field < tmp.n_field) {
+                groups[j + 1] = groups[j];
+                j--;
+            }
+            groups[j + 1] = tmp;
+        }
+    }
+    // Count totals
+    int total_up = 0, total_down = 0;
+    for (int gi = 0; gi < n_up; gi++) total_up += up_groups[gi].n_field;
+    for (int gi = 0; gi < n_down; gi++) total_down += down_groups[gi].n_field;
+    // Emit upstream section
+    {
+        tempstr hdr;
+        hdr << "Upstream (" << display_name << " imports from): "
+            << total_up << (total_up == 1 ? " field, " : " fields, ")
+            << n_up << (n_up == 1 ? " namespace" : " namespaces");
+        acr_nav::ContentRow &cr = acr_nav::content_row_Alloc(vm);
+        cr.text = hdr;
+        acr_nav::nav_target_Alloc(cr) = "";
+        AddSpan(vm, acr_nav::content_row_N(vm) - 1, 0, ch_N(hdr), acr_nav::ind_navstyle_Find("line_section"));
+    }
+    for (int gi = 0; gi < n_up; gi++) {
+        NsFieldGroup &g = up_groups[gi];
+        tempstr section;
+        section << G_HORIZ << G_HORIZ << " " << NsDisplayName(*g.ns)
+                << " (" << g.n_field << (g.n_field == 1 ? " field) " : " fields) ");
+        int display_width = ch_N(section) - Utf8ExtraBytes(strptr(section));
+        int fill = i32_Max(0, 50 - display_width);
+        for (int i = 0; i < fill; i++) section << G_HORIZ;
+        acr_nav::ContentRow &scr = acr_nav::content_row_Alloc(vm);
+        scr.text = section;
+        acr_nav::nav_target_Alloc(scr) = "";
+        AddSpan(vm, acr_nav::content_row_N(vm) - 1, 0, ch_N(section), acr_nav::ind_navstyle_Find("line_section"));
+        for (int fi = 0; fi < g.n_field; fi++) {
+            acr_nav::FField &fld = *g.fields[fi];
+            tempstr row;
+            row << "  " << fld.field;
+            char_PrintNTimes(' ', row, arg_col - ch_N(row) + 2);
+            int arg_start = ch_N(row);
+            row << fld.p_arg->ctype;
+            int arg_end = ch_N(row);
+            char_PrintNTimes(' ', row, ref_col - ch_N(row) + 2);
+            row << fld.reftype;
+            acr_nav::ContentRow &cr = acr_nav::content_row_Alloc(vm);
+            cr.text = row;
+            acr_nav::nav_target_Alloc(cr) = fld.p_arg->ctype;
+            int li = acr_nav::content_row_N(vm) - 1;
+            AddSpan(vm, li, 2, 2 + ch_N(fld.field), acr_nav::ind_navstyle_Find("line_key"));
+            AddSpan(vm, li, arg_start, arg_end, acr_nav::ind_navstyle_Find("line_comment"));
+        }
+    }
+    if (n_up == 0) {
+        acr_nav::ContentRow &ncr = acr_nav::content_row_Alloc(vm);
+        ncr.text = "  (none)";
+        acr_nav::nav_target_Alloc(ncr) = "";
+    }
+    {
+        acr_nav::ContentRow &sep = acr_nav::content_row_Alloc(vm);
+        sep.text = "";
+        acr_nav::nav_target_Alloc(sep) = "";
+    }
+    // Emit downstream section
+    {
+        tempstr hdr;
+        hdr << "Downstream (imports from " << display_name << "): "
+            << total_down << (total_down == 1 ? " field, " : " fields, ")
+            << n_down << (n_down == 1 ? " namespace" : " namespaces");
+        acr_nav::ContentRow &dcr = acr_nav::content_row_Alloc(vm);
+        dcr.text = hdr;
+        acr_nav::nav_target_Alloc(dcr) = "";
+        AddSpan(vm, acr_nav::content_row_N(vm) - 1, 0, ch_N(hdr), acr_nav::ind_navstyle_Find("line_section"));
+    }
+    for (int gi = 0; gi < n_down; gi++) {
+        NsFieldGroup &g = down_groups[gi];
+        tempstr section;
+        section << G_HORIZ << G_HORIZ << " " << NsDisplayName(*g.ns)
+                << " (" << g.n_field << (g.n_field == 1 ? " field) " : " fields) ");
+        int display_width = ch_N(section) - Utf8ExtraBytes(strptr(section));
+        int fill = i32_Max(0, 50 - display_width);
+        for (int i = 0; i < fill; i++) section << G_HORIZ;
+        acr_nav::ContentRow &dscr = acr_nav::content_row_Alloc(vm);
+        dscr.text = section;
+        acr_nav::nav_target_Alloc(dscr) = "";
+        AddSpan(vm, acr_nav::content_row_N(vm) - 1, 0, ch_N(section), acr_nav::ind_navstyle_Find("line_section"));
+        for (int fi = 0; fi < g.n_field; fi++) {
+            acr_nav::FField &fld = *g.fields[fi];
+            tempstr row;
+            row << "  " << fld.field;
+            char_PrintNTimes(' ', row, arg_col - ch_N(row) + 2);
+            int arg_start = ch_N(row);
+            row << fld.p_arg->ctype;
+            int arg_end = ch_N(row);
+            char_PrintNTimes(' ', row, ref_col - ch_N(row) + 2);
+            row << fld.reftype;
+            acr_nav::ContentRow &cr = acr_nav::content_row_Alloc(vm);
+            cr.text = row;
+            acr_nav::nav_target_Alloc(cr) = fld.p_arg->ctype;
+            int li = acr_nav::content_row_N(vm) - 1;
+            AddSpan(vm, li, 2, 2 + ch_N(fld.field), acr_nav::ind_navstyle_Find("line_key"));
+            AddSpan(vm, li, arg_start, arg_end, acr_nav::ind_navstyle_Find("line_comment"));
+        }
+    }
+    if (n_down == 0) {
+        acr_nav::ContentRow &ndcr = acr_nav::content_row_Alloc(vm);
+        ndcr.text = "  (none)";
+        acr_nav::nav_target_Alloc(ndcr) = "";
+    }
+    vm.header = NsDisplayName(ns);
+}
+
+void acr_nav::viewmode_nsdep_detail_ensure_content(acr_nav::FCtype &ct) {
+    acr_nav::FViewmode &vm = *acr_nav::ind_viewmode_Find("nsdep_detail");
+    if (vm.cached_key != ct.p_ns->ns) {
+        LoadNsDepDetail(*ct.p_ns);
     }
 }
 
@@ -508,8 +724,8 @@ static void EmitSectionHeader(acr_nav::FViewmode &vm, algo::strptr title) {
     int display_width = ch_N(hdr) - Utf8ExtraBytes(strptr(hdr));
     int fill = i32_Max(0, 36 - display_width);
     for (int i = 0; i < fill; i++) hdr << G_HORIZ;
-    acr_nav::line_Alloc(vm) = hdr;
-    AddSpan(vm, acr_nav::line_N(vm) - 1, 0, ch_N(hdr), acr_nav::ind_navstyle_Find("line_section"));
+    acr_nav::content_row_Alloc(vm).text = hdr;
+    AddSpan(vm, acr_nav::content_row_N(vm) - 1, 0, ch_N(hdr), acr_nav::ind_navstyle_Find("line_section"));
 }
 
 // Format a single ssim record as a vertical card: section header + one key:value per line.
@@ -540,13 +756,12 @@ static void FormatDetailCard(acr_nav::FViewmode &vm, algo::Tuple &tuple, algo::s
             tempstr safe(attr.value);
             SanitizeForDisplay(safe);
             row << safe;
-            acr_nav::line_Alloc(vm) = row;
-            AddSpan(vm, acr_nav::line_N(vm) - 1, 2, 2 + ch_N(attr.name), acr_nav::ind_navstyle_Find("line_key"));
+            acr_nav::content_row_Alloc(vm).text = row;
+            AddSpan(vm, acr_nav::content_row_N(vm) - 1, 2, 2 + ch_N(attr.name), acr_nav::ind_navstyle_Find("line_key"));
         }
         ai++;
     } ind_end;
-    // Blank separator between cards
-    acr_nav::line_Alloc(vm) = strptr();
+    acr_nav::content_row_Alloc(vm).text = strptr();
 }
 
 // Load metadata records for a single field from detailsrc ssimfiles.
@@ -617,12 +832,15 @@ int acr_nav::RightPanelItemCount(acr_nav::FCtype *sel_ct) {
         if (sel_ct && acr_nav::_db.p_cur_viewmode->ensure_content) {
             acr_nav::ensure_content_Call(*acr_nav::_db.p_cur_viewmode, *sel_ct);
         }
-        // Fallback for nsdep namespace-header rows where sel_ct is NULL --
-        // the hook path above handles the ctype case via NsDepEnsureContent.
-        if (!sel_ct && IsNsDepMode()) {
+        // Namespace-scoped viewmodes: when sel_ct is NULL (namespace header),
+        // trigger ensure_content via a proxy ctype from the selected namespace.
+        if (!sel_ct && acr_nav::_db.p_cur_viewmode->scope_ns) {
             acr_nav::FNs *ns = SelectedNs();
-            if (ns && acr_nav::_db.p_nsdep_ns != ns) {
-                LoadNsDep(*ns);
+            if (ns && acr_nav::c_ctype_N(*ns) > 0) {
+                acr_nav::FCtype *proxy = acr_nav::c_ctype_Find(*ns, 0);
+                if (proxy) {
+                    acr_nav::ensure_content_Call(*acr_nav::_db.p_cur_viewmode, *proxy);
+                }
             }
         }
         ret = RightPanelLineCount();
@@ -814,8 +1032,8 @@ void acr_nav::BuildHelpLines() {
             char_PrintNTimes(' ', line, i32_Max(2, 22 - ch_N(line) + extra));
             int comment_start = ch_N(line);
             line << comment;
-            acr_nav::line_Alloc(vm) = line;
-            int li = acr_nav::line_N(vm) - 1;
+            acr_nav::content_row_Alloc(vm).text = line;
+            int li = acr_nav::content_row_N(vm) - 1;
             AddSpan(vm, li, 2, keys_end, acr_nav::ind_navstyle_Find("line_key"));
             AddSpan(vm, li, comment_start, ch_N(line), acr_nav::ind_navstyle_Find("line_comment"));
         }

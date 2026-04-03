@@ -138,17 +138,17 @@ bool acr_nav::IsDetailMode() {
 }
 
 bool acr_nav::IsNsDepMode() {
-    return acr_nav::_db.p_cur_viewmode == acr_nav::ind_viewmode_Find("nsdep");
+    return acr_nav::_db.p_cur_viewmode->scope_ns;
 }
 
 // -----------------------------------------------------------------------------
 
 int acr_nav::RightPanelLineCount() {
-    return acr_nav::line_N(*acr_nav::_db.p_cur_viewmode);
+    return acr_nav::content_row_N(*acr_nav::_db.p_cur_viewmode);
 }
 
 algo::strptr acr_nav::RightPanelLineFind(int idx) {
-    return acr_nav::line_qFind(*acr_nav::_db.p_cur_viewmode, idx);
+    return acr_nav::content_row_qFind(*acr_nav::_db.p_cur_viewmode, idx).text;
 }
 
 algo::strptr acr_nav::RightPanelLineHeader() {
@@ -185,9 +185,9 @@ int acr_nav::PrintRecordCount(cstring &out, acr_nav::FCtype &ctype) {
 
 // Clear all line content and color spans from a viewmode.
 void acr_nav::ClearViewmodeLines(acr_nav::FViewmode &vm) {
-    acr_nav::line_RemoveAll(vm);
+    acr_nav::content_row_RemoveAll(vm);
     acr_nav::cspan_RemoveAll(vm);
-    acr_nav::preview_nav_RemoveAll(vm);
+    acr_nav::nav_col_RemoveAll(vm);
 }
 
 // Reset a viewmode to empty: clear lines, spans, nav columns, header, and h-scroll.
@@ -197,17 +197,16 @@ void acr_nav::ResetViewmodeContent(acr_nav::FViewmode &vm) {
     vm.preview_h_scroll = 0;
 }
 
-// Clear cached content for content-loading viewmodes (preview, codegen, graph).
+// Clear cached content for all viewmodes with non-empty cached_key.
 // Called when the selected ctype becomes NULL (namespace header row), so stale
 // content from the previous ctype is not displayed.
-// nsdep excluded: caches by namespace, handles NULL selection in RightPanelItemCount.
 void acr_nav::ClearContentCaches() {
-    ResetViewmodeContent(*acr_nav::ind_viewmode_Find("preview"));
-    ResetViewmodeContent(*acr_nav::ind_viewmode_Find("codegen"));
-    ResetViewmodeContent(*acr_nav::ind_viewmode_Find("graph"));
-    acr_nav::_db.p_preview_ctype = NULL;
-    acr_nav::_db.p_codegen_ctype = NULL;
-    acr_nav::_db.p_graph_ctype = NULL;
+    ind_beg(acr_nav::_db_viewmode_curs, vm, acr_nav::_db) {
+        if (ch_N(vm.cached_key) > 0) {
+            ResetViewmodeContent(vm);
+            vm.cached_key = "";
+        }
+    } ind_end;
 }
 
 // True if the byte range [byte_start, byte_end) in line contains at least one non-space character.
@@ -222,11 +221,11 @@ bool acr_nav::RegionHasContent(algo::strptr line, int byte_start, int byte_end) 
 
 // Add a color span to a viewmode. Positions are 0-based relative to stored line text.
 // Spans must be emitted in line_idx then col_start order. No overlapping spans.
-// Caller must ensure line_idx < line_N(vm).
+// Caller must ensure line_idx < content_row_N(vm).
 // Whitespace-only regions are silently skipped.
 void acr_nav::AddSpan(acr_nav::FViewmode &vm, int line_idx, int col_start, int col_end, acr_nav::FNavstyle *p_style) {
     if (col_start < col_end && p_style
-        && RegionHasContent(acr_nav::line_qFind(vm, line_idx), col_start, col_end)) {
+        && RegionHasContent(acr_nav::content_row_qFind(vm, line_idx).text, col_start, col_end)) {
         acr_nav::LineColorSpan &span = acr_nav::cspan_Alloc(vm);
         span.line_idx = line_idx;
         span.col_start = col_start;

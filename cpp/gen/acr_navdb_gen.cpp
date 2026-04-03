@@ -109,6 +109,7 @@ const char* acr_navdb::value_ToCstr(const acr_navdb::FieldId& parent) {
         case acr_navdb_FieldId_passive     : ret = "passive";  break;
         case acr_navdb_FieldId_need_no_overlay: ret = "need_no_overlay";  break;
         case acr_navdb_FieldId_dismiss_viewmode: ret = "dismiss_viewmode";  break;
+        case acr_navdb_FieldId_target_viewmode: ret = "target_viewmode";  break;
         case acr_navdb_FieldId_status_hint : ret = "status_hint";  break;
         case acr_navdb_FieldId_navstyle    : ret = "navstyle";  break;
         case acr_navdb_FieldId_bold        : ret = "bold";  break;
@@ -127,6 +128,7 @@ const char* acr_navdb::value_ToCstr(const acr_navdb::FieldId& parent) {
         case acr_navdb_FieldId_is_overlay  : ret = "is_overlay";  break;
         case acr_navdb_FieldId_need_ssimfile: ret = "need_ssimfile";  break;
         case acr_navdb_FieldId_is_reverse  : ret = "is_reverse";  break;
+        case acr_navdb_FieldId_scope_ns    : ret = "scope_ns";  break;
         case acr_navdb_FieldId_value       : ret = "value";  break;
     }
     return ret;
@@ -223,6 +225,9 @@ bool acr_navdb::value_SetStrptrMaybe(acr_navdb::FieldId& parent, algo::strptr rh
                 }
                 case LE_STR8('p','o','s','i','t','i','o','n'): {
                     value_SetEnum(parent,acr_navdb_FieldId_position); ret = true; break;
+                }
+                case LE_STR8('s','c','o','p','e','_','n','s'): {
+                    value_SetEnum(parent,acr_navdb_FieldId_scope_ns); ret = true; break;
                 }
                 case LE_STR8('v','i','e','w','m','o','d','e'): {
                     value_SetEnum(parent,acr_navdb_FieldId_viewmode); ret = true; break;
@@ -327,6 +332,10 @@ bool acr_navdb::value_SetStrptrMaybe(acr_navdb::FieldId& parent, algo::strptr rh
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('n','e','e','d','_','n','o','_'): {
                     if (memcmp(rhs.elems+8,"overlay",7)==0) { value_SetEnum(parent,acr_navdb_FieldId_need_no_overlay); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('t','a','r','g','e','t','_','v'): {
+                    if (memcmp(rhs.elems+8,"iewmode",7)==0) { value_SetEnum(parent,acr_navdb_FieldId_target_viewmode); ret = true; break; }
                     break;
                 }
             }
@@ -679,6 +688,9 @@ bool acr_navdb::Navaction_ReadFieldMaybe(acr_navdb::Navaction& parent, algo::str
         case acr_navdb_FieldId_dismiss_viewmode: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.dismiss_viewmode, strval);
         } break;
+        case acr_navdb_FieldId_target_viewmode: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.target_viewmode, strval);
+        } break;
         case acr_navdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
         } break;
@@ -729,6 +741,9 @@ void acr_navdb::Navaction_Print(acr_navdb::Navaction& row, algo::cstring& str) {
 
     algo::Smallstr50_Print(row.dismiss_viewmode, temp);
     PrintAttrSpaceReset(str,"dismiss_viewmode", temp);
+
+    algo::Smallstr50_Print(row.target_viewmode, temp);
+    PrintAttrSpaceReset(str,"target_viewmode", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
@@ -1046,6 +1061,9 @@ bool acr_navdb::Viewmode_ReadFieldMaybe(acr_navdb::Viewmode& parent, algo::strpt
         case acr_navdb_FieldId_status_hint: {
             retval = algo::Smallstr200_ReadStrptrMaybe(parent.status_hint, strval);
         } break;
+        case acr_navdb_FieldId_scope_ns: {
+            retval = bool_ReadStrptrMaybe(parent.scope_ns, strval);
+        } break;
         case acr_navdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
         } break;
@@ -1080,6 +1098,7 @@ void acr_navdb::Viewmode_Init(acr_navdb::Viewmode& parent) {
     parent.need_ssimfile = bool(false);
     parent.is_reverse = bool(false);
     parent.status_hint = algo::strptr("");
+    parent.scope_ns = bool(false);
 }
 
 // --- acr_navdb.Viewmode..Print
@@ -1115,6 +1134,9 @@ void acr_navdb::Viewmode_Print(acr_navdb::Viewmode& row, algo::cstring& str) {
 
     algo::Smallstr200_Print(row.status_hint, temp);
     PrintAttrSpaceReset(str,"status_hint", temp);
+
+    bool_Print(row.scope_ns, temp);
+    PrintAttrSpaceReset(str,"scope_ns", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);

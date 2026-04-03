@@ -1,5 +1,6 @@
 dmmeta.inlary  field:abt_md.FDb.mdsection  min:0  max:1  comment:""
 dmmeta.inlary  field:acr_ed.FDb.edaction  min:0  max:1  comment:""
+dmmeta.inlary  field:acr_nav.ContentRow.nav_target  min:0  max:4  comment:"Inline storage for up to 4 nav targets per row"
 dmmeta.inlary  field:algo.Charset.ch  min:8  max:8  comment:""
 dmmeta.inlary  field:algo.Md5Digest.value  min:16  max:16  comment:""
 dmmeta.inlary  field:algo.Sha1sig.sha1sig  min:20  max:20  comment:""

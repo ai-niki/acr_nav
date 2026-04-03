@@ -1,0 +1,831 @@
+acr_nav.Ack  ack:acr_nav.Navigate  ok:Y  ctype:dmmeta.Anonfld  viewmode:fields  navstack_depth:0  msg:""
+
+acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:0  n_sel_ctype:1413  n_ctype:1414  n_field:5687  viewmode:nsdep_detail  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
+acr_nav.PanelState  panel:ctype_list  sel_row:37  scroll_offset:0  n_items:211  sel_value:dmmeta
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:609  sel_value:"Upstream (dmmeta imports from): 312 fields, 4 namespaces"
+
+acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:0  n_sel_ctype:1413  n_ctype:1414  n_field:5687  viewmode:nsdep_detail  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
+acr_nav.PanelState  panel:ctype_list  sel_row:37  scroll_offset:0  n_items:211  sel_value:dmmeta
+acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
+acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
+acr_nav.VisibleLeftItem  row:2  value:abt_md  kind:ns  collapsed:Y  n_match:29  n_record:0
+acr_nav.VisibleLeftItem  row:3  value:acr  kind:ns  collapsed:Y  n_match:34  n_record:0
+acr_nav.VisibleLeftItem  row:4  value:acr_compl  kind:ns  collapsed:Y  n_match:16  n_record:0
+acr_nav.VisibleLeftItem  row:5  value:acr_dm  kind:ns  collapsed:Y  n_match:6  n_record:0
+acr_nav.VisibleLeftItem  row:6  value:acr_ed  kind:ns  collapsed:Y  n_match:19  n_record:0
+acr_nav.VisibleLeftItem  row:7  value:acr_in  kind:ns  collapsed:Y  n_match:12  n_record:0
+acr_nav.VisibleLeftItem  row:8  value:acr_my  kind:ns  collapsed:Y  n_match:3  n_record:0
+acr_nav.VisibleLeftItem  row:9  value:acr_nav  kind:ns  collapsed:Y  n_match:37  n_record:0
+acr_nav.VisibleLeftItem  row:10  value:acr_navdb  kind:ns  collapsed:Y  n_match:10  n_record:0
+acr_nav.VisibleLeftItem  row:11  value:algo  kind:ns  collapsed:Y  n_match:225  n_record:0
+acr_nav.VisibleLeftItem  row:12  value:algo_lib  kind:ns  collapsed:Y  n_match:35  n_record:0
+acr_nav.VisibleLeftItem  row:13  value:amc  kind:ns  collapsed:Y  n_match:130  n_record:0
+acr_nav.VisibleLeftItem  row:14  value:amc_gc  kind:ns  collapsed:Y  n_match:1  n_record:0
+acr_nav.VisibleLeftItem  row:15  value:amc_vis  kind:ns  collapsed:Y  n_match:12  n_record:0
+acr_nav.VisibleLeftItem  row:16  value:amcdb  kind:ns  collapsed:Y  n_match:7  n_record:0
+acr_nav.VisibleLeftItem  row:17  value:ams  kind:ns  collapsed:Y  n_match:23  n_record:0
+acr_nav.VisibleLeftItem  row:18  value:ams_sendtest  kind:ns  collapsed:Y  n_match:3  n_record:0
+acr_nav.VisibleLeftItem  row:19  value:amsdb  kind:ns  collapsed:Y  n_match:2  n_record:0
+acr_nav.VisibleLeftItem  row:20  value:apm  kind:ns  collapsed:Y  n_match:14  n_record:0
+acr_nav.VisibleLeftItem  row:21  value:aqlite  kind:ns  collapsed:Y  n_match:1  n_record:0
+acr_nav.VisibleLeftItem  row:22  value:atf  kind:ns  collapsed:Y  n_match:2  n_record:0
+acr_nav.VisibleLeftItem  row:23  value:atf_amc  kind:ns  collapsed:Y  n_match:99  n_record:0
+acr_nav.VisibleLeftItem  row:24  value:atf_ci  kind:ns  collapsed:Y  n_match:15  n_record:0
+acr_nav.VisibleLeftItem  row:25  value:atf_cmdline  kind:ns  collapsed:Y  n_match:1  n_record:0
+acr_nav.VisibleLeftItem  row:26  value:atf_comp  kind:ns  collapsed:Y  n_match:7  n_record:0
+acr_nav.VisibleLeftItem  row:27  value:atf_cov  kind:ns  collapsed:Y  n_match:9  n_record:0
+acr_nav.VisibleLeftItem  row:28  value:atf_exp  kind:ns  collapsed:Y  n_match:4  n_record:0
+acr_nav.VisibleLeftItem  row:29  value:atf_fuzz  kind:ns  collapsed:Y  n_match:3  n_record:0
+acr_nav.VisibleLeftItem  row:30  value:atf_gcli  kind:ns  collapsed:Y  n_match:6  n_record:0
+acr_nav.VisibleLeftItem  row:31  value:atf_nrun  kind:ns  collapsed:Y  n_match:2  n_record:0
+acr_nav.VisibleLeftItem  row:32  value:atf_unit  kind:ns  collapsed:Y  n_match:9  n_record:0
+acr_nav.VisibleLeftItem  row:33  value:atfdb  kind:ns  collapsed:Y  n_match:16  n_record:0
+acr_nav.VisibleLeftItem  row:34  value:bash2html  kind:ns  collapsed:Y  n_match:1  n_record:0
+acr_nav.VisibleLeftItem  row:35  value:command  kind:ns  collapsed:Y  n_match:48  n_record:0
+acr_nav.VisibleLeftItem  row:36  value:dev  kind:ns  collapsed:Y  n_match:48  n_record:0
+acr_nav.VisibleLeftItem  row:37  value:dmmeta  kind:ns  collapsed:N  n_match:128  n_record:0
+acr_nav.VisibleLeftItem  row:38  value:dmmeta.Anonfld  kind:ctype  collapsed:N  n_match:0  n_record:124
+acr_nav.VisibleLeftItem  row:39  value:dmmeta.Argvtype  kind:ctype  collapsed:N  n_match:0  n_record:11
+acr_nav.VisibleLeftItem  row:40  value:dmmeta.Basepool  kind:ctype  collapsed:N  n_match:0  n_record:7
+acr_nav.VisibleLeftItem  row:41  value:dmmeta.Bitfld  kind:ctype  collapsed:N  n_match:0  n_record:75
+acr_nav.VisibleLeftItem  row:42  value:dmmeta.Buftype  kind:ctype  collapsed:N  n_match:0  n_record:6
+acr_nav.VisibleLeftItem  row:43  value:dmmeta.Cafter  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:44  value:dmmeta.Cascdel  kind:ctype  collapsed:N  n_match:0  n_record:23
+acr_nav.VisibleLeftItem  row:45  value:dmmeta.Ccmp  kind:ctype  collapsed:N  n_match:0  n_record:223
+acr_nav.VisibleLeftItem  row:46  value:dmmeta.Cdflt  kind:ctype  collapsed:N  n_match:0  n_record:22
+acr_nav.VisibleLeftItem  row:47  value:dmmeta.Cextern  kind:ctype  collapsed:N  n_match:0  n_record:56
+acr_nav.VisibleLeftItem  row:48  value:dmmeta.Cfast  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:49  value:dmmeta.Cfmt  kind:ctype  collapsed:N  n_match:0  n_record:817
+acr_nav.VisibleLeftItem  row:50  value:dmmeta.Cget  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:51  value:dmmeta.Charset  kind:ctype  collapsed:N  n_match:0  n_record:23
+acr_nav.VisibleLeftItem  row:52  value:dmmeta.Chash  kind:ctype  collapsed:N  n_match:0  n_record:240
+acr_nav.VisibleLeftItem  row:53  value:dmmeta.Ckafka  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:54  value:dmmeta.Cppfunc  kind:ctype  collapsed:N  n_match:0  n_record:3
+acr_nav.VisibleLeftItem  row:55  value:dmmeta.Cppkeyword  kind:ctype  collapsed:N  n_match:0  n_record:84
+acr_nav.VisibleLeftItem  row:56  value:dmmeta.Cpptype  kind:ctype  collapsed:N  n_match:0  n_record:404
+acr_nav.VisibleLeftItem  row:57  value:dmmeta.Csize  kind:ctype  collapsed:N  n_match:0  n_record:32
+acr_nav.VisibleLeftItem  row:58  value:dmmeta.Cstr  kind:ctype  collapsed:N  n_match:0  n_record:141
+acr_nav.VisibleLeftItem  row:59  value:dmmeta.Ctype  kind:ctype  collapsed:N  n_match:0  n_record:1414
+acr_nav.VisibleLeftItem  row:60  value:dmmeta.Ctypelen  kind:ctype  collapsed:N  n_match:0  n_record:1327
+acr_nav.VisibleLeftItem  row:61  value:dmmeta.Dispatch  kind:ctype  collapsed:N  n_match:0  n_record:9
+acr_nav.VisibleLeftItem  row:62  value:dmmeta.DispatchMsg  kind:ctype  collapsed:N  n_match:0  n_record:28
+acr_nav.VisibleLeftItem  row:63  value:dmmeta.Dispctx  kind:ctype  collapsed:N  n_match:0  n_record:2
+acr_nav.VisibleLeftItem  row:64  value:dmmeta.Dispfilter  kind:ctype  collapsed:N  n_match:0  n_record:1
+acr_nav.VisibleLeftItem  row:65  value:dmmeta.Dispsig  kind:ctype  collapsed:N  n_match:0  n_record:41
+acr_nav.VisibleLeftItem  row:66  value:dmmeta.Dispsigcheck  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:67  value:dmmeta.Disptrace  kind:ctype  collapsed:N  n_match:0  n_record:2
+acr_nav.VisibleLeftItem  row:68  value:dmmeta.Falias  kind:ctype  collapsed:N  n_match:0  n_record:4
+acr_nav.VisibleLeftItem  row:69  value:dmmeta.Fastenc  kind:ctype  collapsed:N  n_match:0  n_record:9
+acr_nav.VisibleLeftItem  row:70  value:dmmeta.Fastinstr  kind:ctype  collapsed:N  n_match:0  n_record:3
+acr_nav.VisibleLeftItem  row:71  value:dmmeta.Fastop  kind:ctype  collapsed:N  n_match:0  n_record:7
+acr_nav.VisibleLeftItem  row:72  value:dmmeta.Fbase  kind:ctype  collapsed:N  n_match:0  n_record:80
+acr_nav.VisibleLeftItem  row:73  value:dmmeta.Fbigend  kind:ctype  collapsed:N  n_match:0  n_record:14
+acr_nav.VisibleLeftItem  row:74  value:dmmeta.Fbitset  kind:ctype  collapsed:N  n_match:0  n_record:7
+acr_nav.VisibleLeftItem  row:75  value:dmmeta.Fbuf  kind:ctype  collapsed:N  n_match:0  n_record:13
+acr_nav.VisibleLeftItem  row:76  value:dmmeta.Fbufdir  kind:ctype  collapsed:N  n_match:0  n_record:2
+acr_nav.VisibleLeftItem  row:77  value:dmmeta.Fbufiotype  kind:ctype  collapsed:N  n_match:0  n_record:3
+acr_nav.VisibleLeftItem  row:78  value:dmmeta.Fbuftype  kind:ctype  collapsed:N  n_match:0  n_record:4
+acr_nav.VisibleLeftItem  row:79  value:dmmeta.Fcast  kind:ctype  collapsed:N  n_match:0  n_record:210
+acr_nav.VisibleLeftItem  row:80  value:dmmeta.Fcleanup  kind:ctype  collapsed:N  n_match:0  n_record:19
+acr_nav.VisibleLeftItem  row:81  value:dmmeta.Fcmap  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:82  value:dmmeta.Fcmdline  kind:ctype  collapsed:N  n_match:0  n_record:46
+acr_nav.VisibleLeftItem  row:83  value:dmmeta.Fcmp  kind:ctype  collapsed:N  n_match:0  n_record:6
+acr_nav.VisibleLeftItem  row:84  value:dmmeta.Fcompact  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:85  value:dmmeta.Fconst  kind:ctype  collapsed:N  n_match:0  n_record:250
+acr_nav.VisibleLeftItem  row:86  value:dmmeta.Fcurs  kind:ctype  collapsed:N  n_match:0  n_record:16
+acr_nav.VisibleLeftItem  row:87  value:dmmeta.Fdec  kind:ctype  collapsed:N  n_match:0  n_record:30
+acr_nav.VisibleLeftItem  row:88  value:dmmeta.Fdelay  kind:ctype  collapsed:N  n_match:0  n_record:4
+acr_nav.VisibleLeftItem  row:89  value:dmmeta.Ffast  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:90  value:dmmeta.Fflag  kind:ctype  collapsed:N  n_match:0  n_record:2
+acr_nav.VisibleLeftItem  row:91  value:dmmeta.Field  kind:ctype  collapsed:N  n_match:0  n_record:5687
+acr_nav.VisibleLeftItem  row:92  value:dmmeta.Findrem  kind:ctype  collapsed:N  n_match:0  n_record:2
+acr_nav.VisibleLeftItem  row:93  value:dmmeta.Finput  kind:ctype  collapsed:N  n_match:0  n_record:316
+acr_nav.VisibleLeftItem  row:94  value:dmmeta.Fkafka  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:95  value:dmmeta.Fldoffset  kind:ctype  collapsed:N  n_match:0  n_record:2
+acr_nav.VisibleLeftItem  row:96  value:dmmeta.Floadtuples  kind:ctype  collapsed:N  n_match:0  n_record:40
+acr_nav.VisibleLeftItem  row:97  value:dmmeta.Fnoremove  kind:ctype  collapsed:N  n_match:0  n_record:157
+acr_nav.VisibleLeftItem  row:98  value:dmmeta.Foutput  kind:ctype  collapsed:N  n_match:0  n_record:6
+acr_nav.VisibleLeftItem  row:99  value:dmmeta.Fprefix  kind:ctype  collapsed:N  n_match:0  n_record:14
+acr_nav.VisibleLeftItem  row:100  value:dmmeta.Fregx  kind:ctype  collapsed:N  n_match:0  n_record:4
+acr_nav.VisibleLeftItem  row:101  value:dmmeta.Fsort  kind:ctype  collapsed:N  n_match:0  n_record:13
+acr_nav.VisibleLeftItem  row:102  value:dmmeta.Fstep  kind:ctype  collapsed:N  n_match:0  n_record:28
+acr_nav.VisibleLeftItem  row:103  value:dmmeta.Ftrace  kind:ctype  collapsed:N  n_match:0  n_record:26
+acr_nav.VisibleLeftItem  row:104  value:dmmeta.Ftuple  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:105  value:dmmeta.Func  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:106  value:dmmeta.Funique  kind:ctype  collapsed:N  n_match:0  n_record:7
+acr_nav.VisibleLeftItem  row:107  value:dmmeta.Fuserinit  kind:ctype  collapsed:N  n_match:0  n_record:2
+acr_nav.VisibleLeftItem  row:108  value:dmmeta.Fwddecl  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:109  value:dmmeta.Gconst  kind:ctype  collapsed:N  n_match:0  n_record:44
+acr_nav.VisibleLeftItem  row:110  value:dmmeta.Gstatic  kind:ctype  collapsed:N  n_match:0  n_record:18
+acr_nav.VisibleLeftItem  row:111  value:dmmeta.Gsymbol  kind:ctype  collapsed:N  n_match:0  n_record:21
+acr_nav.VisibleLeftItem  row:112  value:dmmeta.Hashtype  kind:ctype  collapsed:N  n_match:0  n_record:3
+acr_nav.VisibleLeftItem  row:113  value:dmmeta.Hook  kind:ctype  collapsed:N  n_match:0  n_record:23
+acr_nav.VisibleLeftItem  row:114  value:dmmeta.Inlary  kind:ctype  collapsed:N  n_match:0  n_record:21
+acr_nav.VisibleLeftItem  row:115  value:dmmeta.Jstype  kind:ctype  collapsed:N  n_match:0  n_record:7
+acr_nav.VisibleLeftItem  row:116  value:dmmeta.KafkaTypeKind  kind:ctype  collapsed:N  n_match:0  n_record:6
+acr_nav.VisibleLeftItem  row:117  value:dmmeta.Lenfld  kind:ctype  collapsed:N  n_match:0  n_record:17
+acr_nav.VisibleLeftItem  row:118  value:dmmeta.Listtype  kind:ctype  collapsed:N  n_match:0  n_record:8
+acr_nav.VisibleLeftItem  row:119  value:dmmeta.Llist  kind:ctype  collapsed:N  n_match:0  n_record:117
+acr_nav.VisibleLeftItem  row:120  value:dmmeta.Logcat  kind:ctype  collapsed:N  n_match:0  n_record:10
+acr_nav.VisibleLeftItem  row:121  value:dmmeta.Main  kind:ctype  collapsed:N  n_match:0  n_record:44
+acr_nav.VisibleLeftItem  row:122  value:dmmeta.Msgtype  kind:ctype  collapsed:N  n_match:0  n_record:50
+acr_nav.VisibleLeftItem  row:123  value:dmmeta.Nocascdel  kind:ctype  collapsed:N  n_match:0  n_record:6
+acr_nav.VisibleLeftItem  row:124  value:dmmeta.Nossimfile  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:125  value:dmmeta.Noxref  kind:ctype  collapsed:N  n_match:0  n_record:3
+acr_nav.VisibleLeftItem  row:126  value:dmmeta.Ns  kind:ctype  collapsed:N  n_match:0  n_record:85
+acr_nav.VisibleLeftItem  row:127  value:dmmeta.Nscpp  kind:ctype  collapsed:N  n_match:0  n_record:84
+acr_nav.VisibleLeftItem  row:128  value:dmmeta.Nsdb  kind:ctype  collapsed:N  n_match:0  n_record:12
+acr_nav.VisibleLeftItem  row:129  value:dmmeta.Nsfast  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:130  value:dmmeta.Nsinclude  kind:ctype  collapsed:N  n_match:0  n_record:7
+acr_nav.VisibleLeftItem  row:131  value:dmmeta.Nsjs  kind:ctype  collapsed:N  n_match:0  n_record:2
+acr_nav.VisibleLeftItem  row:132  value:dmmeta.Nsproto  kind:ctype  collapsed:N  n_match:0  n_record:12
+acr_nav.VisibleLeftItem  row:133  value:dmmeta.Nstype  kind:ctype  collapsed:N  n_match:0  n_record:6
+acr_nav.VisibleLeftItem  row:134  value:dmmeta.Nsversion  kind:ctype  collapsed:N  n_match:0  n_record:17
+acr_nav.VisibleLeftItem  row:135  value:dmmeta.Nsx  kind:ctype  collapsed:N  n_match:0  n_record:68
+acr_nav.VisibleLeftItem  row:136  value:dmmeta.Numstr  kind:ctype  collapsed:N  n_match:0  n_record:30
+acr_nav.VisibleLeftItem  row:137  value:dmmeta.Pack  kind:ctype  collapsed:N  n_match:0  n_record:234
+acr_nav.VisibleLeftItem  row:138  value:dmmeta.Pmaskfld  kind:ctype  collapsed:N  n_match:0  n_record:7
+acr_nav.VisibleLeftItem  row:139  value:dmmeta.PmaskfldMember  kind:ctype  collapsed:N  n_match:0  n_record:4
+acr_nav.VisibleLeftItem  row:140  value:dmmeta.Pnew  kind:ctype  collapsed:N  n_match:0  n_record:32
+acr_nav.VisibleLeftItem  row:141  value:dmmeta.Printfmt  kind:ctype  collapsed:N  n_match:0  n_record:7
+acr_nav.VisibleLeftItem  row:142  value:dmmeta.Ptrary  kind:ctype  collapsed:N  n_match:0  n_record:138
+acr_nav.VisibleLeftItem  row:143  value:dmmeta.Reftype  kind:ctype  collapsed:N  n_match:0  n_record:35
+acr_nav.VisibleLeftItem  row:144  value:dmmeta.Rowid  kind:ctype  collapsed:N  n_match:0  n_record:14
+acr_nav.VisibleLeftItem  row:145  value:dmmeta.Smallstr  kind:ctype  collapsed:N  n_match:0  n_record:140
+acr_nav.VisibleLeftItem  row:146  value:dmmeta.Sortfld  kind:ctype  collapsed:N  n_match:0  n_record:25
+acr_nav.VisibleLeftItem  row:147  value:dmmeta.Sorttype  kind:ctype  collapsed:N  n_match:0  n_record:3
+acr_nav.VisibleLeftItem  row:148  value:dmmeta.Sqltype  kind:ctype  collapsed:N  n_match:0  n_record:196
+acr_nav.VisibleLeftItem  row:149  value:dmmeta.Ssimfile  kind:ctype  collapsed:N  n_match:0  n_record:258
+acr_nav.VisibleLeftItem  row:150  value:dmmeta.Ssimreq  kind:ctype  collapsed:N  n_match:0  n_record:27
+acr_nav.VisibleLeftItem  row:151  value:dmmeta.Ssimsort  kind:ctype  collapsed:N  n_match:0  n_record:220
+acr_nav.VisibleLeftItem  row:152  value:dmmeta.Ssimvolatile  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:153  value:dmmeta.Steptype  kind:ctype  collapsed:N  n_match:0  n_record:7
+acr_nav.VisibleLeftItem  row:154  value:dmmeta.Strfmt  kind:ctype  collapsed:N  n_match:0  n_record:5
+acr_nav.VisibleLeftItem  row:155  value:dmmeta.Strtype  kind:ctype  collapsed:N  n_match:0  n_record:3
+acr_nav.VisibleLeftItem  row:156  value:dmmeta.Substr  kind:ctype  collapsed:N  n_match:0  n_record:196
+acr_nav.VisibleLeftItem  row:157  value:dmmeta.Svtype  kind:ctype  collapsed:N  n_match:0  n_record:17
+acr_nav.VisibleLeftItem  row:158  value:dmmeta.Tary  kind:ctype  collapsed:N  n_match:0  n_record:75
+acr_nav.VisibleLeftItem  row:159  value:dmmeta.Thash  kind:ctype  collapsed:N  n_match:0  n_record:250
+acr_nav.VisibleLeftItem  row:160  value:dmmeta.Tracefld  kind:ctype  collapsed:N  n_match:0  n_record:87
+acr_nav.VisibleLeftItem  row:161  value:dmmeta.Tracerec  kind:ctype  collapsed:N  n_match:0  n_record:60
+acr_nav.VisibleLeftItem  row:162  value:dmmeta.Typefld  kind:ctype  collapsed:N  n_match:0  n_record:8
+acr_nav.VisibleLeftItem  row:163  value:dmmeta.Userfunc  kind:ctype  collapsed:N  n_match:0  n_record:1470
+acr_nav.VisibleLeftItem  row:164  value:dmmeta.Usertracefld  kind:ctype  collapsed:N  n_match:0  n_record:9
+acr_nav.VisibleLeftItem  row:165  value:dmmeta.Xref  kind:ctype  collapsed:N  n_match:0  n_record:819
+acr_nav.VisibleLeftItem  row:166  value:fm  kind:ns  collapsed:Y  n_match:9  n_record:0
+acr_nav.VisibleLeftItem  row:167  value:fmdb  kind:ns  collapsed:Y  n_match:4  n_record:0
+acr_nav.VisibleLeftItem  row:168  value:gcache  kind:ns  collapsed:Y  n_match:3  n_record:0
+acr_nav.VisibleLeftItem  row:169  value:gcli  kind:ns  collapsed:Y  n_match:29  n_record:0
+acr_nav.VisibleLeftItem  row:170  value:gclidb  kind:ns  collapsed:Y  n_match:32  n_record:0
+acr_nav.VisibleLeftItem  row:171  value:http  kind:ns  collapsed:Y  n_match:5  n_record:0
+acr_nav.VisibleLeftItem  row:172  value:httpdb  kind:ns  collapsed:Y  n_match:5  n_record:0
+acr_nav.VisibleLeftItem  row:173  value:ietf  kind:ns  collapsed:Y  n_match:3  n_record:0
+acr_nav.VisibleLeftItem  row:174  value:jkv  kind:ns  collapsed:Y  n_match:1  n_record:0
+acr_nav.VisibleLeftItem  row:175  value:js  kind:ns  collapsed:Y  n_match:38  n_record:0
+acr_nav.VisibleLeftItem  row:176  value:kafka  kind:ns  collapsed:Y  n_match:19  n_record:0
+acr_nav.VisibleLeftItem  row:177  value:lib_ams  kind:ns  collapsed:Y  n_match:9  n_record:0
+acr_nav.VisibleLeftItem  row:178  value:lib_ctype  kind:ns  collapsed:Y  n_match:15  n_record:0
+acr_nav.VisibleLeftItem  row:179  value:lib_curl  kind:ns  collapsed:Y  n_match:3  n_record:0
+acr_nav.VisibleLeftItem  row:180  value:lib_exec  kind:ns  collapsed:Y  n_match:4  n_record:0
+acr_nav.VisibleLeftItem  row:181  value:lib_fm  kind:ns  collapsed:Y  n_match:4  n_record:0
+acr_nav.VisibleLeftItem  row:182  value:lib_git  kind:ns  collapsed:Y  n_match:1  n_record:0
+acr_nav.VisibleLeftItem  row:183  value:lib_http  kind:ns  collapsed:Y  n_match:2  n_record:0
+acr_nav.VisibleLeftItem  row:184  value:lib_iconv  kind:ns  collapsed:Y  n_match:2  n_record:0
+acr_nav.VisibleLeftItem  row:185  value:lib_json  kind:ns  collapsed:Y  n_match:4  n_record:0
+acr_nav.VisibleLeftItem  row:186  value:lib_mysql  kind:ns  collapsed:Y  n_match:2  n_record:0
+acr_nav.VisibleLeftItem  row:187  value:lib_netio  kind:ns  collapsed:Y  n_match:2  n_record:0
+acr_nav.VisibleLeftItem  row:188  value:lib_rl  kind:ns  collapsed:Y  n_match:2  n_record:0
+acr_nav.VisibleLeftItem  row:189  value:lib_sql  kind:ns  collapsed:Y  n_match:2  n_record:0
+acr_nav.VisibleLeftItem  row:190  value:lib_sqlite  kind:ns  collapsed:Y  n_match:13  n_record:0
+acr_nav.VisibleLeftItem  row:191  value:lib_ws  kind:ns  collapsed:Y  n_match:2  n_record:0
+acr_nav.VisibleLeftItem  row:192  value:mdbg  kind:ns  collapsed:Y  n_match:3  n_record:0
+acr_nav.VisibleLeftItem  row:193  value:mysql2ssim  kind:ns  collapsed:Y  n_match:2  n_record:0
+acr_nav.VisibleLeftItem  row:194  value:orgfile  kind:ns  collapsed:Y  n_match:6  n_record:0
+acr_nav.VisibleLeftItem  row:195  value:report  kind:ns  collapsed:Y  n_match:9  n_record:0
+acr_nav.VisibleLeftItem  row:196  value:samp_make  kind:ns  collapsed:Y  n_match:6  n_record:0
+acr_nav.VisibleLeftItem  row:197  value:samp_meng  kind:ns  collapsed:Y  n_match:21  n_record:0
+acr_nav.VisibleLeftItem  row:198  value:samp_regx  kind:ns  collapsed:Y  n_match:1  n_record:0
+acr_nav.VisibleLeftItem  row:199  value:sampdb  kind:ns  collapsed:Y  n_match:5  n_record:0
+acr_nav.VisibleLeftItem  row:200  value:sandbox  kind:ns  collapsed:Y  n_match:3  n_record:0
+acr_nav.VisibleLeftItem  row:201  value:src_func  kind:ns  collapsed:Y  n_match:7  n_record:0
+acr_nav.VisibleLeftItem  row:202  value:src_hdr  kind:ns  collapsed:Y  n_match:10  n_record:0
+acr_nav.VisibleLeftItem  row:203  value:src_lim  kind:ns  collapsed:Y  n_match:6  n_record:0
+acr_nav.VisibleLeftItem  row:204  value:ssim2csv  kind:ns  collapsed:Y  n_match:4  n_record:0
+acr_nav.VisibleLeftItem  row:205  value:ssim2mysql  kind:ns  collapsed:Y  n_match:10  n_record:0
+acr_nav.VisibleLeftItem  row:206  value:ssimfilt  kind:ns  collapsed:Y  n_match:3  n_record:0
+acr_nav.VisibleLeftItem  row:207  value:strconv  kind:ns  collapsed:Y  n_match:1  n_record:0
+acr_nav.VisibleLeftItem  row:208  value:sv2ssim  kind:ns  collapsed:Y  n_match:4  n_record:0
+acr_nav.VisibleLeftItem  row:209  value:ws  kind:ns  collapsed:Y  n_match:16  n_record:0
+acr_nav.VisibleLeftItem  row:210  value:wsdb  kind:ns  collapsed:Y  n_match:1  n_record:0
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:609  sel_value:"Upstream (dmmeta imports from): 312 fields, 4 namespaces"
+acr_nav.VisibleLine  row:0  value:"Upstream (dmmeta imports from): 312 fields, 4 namespaces"
+acr_nav.VisibleLine  row:1  value:"── algo (199 fields) ─────────────────────────────"
+acr_nav.VisibleLine  row:2  value:"  dmmeta.Anonfld.comment                 algo.Comment           Val"
+acr_nav.VisibleLine  row:3  value:"  dmmeta.Argvtype.argvtype               algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:4  value:"  dmmeta.Argvtype.comment                algo.Comment           Val"
+acr_nav.VisibleLine  row:5  value:"  dmmeta.Bitfld.name                     algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:6  value:"  dmmeta.Bitfld.comment                  algo.Comment           Val"
+acr_nav.VisibleLine  row:7  value:"  dmmeta.Buftype.pnewtype                algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:8  value:"  dmmeta.Buftype.comment                 algo.Comment           Val"
+acr_nav.VisibleLine  row:9  value:"  dmmeta.Cafter.cafter                   algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:10  value:"  dmmeta.Cafter.comment                  algo.Comment           Val"
+acr_nav.VisibleLine  row:11  value:"  dmmeta.Cascdel.comment                 algo.Comment           Val"
+acr_nav.VisibleLine  row:12  value:"  dmmeta.Ccmp.comment                    algo.Comment           Val"
+acr_nav.VisibleLine  row:13  value:"  dmmeta.Cdflt.dflt                      algo.CppExpr           Val"
+acr_nav.VisibleLine  row:14  value:"  dmmeta.Cdflt.cppdflt                   algo.CppExpr           Val"
+acr_nav.VisibleLine  row:15  value:"  dmmeta.Cdflt.ssimdflt                  algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:16  value:"  dmmeta.Cdflt.jsdflt                    algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:17  value:"  dmmeta.Cdflt.comment                   algo.Comment           Val"
+acr_nav.VisibleLine  row:18  value:"  dmmeta.Cfast.comment                   algo.Comment           Val"
+acr_nav.VisibleLine  row:19  value:"  dmmeta.Cfmt.cfmt                       algo.Smallstr100       Val"
+acr_nav.VisibleLine  row:20  value:"  dmmeta.Cfmt.sep                        algo.Smallstr20        Val"
+acr_nav.VisibleLine  row:21  value:"  dmmeta.Cfmt.comment                    algo.Comment           Val"
+acr_nav.VisibleLine  row:22  value:"  dmmeta.Cget.comment                    algo.Comment           Val"
+acr_nav.VisibleLine  row:23  value:"  dmmeta.Charset.expr                    algo.Smallstr100       Val"
+acr_nav.VisibleLine  row:24  value:"  dmmeta.Charset.comment                 algo.Comment           Val"
+acr_nav.VisibleLine  row:25  value:"  dmmeta.Chash.comment                   algo.Comment           Val"
+acr_nav.VisibleLine  row:26  value:"  dmmeta.Ckafka.root                     algo.cstring           Val"
+acr_nav.VisibleLine  row:27  value:"  dmmeta.Ckafka.valid_versions           algo.Smallstr10        Val"
+acr_nav.VisibleLine  row:28  value:"  dmmeta.Ckafka.flexible_versions        algo.Smallstr10        Val"
+acr_nav.VisibleLine  row:29  value:"  dmmeta.Ckafka.comment                  algo.Comment           Val"
+acr_nav.VisibleLine  row:30  value:"  dmmeta.Cppfunc.expr                    algo.CppExpr           Val"
+acr_nav.VisibleLine  row:31  value:"  dmmeta.Cppkeyword.cppkeyword           algo.Smallstr20        Val"
+acr_nav.VisibleLine  row:32  value:"  dmmeta.Csize.comment                   algo.Comment           Val"
+acr_nav.VisibleLine  row:33  value:"  dmmeta.Cstr.comment                    algo.Comment           Val"
+acr_nav.VisibleLine  row:34  value:"  dmmeta.Ctype.ctype                     algo.Smallstr100       Val"
+acr_nav.VisibleLine  row:35  value:"  dmmeta.Ctype.name                      algo.Smallstr100       Val"
+acr_nav.VisibleLine  row:36  value:"  dmmeta.Ctype.comment                   algo.Comment           Val"
+acr_nav.VisibleLine  row:37  value:"  dmmeta.Dispatch.dispatch               algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:38  value:"  dmmeta.Dispatch.name                   algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:39  value:"  dmmeta.Dispatch.comment                algo.Comment           Val"
+acr_nav.VisibleLine  row:40  value:"  dmmeta.DispatchMsg.dispatch_msg        algo.Smallstr100       Val"
+acr_nav.VisibleLine  row:41  value:"  dmmeta.DispatchMsg.comment             algo.Comment           Val"
+acr_nav.VisibleLine  row:42  value:"  dmmeta.Dispctx.comment                 algo.Comment           Val"
+acr_nav.VisibleLine  row:43  value:"  dmmeta.Dispfilter.comment              algo.Comment           Val"
+acr_nav.VisibleLine  row:44  value:"  dmmeta.Dispsig.dispsig                 algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:45  value:"  dmmeta.Dispsig.name                    algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:46  value:"  dmmeta.Dispsig.signature               algo.Sha1sig           Val"
+acr_nav.VisibleLine  row:47  value:"  dmmeta.Dispsigcheck.signature          algo.Sha1sig           Val"
+acr_nav.VisibleLine  row:48  value:"  dmmeta.Disptrace.comment               algo.Comment           Val"
+acr_nav.VisibleLine  row:49  value:"  dmmeta.Falias.comment                  algo.Comment           Val"
+acr_nav.VisibleLine  row:50  value:"  dmmeta.Fastenc.fastenc                 algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:51  value:"  dmmeta.Fastenc.comment                 algo.Comment           Val"
+acr_nav.VisibleLine  row:52  value:"  dmmeta.Fastinstr.fastinstr             algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:53  value:"  dmmeta.Fastinstr.comment               algo.Comment           Val"
+acr_nav.VisibleLine  row:54  value:"  dmmeta.Fastop.fastop                   algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:55  value:"  dmmeta.Fastop.comment                  algo.Comment           Val"
+acr_nav.VisibleLine  row:56  value:"  dmmeta.Fbase.comment                   algo.Comment           Val"
+acr_nav.VisibleLine  row:57  value:"  dmmeta.Fbigend.comment                 algo.Comment           Val"
+acr_nav.VisibleLine  row:58  value:"  dmmeta.Fbitset.comment                 algo.Comment           Val"
+acr_nav.VisibleLine  row:59  value:"  dmmeta.Fbuf.comment                    algo.Comment           Val"
+acr_nav.VisibleLine  row:60  value:"  dmmeta.Fbufdir.fbufdir                 algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:61  value:"  dmmeta.Fbufdir.comment                 algo.Comment           Val"
+acr_nav.VisibleLine  row:62  value:"  dmmeta.Fbufiotype.fbufiotype           algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:63  value:"  dmmeta.Fbufiotype.comment              algo.Comment           Val"
+acr_nav.VisibleLine  row:64  value:"  dmmeta.Fbuftype.fbuftype               algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:65  value:"  dmmeta.Fbuftype.comment                algo.Comment           Val"
+acr_nav.VisibleLine  row:66  value:"  dmmeta.Fcast.expr                      algo.Smallstr100       Val"
+acr_nav.VisibleLine  row:67  value:"  dmmeta.Fcast.comment                   algo.Comment           Val"
+acr_nav.VisibleLine  row:68  value:"  dmmeta.Fcleanup.comment                algo.Comment           Val"
+acr_nav.VisibleLine  row:69  value:"  dmmeta.Fcmap.fcmap                     algo.Smallstr250       Val"
+acr_nav.VisibleLine  row:70  value:"  dmmeta.Fcmap.leftVal                   algo.Smallstr40        Val"
+acr_nav.VisibleLine  row:71  value:"  dmmeta.Fcmap.rightVal                  algo.Smallstr40        Val"
+acr_nav.VisibleLine  row:72  value:"  dmmeta.Fcmap.comment                   algo.Comment           Val"
+acr_nav.VisibleLine  row:73  value:"  dmmeta.Fcmdline.comment                algo.Comment           Val"
+acr_nav.VisibleLine  row:74  value:"  dmmeta.Fcmp.comment                    algo.Comment           Val"
+acr_nav.VisibleLine  row:75  value:"  dmmeta.Fcompact.comment                algo.Comment           Val"
+acr_nav.VisibleLine  row:76  value:"  dmmeta.Fconst.fconst                   algo.Smallstr100       Val"
+acr_nav.VisibleLine  row:77  value:"  dmmeta.Fconst.value                    algo.CppExpr           Val"
+acr_nav.VisibleLine  row:78  value:"  dmmeta.Fconst.name                     algo.Smallstr100       Val"
+acr_nav.VisibleLine  row:79  value:"  dmmeta.Fconst.comment                  algo.Comment           Val"
+acr_nav.VisibleLine  row:80  value:"  dmmeta.Fcurs.fcurs                     algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:81  value:"  dmmeta.Fcurs.comment                   algo.Comment           Val"
+acr_nav.VisibleLine  row:82  value:"  dmmeta.Fdec.comment                    algo.Comment           Val"
+acr_nav.VisibleLine  row:83  value:"  dmmeta.Fdelay.delay                    algo.I64Dec9           Val"
+acr_nav.VisibleLine  row:84  value:"  dmmeta.Fdelay.comment                  algo.Comment           Val"
+acr_nav.VisibleLine  row:85  value:"  dmmeta.Ffast.ffast                     algo.Smallstr100       Val"
+acr_nav.VisibleLine  row:86  value:"  dmmeta.Ffast.name                      algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:87  value:"  dmmeta.Ffast.value                     algo.CppExpr           Val"
+acr_nav.VisibleLine  row:88  value:"  dmmeta.Ffast.comment                   algo.Comment           Val"
+acr_nav.VisibleLine  row:89  value:"  dmmeta.Fflag.emptyval                  algo.cstring           Val"
+acr_nav.VisibleLine  row:90  value:"  dmmeta.Fflag.comment                   algo.Comment           Val"
+acr_nav.VisibleLine  row:91  value:"  dmmeta.Field.field                     algo.Smallstr100       Val"
+acr_nav.VisibleLine  row:92  value:"  dmmeta.Field.name                      algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:93  value:"  dmmeta.Field.dflt                      algo.CppExpr           Val"
+acr_nav.VisibleLine  row:94  value:"  dmmeta.Field.comment                   algo.Comment           Val"
+acr_nav.VisibleLine  row:95  value:"  dmmeta.Findrem.comment                 algo.Comment           Val"
+acr_nav.VisibleLine  row:96  value:"  dmmeta.Finput.comment                  algo.Comment           Val"
+acr_nav.VisibleLine  row:97  value:"  dmmeta.Fkafka.versions                 algo.Smallstr10        Val"
+acr_nav.VisibleLine  row:98  value:"  dmmeta.Fkafka.nullable_versions        algo.Smallstr10        Val"
+acr_nav.VisibleLine  row:99  value:"  dmmeta.Fkafka.tagged_versions          algo.Smallstr10        Val"
+acr_nav.VisibleLine  row:100  value:"  dmmeta.Fkafka.comment                  algo.Comment           Val"
+acr_nav.VisibleLine  row:101  value:"  dmmeta.Floadtuples.comment             algo.Comment           Val"
+acr_nav.VisibleLine  row:102  value:"  dmmeta.Fnoremove.comment               algo.Comment           Val"
+acr_nav.VisibleLine  row:103  value:"  dmmeta.Foutput.comment                 algo.Comment           Val"
+acr_nav.VisibleLine  row:104  value:"  dmmeta.Fprefix.fprefix                 algo.Smallstr5         Val"
+acr_nav.VisibleLine  row:105  value:"  dmmeta.Fprefix.comment                 algo.Comment           Val"
+acr_nav.VisibleLine  row:106  value:"  dmmeta.Fregx.comment                   algo.Comment           Val"
+acr_nav.VisibleLine  row:107  value:"  dmmeta.Fsort.comment                   algo.Comment           Val"
+acr_nav.VisibleLine  row:108  value:"  dmmeta.Fstep.name                      algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:109  value:"  dmmeta.Fstep.comment                   algo.Comment           Val"
+acr_nav.VisibleLine  row:110  value:"  dmmeta.Ftrace.comment                  algo.Comment           Val"
+acr_nav.VisibleLine  row:111  value:"  dmmeta.Ftuple.comment                  algo.Comment           Val"
+acr_nav.VisibleLine  row:112  value:"  dmmeta.Func.func                       algo.Smallstr100       Val"
+acr_nav.VisibleLine  row:113  value:"  dmmeta.Func.name                       algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:114  value:"  dmmeta.Func.comment                    algo.cstring           Val"
+acr_nav.VisibleLine  row:115  value:"  dmmeta.Funique.comment                 algo.Comment           Val"
+acr_nav.VisibleLine  row:116  value:"  dmmeta.Fuserinit.comment               algo.Comment           Val"
+acr_nav.VisibleLine  row:117  value:"  dmmeta.Fwddecl.fwddecl                 algo.Smallstr100       Val"
+acr_nav.VisibleLine  row:118  value:"  dmmeta.Fwddecl.comment                 algo.Comment           Val"
+acr_nav.VisibleLine  row:119  value:"  dmmeta.Gstatic.comment                 algo.Comment           Val"
+acr_nav.VisibleLine  row:120  value:"  dmmeta.Gsymbol.gsymbol                 algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:121  value:"  dmmeta.Gsymbol.inc                     algo.Smallstr100       Val"
+acr_nav.VisibleLine  row:122  value:"  dmmeta.Gsymbol.comment                 algo.Comment           Val"
+acr_nav.VisibleLine  row:123  value:"  dmmeta.Hashtype.hashtype               algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:124  value:"  dmmeta.Hashtype.comment                algo.Comment           Val"
+acr_nav.VisibleLine  row:125  value:"  dmmeta.Inlary.comment                  algo.Comment           Val"
+acr_nav.VisibleLine  row:126  value:"  dmmeta.Jstype.comment                  algo.Comment           Val"
+acr_nav.VisibleLine  row:127  value:"  dmmeta.KafkaTypeKind.kafka_type_kind   algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:128  value:"  dmmeta.KafkaTypeKind.comment           algo.Comment           Val"
+acr_nav.VisibleLine  row:129  value:"  dmmeta.Listtype.comment                algo.Comment           Val"
+acr_nav.VisibleLine  row:130  value:"  dmmeta.Llist.comment                   algo.Comment           Val"
+acr_nav.VisibleLine  row:131  value:"  dmmeta.Logcat.logcat                   algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:132  value:"  dmmeta.Logcat.comment                  algo.Comment           Val"
+acr_nav.VisibleLine  row:133  value:"  dmmeta.Msgtype.type                    algo.CppExpr           Val"
+acr_nav.VisibleLine  row:134  value:"  dmmeta.Nocascdel.comment               algo.Comment           Val"
+acr_nav.VisibleLine  row:135  value:"  dmmeta.Nossimfile.comment              algo.Comment           Val"
+acr_nav.VisibleLine  row:136  value:"  dmmeta.Noxref.comment                  algo.Comment           Val"
+acr_nav.VisibleLine  row:137  value:"  dmmeta.Ns.ns                           algo.Smallstr16        Val"
+acr_nav.VisibleLine  row:138  value:"  dmmeta.Ns.comment                      algo.Comment           Val"
+acr_nav.VisibleLine  row:139  value:"  dmmeta.Nscpp.comment                   algo.Comment           Val"
+acr_nav.VisibleLine  row:140  value:"  dmmeta.Nsdb.comment                    algo.Comment           Val"
+acr_nav.VisibleLine  row:141  value:"  dmmeta.Nsfast.comment                  algo.Comment           Val"
+acr_nav.VisibleLine  row:142  value:"  dmmeta.Nsinclude.nsinclude             algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:143  value:"  dmmeta.Nsinclude.name                  algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:144  value:"  dmmeta.Nsinclude.comment               algo.Comment           Val"
+acr_nav.VisibleLine  row:145  value:"  dmmeta.Nsjs.comment                    algo.Comment           Val"
+acr_nav.VisibleLine  row:146  value:"  dmmeta.Nsproto.comment                 algo.Comment           Val"
+acr_nav.VisibleLine  row:147  value:"  dmmeta.Nstype.nstype                   algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:148  value:"  dmmeta.Nstype.comment                  algo.Comment           Val"
+acr_nav.VisibleLine  row:149  value:"  dmmeta.Nsversion.version               algo.Smallstr10        Val"
+acr_nav.VisibleLine  row:150  value:"  dmmeta.Nsversion.comment               algo.Comment           Val"
+acr_nav.VisibleLine  row:151  value:"  dmmeta.Nsx.comment                     algo.Comment           Val"
+acr_nav.VisibleLine  row:152  value:"  dmmeta.Pack.comment                    algo.Comment           Val"
+acr_nav.VisibleLine  row:153  value:"  dmmeta.Pmaskfld.comment                algo.Comment           Val"
+acr_nav.VisibleLine  row:154  value:"  dmmeta.PmaskfldMember.pmaskfld_member  algo.Smallstr200       Val"
+acr_nav.VisibleLine  row:155  value:"  dmmeta.PmaskfldMember.comment          algo.Comment           Val"
+acr_nav.VisibleLine  row:156  value:"  dmmeta.Pnew.pnew                       algo.Smallstr100       Val"
+acr_nav.VisibleLine  row:157  value:"  dmmeta.Pnew.comment                    algo.Comment           Val"
+acr_nav.VisibleLine  row:158  value:"  dmmeta.Printfmt.printfmt               algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:159  value:"  dmmeta.Printfmt.comment                algo.Comment           Val"
+acr_nav.VisibleLine  row:160  value:"  dmmeta.Reftype.comment                 algo.Comment           Val"
+acr_nav.VisibleLine  row:161  value:"  dmmeta.Rowid.comment                   algo.Comment           Val"
+acr_nav.VisibleLine  row:162  value:"  dmmeta.Smallstr.pad                    algo.CppExpr           Val"
+acr_nav.VisibleLine  row:163  value:"  dmmeta.Sorttype.sorttype               algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:164  value:"  dmmeta.Sorttype.comment                algo.Comment           Val"
+acr_nav.VisibleLine  row:165  value:"  dmmeta.Sqltype.expr                    algo.Smallstr100       Val"
+acr_nav.VisibleLine  row:166  value:"  dmmeta.Sqltype.comment                 algo.Comment           Val"
+acr_nav.VisibleLine  row:167  value:"  dmmeta.Ssimfile.ssimfile               algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:168  value:"  dmmeta.Ssimfile.name                   algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:169  value:"  dmmeta.Ssimreq.ssimreq                 algo.Smallstr100       Val"
+acr_nav.VisibleLine  row:170  value:"  dmmeta.Ssimreq.parent                  algo.Smallstr100       Val"
+acr_nav.VisibleLine  row:171  value:"  dmmeta.Ssimreq.value                   algo.Smallstr100       Val"
+acr_nav.VisibleLine  row:172  value:"  dmmeta.Ssimreq.child_key               algo.Smallstr100       Val"
+acr_nav.VisibleLine  row:173  value:"  dmmeta.Ssimreq.comment                 algo.Comment           Val"
+acr_nav.VisibleLine  row:174  value:"  dmmeta.Ssimsort.comment                algo.Comment           Val"
+acr_nav.VisibleLine  row:175  value:"  dmmeta.Ssimvolatile.comment            algo.Comment           Val"
+acr_nav.VisibleLine  row:176  value:"  dmmeta.Steptype.steptype               algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:177  value:"  dmmeta.Steptype.comment                algo.Comment           Val"
+acr_nav.VisibleLine  row:178  value:"  dmmeta.Strfmt.strfmt                   algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:179  value:"  dmmeta.Strfmt.comment                  algo.Comment           Val"
+acr_nav.VisibleLine  row:180  value:"  dmmeta.Strtype.strtype                 algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:181  value:"  dmmeta.Strtype.comment                 algo.Comment           Val"
+acr_nav.VisibleLine  row:182  value:"  dmmeta.Substr.expr                     algo.CppExpr           Val"
+acr_nav.VisibleLine  row:183  value:"  dmmeta.Svtype.comment                  algo.Comment           Val"
+acr_nav.VisibleLine  row:184  value:"  dmmeta.Tary.comment                    algo.Comment           Val"
+acr_nav.VisibleLine  row:185  value:"  dmmeta.Thash.comment                   algo.Comment           Val"
+acr_nav.VisibleLine  row:186  value:"  dmmeta.Tracefld.tracefld               algo.Smallstr100       Val"
+acr_nav.VisibleLine  row:187  value:"  dmmeta.Tracefld.name                   algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:188  value:"  dmmeta.Tracefld.comment                algo.Comment           Val"
+acr_nav.VisibleLine  row:189  value:"  dmmeta.Tracerec.tracerec               algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:190  value:"  dmmeta.Tracerec.name                   algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:191  value:"  dmmeta.Tracerec.comment                algo.Comment           Val"
+acr_nav.VisibleLine  row:192  value:"  dmmeta.Typefld.comment                 algo.Comment           Val"
+acr_nav.VisibleLine  row:193  value:"  dmmeta.Userfunc.userfunc               algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:194  value:"  dmmeta.Userfunc.acrkey                 algo.Smallstr200       Val"
+acr_nav.VisibleLine  row:195  value:"  dmmeta.Userfunc.cppname                algo.Smallstr100       Val"
+acr_nav.VisibleLine  row:196  value:"  dmmeta.Userfunc.comment                algo.Comment           Val"
+acr_nav.VisibleLine  row:197  value:"  dmmeta.Usertracefld.comment            algo.Comment           Val"
+acr_nav.VisibleLine  row:198  value:"  dmmeta.Xref.name                       algo.Smallstr50        Val"
+acr_nav.VisibleLine  row:199  value:"  dmmeta.Xref.inscond                    algo.CppExpr           Val"
+acr_nav.VisibleLine  row:200  value:"  dmmeta.Xref.via                        algo.Smallstr200       Val"
+acr_nav.VisibleLine  row:201  value:"── other (109 fields) ────────────────────────────"
+acr_nav.VisibleLine  row:202  value:"  dmmeta.Bitfld.offset                   i32                    Val"
+acr_nav.VisibleLine  row:203  value:"  dmmeta.Bitfld.width                    i32                    Val"
+acr_nav.VisibleLine  row:204  value:"  dmmeta.Ccmp.extrn                      bool                   Val"
+acr_nav.VisibleLine  row:205  value:"  dmmeta.Ccmp.genop                      bool                   Val"
+acr_nav.VisibleLine  row:206  value:"  dmmeta.Ccmp.order                      bool                   Val"
+acr_nav.VisibleLine  row:207  value:"  dmmeta.Ccmp.minmax                     bool                   Val"
+acr_nav.VisibleLine  row:208  value:"  dmmeta.Cextern.initmemset              bool                   Val"
+acr_nav.VisibleLine  row:209  value:"  dmmeta.Cextern.isstruct                bool                   Val"
+acr_nav.VisibleLine  row:210  value:"  dmmeta.Cextern.plaindata               bool                   Val"
+acr_nav.VisibleLine  row:211  value:"  dmmeta.Cfast.id                        u32                    Val"
+acr_nav.VisibleLine  row:212  value:"  dmmeta.Cfast.reset                     bool                   Val"
+acr_nav.VisibleLine  row:213  value:"  dmmeta.Cfmt.read                       bool                   Val"
+acr_nav.VisibleLine  row:214  value:"  dmmeta.Cfmt.print                      bool                   Val"
+acr_nav.VisibleLine  row:215  value:"  dmmeta.Cfmt.genop                      bool                   Val"
+acr_nav.VisibleLine  row:216  value:"  dmmeta.Charset.charrange               bool                   Val"
+acr_nav.VisibleLine  row:217  value:"  dmmeta.Charset.calc                    bool                   Val"
+acr_nav.VisibleLine  row:218  value:"  dmmeta.Cppfunc.print                   bool                   Val"
+acr_nav.VisibleLine  row:219  value:"  dmmeta.Cppfunc.set                     bool                   Val"
+acr_nav.VisibleLine  row:220  value:"  dmmeta.Cpptype.ctor                    bool                   Val"
+acr_nav.VisibleLine  row:221  value:"  dmmeta.Cpptype.dtor                    bool                   Val"
+acr_nav.VisibleLine  row:222  value:"  dmmeta.Cpptype.cheap_copy              bool                   Val"
+acr_nav.VisibleLine  row:223  value:"  dmmeta.Csize.size                      u32                    Val"
+acr_nav.VisibleLine  row:224  value:"  dmmeta.Csize.alignment                 u32                    Val"
+acr_nav.VisibleLine  row:225  value:"  dmmeta.Cstr.strequiv                   bool                   Val"
+acr_nav.VisibleLine  row:226  value:"  dmmeta.Ctypelen.len                    u32                    Val"
+acr_nav.VisibleLine  row:227  value:"  dmmeta.Ctypelen.alignment              i32                    Val"
+acr_nav.VisibleLine  row:228  value:"  dmmeta.Ctypelen.padbytes               i32                    Val"
+acr_nav.VisibleLine  row:229  value:"  dmmeta.Ctypelen.plaindata              bool                   Val"
+acr_nav.VisibleLine  row:230  value:"  dmmeta.Dispatch.unk                    bool                   Val"
+acr_nav.VisibleLine  row:231  value:"  dmmeta.Dispatch.read                   bool                   Val"
+acr_nav.VisibleLine  row:232  value:"  dmmeta.Dispatch.print                  bool                   Val"
+acr_nav.VisibleLine  row:233  value:"  dmmeta.Dispatch.haslen                 bool                   Val"
+acr_nav.VisibleLine  row:234  value:"  dmmeta.Dispatch.call                   bool                   Val"
+acr_nav.VisibleLine  row:235  value:"  dmmeta.Dispatch.strict                 bool                   Val"
+acr_nav.VisibleLine  row:236  value:"  dmmeta.Dispatch.dyn                    bool                   Val"
+acr_nav.VisibleLine  row:237  value:"  dmmeta.Dispatch.kafka                  bool                   Val"
+acr_nav.VisibleLine  row:238  value:"  dmmeta.Dispfilter.match_all            bool                   Val"
+acr_nav.VisibleLine  row:239  value:"  dmmeta.Disptrace.cycle                 bool                   Val"
+acr_nav.VisibleLine  row:240  value:"  dmmeta.Fbase.stripcomment              bool                   Val"
+acr_nav.VisibleLine  row:241  value:"  dmmeta.Fbuf.max                        u32                    Val"
+acr_nav.VisibleLine  row:242  value:"  dmmeta.Fbufdir.read                    bool                   Val"
+acr_nav.VisibleLine  row:243  value:"  dmmeta.Fbuftype.skipbytes              bool                   Val"
+acr_nav.VisibleLine  row:244  value:"  dmmeta.Fcmap.bidir                     bool                   Val"
+acr_nav.VisibleLine  row:245  value:"  dmmeta.Fcmdline.read                   bool                   Val"
+acr_nav.VisibleLine  row:246  value:"  dmmeta.Fcmp.versionsort                bool                   Val"
+acr_nav.VisibleLine  row:247  value:"  dmmeta.Fcmp.casesens                   bool                   Val"
+acr_nav.VisibleLine  row:248  value:"  dmmeta.Fcmp.extrn                      bool                   Val"
+acr_nav.VisibleLine  row:249  value:"  dmmeta.Fdec.nplace                     i32                    Val"
+acr_nav.VisibleLine  row:250  value:"  dmmeta.Fdec.fixedfmt                   bool                   Val"
+acr_nav.VisibleLine  row:251  value:"  dmmeta.Fdelay.scale                    bool                   Val"
+acr_nav.VisibleLine  row:252  value:"  dmmeta.Ffast.id                        u32                    Val"
+acr_nav.VisibleLine  row:253  value:"  dmmeta.Ffast.pos                       u32                    Val"
+acr_nav.VisibleLine  row:254  value:"  dmmeta.Ffast.optional                  bool                   Val"
+acr_nav.VisibleLine  row:255  value:"  dmmeta.Fflag.cumulative                bool                   Val"
+acr_nav.VisibleLine  row:256  value:"  dmmeta.Finput.extrn                    bool                   Val"
+acr_nav.VisibleLine  row:257  value:"  dmmeta.Finput.update                   bool                   Val"
+acr_nav.VisibleLine  row:258  value:"  dmmeta.Finput.strict                   bool                   Val"
+acr_nav.VisibleLine  row:259  value:"  dmmeta.Fkafka.tag                      u64                    Val"
+acr_nav.VisibleLine  row:260  value:"  dmmeta.Fldoffset.offset                i32                    Val"
+acr_nav.VisibleLine  row:261  value:"  dmmeta.Fregx.partial                   bool                   Val"
+acr_nav.VisibleLine  row:262  value:"  dmmeta.Func.extrn                      bool                   Val"
+acr_nav.VisibleLine  row:263  value:"  dmmeta.Gconst.wantenum                 bool                   Val"
+acr_nav.VisibleLine  row:264  value:"  dmmeta.Inlary.min                      i32                    Val"
+acr_nav.VisibleLine  row:265  value:"  dmmeta.Inlary.max                      i32                    Val"
+acr_nav.VisibleLine  row:266  value:"  dmmeta.Lenfld.extra                    i32                    Val"
+acr_nav.VisibleLine  row:267  value:"  dmmeta.Lenfld.scale                    i32                    Val"
+acr_nav.VisibleLine  row:268  value:"  dmmeta.Listtype.circular               bool                   Val"
+acr_nav.VisibleLine  row:269  value:"  dmmeta.Listtype.haveprev               bool                   Val"
+acr_nav.VisibleLine  row:270  value:"  dmmeta.Listtype.instail                bool                   Val"
+acr_nav.VisibleLine  row:271  value:"  dmmeta.Llist.havetail                  bool                   Val"
+acr_nav.VisibleLine  row:272  value:"  dmmeta.Llist.havecount                 bool                   Val"
+acr_nav.VisibleLine  row:273  value:"  dmmeta.Logcat.enabled                  bool                   Val"
+acr_nav.VisibleLine  row:274  value:"  dmmeta.Logcat.builtin                  bool                   Val"
+acr_nav.VisibleLine  row:275  value:"  dmmeta.Logcat.stdout                   bool                   Val"
+acr_nav.VisibleLine  row:276  value:"  dmmeta.Logcat.maxmsg                   i32                    Val"
+acr_nav.VisibleLine  row:277  value:"  dmmeta.Logcat.window                   i32                    Val"
+acr_nav.VisibleLine  row:278  value:"  dmmeta.Main.ismodule                   bool                   Val"
+acr_nav.VisibleLine  row:279  value:"  dmmeta.Nsinclude.sys                   bool                   Val"
+acr_nav.VisibleLine  row:280  value:"  dmmeta.Nsjs.typescript                 bool                   Val"
+acr_nav.VisibleLine  row:281  value:"  dmmeta.Nsjs.gensel                     bool                   Val"
+acr_nav.VisibleLine  row:282  value:"  dmmeta.Nsx.genthrow                    bool                   Val"
+acr_nav.VisibleLine  row:283  value:"  dmmeta.Nsx.correct_getorcreate         bool                   Val"
+acr_nav.VisibleLine  row:284  value:"  dmmeta.Nsx.sortxref                    bool                   Val"
+acr_nav.VisibleLine  row:285  value:"  dmmeta.Nsx.pack                        bool                   Val"
+acr_nav.VisibleLine  row:286  value:"  dmmeta.Numstr.base                     i32                    Val"
+acr_nav.VisibleLine  row:287  value:"  dmmeta.Numstr.min_len                  i32                    Val"
+acr_nav.VisibleLine  row:288  value:"  dmmeta.Pmaskfld.filter_print           bool                   Val"
+acr_nav.VisibleLine  row:289  value:"  dmmeta.Ptrary.unique                   bool                   Val"
+acr_nav.VisibleLine  row:290  value:"  dmmeta.Ptrary.heaplike                 bool                   Val"
+acr_nav.VisibleLine  row:291  value:"  dmmeta.Reftype.isval                   bool                   Val"
+acr_nav.VisibleLine  row:292  value:"  dmmeta.Reftype.cascins                 bool                   Val"
+acr_nav.VisibleLine  row:293  value:"  dmmeta.Reftype.usebasepool             bool                   Val"
+acr_nav.VisibleLine  row:294  value:"  dmmeta.Reftype.cancopy                 bool                   Val"
+acr_nav.VisibleLine  row:295  value:"  dmmeta.Reftype.isxref                  bool                   Val"
+acr_nav.VisibleLine  row:296  value:"  dmmeta.Reftype.del                     bool                   Val"
+acr_nav.VisibleLine  row:297  value:"  dmmeta.Reftype.up                      bool                   Val"
+acr_nav.VisibleLine  row:298  value:"  dmmeta.Reftype.isnew                   bool                   Val"
+acr_nav.VisibleLine  row:299  value:"  dmmeta.Reftype.hasalloc                bool                   Val"
+acr_nav.VisibleLine  row:300  value:"  dmmeta.Reftype.inst                    bool                   Val"
+acr_nav.VisibleLine  row:301  value:"  dmmeta.Reftype.varlen                  bool                   Val"
+acr_nav.VisibleLine  row:302  value:"  dmmeta.Smallstr.length                 i32                    Val"
+acr_nav.VisibleLine  row:303  value:"  dmmeta.Smallstr.strict                 bool                   Val"
+acr_nav.VisibleLine  row:304  value:"  dmmeta.Ssimreq.reqchild                bool                   Val"
+acr_nav.VisibleLine  row:305  value:"  dmmeta.Ssimreq.bidir                   bool                   Val"
+acr_nav.VisibleLine  row:306  value:"  dmmeta.Svtype.maxwid                   i32                    Val"
+acr_nav.VisibleLine  row:307  value:"  dmmeta.Svtype.fixedwid1                i32                    Val"
+acr_nav.VisibleLine  row:308  value:"  dmmeta.Svtype.fixedwid2                i32                    Val"
+acr_nav.VisibleLine  row:309  value:"  dmmeta.Tary.aliased                    bool                   Val"
+acr_nav.VisibleLine  row:310  value:"  dmmeta.Thash.unique                    bool                   Val"
+acr_nav.VisibleLine  row:311  value:"── amcdb (3 fields) ──────────────────────────────"
+acr_nav.VisibleLine  row:312  value:"  dmmeta.Fcurs.curstype                  amcdb.Curstype         Pkey"
+acr_nav.VisibleLine  row:313  value:"  dmmeta.Fregx.regxtype                  amcdb.Regxtype         Pkey"
+acr_nav.VisibleLine  row:314  value:"  dmmeta.Reftype.reftype                 amcdb.Tclass           Pkey"
+acr_nav.VisibleLine  row:315  value:"── dev (1 field) ─────────────────────────────────"
+acr_nav.VisibleLine  row:316  value:"  dmmeta.Ns.license                      dev.License            Pkey"
+acr_nav.VisibleLine  row:317  value:""
+acr_nav.VisibleLine  row:318  value:"Downstream (imports from dmmeta): 261 fields, 29 namespaces"
+acr_nav.VisibleLine  row:319  value:"── amc (110 fields) ──────────────────────────────"
+acr_nav.VisibleLine  row:320  value:"  amc.FAnonfld.msghdr                    dmmeta.Anonfld         Base"
+acr_nav.VisibleLine  row:321  value:"  amc.FArgvtype.base                     dmmeta.Argvtype        Base"
+acr_nav.VisibleLine  row:322  value:"  amc.FBasepool.msghdr                   dmmeta.Basepool        Base"
+acr_nav.VisibleLine  row:323  value:"  amc.FBitfld.msghdr                     dmmeta.Bitfld          Base"
+acr_nav.VisibleLine  row:324  value:"  amc.FCafter.msghdr                     dmmeta.Cafter          Base"
+acr_nav.VisibleLine  row:325  value:"  amc.FCascdel.msghdr                    dmmeta.Cascdel         Base"
+acr_nav.VisibleLine  row:326  value:"  amc.FCcmp.msghdr                       dmmeta.Ccmp            Base"
+acr_nav.VisibleLine  row:327  value:"  amc.FCdflt.base                        dmmeta.Cdflt           Base"
+acr_nav.VisibleLine  row:328  value:"  amc.FCextern.msghdr                    dmmeta.Cextern         Base"
+acr_nav.VisibleLine  row:329  value:"  amc.FCfast.base                        dmmeta.Cfast           Base"
+acr_nav.VisibleLine  row:330  value:"  amc.FCfmt.msghdr                       dmmeta.Cfmt            Base"
+acr_nav.VisibleLine  row:331  value:"  amc.FCget.base                         dmmeta.Cget            Base"
+acr_nav.VisibleLine  row:332  value:"  amc.FCharset.base                      dmmeta.Charset         Base"
+acr_nav.VisibleLine  row:333  value:"  amc.FChash.msghdr                      dmmeta.Chash           Base"
+acr_nav.VisibleLine  row:334  value:"  amc.FCkafka.base                       dmmeta.Ckafka          Base"
+acr_nav.VisibleLine  row:335  value:"  amc.FCppfunc.msghdr                    dmmeta.Cppfunc         Base"
+acr_nav.VisibleLine  row:336  value:"  amc.FCpptype.msghdr                    dmmeta.Cpptype         Base"
+acr_nav.VisibleLine  row:337  value:"  amc.FCsize.msghdr                      dmmeta.Csize           Base"
+acr_nav.VisibleLine  row:338  value:"  amc.FCstr.msghdr                       dmmeta.Cstr            Base"
+acr_nav.VisibleLine  row:339  value:"  amc.FCtype.msghdr                      dmmeta.Ctype           Base"
+acr_nav.VisibleLine  row:340  value:"  amc.FStatictuple.ctype                 dmmeta.Ctype           Pkey"
+acr_nav.VisibleLine  row:341  value:"  amc.FCtypelen.base                     dmmeta.Ctypelen        Base"
+acr_nav.VisibleLine  row:342  value:"  amc.FDispatch.msghdr                   dmmeta.Dispatch        Base"
+acr_nav.VisibleLine  row:343  value:"  amc.FDispatchmsg.msghdr                dmmeta.DispatchMsg     Base"
+acr_nav.VisibleLine  row:344  value:"  amc.FDispctx.msghdr                    dmmeta.Dispctx         Base"
+acr_nav.VisibleLine  row:345  value:"  amc.FDispfilter.msghdr                 dmmeta.Dispfilter      Base"
+acr_nav.VisibleLine  row:346  value:"  amc.FDispsig.msghdr                    dmmeta.Dispsig         Base"
+acr_nav.VisibleLine  row:347  value:"  amc.FDisptrace.msghdr                  dmmeta.Disptrace       Base"
+acr_nav.VisibleLine  row:348  value:"  amc.FFalias.base                       dmmeta.Falias          Base"
+acr_nav.VisibleLine  row:349  value:"  amc.FFbase.base                        dmmeta.Fbase           Base"
+acr_nav.VisibleLine  row:350  value:"  amc.FFbigend.msghdr                    dmmeta.Fbigend         Base"
+acr_nav.VisibleLine  row:351  value:"  amc.FFbitset.msghdr                    dmmeta.Fbitset         Base"
+acr_nav.VisibleLine  row:352  value:"  amc.FFbuf.msghdr                       dmmeta.Fbuf            Base"
+acr_nav.VisibleLine  row:353  value:"  amc.FFbuftype.base                     dmmeta.Fbuftype        Base"
+acr_nav.VisibleLine  row:354  value:"  amc.FFcast.msghdr                      dmmeta.Fcast           Base"
+acr_nav.VisibleLine  row:355  value:"  amc.FFcleanup.msghdr                   dmmeta.Fcleanup        Base"
+acr_nav.VisibleLine  row:356  value:"  amc.FFcmap.base                        dmmeta.Fcmap           Base"
+acr_nav.VisibleLine  row:357  value:"  amc.FFcmdline.base                     dmmeta.Fcmdline        Base"
+acr_nav.VisibleLine  row:358  value:"  amc.FFcmp.msghdr                       dmmeta.Fcmp            Base"
+acr_nav.VisibleLine  row:359  value:"  amc.FFcompact.base                     dmmeta.Fcompact        Base"
+acr_nav.VisibleLine  row:360  value:"  amc.FFconst.msghdr                     dmmeta.Fconst          Base"
+acr_nav.VisibleLine  row:361  value:"  amc.FFcurs.base                        dmmeta.Fcurs           Base"
+acr_nav.VisibleLine  row:362  value:"  amc.FFdec.msghdr                       dmmeta.Fdec            Base"
+acr_nav.VisibleLine  row:363  value:"  amc.FFdelay.msghdr                     dmmeta.Fdelay          Base"
+acr_nav.VisibleLine  row:364  value:"  amc.FFfast.base                        dmmeta.Ffast           Base"
+acr_nav.VisibleLine  row:365  value:"  amc.FFflag.base                        dmmeta.Fflag           Base"
+acr_nav.VisibleLine  row:366  value:"  amc.FField.msghdr                      dmmeta.Field           Base"
+acr_nav.VisibleLine  row:367  value:"  amc.FGenXrefSeen.via                   dmmeta.Field           Pkey"
+acr_nav.VisibleLine  row:368  value:"  amc.FGenXrefSeen.xreffld               dmmeta.Field           Pkey"
+acr_nav.VisibleLine  row:369  value:"  amc.FFindrem.base                      dmmeta.Findrem         Base"
+acr_nav.VisibleLine  row:370  value:"  amc.FFinput.msghdr                     dmmeta.Finput          Base"
+acr_nav.VisibleLine  row:371  value:"  amc.FFkafka.base                       dmmeta.Fkafka          Base"
+acr_nav.VisibleLine  row:372  value:"  amc.FFldoffset.msghdr                  dmmeta.Fldoffset       Base"
+acr_nav.VisibleLine  row:373  value:"  amc.FFloadtuples.base                  dmmeta.Floadtuples     Base"
+acr_nav.VisibleLine  row:374  value:"  amc.FFnoremove.base                    dmmeta.Fnoremove       Base"
+acr_nav.VisibleLine  row:375  value:"  amc.FFoutput.msghdr                    dmmeta.Foutput         Base"
+acr_nav.VisibleLine  row:376  value:"  amc.FFprefix.base                      dmmeta.Fprefix         Base"
+acr_nav.VisibleLine  row:377  value:"  amc.FFregx.msghdr                      dmmeta.Fregx           Base"
+acr_nav.VisibleLine  row:378  value:"  amc.FFsort.msghdr                      dmmeta.Fsort           Base"
+acr_nav.VisibleLine  row:379  value:"  amc.FFstep.msghdr                      dmmeta.Fstep           Base"
+acr_nav.VisibleLine  row:380  value:"  amc.FFtrace.base                       dmmeta.Ftrace          Base"
+acr_nav.VisibleLine  row:381  value:"  amc.FFunc.msghdr                       dmmeta.Func            Base"
+acr_nav.VisibleLine  row:382  value:"  amc.FFunique.base                      dmmeta.Funique         Base"
+acr_nav.VisibleLine  row:383  value:"  amc.FFuserinit.base                    dmmeta.Fuserinit       Base"
+acr_nav.VisibleLine  row:384  value:"  amc.FFwddecl.msghdr                    dmmeta.Fwddecl         Base"
+acr_nav.VisibleLine  row:385  value:"  amc.FGconst.msghdr                     dmmeta.Gconst          Base"
+acr_nav.VisibleLine  row:386  value:"  amc.FGstatic.msghdr                    dmmeta.Gstatic         Base"
+acr_nav.VisibleLine  row:387  value:"  amc.FGsymbol.base                      dmmeta.Gsymbol         Base"
+acr_nav.VisibleLine  row:388  value:"  amc.FHook.base                         dmmeta.Hook            Base"
+acr_nav.VisibleLine  row:389  value:"  amc.FInlary.msghdr                     dmmeta.Inlary          Base"
+acr_nav.VisibleLine  row:390  value:"  amc.FJstype.base                       dmmeta.Jstype          Base"
+acr_nav.VisibleLine  row:391  value:"  amc.FLenfld.msghdr                     dmmeta.Lenfld          Base"
+acr_nav.VisibleLine  row:392  value:"  amc.FListtype.msghdr                   dmmeta.Listtype        Base"
+acr_nav.VisibleLine  row:393  value:"  amc.FLlist.msghdr                      dmmeta.Llist           Base"
+acr_nav.VisibleLine  row:394  value:"  amc.FMain.msghdr                       dmmeta.Main            Base"
+acr_nav.VisibleLine  row:395  value:"  amc.FMsgtype.msghdr                    dmmeta.Msgtype         Base"
+acr_nav.VisibleLine  row:396  value:"  amc.FNocascdel.msghdr                  dmmeta.Nocascdel       Base"
+acr_nav.VisibleLine  row:397  value:"  amc.FNossimfile.base                   dmmeta.Nossimfile      Base"
+acr_nav.VisibleLine  row:398  value:"  amc.FNoxref.msghdr                     dmmeta.Noxref          Base"
+acr_nav.VisibleLine  row:399  value:"  amc.FNs.msghdr                         dmmeta.Ns              Base"
+acr_nav.VisibleLine  row:400  value:"  amc.FOutfile.ns                        dmmeta.Ns              Pkey"
+acr_nav.VisibleLine  row:401  value:"  amc.FNscpp.base                        dmmeta.Nscpp           Base"
+acr_nav.VisibleLine  row:402  value:"  amc.FNsdb.base                         dmmeta.Nsdb            Base"
+acr_nav.VisibleLine  row:403  value:"  amc.FNsinclude.base                    dmmeta.Nsinclude       Base"
+acr_nav.VisibleLine  row:404  value:"  amc.FNsjs.base                         dmmeta.Nsjs            Base"
+acr_nav.VisibleLine  row:405  value:"  amc.FNsproto.base                      dmmeta.Nsproto         Base"
+acr_nav.VisibleLine  row:406  value:"  amc.FNsx.base                          dmmeta.Nsx             Base"
+acr_nav.VisibleLine  row:407  value:"  amc.FNumstr.msghdr                     dmmeta.Numstr          Base"
+acr_nav.VisibleLine  row:408  value:"  amc.FPack.msghdr                       dmmeta.Pack            Base"
+acr_nav.VisibleLine  row:409  value:"  amc.FPmaskfld.msghdr                   dmmeta.Pmaskfld        Base"
+acr_nav.VisibleLine  row:410  value:"  amc.FPmaskfldMember.base               dmmeta.PmaskfldMember  Base"
+acr_nav.VisibleLine  row:411  value:"  amc.FPnew.msghdr                       dmmeta.Pnew            Base"
+acr_nav.VisibleLine  row:412  value:"  amc.FPtrary.msghdr                     dmmeta.Ptrary          Base"
+acr_nav.VisibleLine  row:413  value:"  amc.FReftype.msghdr                    dmmeta.Reftype         Base"
+acr_nav.VisibleLine  row:414  value:"  amc.FRowid.msghdr                      dmmeta.Rowid           Base"
+acr_nav.VisibleLine  row:415  value:"  amc.FSmallstr.msghdr                   dmmeta.Smallstr        Base"
+acr_nav.VisibleLine  row:416  value:"  amc.FSortfld.msghdr                    dmmeta.Sortfld         Base"
+acr_nav.VisibleLine  row:417  value:"  amc.FSsimfile.msghdr                   dmmeta.Ssimfile        Base"
+acr_nav.VisibleLine  row:418  value:"  amc.FSsimsort.base                     dmmeta.Ssimsort        Base"
+acr_nav.VisibleLine  row:419  value:"  amc.FSsimvolatile.base                 dmmeta.Ssimvolatile    Base"
+acr_nav.VisibleLine  row:420  value:"  amc.FSteptype.base                     dmmeta.Steptype        Base"
+acr_nav.VisibleLine  row:421  value:"  amc.FSubstr.msghdr                     dmmeta.Substr          Base"
+acr_nav.VisibleLine  row:422  value:"  amc.FTary.msghdr                       dmmeta.Tary            Base"
+acr_nav.VisibleLine  row:423  value:"  amc.FThash.msghdr                      dmmeta.Thash           Base"
+acr_nav.VisibleLine  row:424  value:"  amc.FTracefld.msghdr                   dmmeta.Tracefld        Base"
+acr_nav.VisibleLine  row:425  value:"  amc.FTracerec.msghdr                   dmmeta.Tracerec        Base"
+acr_nav.VisibleLine  row:426  value:"  amc.FTypefld.msghdr                    dmmeta.Typefld         Base"
+acr_nav.VisibleLine  row:427  value:"  amc.FUserfunc.base                     dmmeta.Userfunc        Base"
+acr_nav.VisibleLine  row:428  value:"  amc.FUsertracefld.msghdr               dmmeta.Usertracefld    Base"
+acr_nav.VisibleLine  row:429  value:"  amc.FXref.msghdr                       dmmeta.Xref            Base"
+acr_nav.VisibleLine  row:430  value:"── command (25 fields) ───────────────────────────"
+acr_nav.VisibleLine  row:431  value:"  command.acr_ed.ctype                   dmmeta.Ctype           Pkey"
+acr_nav.VisibleLine  row:432  value:"  command.acr_ed.subset                  dmmeta.Ctype           Pkey"
+acr_nav.VisibleLine  row:433  value:"  command.acr_ed.subset2                 dmmeta.Ctype           Pkey"
+acr_nav.VisibleLine  row:434  value:"  command.acr_ed.arg                     dmmeta.Ctype           Pkey"
+acr_nav.VisibleLine  row:435  value:"  command.amc_vis.ctype                  dmmeta.Ctype           RegxSql"
+acr_nav.VisibleLine  row:436  value:"  command.atf_cmdline.dregx              dmmeta.Ctype           RegxSql"
+acr_nav.VisibleLine  row:437  value:"  command.atf_cmdline.dpkey              dmmeta.Ctype           Pkey"
+acr_nav.VisibleLine  row:438  value:"  command.acr_ed.field                   dmmeta.Field           Pkey"
+acr_nav.VisibleLine  row:439  value:"  command.acr_ed.before                  dmmeta.Field           Pkey"
+acr_nav.VisibleLine  row:440  value:"  command.acr_ed.srcfield                dmmeta.Field           Pkey"
+acr_nav.VisibleLine  row:441  value:"  command.acr_ed.hashfld                 dmmeta.Field           Pkey"
+acr_nav.VisibleLine  row:442  value:"  command.acr_ed.sortfld                 dmmeta.Field           Pkey"
+acr_nav.VisibleLine  row:443  value:"  command.acr_ed.fstep                   dmmeta.Fstep           Pkey"
+acr_nav.VisibleLine  row:444  value:"  command.abt_md.ns                      dmmeta.Ns              RegxSql"
+acr_nav.VisibleLine  row:445  value:"  command.acr_in.ns                      dmmeta.Ns              RegxSql"
+acr_nav.VisibleLine  row:446  value:"  command.apm.ns                         dmmeta.Ns              RegxSql"
+acr_nav.VisibleLine  row:447  value:"  command.aqlite.ns                      dmmeta.Ns              RegxSql"
+acr_nav.VisibleLine  row:448  value:"  command.acr_my.nsdb                    dmmeta.Nsdb            RegxSql"
+acr_nav.VisibleLine  row:449  value:"  command.acr_ed.nstype                  dmmeta.Nstype          Pkey"
+acr_nav.VisibleLine  row:450  value:"  command.acr_ed.pooltype                dmmeta.Reftype         Pkey"
+acr_nav.VisibleLine  row:451  value:"  command.acr_ed.reftype                 dmmeta.Reftype         Pkey"
+acr_nav.VisibleLine  row:452  value:"  command.acr_ed.ssimfile                dmmeta.Ssimfile        Pkey"
+acr_nav.VisibleLine  row:453  value:"  command.acr_in.notssimfile             dmmeta.Ssimfile        RegxSql"
+acr_nav.VisibleLine  row:454  value:"  command.acr_in.r                       dmmeta.Ssimfile        RegxSql"
+acr_nav.VisibleLine  row:455  value:"  command.acr_ed.substr                  dmmeta.Substr          Pkey"
+acr_nav.VisibleLine  row:456  value:"── acr_ed (15 fields) ────────────────────────────"
+acr_nav.VisibleLine  row:457  value:"  acr_ed.FCfmt.base                      dmmeta.Cfmt            Base"
+acr_nav.VisibleLine  row:458  value:"  acr_ed.FCpptype.base                   dmmeta.Cpptype         Base"
+acr_nav.VisibleLine  row:459  value:"  acr_ed.FCstr.msghdr                    dmmeta.Cstr            Base"
+acr_nav.VisibleLine  row:460  value:"  acr_ed.FCtype.msghdr                   dmmeta.Ctype           Base"
+acr_nav.VisibleLine  row:461  value:"  acr_ed.FDb.keyfld                      dmmeta.Field           Pkey"
+acr_nav.VisibleLine  row:462  value:"  acr_ed.FDb.viafld                      dmmeta.Field           Pkey"
+acr_nav.VisibleLine  row:463  value:"  acr_ed.FField.msghdr                   dmmeta.Field           Base"
+acr_nav.VisibleLine  row:464  value:"  acr_ed.FFprefix.base                   dmmeta.Fprefix         Base"
+acr_nav.VisibleLine  row:465  value:"  acr_ed.FListtype.msghdr                dmmeta.Listtype        Base"
+acr_nav.VisibleLine  row:466  value:"  acr_ed.FMsgtype.base                   dmmeta.Msgtype         Base"
+acr_nav.VisibleLine  row:467  value:"  acr_ed.FNs.msghdr                      dmmeta.Ns              Base"
+acr_nav.VisibleLine  row:468  value:"  acr_ed.FNsdb.base                      dmmeta.Nsdb            Base"
+acr_nav.VisibleLine  row:469  value:"  acr_ed.FPack.base                      dmmeta.Pack            Base"
+acr_nav.VisibleLine  row:470  value:"  acr_ed.FSsimfile.msghdr                dmmeta.Ssimfile        Base"
+acr_nav.VisibleLine  row:471  value:"  acr_ed.FTypefld.base                   dmmeta.Typefld         Base"
+acr_nav.VisibleLine  row:472  value:"── acr (13 fields) ───────────────────────────────"
+acr_nav.VisibleLine  row:473  value:"  acr.FAnonfld.base                      dmmeta.Anonfld         Base"
+acr_nav.VisibleLine  row:474  value:"  acr.FCdflt.base                        dmmeta.Cdflt           Base"
+acr_nav.VisibleLine  row:475  value:"  acr.FCppfunc.base                      dmmeta.Cppfunc         Base"
+acr_nav.VisibleLine  row:476  value:"  acr.FCtype.base                        dmmeta.Ctype           Base"
+acr_nav.VisibleLine  row:477  value:"  acr.RecSortkey.ctype                   dmmeta.Ctype           Pkey"
+acr_nav.VisibleLine  row:478  value:"  acr.FField.base                        dmmeta.Field           Base"
+acr_nav.VisibleLine  row:479  value:"  acr.FPrintAttr.field                   dmmeta.Field           Pkey"
+acr_nav.VisibleLine  row:480  value:"  acr.FFunique.base                      dmmeta.Funique         Base"
+acr_nav.VisibleLine  row:481  value:"  acr.FSmallstr.base                     dmmeta.Smallstr        Base"
+acr_nav.VisibleLine  row:482  value:"  acr.FSsimfile.base                     dmmeta.Ssimfile        Base"
+acr_nav.VisibleLine  row:483  value:"  acr.FSsimreq.base                      dmmeta.Ssimreq         Base"
+acr_nav.VisibleLine  row:484  value:"  acr.FSsimsort.base                     dmmeta.Ssimsort        Base"
+acr_nav.VisibleLine  row:485  value:"  acr.FSubstr.base                       dmmeta.Substr          Base"
+acr_nav.VisibleLine  row:486  value:"── abt_md (13 fields) ────────────────────────────"
+acr_nav.VisibleLine  row:487  value:"  abt_md.FCtype.base                     dmmeta.Ctype           Base"
+acr_nav.VisibleLine  row:488  value:"  abt_md.FDispatch.base                  dmmeta.Dispatch        Base"
+acr_nav.VisibleLine  row:489  value:"  abt_md.FDispatchMsg.base               dmmeta.DispatchMsg     Base"
+acr_nav.VisibleLine  row:490  value:"  abt_md.FFconst.base                    dmmeta.Fconst          Base"
+acr_nav.VisibleLine  row:491  value:"  abt_md.FField.base                     dmmeta.Field           Base"
+acr_nav.VisibleLine  row:492  value:"  abt_md.FFinput.base                    dmmeta.Finput          Base"
+acr_nav.VisibleLine  row:493  value:"  abt_md.FGconst.base                    dmmeta.Gconst          Base"
+acr_nav.VisibleLine  row:494  value:"  abt_md.FGstatic.base                   dmmeta.Gstatic         Base"
+acr_nav.VisibleLine  row:495  value:"  abt_md.FNs.base                        dmmeta.Ns              Base"
+acr_nav.VisibleLine  row:496  value:"  abt_md.FNstype.base                    dmmeta.Nstype          Base"
+acr_nav.VisibleLine  row:497  value:"  abt_md.FReftype.base                   dmmeta.Reftype         Base"
+acr_nav.VisibleLine  row:498  value:"  abt_md.FSsimfile.base                  dmmeta.Ssimfile        Base"
+acr_nav.VisibleLine  row:499  value:"  abt_md.FSubstr.base                    dmmeta.Substr          Base"
+acr_nav.VisibleLine  row:500  value:"── lib_ctype (11 fields) ─────────────────────────"
+acr_nav.VisibleLine  row:501  value:"  lib_ctype.FCdflt.base                  dmmeta.Cdflt           Base"
+acr_nav.VisibleLine  row:502  value:"  lib_ctype.FCfmt.msghdr                 dmmeta.Cfmt            Base"
+acr_nav.VisibleLine  row:503  value:"  lib_ctype.FCppfunc.base                dmmeta.Cppfunc         Base"
+acr_nav.VisibleLine  row:504  value:"  lib_ctype.FCtype.msghdr                dmmeta.Ctype           Base"
+acr_nav.VisibleLine  row:505  value:"  lib_ctype.FFconst.msghdr               dmmeta.Fconst          Base"
+acr_nav.VisibleLine  row:506  value:"  lib_ctype.FField.msghdr                dmmeta.Field           Base"
+acr_nav.VisibleLine  row:507  value:"  lib_ctype.FFtuple.msghdr               dmmeta.Ftuple          Base"
+acr_nav.VisibleLine  row:508  value:"  lib_ctype.FCtype.printfmt              dmmeta.Printfmt        Pkey"
+acr_nav.VisibleLine  row:509  value:"  lib_ctype.FSqltype.base                dmmeta.Sqltype         Base"
+acr_nav.VisibleLine  row:510  value:"  lib_ctype.FSsimfile.msghdr             dmmeta.Ssimfile        Base"
+acr_nav.VisibleLine  row:511  value:"  lib_ctype.FSubstr.base                 dmmeta.Substr          Base"
+acr_nav.VisibleLine  row:512  value:"── acr_compl (10 fields) ─────────────────────────"
+acr_nav.VisibleLine  row:513  value:"  acr_compl.FAnonfld.msghdr              dmmeta.Anonfld         Base"
+acr_nav.VisibleLine  row:514  value:"  acr_compl.FArgvtype.base               dmmeta.Argvtype        Base"
+acr_nav.VisibleLine  row:515  value:"  acr_compl.FCtype.msghdr                dmmeta.Ctype           Base"
+acr_nav.VisibleLine  row:516  value:"  acr_compl.FFalias.base                 dmmeta.Falias          Base"
+acr_nav.VisibleLine  row:517  value:"  acr_compl.FFcmdline.base               dmmeta.Fcmdline        Base"
+acr_nav.VisibleLine  row:518  value:"  acr_compl.FFconst.base                 dmmeta.Fconst          Base"
+acr_nav.VisibleLine  row:519  value:"  acr_compl.FFflag.base                  dmmeta.Fflag           Base"
+acr_nav.VisibleLine  row:520  value:"  acr_compl.FField.msghdr                dmmeta.Field           Base"
+acr_nav.VisibleLine  row:521  value:"  acr_compl.FNs.base                     dmmeta.Ns              Base"
+acr_nav.VisibleLine  row:522  value:"  acr_compl.FSsimfile.msghdr             dmmeta.Ssimfile        Base"
+acr_nav.VisibleLine  row:523  value:"── acr_in (9 fields) ─────────────────────────────"
+acr_nav.VisibleLine  row:524  value:"  acr_in.FCtype.msghdr                   dmmeta.Ctype           Base"
+acr_nav.VisibleLine  row:525  value:"  acr_in.FDispsig.msghdr                 dmmeta.Dispsig         Base"
+acr_nav.VisibleLine  row:526  value:"  acr_in.FField.msghdr                   dmmeta.Field           Base"
+acr_nav.VisibleLine  row:527  value:"  acr_in.FFinput.msghdr                  dmmeta.Finput          Base"
+acr_nav.VisibleLine  row:528  value:"  acr_in.FNs.msghdr                      dmmeta.Ns              Base"
+acr_nav.VisibleLine  row:529  value:"  acr_in.FNsssimfile.ns                  dmmeta.Ns              Pkey"
+acr_nav.VisibleLine  row:530  value:"  acr_in.FNsssimfile.ssimfile            dmmeta.Ssimfile        Pkey"
+acr_nav.VisibleLine  row:531  value:"  acr_in.FSsimfile.msghdr                dmmeta.Ssimfile        Base"
+acr_nav.VisibleLine  row:532  value:"  acr_in.FSubstr.msghdr                  dmmeta.Substr          Base"
+acr_nav.VisibleLine  row:533  value:"── ssim2mysql (7 fields) ─────────────────────────"
+acr_nav.VisibleLine  row:534  value:"  ssim2mysql.FCtype.msghdr               dmmeta.Ctype           Base"
+acr_nav.VisibleLine  row:535  value:"  ssim2mysql.FField.msghdr               dmmeta.Field           Base"
+acr_nav.VisibleLine  row:536  value:"  ssim2mysql.FNs.msghdr                  dmmeta.Ns              Base"
+acr_nav.VisibleLine  row:537  value:"  ssim2mysql.FSqltype.msghdr             dmmeta.Sqltype         Base"
+acr_nav.VisibleLine  row:538  value:"  ssim2mysql.FColumn.ssimfile            dmmeta.Ssimfile        Pkey"
+acr_nav.VisibleLine  row:539  value:"  ssim2mysql.FSsimfile.msghdr            dmmeta.Ssimfile        Base"
+acr_nav.VisibleLine  row:540  value:"  ssim2mysql.FSubstr.msghdr              dmmeta.Substr          Base"
+acr_nav.VisibleLine  row:541  value:"── apm (6 fields) ────────────────────────────────"
+acr_nav.VisibleLine  row:542  value:"  apm.FCtype.base                        dmmeta.Ctype           Base"
+acr_nav.VisibleLine  row:543  value:"  apm.FField.base                        dmmeta.Field           Base"
+acr_nav.VisibleLine  row:544  value:"  apm.FNs.base                           dmmeta.Ns              Base"
+acr_nav.VisibleLine  row:545  value:"  apm.FSsimfile.base                     dmmeta.Ssimfile        Base"
+acr_nav.VisibleLine  row:546  value:"  apm.FSsimreq.base                      dmmeta.Ssimreq         Base"
+acr_nav.VisibleLine  row:547  value:"  apm.FSubstr.base                       dmmeta.Substr          Base"
+acr_nav.VisibleLine  row:548  value:"── lib_sqlite (6 fields) ─────────────────────────"
+acr_nav.VisibleLine  row:549  value:"  lib_sqlite.FCtype.base                 dmmeta.Ctype           Base"
+acr_nav.VisibleLine  row:550  value:"  lib_sqlite.FField.base                 dmmeta.Field           Base"
+acr_nav.VisibleLine  row:551  value:"  lib_sqlite.FNs.base                    dmmeta.Ns              Base"
+acr_nav.VisibleLine  row:552  value:"  lib_sqlite.FSqltype.base               dmmeta.Sqltype         Base"
+acr_nav.VisibleLine  row:553  value:"  lib_sqlite.FSsimfile.base              dmmeta.Ssimfile        Base"
+acr_nav.VisibleLine  row:554  value:"  lib_sqlite.FSubstr.base                dmmeta.Substr          Base"
+acr_nav.VisibleLine  row:555  value:"── acr_nav (5 fields) ────────────────────────────"
+acr_nav.VisibleLine  row:556  value:"  acr_nav.FCtype.base                    dmmeta.Ctype           Base"
+acr_nav.VisibleLine  row:557  value:"  acr_nav.FField.base                    dmmeta.Field           Base"
+acr_nav.VisibleLine  row:558  value:"  acr_nav.FNs.base                       dmmeta.Ns              Base"
+acr_nav.VisibleLine  row:559  value:"  acr_nav.FReftype.base                  dmmeta.Reftype         Base"
+acr_nav.VisibleLine  row:560  value:"  acr_nav.FSsimfile.base                 dmmeta.Ssimfile        Base"
+acr_nav.VisibleLine  row:561  value:"── amc_vis (5 fields) ────────────────────────────"
+acr_nav.VisibleLine  row:562  value:"  amc_vis.FCtype.msghdr                  dmmeta.Ctype           Base"
+acr_nav.VisibleLine  row:563  value:"  amc_vis.FField.msghdr                  dmmeta.Field           Base"
+acr_nav.VisibleLine  row:564  value:"  amc_vis.FFinput.msghdr                 dmmeta.Finput          Base"
+acr_nav.VisibleLine  row:565  value:"  amc_vis.FNodedep.reftype               dmmeta.Reftype         Pkey"
+acr_nav.VisibleLine  row:566  value:"  amc_vis.FReftype.msghdr                dmmeta.Reftype         Base"
+acr_nav.VisibleLine  row:567  value:"── algo (2 fields) ───────────────────────────────"
+acr_nav.VisibleLine  row:568  value:"  algo.Imtable.elem_type                 dmmeta.Ctype           Pkey"
+acr_nav.VisibleLine  row:569  value:"  algo.Imtable.ssimfile                  dmmeta.Ssimfile        Pkey"
+acr_nav.VisibleLine  row:570  value:"── sv2ssim (2 fields) ────────────────────────────"
+acr_nav.VisibleLine  row:571  value:"  sv2ssim.FField.ctype                   dmmeta.Ctype           Pkey"
+acr_nav.VisibleLine  row:572  value:"  sv2ssim.FSvtype.base                   dmmeta.Svtype          Base"
+acr_nav.VisibleLine  row:573  value:"── src_func (2 fields) ───────────────────────────"
+acr_nav.VisibleLine  row:574  value:"  src_func.FCtypelen.base                dmmeta.Ctypelen        Base"
+acr_nav.VisibleLine  row:575  value:"  src_func.FUserfunc.base                dmmeta.Userfunc        Base"
+acr_nav.VisibleLine  row:576  value:"── algo_lib (2 fields) ───────────────────────────"
+acr_nav.VisibleLine  row:577  value:"  algo_lib.FDispsigcheck.msghdr          dmmeta.Dispsigcheck    Base"
+acr_nav.VisibleLine  row:578  value:"  algo_lib.FLogcat.base                  dmmeta.Logcat          Base"
+acr_nav.VisibleLine  row:579  value:"── dev (2 fields) ────────────────────────────────"
+acr_nav.VisibleLine  row:580  value:"  dev.Unstablefld.field                  dmmeta.Field           Pkey"
+acr_nav.VisibleLine  row:581  value:"  dev.Target.target                      dmmeta.Ns              Pkey"
+acr_nav.VisibleLine  row:582  value:"── amsdb (2 fields) ──────────────────────────────"
+acr_nav.VisibleLine  row:583  value:"  amsdb.Proctype.proctype                dmmeta.Ns              Pkey"
+acr_nav.VisibleLine  row:584  value:"  amsdb.Proctype.ns                      dmmeta.Ns              Pkey"
+acr_nav.VisibleLine  row:585  value:"── atf_ci (2 fields) ─────────────────────────────"
+acr_nav.VisibleLine  row:586  value:"  atf_ci.FNs.base                        dmmeta.Ns              Base"
+acr_nav.VisibleLine  row:587  value:"  atf_ci.FSsimfile.base                  dmmeta.Ssimfile        Base"
+acr_nav.VisibleLine  row:588  value:"── atfdb (2 fields) ──────────────────────────────"
+acr_nav.VisibleLine  row:589  value:"  atfdb.Comptest.target                  dmmeta.Ns              Pkey"
+acr_nav.VisibleLine  row:590  value:"  atfdb.Unittest.ns                      dmmeta.Ns              Pkey"
+acr_nav.VisibleLine  row:591  value:"── src_hdr (2 fields) ────────────────────────────"
+acr_nav.VisibleLine  row:592  value:"  src_hdr.FNs.base                       dmmeta.Ns              Base"
+acr_nav.VisibleLine  row:593  value:"  src_hdr.FNsx.base                      dmmeta.Nsx             Base"
+acr_nav.VisibleLine  row:594  value:"── acr_my (2 fields) ─────────────────────────────"
+acr_nav.VisibleLine  row:595  value:"  acr_my.FNsdb.base                      dmmeta.Nsdb            Base"
+acr_nav.VisibleLine  row:596  value:"  acr_my.FSsimfile.base                  dmmeta.Ssimfile        Base"
+acr_nav.VisibleLine  row:597  value:"── amcdb (1 field) ───────────────────────────────"
+acr_nav.VisibleLine  row:598  value:"  amcdb.Bltin.ctype                      dmmeta.Ctype           Pkey"
+acr_nav.VisibleLine  row:599  value:"── gcli (1 field) ────────────────────────────────"
+acr_nav.VisibleLine  row:600  value:"  gcli.FGclicmdf.field                   dmmeta.Field           Pkey"
+acr_nav.VisibleLine  row:601  value:"── gclidb (1 field) ──────────────────────────────"
+acr_nav.VisibleLine  row:602  value:"  gclidb.Gclicmdf2j.field                dmmeta.Field           Pkey"
+acr_nav.VisibleLine  row:603  value:"── atf_amc (1 field) ─────────────────────────────"
+acr_nav.VisibleLine  row:604  value:"  atf_amc.FListtype.base                 dmmeta.Listtype        Base"
+acr_nav.VisibleLine  row:605  value:"── abt (1 field) ─────────────────────────────────"
+acr_nav.VisibleLine  row:606  value:"  abt.FNs.base                           dmmeta.Ns              Base"
+acr_nav.VisibleLine  row:607  value:"── acr_navdb (1 field) ───────────────────────────"
+acr_nav.VisibleLine  row:608  value:"  acr_navdb.Reftypestyle.reftype         dmmeta.Reftype         Pkey"
+acr_nav.PreviewNavCol  col_start:39  col_wid:21  name_len:0  col_name:arg  target_ctype:""
+

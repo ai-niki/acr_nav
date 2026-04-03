@@ -1,4 +1,4 @@
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1412  n_ctype:1413  n_field:5685  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1413  n_ctype:1414  n_field:5687  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:83  sel_value:abt
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
@@ -9,7 +9,7 @@ acr_nav.VisibleLeftItem  row:5  value:acr_dm  kind:ns  collapsed:Y  n_match:6  n
 acr_nav.VisibleLeftItem  row:6  value:acr_ed  kind:ns  collapsed:Y  n_match:19  n_record:0
 acr_nav.VisibleLeftItem  row:7  value:acr_in  kind:ns  collapsed:Y  n_match:12  n_record:0
 acr_nav.VisibleLeftItem  row:8  value:acr_my  kind:ns  collapsed:Y  n_match:3  n_record:0
-acr_nav.VisibleLeftItem  row:9  value:acr_nav  kind:ns  collapsed:Y  n_match:36  n_record:0
+acr_nav.VisibleLeftItem  row:9  value:acr_nav  kind:ns  collapsed:Y  n_match:37  n_record:0
 acr_nav.VisibleLeftItem  row:10  value:acr_navdb  kind:ns  collapsed:Y  n_match:10  n_record:0
 acr_nav.VisibleLeftItem  row:11  value:algo  kind:ns  collapsed:Y  n_match:225  n_record:0
 acr_nav.VisibleLeftItem  row:12  value:algo_lib  kind:ns  collapsed:Y  n_match:35  n_record:0
@@ -96,7 +96,7 @@ acr_nav.VisibleLine  row:8  value:""
 acr_nav.VisibleLine  row:9  value:"Downstream (imports from abt):"
 acr_nav.VisibleLine  row:10  value:"  (none)"
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1412  n_ctype:1413  n_field:5685  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1413  n_ctype:1414  n_field:5687  viewmode:nsdep_detail  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:83  sel_value:abt
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
@@ -107,7 +107,7 @@ acr_nav.VisibleLeftItem  row:5  value:acr_dm  kind:ns  collapsed:Y  n_match:6  n
 acr_nav.VisibleLeftItem  row:6  value:acr_ed  kind:ns  collapsed:Y  n_match:19  n_record:0
 acr_nav.VisibleLeftItem  row:7  value:acr_in  kind:ns  collapsed:Y  n_match:12  n_record:0
 acr_nav.VisibleLeftItem  row:8  value:acr_my  kind:ns  collapsed:Y  n_match:3  n_record:0
-acr_nav.VisibleLeftItem  row:9  value:acr_nav  kind:ns  collapsed:Y  n_match:36  n_record:0
+acr_nav.VisibleLeftItem  row:9  value:acr_nav  kind:ns  collapsed:Y  n_match:37  n_record:0
 acr_nav.VisibleLeftItem  row:10  value:acr_navdb  kind:ns  collapsed:Y  n_match:10  n_record:0
 acr_nav.VisibleLeftItem  row:11  value:algo  kind:ns  collapsed:Y  n_match:225  n_record:0
 acr_nav.VisibleLeftItem  row:12  value:algo_lib  kind:ns  collapsed:Y  n_match:35  n_record:0
@@ -181,20 +181,82 @@ acr_nav.VisibleLeftItem  row:79  value:strconv  kind:ns  collapsed:Y  n_match:1 
 acr_nav.VisibleLeftItem  row:80  value:sv2ssim  kind:ns  collapsed:Y  n_match:4  n_record:0
 acr_nav.VisibleLeftItem  row:81  value:ws  kind:ns  collapsed:Y  n_match:16  n_record:0
 acr_nav.VisibleLeftItem  row:82  value:wsdb  kind:ns  collapsed:Y  n_match:1  n_record:0
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:11  sel_value:"Upstream (abt imports from):"
-acr_nav.VisibleLine  row:0  value:"Upstream (abt imports from):"
-acr_nav.VisibleLine  row:1  value:"     other     23 fields"
-acr_nav.VisibleLine  row:2  value:"       dev     16 fields"
-acr_nav.VisibleLine  row:3  value:"      algo     15 fields"
-acr_nav.VisibleLine  row:4  value:"  algo_lib      4 fields"
-acr_nav.VisibleLine  row:5  value:"   command      1 field"
-acr_nav.VisibleLine  row:6  value:"    report      1 field"
-acr_nav.VisibleLine  row:7  value:"    dmmeta      1 field"
-acr_nav.VisibleLine  row:8  value:""
-acr_nav.VisibleLine  row:9  value:"Downstream (imports from abt):"
-acr_nav.VisibleLine  row:10  value:"  (none)"
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:72  sel_value:"Upstream (abt imports from): 61 fields, 7 namespaces"
+acr_nav.VisibleLine  row:0  value:"Upstream (abt imports from): 61 fields, 7 namespaces"
+acr_nav.VisibleLine  row:1  value:"── other (23 fields) ─────────────────────────────"
+acr_nav.VisibleLine  row:2  value:"  abt.FBuilddir.select          bool                Val"
+acr_nav.VisibleLine  row:3  value:"  abt.FDb.lpool                 u8                  Lpool"
+acr_nav.VisibleLine  row:4  value:"  abt.FDb.ccache                bool                Val"
+acr_nav.VisibleLine  row:5  value:"  abt.FDb.gcache                bool                Val"
+acr_nav.VisibleLine  row:6  value:"  abt.FDb.tty                   bool                Val"
+acr_nav.VisibleLine  row:7  value:"  abt.FFilestat.size            u64                 Val"
+acr_nav.VisibleLine  row:8  value:"  abt.FFilestat.isdir           bool                Val"
+acr_nav.VisibleLine  row:9  value:"  abt.FFilestat.exists          bool                Val"
+acr_nav.VisibleLine  row:10  value:"  abt.FInclude.wantprint        bool                Val"
+acr_nav.VisibleLine  row:11  value:"  abt.FSrcfile.ood              bool                Val"
+acr_nav.VisibleLine  row:12  value:"  abt.FSrcfile.cum_mod_visited  bool                Val"
+acr_nav.VisibleLine  row:13  value:"  abt.FSrcfile.line_n           u64                 Val"
+acr_nav.VisibleLine  row:14  value:"  abt.FSrcfile.srcfile_visited  bool                Val"
+acr_nav.VisibleLine  row:15  value:"  abt.FSrcfile.printed          bool                Val"
+acr_nav.VisibleLine  row:16  value:"  abt.FSyscmd.rowid             i32                 Val"
+acr_nav.VisibleLine  row:17  value:"  abt.FSyscmd.line_n            u64                 Val"
+acr_nav.VisibleLine  row:18  value:"  abt.FSyscmd.redirect          bool                Val"
+acr_nav.VisibleLine  row:19  value:"  abt.FTarget.ood               bool                Val"
+acr_nav.VisibleLine  row:20  value:"  abt.FTarget.ood_visited       bool                Val"
+acr_nav.VisibleLine  row:21  value:"  abt.FTarget.libdep_visited    bool                Val"
+acr_nav.VisibleLine  row:22  value:"  abt.FTarget.origsel           bool                Val"
+acr_nav.VisibleLine  row:23  value:"  abt.config.ood_src            i32                 Val"
+acr_nav.VisibleLine  row:24  value:"  abt.config.ood_target         i32                 Val"
+acr_nav.VisibleLine  row:25  value:"── dev (16 fields) ───────────────────────────────"
+acr_nav.VisibleLine  row:26  value:"  abt.FArch.msghdr              dev.Arch            Base"
+acr_nav.VisibleLine  row:27  value:"  abt.FBuilddir.base            dev.Builddir        Base"
+acr_nav.VisibleLine  row:28  value:"  abt.FCfg.msghdr               dev.Cfg             Base"
+acr_nav.VisibleLine  row:29  value:"  abt.FCompiler.msghdr          dev.Compiler        Base"
+acr_nav.VisibleLine  row:30  value:"  abt.FInclude.msghdr           dev.Include         Base"
+acr_nav.VisibleLine  row:31  value:"  abt.FSrcfile.msghdr           dev.Srcfile         Base"
+acr_nav.VisibleLine  row:32  value:"  abt.FSyscmd.msghdr            dev.Syscmd          Base"
+acr_nav.VisibleLine  row:33  value:"  abt.FSyscmddep.msghdr         dev.Syscmddep       Base"
+acr_nav.VisibleLine  row:34  value:"  abt.FSyslib.msghdr            dev.Syslib          Base"
+acr_nav.VisibleLine  row:35  value:"  abt.FTargdep.msghdr           dev.Targdep         Base"
+acr_nav.VisibleLine  row:36  value:"  abt.FTarget.msghdr            dev.Target          Base"
+acr_nav.VisibleLine  row:37  value:"  abt.FTargsrc.msghdr           dev.Targsrc         Base"
+acr_nav.VisibleLine  row:38  value:"  abt.FTargsyslib.msghdr        dev.Targsyslib      Base"
+acr_nav.VisibleLine  row:39  value:"  abt.FToolOpt.msghdr           dev.ToolOpt         Base"
+acr_nav.VisibleLine  row:40  value:"  abt.FUname.msghdr             dev.Uname           Base"
+acr_nav.VisibleLine  row:41  value:"  abt.config.builddir           dev.Builddir        Pkey"
+acr_nav.VisibleLine  row:42  value:"── algo (15 fields) ──────────────────────────────"
+acr_nav.VisibleLine  row:43  value:"  abt.FBuilddir.path            algo.cstring        Val"
+acr_nav.VisibleLine  row:44  value:"  abt.FDb.sysincl               algo.cstring        Tary"
+acr_nav.VisibleLine  row:45  value:"  abt.FFilestat.filename        algo.cstring        Val"
+acr_nav.VisibleLine  row:46  value:"  abt.FFilestat.modtime         algo.UnTime         Val"
+acr_nav.VisibleLine  row:47  value:"  abt.FSrcfile.mod_time         algo.UnTime         Val"
+acr_nav.VisibleLine  row:48  value:"  abt.FSrcfile.objkey           algo.cstring        Val"
+acr_nav.VisibleLine  row:49  value:"  abt.FSrcfile.cum_modtime      algo.UnTime         Val"
+acr_nav.VisibleLine  row:50  value:"  abt.FSyscmd.fstdout           algo.cstring        Val"
+acr_nav.VisibleLine  row:51  value:"  abt.FSyscmd.fstderr           algo.cstring        Val"
+acr_nav.VisibleLine  row:52  value:"  abt.FSyscmd.outfile           algo.cstring        Val"
+acr_nav.VisibleLine  row:53  value:"  abt.FTarget.cum_modtime       algo.UnTime         Val"
+acr_nav.VisibleLine  row:54  value:"  abt.FTarget.out_modtime       algo.UnTime         Val"
+acr_nav.VisibleLine  row:55  value:"  abt.FToolOpt.regx_opt         algo.cstring        RegxSql"
+acr_nav.VisibleLine  row:56  value:"  abt.FToolOpt.regx_target      algo.cstring        RegxSql"
+acr_nav.VisibleLine  row:57  value:"  abt.config.cache              algo.Smallstr20     Val"
+acr_nav.VisibleLine  row:58  value:"── algo_lib (4 fields) ───────────────────────────"
+acr_nav.VisibleLine  row:59  value:"  abt.FBuilddir.lockfile        algo_lib.FLockfile  Val"
+acr_nav.VisibleLine  row:60  value:"  abt.FBuilddir.R               algo_lib.Replscope  Val"
+acr_nav.VisibleLine  row:61  value:"  abt.FSyscmd.fd_stdout         algo_lib.FFildes    Val"
+acr_nav.VisibleLine  row:62  value:"  abt.FSyscmd.fd_stderr         algo_lib.FFildes    Val"
+acr_nav.VisibleLine  row:63  value:"── command (1 field) ─────────────────────────────"
+acr_nav.VisibleLine  row:64  value:"  abt.FDb.cmdline               command.abt         Val"
+acr_nav.VisibleLine  row:65  value:"── report (1 field) ──────────────────────────────"
+acr_nav.VisibleLine  row:66  value:"  abt.FDb.report                report.abt          Val"
+acr_nav.VisibleLine  row:67  value:"── dmmeta (1 field) ──────────────────────────────"
+acr_nav.VisibleLine  row:68  value:"  abt.FNs.base                  dmmeta.Ns           Base"
+acr_nav.VisibleLine  row:69  value:""
+acr_nav.VisibleLine  row:70  value:"Downstream (imports from abt): 0 fields, 0 namespaces"
+acr_nav.VisibleLine  row:71  value:"  (none)"
+acr_nav.PreviewNavCol  col_start:30  col_wid:18  name_len:0  col_name:arg  target_ctype:""
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1412  n_ctype:1413  n_field:5685  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1413  n_ctype:1414  n_field:5687  viewmode:nsdep_detail  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:83  sel_value:abt
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
@@ -205,7 +267,7 @@ acr_nav.VisibleLeftItem  row:5  value:acr_dm  kind:ns  collapsed:Y  n_match:6  n
 acr_nav.VisibleLeftItem  row:6  value:acr_ed  kind:ns  collapsed:Y  n_match:19  n_record:0
 acr_nav.VisibleLeftItem  row:7  value:acr_in  kind:ns  collapsed:Y  n_match:12  n_record:0
 acr_nav.VisibleLeftItem  row:8  value:acr_my  kind:ns  collapsed:Y  n_match:3  n_record:0
-acr_nav.VisibleLeftItem  row:9  value:acr_nav  kind:ns  collapsed:Y  n_match:36  n_record:0
+acr_nav.VisibleLeftItem  row:9  value:acr_nav  kind:ns  collapsed:Y  n_match:37  n_record:0
 acr_nav.VisibleLeftItem  row:10  value:acr_navdb  kind:ns  collapsed:Y  n_match:10  n_record:0
 acr_nav.VisibleLeftItem  row:11  value:algo  kind:ns  collapsed:Y  n_match:225  n_record:0
 acr_nav.VisibleLeftItem  row:12  value:algo_lib  kind:ns  collapsed:Y  n_match:35  n_record:0
@@ -279,16 +341,78 @@ acr_nav.VisibleLeftItem  row:79  value:strconv  kind:ns  collapsed:Y  n_match:1 
 acr_nav.VisibleLeftItem  row:80  value:sv2ssim  kind:ns  collapsed:Y  n_match:4  n_record:0
 acr_nav.VisibleLeftItem  row:81  value:ws  kind:ns  collapsed:Y  n_match:16  n_record:0
 acr_nav.VisibleLeftItem  row:82  value:wsdb  kind:ns  collapsed:Y  n_match:1  n_record:0
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:11  sel_value:"Upstream (abt imports from):"
-acr_nav.VisibleLine  row:0  value:"Upstream (abt imports from):"
-acr_nav.VisibleLine  row:1  value:"     other     23 fields"
-acr_nav.VisibleLine  row:2  value:"       dev     16 fields"
-acr_nav.VisibleLine  row:3  value:"      algo     15 fields"
-acr_nav.VisibleLine  row:4  value:"  algo_lib      4 fields"
-acr_nav.VisibleLine  row:5  value:"   command      1 field"
-acr_nav.VisibleLine  row:6  value:"    report      1 field"
-acr_nav.VisibleLine  row:7  value:"    dmmeta      1 field"
-acr_nav.VisibleLine  row:8  value:""
-acr_nav.VisibleLine  row:9  value:"Downstream (imports from abt):"
-acr_nav.VisibleLine  row:10  value:"  (none)"
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:72  sel_value:"Upstream (abt imports from): 61 fields, 7 namespaces"
+acr_nav.VisibleLine  row:0  value:"Upstream (abt imports from): 61 fields, 7 namespaces"
+acr_nav.VisibleLine  row:1  value:"── other (23 fields) ─────────────────────────────"
+acr_nav.VisibleLine  row:2  value:"  abt.FBuilddir.select          bool                Val"
+acr_nav.VisibleLine  row:3  value:"  abt.FDb.lpool                 u8                  Lpool"
+acr_nav.VisibleLine  row:4  value:"  abt.FDb.ccache                bool                Val"
+acr_nav.VisibleLine  row:5  value:"  abt.FDb.gcache                bool                Val"
+acr_nav.VisibleLine  row:6  value:"  abt.FDb.tty                   bool                Val"
+acr_nav.VisibleLine  row:7  value:"  abt.FFilestat.size            u64                 Val"
+acr_nav.VisibleLine  row:8  value:"  abt.FFilestat.isdir           bool                Val"
+acr_nav.VisibleLine  row:9  value:"  abt.FFilestat.exists          bool                Val"
+acr_nav.VisibleLine  row:10  value:"  abt.FInclude.wantprint        bool                Val"
+acr_nav.VisibleLine  row:11  value:"  abt.FSrcfile.ood              bool                Val"
+acr_nav.VisibleLine  row:12  value:"  abt.FSrcfile.cum_mod_visited  bool                Val"
+acr_nav.VisibleLine  row:13  value:"  abt.FSrcfile.line_n           u64                 Val"
+acr_nav.VisibleLine  row:14  value:"  abt.FSrcfile.srcfile_visited  bool                Val"
+acr_nav.VisibleLine  row:15  value:"  abt.FSrcfile.printed          bool                Val"
+acr_nav.VisibleLine  row:16  value:"  abt.FSyscmd.rowid             i32                 Val"
+acr_nav.VisibleLine  row:17  value:"  abt.FSyscmd.line_n            u64                 Val"
+acr_nav.VisibleLine  row:18  value:"  abt.FSyscmd.redirect          bool                Val"
+acr_nav.VisibleLine  row:19  value:"  abt.FTarget.ood               bool                Val"
+acr_nav.VisibleLine  row:20  value:"  abt.FTarget.ood_visited       bool                Val"
+acr_nav.VisibleLine  row:21  value:"  abt.FTarget.libdep_visited    bool                Val"
+acr_nav.VisibleLine  row:22  value:"  abt.FTarget.origsel           bool                Val"
+acr_nav.VisibleLine  row:23  value:"  abt.config.ood_src            i32                 Val"
+acr_nav.VisibleLine  row:24  value:"  abt.config.ood_target         i32                 Val"
+acr_nav.VisibleLine  row:25  value:"── dev (16 fields) ───────────────────────────────"
+acr_nav.VisibleLine  row:26  value:"  abt.FArch.msghdr              dev.Arch            Base"
+acr_nav.VisibleLine  row:27  value:"  abt.FBuilddir.base            dev.Builddir        Base"
+acr_nav.VisibleLine  row:28  value:"  abt.FCfg.msghdr               dev.Cfg             Base"
+acr_nav.VisibleLine  row:29  value:"  abt.FCompiler.msghdr          dev.Compiler        Base"
+acr_nav.VisibleLine  row:30  value:"  abt.FInclude.msghdr           dev.Include         Base"
+acr_nav.VisibleLine  row:31  value:"  abt.FSrcfile.msghdr           dev.Srcfile         Base"
+acr_nav.VisibleLine  row:32  value:"  abt.FSyscmd.msghdr            dev.Syscmd          Base"
+acr_nav.VisibleLine  row:33  value:"  abt.FSyscmddep.msghdr         dev.Syscmddep       Base"
+acr_nav.VisibleLine  row:34  value:"  abt.FSyslib.msghdr            dev.Syslib          Base"
+acr_nav.VisibleLine  row:35  value:"  abt.FTargdep.msghdr           dev.Targdep         Base"
+acr_nav.VisibleLine  row:36  value:"  abt.FTarget.msghdr            dev.Target          Base"
+acr_nav.VisibleLine  row:37  value:"  abt.FTargsrc.msghdr           dev.Targsrc         Base"
+acr_nav.VisibleLine  row:38  value:"  abt.FTargsyslib.msghdr        dev.Targsyslib      Base"
+acr_nav.VisibleLine  row:39  value:"  abt.FToolOpt.msghdr           dev.ToolOpt         Base"
+acr_nav.VisibleLine  row:40  value:"  abt.FUname.msghdr             dev.Uname           Base"
+acr_nav.VisibleLine  row:41  value:"  abt.config.builddir           dev.Builddir        Pkey"
+acr_nav.VisibleLine  row:42  value:"── algo (15 fields) ──────────────────────────────"
+acr_nav.VisibleLine  row:43  value:"  abt.FBuilddir.path            algo.cstring        Val"
+acr_nav.VisibleLine  row:44  value:"  abt.FDb.sysincl               algo.cstring        Tary"
+acr_nav.VisibleLine  row:45  value:"  abt.FFilestat.filename        algo.cstring        Val"
+acr_nav.VisibleLine  row:46  value:"  abt.FFilestat.modtime         algo.UnTime         Val"
+acr_nav.VisibleLine  row:47  value:"  abt.FSrcfile.mod_time         algo.UnTime         Val"
+acr_nav.VisibleLine  row:48  value:"  abt.FSrcfile.objkey           algo.cstring        Val"
+acr_nav.VisibleLine  row:49  value:"  abt.FSrcfile.cum_modtime      algo.UnTime         Val"
+acr_nav.VisibleLine  row:50  value:"  abt.FSyscmd.fstdout           algo.cstring        Val"
+acr_nav.VisibleLine  row:51  value:"  abt.FSyscmd.fstderr           algo.cstring        Val"
+acr_nav.VisibleLine  row:52  value:"  abt.FSyscmd.outfile           algo.cstring        Val"
+acr_nav.VisibleLine  row:53  value:"  abt.FTarget.cum_modtime       algo.UnTime         Val"
+acr_nav.VisibleLine  row:54  value:"  abt.FTarget.out_modtime       algo.UnTime         Val"
+acr_nav.VisibleLine  row:55  value:"  abt.FToolOpt.regx_opt         algo.cstring        RegxSql"
+acr_nav.VisibleLine  row:56  value:"  abt.FToolOpt.regx_target      algo.cstring        RegxSql"
+acr_nav.VisibleLine  row:57  value:"  abt.config.cache              algo.Smallstr20     Val"
+acr_nav.VisibleLine  row:58  value:"── algo_lib (4 fields) ───────────────────────────"
+acr_nav.VisibleLine  row:59  value:"  abt.FBuilddir.lockfile        algo_lib.FLockfile  Val"
+acr_nav.VisibleLine  row:60  value:"  abt.FBuilddir.R               algo_lib.Replscope  Val"
+acr_nav.VisibleLine  row:61  value:"  abt.FSyscmd.fd_stdout         algo_lib.FFildes    Val"
+acr_nav.VisibleLine  row:62  value:"  abt.FSyscmd.fd_stderr         algo_lib.FFildes    Val"
+acr_nav.VisibleLine  row:63  value:"── command (1 field) ─────────────────────────────"
+acr_nav.VisibleLine  row:64  value:"  abt.FDb.cmdline               command.abt         Val"
+acr_nav.VisibleLine  row:65  value:"── report (1 field) ──────────────────────────────"
+acr_nav.VisibleLine  row:66  value:"  abt.FDb.report                report.abt          Val"
+acr_nav.VisibleLine  row:67  value:"── dmmeta (1 field) ──────────────────────────────"
+acr_nav.VisibleLine  row:68  value:"  abt.FNs.base                  dmmeta.Ns           Base"
+acr_nav.VisibleLine  row:69  value:""
+acr_nav.VisibleLine  row:70  value:"Downstream (imports from abt): 0 fields, 0 namespaces"
+acr_nav.VisibleLine  row:71  value:"  (none)"
+acr_nav.PreviewNavCol  col_start:30  col_wid:18  name_len:0  col_name:arg  target_ctype:""
 

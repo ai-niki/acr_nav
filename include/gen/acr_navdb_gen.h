@@ -51,28 +51,30 @@ enum acr_navdb_FieldIdEnum {                      // acr_navdb.FieldId.value
     ,acr_navdb_FieldId_passive              = 18
     ,acr_navdb_FieldId_need_no_overlay      = 19
     ,acr_navdb_FieldId_dismiss_viewmode     = 20
-    ,acr_navdb_FieldId_status_hint          = 21
-    ,acr_navdb_FieldId_navstyle             = 22
-    ,acr_navdb_FieldId_bold                 = 23
-    ,acr_navdb_FieldId_dim                  = 24
-    ,acr_navdb_FieldId_reverse              = 25
-    ,acr_navdb_FieldId_fg_color             = 26
-    ,acr_navdb_FieldId_panel                = 27
-    ,acr_navdb_FieldId_title                = 28
-    ,acr_navdb_FieldId_position             = 29
-    ,acr_navdb_FieldId_min_width            = 30
-    ,acr_navdb_FieldId_reftypestyle         = 31
-    ,acr_navdb_FieldId_reftype              = 32
-    ,acr_navdb_FieldId_viewmode             = 33
-    ,acr_navdb_FieldId_empty_msg            = 34
-    ,acr_navdb_FieldId_has_fields           = 35
-    ,acr_navdb_FieldId_is_overlay           = 36
-    ,acr_navdb_FieldId_need_ssimfile        = 37
-    ,acr_navdb_FieldId_is_reverse           = 38
-    ,acr_navdb_FieldId_value                = 39
+    ,acr_navdb_FieldId_target_viewmode      = 21
+    ,acr_navdb_FieldId_status_hint          = 22
+    ,acr_navdb_FieldId_navstyle             = 23
+    ,acr_navdb_FieldId_bold                 = 24
+    ,acr_navdb_FieldId_dim                  = 25
+    ,acr_navdb_FieldId_reverse              = 26
+    ,acr_navdb_FieldId_fg_color             = 27
+    ,acr_navdb_FieldId_panel                = 28
+    ,acr_navdb_FieldId_title                = 29
+    ,acr_navdb_FieldId_position             = 30
+    ,acr_navdb_FieldId_min_width            = 31
+    ,acr_navdb_FieldId_reftypestyle         = 32
+    ,acr_navdb_FieldId_reftype              = 33
+    ,acr_navdb_FieldId_viewmode             = 34
+    ,acr_navdb_FieldId_empty_msg            = 35
+    ,acr_navdb_FieldId_has_fields           = 36
+    ,acr_navdb_FieldId_is_overlay           = 37
+    ,acr_navdb_FieldId_need_ssimfile        = 38
+    ,acr_navdb_FieldId_is_reverse           = 39
+    ,acr_navdb_FieldId_scope_ns             = 40
+    ,acr_navdb_FieldId_value                = 41
 };
 
-enum { acr_navdb_FieldIdEnum_N = 40 };
+enum { acr_navdb_FieldIdEnum_N = 42 };
 
 namespace acr_navdb { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 DetailsrcPkey;
@@ -269,6 +271,7 @@ struct Navaction { // acr_navdb.Navaction: Controlled vocabulary of navigation a
     bool               passive;            //   false  Movement-only action; does not dismiss startup help
     bool               need_no_overlay;    //   false  Hint hidden when viewmode.is_overlay is Y
     algo::Smallstr50   dismiss_viewmode;   // Viewmode this action dismisses; empty means any overlay
+    algo::Smallstr50   target_viewmode;    //   ""  Viewmode to toggle (empty=not a toggle action)
     algo::Comment      comment;            //
     // func:acr_navdb.Navaction..Ctor
     inline               Navaction() __attribute__((nothrow));
@@ -404,6 +407,7 @@ struct Viewmode { // acr_navdb.Viewmode: Right-panel view mode for acr_nav
     bool                need_ssimfile;   //   false  Viewmode requires ssimfile-backed ctype
     bool                is_reverse;      //   false  Y=reverse xrefs, N=forward fields
     algo::Smallstr200   status_hint;     //   ""  Status bar hint (right panel for views, full hint for overlays)
+    bool                scope_ns;        //   false  Y: viewmode is scoped to namespace (auto-activate/deactivate on ns headers)
     algo::Comment       comment;         //
     // func:acr_navdb.Viewmode..Ctor
     inline               Viewmode() __attribute__((nothrow));

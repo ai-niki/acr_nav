@@ -265,8 +265,8 @@ static void EmitCenterOpen(acr_nav::FViewmode &vm, int center_x, acr_nav::FCtype
     int name_start = gl.BytePos();
     gl.Ascii(ctype.ctype);
     int name_end = gl.BytePos();
-    acr_nav::line_Alloc(vm) = gl.str;
-    AddSpan(vm, acr_nav::line_N(vm) - 1, name_start, name_end, ctype_style);
+    acr_nav::content_row_Alloc(vm).text = gl.str;
+    AddSpan(vm, acr_nav::content_row_N(vm) - 1, name_start, name_end, ctype_style);
 }
 
 // Emit a right-column block: field lines with labels/arrows, followed by a spine-only close line.
@@ -298,8 +298,8 @@ static void EmitRightBlock(acr_nav::FViewmode &vm, GraphEdgeGroup &g, int center
         } else {
             gl.Utf8(G_VERT);
         }
-        acr_nav::line_Alloc(vm) = gl.str;
-        int line_idx = acr_nav::line_N(vm) - 1;
+        acr_nav::content_row_Alloc(vm).text = gl.str;
+        int line_idx = acr_nav::content_row_N(vm) - 1;
         if (fld.p_reftype->c_reftypestyle) {
             AddSpan(vm, line_idx, label_start, label_end,
                     fld.p_reftype->c_reftypestyle->p_navstyle);
@@ -314,7 +314,7 @@ static void EmitRightBlock(acr_nav::FViewmode &vm, GraphEdgeGroup &g, int center
         GLine gl;
         gl.PadTo(center_x);
         gl.Utf8(G_DBL_VERT);
-        acr_nav::line_Alloc(vm) = gl.str;
+        acr_nav::content_row_Alloc(vm).text = gl.str;
     }
 }
 
@@ -335,8 +335,8 @@ static void EmitLeftEdgeLine(acr_nav::FViewmode &vm, acr_nav::FField &fld, int n
     int label_start = gl.BytePos();
     gl.Ascii(label);
     int label_end = gl.BytePos();
-    acr_nav::line_Alloc(vm) = gl.str;
-    int line_idx = acr_nav::line_N(vm) - 1;
+    acr_nav::content_row_Alloc(vm).text = gl.str;
+    int line_idx = acr_nav::content_row_N(vm) - 1;
     AddSpan(vm, line_idx, arrow_start, arrow_end, arrow_style);
     if (fld.p_reftype->c_reftypestyle) {
         AddSpan(vm, line_idx, label_start, label_end,
@@ -369,8 +369,8 @@ static void EmitLeftBlock(acr_nav::FViewmode &vm, GraphEdgeGroup &g, int center_
         PrintRecordCount(gl.str, *g.p_neighbor);
         gl.PadTo(center_x);
         gl.Utf8(G_DBL_TEE_L);
-        acr_nav::line_Alloc(vm) = gl.str;
-        AddSpan(vm, acr_nav::line_N(vm) - 1, nb_start, nb_end, neighbor_style);
+        acr_nav::content_row_Alloc(vm).text = gl.str;
+        AddSpan(vm, acr_nav::content_row_N(vm) - 1, nb_start, nb_end, neighbor_style);
     }
     // Edge lines
     for (int fi = 0; fi < g.n_field; fi++) {
@@ -383,7 +383,7 @@ static void EmitLeftBlock(acr_nav::FViewmode &vm, GraphEdgeGroup &g, int center_
         gl.Utf8(G_ROUND_BL);
         gl.PadTo(center_x);
         gl.Utf8(is_last ? G_DBL_BL : G_DBL_VERT);
-        acr_nav::line_Alloc(vm) = gl.str;
+        acr_nav::content_row_Alloc(vm).text = gl.str;
     }
 }
 
@@ -393,7 +393,7 @@ static void LoadGraph(acr_nav::FCtype &ctype) {
     acr_nav::FViewmode &vm = *acr_nav::ind_viewmode_Find("graph");
     ClearViewmodeLines(vm);
     vm.header = ctype.ctype;
-    acr_nav::_db.p_graph_ctype = &ctype;
+    vm.cached_key = ctype.ctype;
     acr_nav::FNavstyle *ctype_style     = acr_nav::ind_navstyle_Find("graph_ctype");
     acr_nav::FNavstyle *neighbor_style  = acr_nav::ind_navstyle_Find("graph_neighbor");
     acr_nav::FNavstyle *arrow_style     = acr_nav::ind_navstyle_Find("graph_arrow");
@@ -424,13 +424,31 @@ static void LoadGraph(acr_nav::FCtype &ctype) {
             GLine gl;
             gl.PadTo(center_x);
             gl.Utf8(G_DBL_BL);
-            acr_nav::line_Alloc(vm) = gl.str;
+            acr_nav::content_row_Alloc(vm).text = gl.str;
+        }
+        // Populate nav_target per content_row using GraphInfoAtLine
+        acr_nav::PreviewNavCol &nc = acr_nav::nav_col_Alloc(vm);
+        nc.col_start = 0;
+        nc.col_wid = 0;
+        nc.col_name = "target";
+        nc.target_ctype = "";
+        int n_rows = acr_nav::content_row_N(vm);
+        for (int ri = 0; ri < n_rows; ri++) {
+            acr_nav::ContentRow &cr = acr_nav::content_row_qFind(vm, ri);
+            acr_nav::FCtype *node = NULL;
+            GraphInfoAtLine(ctype, ri, &node, NULL);
+            if (node && node != &ctype) {
+                acr_nav::nav_target_Alloc(cr) = node->ctype;
+            } else {
+                acr_nav::nav_target_Alloc(cr) = "";
+            }
         }
     }
 }
 
-void acr_nav::GraphEnsureContent(void *, acr_nav::FCtype &ct) {
-    if (acr_nav::_db.p_graph_ctype != &ct) {
+void acr_nav::viewmode_graph_ensure_content(acr_nav::FCtype &ct) {
+    acr_nav::FViewmode &vm = *acr_nav::ind_viewmode_Find("graph");
+    if (vm.cached_key != ct.ctype) {
         LoadGraph(ct);
     }
 }

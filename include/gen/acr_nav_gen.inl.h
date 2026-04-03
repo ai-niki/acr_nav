@@ -42,6 +42,121 @@ inline  acr_nav::Ack::Ack() {
     acr_nav::Ack_Init(*this);
 }
 
+// --- acr_nav.ContentRow.nav_target.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+inline void* acr_nav::nav_target_AllocMem(acr_nav::ContentRow& parent) {
+    void *row = reinterpret_cast<algo::Smallstr100*>(parent.nav_target_data) + parent.nav_target_n;
+    if (parent.nav_target_n == 4) row = NULL;
+    if (row) parent.nav_target_n++;
+    return row;
+}
+
+// --- acr_nav.ContentRow.nav_target.EmptyQ
+// Return true if index is empty
+inline bool acr_nav::nav_target_EmptyQ(acr_nav::ContentRow& parent) {
+    return parent.nav_target_n == 0;
+}
+
+// --- acr_nav.ContentRow.nav_target.Find
+// Look up row by row id. Return NULL if out of range
+inline algo::Smallstr100* acr_nav::nav_target_Find(acr_nav::ContentRow& parent, u64 t) {
+    u64 idx = t;
+    u64 lim = parent.nav_target_n;
+    return idx < lim ? reinterpret_cast<algo::Smallstr100*>(parent.nav_target_data) + idx : NULL; // unsigned comparison with limit
+}
+
+// --- acr_nav.ContentRow.nav_target.Getary
+// Return array pointer by value
+inline algo::aryptr<algo::Smallstr100> acr_nav::nav_target_Getary(acr_nav::ContentRow& parent) {
+    return algo::aryptr<algo::Smallstr100>(reinterpret_cast<algo::Smallstr100*>(parent.nav_target_data), parent.nav_target_n);
+}
+
+// --- acr_nav.ContentRow.nav_target.Max
+// Return constant 4 -- max. number of items in the pool
+inline i32 acr_nav::nav_target_Max(acr_nav::ContentRow& parent) {
+    (void)parent;
+    return 4;
+}
+
+// --- acr_nav.ContentRow.nav_target.N
+// Return number of items in the array
+inline i32 acr_nav::nav_target_N(const acr_nav::ContentRow& parent) {
+    (void)parent;//only to avoid -Wunused-parameter
+    return parent.nav_target_n;
+}
+
+// --- acr_nav.ContentRow.nav_target.Setary
+// Set contents of fixed array to RHS; Input length is trimmed as necessary
+inline void acr_nav::nav_target_Setary(acr_nav::ContentRow& parent, const algo::aryptr<algo::Smallstr100> &rhs) {
+    int n = i32_Min(4, rhs.n_elems);
+    memcpy(reinterpret_cast<algo::Smallstr100*>(parent.nav_target_data), rhs.elems, sizeof(algo::Smallstr100)*n);
+}
+
+// --- acr_nav.ContentRow.nav_target.qFind
+// 'quick' Access row by row id. No bounds checking in release.
+inline algo::Smallstr100& acr_nav::nav_target_qFind(acr_nav::ContentRow& parent, u64 t) {
+    return reinterpret_cast<algo::Smallstr100*>(parent.nav_target_data)[u64(t)];
+}
+
+// --- acr_nav.ContentRow.nav_target.rowid_Get
+// Compute row id of element given element's address
+inline u64 acr_nav::nav_target_rowid_Get(acr_nav::ContentRow& parent, algo::Smallstr100 &row) {
+    u64 ret = u64(&row - reinterpret_cast<algo::Smallstr100*>(parent.nav_target_data));
+    return u64(ret);
+}
+
+// --- acr_nav.ContentRow.nav_target_curs.Reset
+// cursor points to valid item
+inline void acr_nav::ContentRow_nav_target_curs_Reset(ContentRow_nav_target_curs &curs, acr_nav::ContentRow &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- acr_nav.ContentRow.nav_target_curs.ValidQ
+// cursor points to valid item
+inline bool acr_nav::ContentRow_nav_target_curs_ValidQ(ContentRow_nav_target_curs &curs) {
+    return u64(curs.index) < u64(curs.parent->nav_target_n);
+}
+
+// --- acr_nav.ContentRow.nav_target_curs.Next
+// proceed to next item
+inline void acr_nav::ContentRow_nav_target_curs_Next(ContentRow_nav_target_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_nav.ContentRow.nav_target_curs.Access
+// item access
+inline algo::Smallstr100& acr_nav::ContentRow_nav_target_curs_Access(ContentRow_nav_target_curs &curs) {
+    return nav_target_qFind((*curs.parent), u64(curs.index));
+}
+
+// --- acr_nav.ContentRow..AssignOp
+inline acr_nav::ContentRow& acr_nav::ContentRow::operator =(const acr_nav::ContentRow &rhs) {
+    text = rhs.text;
+    nav_target_Setary(*this, nav_target_Getary(const_cast<acr_nav::ContentRow&>(rhs)));
+    return *this;
+}
+
+// --- acr_nav.ContentRow..Ctor
+inline  acr_nav::ContentRow::ContentRow() {
+    acr_nav::ContentRow_Init(*this);
+    // added because acr_nav.ContentRow.nav_target (Inlary) does not need initialization
+    // coverity[uninit_member]
+}
+
+// --- acr_nav.ContentRow..Dtor
+inline  acr_nav::ContentRow::~ContentRow() {
+    acr_nav::ContentRow_Uninit(*this);
+}
+
+// --- acr_nav.ContentRow..CopyCtor
+inline  acr_nav::ContentRow::ContentRow(const acr_nav::ContentRow &rhs)
+    : text(rhs.text)
+ {
+    nav_target_n = 0; // nav_target: initialize count
+    nav_target_Setary(*this, nav_target_Getary(const_cast<acr_nav::ContentRow&>(rhs)));
+}
+
 // --- acr_nav.FCtype.c_field.EmptyQ
 // Return true if index is empty
 inline bool acr_nav::c_field_EmptyQ(acr_nav::FCtype& ctype) {
@@ -1800,18 +1915,6 @@ inline void acr_nav::step_Call(acr_nav::FNavaction& navaction) {
     }
 }
 
-// --- acr_nav.FNavaction..Init
-// Set all fields to initial values.
-inline void acr_nav::FNavaction_Init(acr_nav::FNavaction& navaction) {
-    navaction.sort_order = i32(0);
-    navaction.passive = bool(false);
-    navaction.need_no_overlay = bool(false);
-    navaction.p_helpgroup = NULL;
-    navaction.ind_navaction_next = (acr_nav::FNavaction*)-1; // (acr_nav.FDb.ind_navaction) not-in-hash
-    navaction.ind_navaction_hashval = 0; // stored hash value
-    navaction.step = NULL;
-}
-
 // --- acr_nav.FNavaction..Ctor
 inline  acr_nav::FNavaction::FNavaction() {
     acr_nav::FNavaction_Init(*this);
@@ -2054,74 +2157,6 @@ inline  acr_nav::FSsimfile::~FSsimfile() {
     acr_nav::FSsimfile_Uninit(*this);
 }
 
-// --- acr_nav.FViewmode.line.EmptyQ
-// Return true if index is empty
-inline bool acr_nav::line_EmptyQ(acr_nav::FViewmode& viewmode) {
-    return viewmode.line_n == 0;
-}
-
-// --- acr_nav.FViewmode.line.Find
-// Look up row by row id. Return NULL if out of range
-inline algo::cstring* acr_nav::line_Find(acr_nav::FViewmode& viewmode, u64 t) {
-    u64 idx = t;
-    u64 lim = viewmode.line_n;
-    if (idx >= lim) return NULL;
-    return viewmode.line_elems + idx;
-}
-
-// --- acr_nav.FViewmode.line.Getary
-// Return array pointer by value
-inline algo::aryptr<algo::cstring> acr_nav::line_Getary(const acr_nav::FViewmode& viewmode) {
-    return algo::aryptr<algo::cstring>(viewmode.line_elems, viewmode.line_n);
-}
-
-// --- acr_nav.FViewmode.line.Last
-// Return pointer to last element of array, or NULL if array is empty
-inline algo::cstring* acr_nav::line_Last(acr_nav::FViewmode& viewmode) {
-    return line_Find(viewmode, u64(viewmode.line_n-1));
-}
-
-// --- acr_nav.FViewmode.line.Max
-// Return max. number of items in the array
-inline i32 acr_nav::line_Max(acr_nav::FViewmode& viewmode) {
-    (void)viewmode;
-    return viewmode.line_max;
-}
-
-// --- acr_nav.FViewmode.line.N
-// Return number of items in the array
-inline i32 acr_nav::line_N(const acr_nav::FViewmode& viewmode) {
-    return viewmode.line_n;
-}
-
-// --- acr_nav.FViewmode.line.Reserve
-// Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void acr_nav::line_Reserve(acr_nav::FViewmode& viewmode, int n) {
-    u32 new_n = viewmode.line_n + n;
-    if (UNLIKELY(new_n > viewmode.line_max)) {
-        line_AbsReserve(viewmode, new_n);
-    }
-}
-
-// --- acr_nav.FViewmode.line.qFind
-// 'quick' Access row by row id. No bounds checking.
-inline algo::cstring& acr_nav::line_qFind(acr_nav::FViewmode& viewmode, u64 t) {
-    return viewmode.line_elems[t];
-}
-
-// --- acr_nav.FViewmode.line.qLast
-// Return reference to last element of array. No bounds checking
-inline algo::cstring& acr_nav::line_qLast(acr_nav::FViewmode& viewmode) {
-    return line_qFind(viewmode, u64(viewmode.line_n-1));
-}
-
-// --- acr_nav.FViewmode.line.rowid_Get
-// Return row id of specified element
-inline u64 acr_nav::line_rowid_Get(acr_nav::FViewmode& viewmode, algo::cstring &elem) {
-    u64 id = &elem - viewmode.line_elems;
-    return u64(id);
-}
-
 // --- acr_nav.FViewmode.cspan.EmptyQ
 // Return true if index is empty
 inline bool acr_nav::cspan_EmptyQ(acr_nav::FViewmode& viewmode) {
@@ -2194,122 +2229,144 @@ inline u64 acr_nav::cspan_rowid_Get(acr_nav::FViewmode& viewmode, acr_nav::LineC
 // Invoke function by pointer
 inline void acr_nav::ensure_content_Call(acr_nav::FViewmode& viewmode, acr_nav::FCtype& arg) {
     if (viewmode.ensure_content) {
-        viewmode.ensure_content((void*)viewmode.ensure_content_ctx, arg);
+        viewmode.ensure_content(arg);
     }
 }
 
-// --- acr_nav.FViewmode.ensure_content.Set0
-// Assign 0-argument hook with no context pointer
-inline void acr_nav::ensure_content_Set0(acr_nav::FViewmode& viewmode, void (*fcn)() ) {
-    viewmode.ensure_content_ctx = 0;
-    viewmode.ensure_content = (acr_nav::viewmode_ensure_content_hook)fcn;
-}
-
-// --- acr_nav.FViewmode.ensure_content.Set1
-// Assign 1-argument hook with context pointer
-template<class T> inline void acr_nav::ensure_content_Set1(acr_nav::FViewmode& viewmode, T& ctx, void (*fcn)(T&) ) {
-    viewmode.ensure_content_ctx = (u64)&ctx;
-    viewmode.ensure_content = (acr_nav::viewmode_ensure_content_hook)fcn;
-}
-
-// --- acr_nav.FViewmode.ensure_content.Set2
-// Assign 2-argument hook with context pointer
-template<class T> inline void acr_nav::ensure_content_Set2(acr_nav::FViewmode& viewmode, T& ctx, void (*fcn)(T&, acr_nav::FCtype& arg) ) {
-    viewmode.ensure_content_ctx = (u64)&ctx;
-    viewmode.ensure_content = (acr_nav::viewmode_ensure_content_hook)fcn;
-}
-
-// --- acr_nav.FViewmode.preview_nav.EmptyQ
+// --- acr_nav.FViewmode.nav_col.EmptyQ
 // Return true if index is empty
-inline bool acr_nav::preview_nav_EmptyQ(acr_nav::FViewmode& viewmode) {
-    return viewmode.preview_nav_n == 0;
+inline bool acr_nav::nav_col_EmptyQ(acr_nav::FViewmode& viewmode) {
+    return viewmode.nav_col_n == 0;
 }
 
-// --- acr_nav.FViewmode.preview_nav.Find
+// --- acr_nav.FViewmode.nav_col.Find
 // Look up row by row id. Return NULL if out of range
-inline acr_nav::PreviewNavCol* acr_nav::preview_nav_Find(acr_nav::FViewmode& viewmode, u64 t) {
+inline acr_nav::PreviewNavCol* acr_nav::nav_col_Find(acr_nav::FViewmode& viewmode, u64 t) {
     u64 idx = t;
-    u64 lim = viewmode.preview_nav_n;
+    u64 lim = viewmode.nav_col_n;
     if (idx >= lim) return NULL;
-    return viewmode.preview_nav_elems + idx;
+    return viewmode.nav_col_elems + idx;
 }
 
-// --- acr_nav.FViewmode.preview_nav.Getary
+// --- acr_nav.FViewmode.nav_col.Getary
 // Return array pointer by value
-inline algo::aryptr<acr_nav::PreviewNavCol> acr_nav::preview_nav_Getary(const acr_nav::FViewmode& viewmode) {
-    return algo::aryptr<acr_nav::PreviewNavCol>(viewmode.preview_nav_elems, viewmode.preview_nav_n);
+inline algo::aryptr<acr_nav::PreviewNavCol> acr_nav::nav_col_Getary(const acr_nav::FViewmode& viewmode) {
+    return algo::aryptr<acr_nav::PreviewNavCol>(viewmode.nav_col_elems, viewmode.nav_col_n);
 }
 
-// --- acr_nav.FViewmode.preview_nav.Last
+// --- acr_nav.FViewmode.nav_col.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline acr_nav::PreviewNavCol* acr_nav::preview_nav_Last(acr_nav::FViewmode& viewmode) {
-    return preview_nav_Find(viewmode, u64(viewmode.preview_nav_n-1));
+inline acr_nav::PreviewNavCol* acr_nav::nav_col_Last(acr_nav::FViewmode& viewmode) {
+    return nav_col_Find(viewmode, u64(viewmode.nav_col_n-1));
 }
 
-// --- acr_nav.FViewmode.preview_nav.Max
+// --- acr_nav.FViewmode.nav_col.Max
 // Return max. number of items in the array
-inline i32 acr_nav::preview_nav_Max(acr_nav::FViewmode& viewmode) {
+inline i32 acr_nav::nav_col_Max(acr_nav::FViewmode& viewmode) {
     (void)viewmode;
-    return viewmode.preview_nav_max;
+    return viewmode.nav_col_max;
 }
 
-// --- acr_nav.FViewmode.preview_nav.N
+// --- acr_nav.FViewmode.nav_col.N
 // Return number of items in the array
-inline i32 acr_nav::preview_nav_N(const acr_nav::FViewmode& viewmode) {
-    return viewmode.preview_nav_n;
+inline i32 acr_nav::nav_col_N(const acr_nav::FViewmode& viewmode) {
+    return viewmode.nav_col_n;
 }
 
-// --- acr_nav.FViewmode.preview_nav.Reserve
+// --- acr_nav.FViewmode.nav_col.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void acr_nav::preview_nav_Reserve(acr_nav::FViewmode& viewmode, int n) {
-    u32 new_n = viewmode.preview_nav_n + n;
-    if (UNLIKELY(new_n > viewmode.preview_nav_max)) {
-        preview_nav_AbsReserve(viewmode, new_n);
+inline void acr_nav::nav_col_Reserve(acr_nav::FViewmode& viewmode, int n) {
+    u32 new_n = viewmode.nav_col_n + n;
+    if (UNLIKELY(new_n > viewmode.nav_col_max)) {
+        nav_col_AbsReserve(viewmode, new_n);
     }
 }
 
-// --- acr_nav.FViewmode.preview_nav.qFind
+// --- acr_nav.FViewmode.nav_col.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline acr_nav::PreviewNavCol& acr_nav::preview_nav_qFind(acr_nav::FViewmode& viewmode, u64 t) {
-    return viewmode.preview_nav_elems[t];
+inline acr_nav::PreviewNavCol& acr_nav::nav_col_qFind(acr_nav::FViewmode& viewmode, u64 t) {
+    return viewmode.nav_col_elems[t];
 }
 
-// --- acr_nav.FViewmode.preview_nav.qLast
+// --- acr_nav.FViewmode.nav_col.qLast
 // Return reference to last element of array. No bounds checking
-inline acr_nav::PreviewNavCol& acr_nav::preview_nav_qLast(acr_nav::FViewmode& viewmode) {
-    return preview_nav_qFind(viewmode, u64(viewmode.preview_nav_n-1));
+inline acr_nav::PreviewNavCol& acr_nav::nav_col_qLast(acr_nav::FViewmode& viewmode) {
+    return nav_col_qFind(viewmode, u64(viewmode.nav_col_n-1));
 }
 
-// --- acr_nav.FViewmode.preview_nav.rowid_Get
+// --- acr_nav.FViewmode.nav_col.rowid_Get
 // Return row id of specified element
-inline u64 acr_nav::preview_nav_rowid_Get(acr_nav::FViewmode& viewmode, acr_nav::PreviewNavCol &elem) {
-    u64 id = &elem - viewmode.preview_nav_elems;
+inline u64 acr_nav::nav_col_rowid_Get(acr_nav::FViewmode& viewmode, acr_nav::PreviewNavCol &elem) {
+    u64 id = &elem - viewmode.nav_col_elems;
     return u64(id);
 }
 
-// --- acr_nav.FViewmode.line_curs.Next
-// proceed to next item
-inline void acr_nav::viewmode_line_curs_Next(viewmode_line_curs &curs) {
-    curs.index++;
+// --- acr_nav.FViewmode.content_row.EmptyQ
+// Return true if index is empty
+inline bool acr_nav::content_row_EmptyQ(acr_nav::FViewmode& viewmode) {
+    return viewmode.content_row_n == 0;
 }
 
-// --- acr_nav.FViewmode.line_curs.Reset
-inline void acr_nav::viewmode_line_curs_Reset(viewmode_line_curs &curs, acr_nav::FViewmode &parent) {
-    curs.elems = parent.line_elems;
-    curs.n_elems = parent.line_n;
-    curs.index = 0;
+// --- acr_nav.FViewmode.content_row.Find
+// Look up row by row id. Return NULL if out of range
+inline acr_nav::ContentRow* acr_nav::content_row_Find(acr_nav::FViewmode& viewmode, u64 t) {
+    u64 idx = t;
+    u64 lim = viewmode.content_row_n;
+    if (idx >= lim) return NULL;
+    return viewmode.content_row_elems + idx;
 }
 
-// --- acr_nav.FViewmode.line_curs.ValidQ
-// cursor points to valid item
-inline bool acr_nav::viewmode_line_curs_ValidQ(viewmode_line_curs &curs) {
-    return curs.index < curs.n_elems;
+// --- acr_nav.FViewmode.content_row.Getary
+// Return array pointer by value
+inline algo::aryptr<acr_nav::ContentRow> acr_nav::content_row_Getary(const acr_nav::FViewmode& viewmode) {
+    return algo::aryptr<acr_nav::ContentRow>(viewmode.content_row_elems, viewmode.content_row_n);
 }
 
-// --- acr_nav.FViewmode.line_curs.Access
-// item access
-inline algo::cstring& acr_nav::viewmode_line_curs_Access(viewmode_line_curs &curs) {
-    return curs.elems[curs.index];
+// --- acr_nav.FViewmode.content_row.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline acr_nav::ContentRow* acr_nav::content_row_Last(acr_nav::FViewmode& viewmode) {
+    return content_row_Find(viewmode, u64(viewmode.content_row_n-1));
+}
+
+// --- acr_nav.FViewmode.content_row.Max
+// Return max. number of items in the array
+inline i32 acr_nav::content_row_Max(acr_nav::FViewmode& viewmode) {
+    (void)viewmode;
+    return viewmode.content_row_max;
+}
+
+// --- acr_nav.FViewmode.content_row.N
+// Return number of items in the array
+inline i32 acr_nav::content_row_N(const acr_nav::FViewmode& viewmode) {
+    return viewmode.content_row_n;
+}
+
+// --- acr_nav.FViewmode.content_row.Reserve
+// Make sure N *more* elements will fit in array. Process dies if out of memory
+inline void acr_nav::content_row_Reserve(acr_nav::FViewmode& viewmode, int n) {
+    u32 new_n = viewmode.content_row_n + n;
+    if (UNLIKELY(new_n > viewmode.content_row_max)) {
+        content_row_AbsReserve(viewmode, new_n);
+    }
+}
+
+// --- acr_nav.FViewmode.content_row.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline acr_nav::ContentRow& acr_nav::content_row_qFind(acr_nav::FViewmode& viewmode, u64 t) {
+    return viewmode.content_row_elems[t];
+}
+
+// --- acr_nav.FViewmode.content_row.qLast
+// Return reference to last element of array. No bounds checking
+inline acr_nav::ContentRow& acr_nav::content_row_qLast(acr_nav::FViewmode& viewmode) {
+    return content_row_qFind(viewmode, u64(viewmode.content_row_n-1));
+}
+
+// --- acr_nav.FViewmode.content_row.rowid_Get
+// Return row id of specified element
+inline u64 acr_nav::content_row_rowid_Get(acr_nav::FViewmode& viewmode, acr_nav::ContentRow &elem) {
+    u64 id = &elem - viewmode.content_row_elems;
+    return u64(id);
 }
 
 // --- acr_nav.FViewmode.cspan_curs.Next
@@ -2337,28 +2394,53 @@ inline acr_nav::LineColorSpan& acr_nav::viewmode_cspan_curs_Access(viewmode_cspa
     return curs.elems[curs.index];
 }
 
-// --- acr_nav.FViewmode.preview_nav_curs.Next
+// --- acr_nav.FViewmode.nav_col_curs.Next
 // proceed to next item
-inline void acr_nav::viewmode_preview_nav_curs_Next(viewmode_preview_nav_curs &curs) {
+inline void acr_nav::viewmode_nav_col_curs_Next(viewmode_nav_col_curs &curs) {
     curs.index++;
 }
 
-// --- acr_nav.FViewmode.preview_nav_curs.Reset
-inline void acr_nav::viewmode_preview_nav_curs_Reset(viewmode_preview_nav_curs &curs, acr_nav::FViewmode &parent) {
-    curs.elems = parent.preview_nav_elems;
-    curs.n_elems = parent.preview_nav_n;
+// --- acr_nav.FViewmode.nav_col_curs.Reset
+inline void acr_nav::viewmode_nav_col_curs_Reset(viewmode_nav_col_curs &curs, acr_nav::FViewmode &parent) {
+    curs.elems = parent.nav_col_elems;
+    curs.n_elems = parent.nav_col_n;
     curs.index = 0;
 }
 
-// --- acr_nav.FViewmode.preview_nav_curs.ValidQ
+// --- acr_nav.FViewmode.nav_col_curs.ValidQ
 // cursor points to valid item
-inline bool acr_nav::viewmode_preview_nav_curs_ValidQ(viewmode_preview_nav_curs &curs) {
+inline bool acr_nav::viewmode_nav_col_curs_ValidQ(viewmode_nav_col_curs &curs) {
     return curs.index < curs.n_elems;
 }
 
-// --- acr_nav.FViewmode.preview_nav_curs.Access
+// --- acr_nav.FViewmode.nav_col_curs.Access
 // item access
-inline acr_nav::PreviewNavCol& acr_nav::viewmode_preview_nav_curs_Access(viewmode_preview_nav_curs &curs) {
+inline acr_nav::PreviewNavCol& acr_nav::viewmode_nav_col_curs_Access(viewmode_nav_col_curs &curs) {
+    return curs.elems[curs.index];
+}
+
+// --- acr_nav.FViewmode.content_row_curs.Next
+// proceed to next item
+inline void acr_nav::viewmode_content_row_curs_Next(viewmode_content_row_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_nav.FViewmode.content_row_curs.Reset
+inline void acr_nav::viewmode_content_row_curs_Reset(viewmode_content_row_curs &curs, acr_nav::FViewmode &parent) {
+    curs.elems = parent.content_row_elems;
+    curs.n_elems = parent.content_row_n;
+    curs.index = 0;
+}
+
+// --- acr_nav.FViewmode.content_row_curs.ValidQ
+// cursor points to valid item
+inline bool acr_nav::viewmode_content_row_curs_ValidQ(viewmode_content_row_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- acr_nav.FViewmode.content_row_curs.Access
+// item access
+inline acr_nav::ContentRow& acr_nav::viewmode_content_row_curs_Access(viewmode_content_row_curs &curs) {
     return curs.elems[curs.index];
 }
 

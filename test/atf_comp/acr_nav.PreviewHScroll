@@ -1,0 +1,85 @@
+acr_nav.Ack  ack:acr_nav.Navigate  ok:Y  ctype:dmmeta.Field  viewmode:preview  navstack_depth:0  msg:""
+
+acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:0  n_sel_ctype:1413  n_ctype:1414  n_field:5687  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
+acr_nav.PanelState  panel:ctype_list  sel_row:91  scroll_offset:65  n_items:211  sel_value:dmmeta.Field
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:5687  sel_value:"                                                                            Val                                                                                                                                                     "
+
+acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:0  n_sel_ctype:1413  n_ctype:1414  n_field:5687  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:1
+acr_nav.PanelState  panel:ctype_list  sel_row:91  scroll_offset:65  n_items:211  sel_value:dmmeta.Field
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:5687  sel_value:"                                                                            Val                                                                                                                                                     "
+
+acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:0  n_sel_ctype:1413  n_ctype:1414  n_field:5687  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:2
+acr_nav.PanelState  panel:ctype_list  sel_row:91  scroll_offset:65  n_items:211  sel_value:dmmeta.Field
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:5687  sel_value:"                                                                            Val                                                                                                                                                     "
+
+acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:0  n_sel_ctype:1413  n_ctype:1414  n_field:5687  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:3
+acr_nav.PanelState  panel:ctype_list  sel_row:91  scroll_offset:65  n_items:211  sel_value:dmmeta.Field
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:5687  sel_value:"                                                                            Val                                                                                                                                                     "
+
+acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:0  n_sel_ctype:1413  n_ctype:1414  n_field:5687  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:4
+acr_nav.PanelState  panel:ctype_list  sel_row:91  scroll_offset:65  n_items:211  sel_value:dmmeta.Field
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:5687  sel_value:"                                                                            Val                                                                                                                                                     "
+
+acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:0  n_sel_ctype:1413  n_ctype:1414  n_field:5687  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:4
+acr_nav.PanelState  panel:ctype_list  sel_row:91  scroll_offset:65  n_items:211  sel_value:dmmeta.Field
+acr_nav.VisibleLeftItem  row:65  value:dmmeta.Dispsig  kind:ctype  collapsed:N  n_match:0  n_record:41
+acr_nav.VisibleLeftItem  row:66  value:dmmeta.Dispsigcheck  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:67  value:dmmeta.Disptrace  kind:ctype  collapsed:N  n_match:0  n_record:2
+acr_nav.VisibleLeftItem  row:68  value:dmmeta.Falias  kind:ctype  collapsed:N  n_match:0  n_record:4
+acr_nav.VisibleLeftItem  row:69  value:dmmeta.Fastenc  kind:ctype  collapsed:N  n_match:0  n_record:9
+acr_nav.VisibleLeftItem  row:70  value:dmmeta.Fastinstr  kind:ctype  collapsed:N  n_match:0  n_record:3
+acr_nav.VisibleLeftItem  row:71  value:dmmeta.Fastop  kind:ctype  collapsed:N  n_match:0  n_record:7
+acr_nav.VisibleLeftItem  row:72  value:dmmeta.Fbase  kind:ctype  collapsed:N  n_match:0  n_record:80
+acr_nav.VisibleLeftItem  row:73  value:dmmeta.Fbigend  kind:ctype  collapsed:N  n_match:0  n_record:14
+acr_nav.VisibleLeftItem  row:74  value:dmmeta.Fbitset  kind:ctype  collapsed:N  n_match:0  n_record:7
+acr_nav.VisibleLeftItem  row:75  value:dmmeta.Fbuf  kind:ctype  collapsed:N  n_match:0  n_record:13
+acr_nav.VisibleLeftItem  row:76  value:dmmeta.Fbufdir  kind:ctype  collapsed:N  n_match:0  n_record:2
+acr_nav.VisibleLeftItem  row:77  value:dmmeta.Fbufiotype  kind:ctype  collapsed:N  n_match:0  n_record:3
+acr_nav.VisibleLeftItem  row:78  value:dmmeta.Fbuftype  kind:ctype  collapsed:N  n_match:0  n_record:4
+acr_nav.VisibleLeftItem  row:79  value:dmmeta.Fcast  kind:ctype  collapsed:N  n_match:0  n_record:210
+acr_nav.VisibleLeftItem  row:80  value:dmmeta.Fcleanup  kind:ctype  collapsed:N  n_match:0  n_record:19
+acr_nav.VisibleLeftItem  row:81  value:dmmeta.Fcmap  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:82  value:dmmeta.Fcmdline  kind:ctype  collapsed:N  n_match:0  n_record:46
+acr_nav.VisibleLeftItem  row:83  value:dmmeta.Fcmp  kind:ctype  collapsed:N  n_match:0  n_record:6
+acr_nav.VisibleLeftItem  row:84  value:dmmeta.Fcompact  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:85  value:dmmeta.Fconst  kind:ctype  collapsed:N  n_match:0  n_record:250
+acr_nav.VisibleLeftItem  row:86  value:dmmeta.Fcurs  kind:ctype  collapsed:N  n_match:0  n_record:16
+acr_nav.VisibleLeftItem  row:87  value:dmmeta.Fdec  kind:ctype  collapsed:N  n_match:0  n_record:30
+acr_nav.VisibleLeftItem  row:88  value:dmmeta.Fdelay  kind:ctype  collapsed:N  n_match:0  n_record:4
+acr_nav.VisibleLeftItem  row:89  value:dmmeta.Ffast  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:90  value:dmmeta.Fflag  kind:ctype  collapsed:N  n_match:0  n_record:2
+acr_nav.VisibleLeftItem  row:91  value:dmmeta.Field  kind:ctype  collapsed:N  n_match:0  n_record:5687
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:5687  sel_value:"                                                                            Val                                                                                                                                                     "
+acr_nav.VisibleLine  row:0  value:"                                                                            Val                                                                                                                                                     "
+acr_nav.VisibleLine  row:1  value:"abt.FArch.msghdr                             dev.Arch                       Base                                                                                                                                                    "
+acr_nav.VisibleLine  row:2  value:"abt.FBuilddir.base                           dev.Builddir                   Base                                                                                                                                                    "
+acr_nav.VisibleLine  row:3  value:"abt.FBuilddir.select                         bool                           Val                                                                                                                                                     "
+acr_nav.VisibleLine  row:4  value:"abt.FBuilddir.path                           algo.cstring                   Val                                         Path for this builddir                                                                                      "
+acr_nav.VisibleLine  row:5  value:"abt.FBuilddir.lockfile                       algo_lib.FLockfile             Val                                                                                                                                                     "
+acr_nav.VisibleLine  row:6  value:"abt.FBuilddir.R                              algo_lib.Replscope             Val                                                                                                                                                     "
+acr_nav.VisibleLine  row:7  value:"abt.FBuilddir.p_compiler                     abt.FCompiler                  Upptr                                                                                                                                                   "
+acr_nav.VisibleLine  row:8  value:"abt.FCfg.msghdr                              dev.Cfg                        Base                                                                                                                                                    "
+acr_nav.VisibleLine  row:9  value:"abt.FCompiler.msghdr                         dev.Compiler                   Base                                                                                                                                                    "
+acr_nav.VisibleLine  row:10  value:"abt.FDb.lpool                                u8                             Lpool                                       private memory pool                                                                                         "
+acr_nav.VisibleLine  row:11  value:"abt.FDb.cmdline                              command.abt                    Val                                                                                                                                                     "
+acr_nav.VisibleLine  row:12  value:"abt.FDb.srcfile                              abt.FSrcfile                   Lary                                                                                                                                                    "
+acr_nav.VisibleLine  row:13  value:"abt.FDb.targdep                              abt.FTargdep                   Lary                                                                                                                                                    "
+acr_nav.VisibleLine  row:14  value:"abt.FDb.tool_opt                             abt.FToolOpt                   Lary                                                                                                                                                    "
+acr_nav.VisibleLine  row:15  value:"abt.FDb.ind_target                           abt.FTarget                    Thash                                                                                                                                                   "
+acr_nav.VisibleLine  row:16  value:"abt.FDb.target                               abt.FTarget                    Lary                                                                                                                                                    "
+acr_nav.VisibleLine  row:17  value:"abt.FDb.ind_targsrc                          abt.FTargsrc                   Thash                                                                                                                                                   "
+acr_nav.VisibleLine  row:18  value:"abt.FDb.targsrc                              abt.FTargsrc                   Lary                                                                                                                                                    "
+acr_nav.VisibleLine  row:19  value:"abt.FDb.syscmddep                            abt.FSyscmddep                 Lary                                                                                                                                                    "
+acr_nav.VisibleLine  row:20  value:"abt.FDb.syscmd                               abt.FSyscmd                    Lary                                                                                                                                                    "
+acr_nav.VisibleLine  row:21  value:"abt.FDb._db                                  abt.FDb                        Global                                                                                                                                                  "
+acr_nav.VisibleLine  row:22  value:"abt.FDb.ind_syscmd                           abt.FSyscmd                    Thash                                                                                                                                                   "
+acr_nav.VisibleLine  row:23  value:"abt.FDb.ind_running                          abt.FSyscmd                    Thash                                                                                                                                                   "
+acr_nav.VisibleLine  row:24  value:"abt.FDb.ind_srcfile                          abt.FSrcfile                   Thash                                                                                                                                                   "
+acr_nav.VisibleLine  row:25  value:"abt.FDb.cfg                                  abt.FCfg                       Lary                                                                                                                                                    "
+acr_nav.VisibleLine  row:26  value:"abt.FDb.ind_cfg                              abt.FCfg                       Thash                                                                                                                                                   "
+acr_nav.PreviewNavCol  col_start:0  col_wid:43  name_len:5  col_name:field  target_ctype:""
+acr_nav.PreviewNavCol  col_start:45  col_wid:29  name_len:3  col_name:arg  target_ctype:dmmeta.Ctype
+acr_nav.PreviewNavCol  col_start:76  col_wid:8  name_len:7  col_name:reftype  target_ctype:dmmeta.Reftype
+acr_nav.PreviewNavCol  col_start:86  col_wid:32  name_len:4  col_name:dflt  target_ctype:""
+acr_nav.PreviewNavCol  col_start:120  col_wid:108  name_len:7  col_name:comment  target_ctype:""
+

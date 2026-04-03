@@ -41,10 +41,6 @@ using acr_nav::PushOverlay;
 using acr_nav::GraphFindCtypeLine;
 using acr_nav::SwitchToBrowse;
 using acr_nav::BuildHelpLines;
-using acr_nav::PreviewEnsureContent;
-using acr_nav::CodegenEnsureContent;
-using acr_nav::NsDepEnsureContent;
-using acr_nav::GraphEnsureContent;
 using acr_nav::Render;
 using acr_nav::RightPanelFieldFind;
 using acr_nav::FieldMatchesFilter;
@@ -53,6 +49,7 @@ using acr_nav::BuildBreadcrumb;
 using acr_nav::BuildStatusHint;
 using acr_nav::FindSsimfile;
 using acr_nav::GoToCtype;
+using acr_nav::ToggleViewmode;
 
 static struct termios acr_nav_orig_termios;
 static bool acr_nav_raw_mode = false;
@@ -168,25 +165,6 @@ static tempstr ReadKeyName() {
 
 // -----------------------------------------------------------------------------
 
-// Resolve well-known viewmode pointers and set ensure-content hooks
-static void ResolveViewmodes() {
-    vrfy(acr_nav::ind_viewmode_Find("fields"),  "viewmode 'fields' not found");
-    vrfy(acr_nav::ind_viewmode_Find("preview"), "viewmode 'preview' not found");
-    vrfy(acr_nav::ind_viewmode_Find("help"),    "viewmode 'help' not found");
-    vrfy(acr_nav::ind_viewmode_Find("detail"),  "viewmode 'detail' not found");
-    vrfy(acr_nav::ind_viewmode_Find("codegen"), "viewmode 'codegen' not found");
-    vrfy(acr_nav::ind_viewmode_Find("nsdep"),   "viewmode 'nsdep' not found");
-    vrfy(acr_nav::ind_viewmode_Find("xref"),    "viewmode 'xref' not found");
-    vrfy(acr_nav::ind_viewmode_Find("graph"),   "viewmode 'graph' not found");
-    acr_nav::_db.p_default_viewmode                          = acr_nav::ind_viewmode_Find("fields");
-    acr_nav::ind_viewmode_Find("preview")->ensure_content    = PreviewEnsureContent;
-    acr_nav::ind_viewmode_Find("codegen")->ensure_content    = CodegenEnsureContent;
-    acr_nav::ind_viewmode_Find("nsdep")->ensure_content      = NsDepEnsureContent;
-    acr_nav::ind_viewmode_Find("graph")->ensure_content      = GraphEnsureContent;
-}
-
-// -----------------------------------------------------------------------------
-
 // Resolve filtertarget pointers
 static void ResolveStyles() {
     acr_nav::_db.p_default_filtertarget = acr_nav::ind_filtertarget_Find("ctype");
@@ -204,7 +182,7 @@ static void InitPanels() {
     acr_nav::_db.p_cur_panel = acr_nav::_db.p_left_panel;
     acr_nav::_db.p_filter_mode = acr_nav::ind_navmode_Find("filter");
     vrfy(acr_nav::_db.p_filter_mode, "navmode 'filter' not found");
-    ResolveViewmodes();
+    acr_nav::_db.p_default_viewmode = acr_nav::ind_viewmode_Find("fields");
     // Resolve navaction -> helpgroup pointers (Ptr, not Upptr: 6 navactions have empty helpgroup)
     ind_beg(acr_nav::_db_navaction_curs, na, acr_nav::_db) {
         if (ch_N(na.helpgroup) > 0) {
@@ -302,7 +280,11 @@ static bool ProcessKey(algo::strptr key_name) {
                 blocked = false;
             }
             if (!blocked) {
-                step_Call(na);
+                if (ch_N(na.target_viewmode) > 0) {
+                    ToggleViewmode(acr_nav::ind_viewmode_Find(na.target_viewmode));
+                } else {
+                    step_Call(na);
+                }
                 did_something = true;
             }
         }
@@ -458,13 +440,10 @@ static void EmitVisibleLines(acr_nav::FPanel &right, acr_nav::FCtype *sel_ct) {
         vl.value = RightPanelLineFind(i);
         prlog(vl);
     }
-    // Emit navigable column metadata for preview mode
-    acr_nav::FViewmode &pvm = *acr_nav::ind_viewmode_Find("preview");
-    if (acr_nav::_db.p_cur_viewmode == &pvm) {
-        int n_nav = acr_nav::preview_nav_N(pvm);
-        for (int i = 0; i < n_nav; i++) {
-            prlog(acr_nav::preview_nav_qFind(pvm, i));
-        }
+    // Emit navigable column metadata for viewmodes with nav columns
+    int n_nav = acr_nav::nav_col_N(*acr_nav::_db.p_cur_viewmode);
+    for (int i = 0; i < n_nav; i++) {
+        prlog(acr_nav::nav_col_qFind(*acr_nav::_db.p_cur_viewmode, i));
     }
 }
 
@@ -536,8 +515,8 @@ static void HeadlessSetView(acr_nav::SetView &cmd) {
     acr_nav::FViewmode *vm = acr_nav::ind_viewmode_Find(cmd.viewmode);
     if (!vm) {
         EmitAck("acr_nav.SetView", false, tempstr() << "viewmode not found: " << cmd.viewmode);
-    } else if (vm == acr_nav::ind_viewmode_Find("nsdep")) {
-        EmitAck("acr_nav.SetView", false, "nsdep is context-sensitive");
+    } else if (vm->scope_ns) {
+        EmitAck("acr_nav.SetView", false, "namespace-scoped viewmode is context-sensitive");
     } else if (vm == acr_nav::ind_viewmode_Find("detail")) {
         EmitAck("acr_nav.SetView", false, "use SendKey key:d on a field");
     } else {
@@ -622,9 +601,9 @@ static void HeadlessNavigate(acr_nav::Navigate &cmd) {
         if (!vm) {
             ok = false;
             err_msg << "viewmode not found: " << cmd.viewmode;
-        } else if (vm == acr_nav::ind_viewmode_Find("nsdep")) {
+        } else if (vm->scope_ns) {
             ok = false;
-            err_msg << "nsdep is context-sensitive";
+            err_msg << "namespace-scoped viewmode is context-sensitive";
         } else if (vm->is_overlay) {
             ok = false;
             err_msg << "overlay viewmodes not supported in Navigate";
