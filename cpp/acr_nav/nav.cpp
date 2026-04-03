@@ -208,6 +208,13 @@ void acr_nav::DismissStartupHelp(acr_nav::FKeybind *keybind) {
     }
 }
 
+// Restore the viewmode saved before entering nsdep mode, or fall back to default.
+static void DeactivateNsdep() {
+    acr_nav::_db.p_cur_viewmode = acr_nav::_db.p_pre_nsdep_viewmode
+        ? acr_nav::_db.p_pre_nsdep_viewmode : acr_nav::_db.p_default_viewmode;
+    acr_nav::_db.p_pre_nsdep_viewmode = NULL;
+}
+
 // If an overlay viewmode is active and the selected ctype changed, pop all
 // overlays and restore the base viewmode.  During startup help, preserve the
 // overlay so movement doesn't dismiss it.
@@ -219,9 +226,7 @@ bool acr_nav::PopOverlayOnCtypeChange(acr_nav::FCtype *prev_sel_ct, acr_nav::FCt
     if (IsNsDepMode()) {
         if (sel_ct) {
             // Leaving ns header for ctype row — restore saved viewmode
-            acr_nav::_db.p_cur_viewmode = acr_nav::_db.p_pre_nsdep_viewmode
-                ? acr_nav::_db.p_pre_nsdep_viewmode : acr_nav::_db.p_default_viewmode;
-            acr_nav::_db.p_pre_nsdep_viewmode = NULL;
+            DeactivateNsdep();
             nsdep_changed = true;
         } else {
             acr_nav::FNs *ns = SelectedNs();
@@ -247,9 +252,7 @@ bool acr_nav::PopOverlayOnCtypeChange(acr_nav::FCtype *prev_sel_ct, acr_nav::FCt
         // If overlay-pop restored nsdep as base but we landed on a ctype row,
         // deactivate nsdep immediately (same logic as the IsNsDepMode block above).
         if (IsNsDepMode() && sel_ct) {
-            acr_nav::_db.p_cur_viewmode = acr_nav::_db.p_pre_nsdep_viewmode
-                ? acr_nav::_db.p_pre_nsdep_viewmode : acr_nav::_db.p_default_viewmode;
-            acr_nav::_db.p_pre_nsdep_viewmode = NULL;
+            DeactivateNsdep();
             nsdep_changed = true;
         }
     }
@@ -427,9 +430,7 @@ static void FollowRefLeftPanel(acr_nav::FPanel *left) {
         } else {
             // Leave nsdep context so right panel returns to fields view
             if (IsNsDepMode()) {
-                acr_nav::_db.p_cur_viewmode = acr_nav::_db.p_pre_nsdep_viewmode
-                    ? acr_nav::_db.p_pre_nsdep_viewmode : acr_nav::_db.p_default_viewmode;
-                acr_nav::_db.p_pre_nsdep_viewmode = NULL;
+                DeactivateNsdep();
             }
             acr_nav::_db.p_cur_panel = acr_nav::_db.p_right_panel;
         }

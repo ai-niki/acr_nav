@@ -52,6 +52,7 @@ struct GLine {
     void Utf8(const char *s) { int n = strlen(s); str << s; extra += (n - 1); }
     void RepeatUtf8(const char *s, int cnt) {
         int n = strlen(s);
+        cnt = i32_Max(0, cnt);
         for (int i = 0; i < cnt; i++) {
             str << s;
         }

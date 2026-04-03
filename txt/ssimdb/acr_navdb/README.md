@@ -6,7 +6,7 @@
 <!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
 <!-- dev.mdmark  mdmark:TOC  state:BEG_AUTO  param:Toc -->
 &#128196; [acr_navdb.detailsrc - Ssimfile to scan for field detail metadata](/txt/ssimdb/acr_navdb/detailsrc.md)<br/>
-&#128196; [acr_navdb.filtertarget -](/txt/ssimdb/acr_navdb/filtertarget.md)<br/>
+&#128196; [acr_navdb.filtertarget - Filter search target for acr_nav](/txt/ssimdb/acr_navdb/filtertarget.md)<br/>
 &#128196; [acr_navdb.helpgroup - Help panel group category](/txt/ssimdb/acr_navdb/helpgroup.md)<br/>
 &#128196; [acr_navdb.keybind - Key-to-action mapping for acr_nav](/txt/ssimdb/acr_navdb/keybind.md)<br/>
 &#128196; [acr_navdb.navaction - Controlled vocabulary of navigation actions](/txt/ssimdb/acr_navdb/navaction.md)<br/>

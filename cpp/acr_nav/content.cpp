@@ -829,22 +829,19 @@ int acr_nav::PanelItemCount(acr_nav::FPanel &panel, acr_nav::FCtype *sel_ct) {
 
 // Append key display name, mapping arrow keys to Unicode symbols.
 static void AppendKeyDisplay(cstring &out, algo::strptr key) {
+    struct { const char *key; const char *symbol; } arrows[] = {
+        {"Up",    "\xe2\x86\x91"},
+        {"Down",  "\xe2\x86\x93"},
+        {"Left",  "\xe2\x86\x90"},
+        {"Right", "\xe2\x86\x92"},
+    };
     bool mapped = false;
-    if (key == "Up") {
-        out << "\xe2\x86\x91";
-        mapped = true;
-    }
-    if (!mapped && key == "Down") {
-        out << "\xe2\x86\x93";
-        mapped = true;
-    }
-    if (!mapped && key == "Left") {
-        out << "\xe2\x86\x90";
-        mapped = true;
-    }
-    if (!mapped && key == "Right") {
-        out << "\xe2\x86\x92";
-        mapped = true;
+    for (int i = 0; i < (int)(sizeof(arrows)/sizeof(arrows[0])); i++) {
+        if (key == algo::strptr(arrows[i].key)) {
+            out << arrows[i].symbol;
+            mapped = true;
+            break;
+        }
     }
     if (!mapped) {
         out << key;

@@ -116,7 +116,7 @@ one `keybind` record, and one C++ handler function.
 |[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
 |[acr_navdb.detailsrc](/txt/ssimdb/acr_navdb/detailsrc.md)|Ssimfile to scan for field detail metadata|
 |[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
-|[acr_navdb.filtertarget](/txt/ssimdb/acr_navdb/filtertarget.md)||
+|[acr_navdb.filtertarget](/txt/ssimdb/acr_navdb/filtertarget.md)|Filter search target for acr_nav|
 |[acr_navdb.helpgroup](/txt/ssimdb/acr_navdb/helpgroup.md)|Help panel group category|
 |[acr_navdb.keybind](/txt/ssimdb/acr_navdb/keybind.md)|Key-to-action mapping for acr_nav|
 |[acr_navdb.navmode](/txt/ssimdb/acr_navdb/navmode.md)|UI mode for acr_nav|

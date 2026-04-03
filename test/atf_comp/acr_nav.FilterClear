@@ -1,58 +1,16 @@
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:comment  navstack_depth:0  n_sel_ctype:218  n_ctype:1414  n_field:5687  viewmode:fields  breadcrumb:""  filtertarget:field  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
-acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:238  sel_value:acr.FQuery
-acr_nav.VisibleLeftItem  row:0  value:acr  kind:ns  collapsed:N  n_match:1  n_record:0
-acr_nav.VisibleLeftItem  row:1  value:acr.FQuery  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.VisibleLeftItem  row:2  value:acr_navdb  kind:ns  collapsed:N  n_match:10  n_record:0
-acr_nav.VisibleLeftItem  row:3  value:acr_navdb.Detailsrc  kind:ctype  collapsed:N  n_match:0  n_record:5
-acr_nav.VisibleLeftItem  row:4  value:acr_navdb.Filtertarget  kind:ctype  collapsed:N  n_match:0  n_record:5
-acr_nav.VisibleLeftItem  row:5  value:acr_navdb.Helpgroup  kind:ctype  collapsed:N  n_match:0  n_record:5
-acr_nav.VisibleLeftItem  row:6  value:acr_navdb.Keybind  kind:ctype  collapsed:N  n_match:0  n_record:42
-acr_nav.VisibleLeftItem  row:7  value:acr_navdb.Navaction  kind:ctype  collapsed:N  n_match:0  n_record:28
-acr_nav.VisibleLeftItem  row:8  value:acr_navdb.Navmode  kind:ctype  collapsed:N  n_match:0  n_record:2
-acr_nav.VisibleLeftItem  row:9  value:acr_navdb.Navstyle  kind:ctype  collapsed:N  n_match:0  n_record:22
-acr_nav.VisibleLeftItem  row:10  value:acr_navdb.Panel  kind:ctype  collapsed:N  n_match:0  n_record:2
-acr_nav.VisibleLeftItem  row:11  value:acr_navdb.Reftypestyle  kind:ctype  collapsed:N  n_match:0  n_record:35
-acr_nav.VisibleLeftItem  row:12  value:acr_navdb.Viewmode  kind:ctype  collapsed:N  n_match:0  n_record:9
-acr_nav.VisibleLeftItem  row:13  value:algo  kind:ns  collapsed:N  n_match:2  n_record:0
-acr_nav.VisibleLeftItem  row:14  value:algo.Imdb  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.VisibleLeftItem  row:15  value:algo.Imtable  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.VisibleLeftItem  row:16  value:amcdb  kind:ns  collapsed:N  n_match:7  n_record:0
-acr_nav.VisibleLeftItem  row:17  value:amcdb.Bltin  kind:ctype  collapsed:N  n_match:0  n_record:14
-acr_nav.VisibleLeftItem  row:18  value:amcdb.Curstype  kind:ctype  collapsed:N  n_match:0  n_record:5
-acr_nav.VisibleLeftItem  row:19  value:amcdb.Gen  kind:ctype  collapsed:N  n_match:0  n_record:90
-acr_nav.VisibleLeftItem  row:20  value:amcdb.Regxtype  kind:ctype  collapsed:N  n_match:0  n_record:4
-acr_nav.VisibleLeftItem  row:21  value:amcdb.Tclass  kind:ctype  collapsed:N  n_match:0  n_record:52
-acr_nav.VisibleLeftItem  row:22  value:amcdb.Tcurs  kind:ctype  collapsed:N  n_match:0  n_record:13
-acr_nav.VisibleLeftItem  row:23  value:amcdb.Tfunc  kind:ctype  collapsed:N  n_match:0  n_record:433
-acr_nav.VisibleLeftItem  row:24  value:amsdb  kind:ns  collapsed:N  n_match:2  n_record:0
-acr_nav.VisibleLeftItem  row:25  value:amsdb.Proctype  kind:ctype  collapsed:N  n_match:0  n_record:2
-acr_nav.VisibleLeftItem  row:26  value:amsdb.Shmtype  kind:ctype  collapsed:N  n_match:0  n_record:3
-acr_nav.VisibleLeftItem  row:27  value:atf  kind:ns  collapsed:N  n_match:1  n_record:0
-acr_nav.VisibleLeftItem  row:28  value:atf.Testrun  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.VisibleLeftItem  row:29  value:atf_amc  kind:ns  collapsed:N  n_match:1  n_record:0
-acr_nav.VisibleLeftItem  row:30  value:atf_amc.TypeS  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.VisibleLeftItem  row:31  value:atfdb  kind:ns  collapsed:N  n_match:14  n_record:0
-acr_nav.VisibleLeftItem  row:32  value:atfdb.Amctest  kind:ctype  collapsed:N  n_match:0  n_record:239
-acr_nav.VisibleLeftItem  row:33  value:atfdb.Cijob  kind:ctype  collapsed:N  n_match:0  n_record:4
-acr_nav.VisibleLeftItem  row:34  value:atfdb.Cipackage  kind:ctype  collapsed:N  n_match:0  n_record:2
-acr_nav.VisibleLeftItem  row:35  value:atfdb.Citest  kind:ctype  collapsed:N  n_match:0  n_record:40
-acr_nav.VisibleLeftItem  row:36  value:atfdb.Comptest  kind:ctype  collapsed:N  n_match:0  n_record:287
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:13  sel_value:acr.FQuery.queryop
-acr_nav.VisibleField  row:0  field:acr.FQuery.queryop  arg:acr.Queryop  reftype:Val  style:field_val  navigable:Y  match:N
-acr_nav.VisibleField  row:1  field:acr.FQuery.query  arg:acr.AttrRegx  reftype:Val  style:field_val  navigable:Y  match:N
-acr_nav.VisibleField  row:2  field:acr.FQuery.where  arg:acr.AttrRegx  reftype:Tary  style:field_val  navigable:Y  match:N
-acr_nav.VisibleField  row:3  field:acr.FQuery.new_val  arg:algo.cstring  reftype:Val  style:field_val  navigable:Y  match:N
-acr_nav.VisibleField  row:4  field:acr.FQuery.ssimfile  arg:algo.cstring  reftype:Regx  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:5  field:acr.FQuery.comment  arg:algo.cstring  reftype:Val  style:field_val  navigable:Y  match:Y
-acr_nav.VisibleField  row:6  field:acr.FQuery.c_ctype  arg:acr.FCtype  reftype:Ptrary  style:field_idx  navigable:Y  match:N
-acr_nav.VisibleField  row:7  field:acr.FQuery.c_field  arg:acr.FField  reftype:Ptrary  style:field_idx  navigable:Y  match:N
-acr_nav.VisibleField  row:8  field:acr.FQuery.c_rec  arg:acr.FRec  reftype:Ptrary  style:field_idx  navigable:Y  match:N
-acr_nav.VisibleField  row:9  field:acr.FQuery.n_regx_match  arg:i32  reftype:Val  style:field_val  navigable:Y  match:N
-acr_nav.VisibleField  row:10  field:acr.FQuery.n_visit_field  arg:i32  reftype:Val  style:field_val  navigable:Y  match:N
-acr_nav.VisibleField  row:11  field:acr.FQuery.n_visit_ctype  arg:i32  reftype:Val  style:field_val  navigable:Y  match:N
-acr_nav.VisibleField  row:12  field:acr.FQuery.n_mod_rec  arg:i32  reftype:Val  style:field_val  navigable:Y  match:N
+acr_nav.Screen  mode:filter  focus:ctype_list  filter:abc  navstack_depth:0  n_sel_ctype:1  n_ctype:1414  n_field:5687  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"Enter:accept  Tab:target  Esc:cancel"  sel_nav_col:0
+acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:lib_sqlite
+acr_nav.VisibleLeftItem  row:0  value:lib_sqlite  kind:ns  collapsed:Y  n_match:1  n_record:0
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:7  sel_value:"Upstream (lib_sqlite imports from):"
+acr_nav.VisibleLine  row:0  value:"Upstream (lib_sqlite imports from):"
+acr_nav.VisibleLine  row:1  value:"   other     11 fields"
+acr_nav.VisibleLine  row:2  value:"    algo      6 fields"
+acr_nav.VisibleLine  row:3  value:"  dmmeta      6 fields"
+acr_nav.VisibleLine  row:4  value:""
+acr_nav.VisibleLine  row:5  value:"Downstream (imports from lib_sqlite):"
+acr_nav.VisibleLine  row:6  value:"  (none)"
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1413  n_ctype:1414  n_field:5687  viewmode:nsdep  breadcrumb:""  filtertarget:field  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:filter  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1413  n_ctype:1414  n_field:5687  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"Enter:accept  Tab:target  Esc:cancel"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:83  sel_value:""
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
@@ -130,7 +88,7 @@ acr_nav.VisibleLine  row:34  value:"            fm      9 fields"
 acr_nav.VisibleLine  row:35  value:"        abt_md      8 fields"
 acr_nav.VisibleLine  row:36  value:"        acr_in      8 fields"
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1413  n_ctype:1414  n_field:5687  viewmode:nsdep  breadcrumb:""  filtertarget:field  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:filter  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1413  n_ctype:1414  n_field:5687  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"Enter:accept  Tab:target  Esc:cancel"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:83  sel_value:""
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0

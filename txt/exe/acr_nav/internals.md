@@ -488,7 +488,7 @@ private:
 };
 ```
 
-#### acr_nav.FFiltertarget - 
+#### acr_nav.FFiltertarget - Filter search target for acr_nav
 <a href="#acr_nav-ffiltertarget"></a>
 
 #### acr_nav.FFiltertarget Fields

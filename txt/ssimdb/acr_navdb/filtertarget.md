@@ -1,4 +1,4 @@
-## acr_navdb.filtertarget -
+## acr_navdb.filtertarget - Filter search target for acr_nav
 
 
 ### Attributes
