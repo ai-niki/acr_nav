@@ -29,7 +29,6 @@
 <!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Related -->
 These ssimfiles reference acr_navdb.viewmode
 
-* [acr_navdb.navaction via target_viewmode](/txt/ssimdb/acr_navdb/navaction.md) - Viewmode to toggle (empty=not a toggle action) 
 * [acr_navdb.viewmode via next](/txt/ssimdb/acr_navdb/viewmode.md) - Next viewmode in Tab cycle 
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Related -->

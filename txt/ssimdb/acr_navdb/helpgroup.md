@@ -16,15 +16,6 @@
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
 
-### Related
-<a href="#related"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Related -->
-These ssimfiles reference acr_navdb.helpgroup
-
-* [acr_navdb.navaction via helpgroup](/txt/ssimdb/acr_navdb/navaction.md) - Help group; empty=hidden from help 
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Related -->
-
 ### Used In Executables
 <a href="#used-in-executables"></a>
 <!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:ImdbUses -->

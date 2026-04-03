@@ -637,7 +637,7 @@ struct FNavaction { // acr_nav.FNavaction
     bool                           passive;                 //   false  Movement-only action; does not dismiss startup help
     bool                           need_no_overlay;         //   false  Hint hidden when viewmode.is_overlay is Y
     algo::Smallstr50               dismiss_viewmode;        // Viewmode this action dismisses; empty means any overlay
-    algo::Smallstr50               target_viewmode;         //   ""  Viewmode to toggle (empty=not a toggle action)
+    algo::Smallstr50               target_viewmode;         // Viewmode to toggle (empty=not a toggle action)
     algo::Comment                  comment;                 //
     acr_nav::FHelpgroup*           p_helpgroup;             // optional pointer
     acr_nav::navaction_step_hook   step;                    //   NULL  Pointer to a function
