@@ -29,3 +29,4 @@ compile_flags.txt
 
 *.gcov
 learn/*
+.claude/settings.local.json

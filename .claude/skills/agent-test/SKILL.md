@@ -7,7 +7,7 @@ description: Exploratory testing of acr_nav via headless mode. Launches parallel
 
 Exploratory testing of acr_nav through its headless protocol. The value is unconstrained judgment finding novel issues that scripted regression tests miss: state combinations, protocol gaps, edge cases no one thought to script.
 
-This is an orchestrator's playbook. Subagents receive `references/protocol.md` — they never see this file.
+This is an orchestrator’s playbook. Subagents receive `references/protocol.md` — they never see this file.
 
 ## Prerequisite
 
@@ -74,12 +74,12 @@ Suggestions — combine, split, skip, or invent areas based on what regression t
 
 ## Subagent Guidelines
 
+- **Prefer Summary over Screenshot** for state checks. Summary returns 4 lines (~400 bytes) vs Screenshot's 100+ lines. Use Screenshot only when you need item-level details (VisibleField, VisibleLine content). Use `SetTermSize` to expand the default 40×120 viewport when more rows are needed.
 - **Don't hardcode counts.** Read initial state (auto-screenshot on launch) as baseline. Verify relative changes, not absolute values.
 - **Don't repeat regression tests.** If `acr_nav.Filter` already tests basic filtering, explore filter + other features instead.
 - **Run `acr acr_navdb.%`** to discover the full capability surface (keybinds, viewmodes, navactions, navstyles).
 - **Follow surprises.** When something unexpected happens, send more commands and investigate. The most valuable findings come from following anomalies.
 - **Cross-validate with `acr`.** Verify field counts, xref counts, and record counts against `acr dmmeta.field -where:...` queries.
-- **Prefer Summary over Screenshot** for state checks. Summary returns 4 lines (~400 bytes) vs Screenshot's 100+ lines (~10KB). Use Screenshot only when you need item-level details (VisibleField, VisibleLine content).
 
 ## Synthesis
 

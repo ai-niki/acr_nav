@@ -530,8 +530,8 @@ struct FDb { // acr_nav.FDb
     acr_nav::FNavmode*         p_filter_mode;                    // Cached pointer to filter navmode for fast comparison. optional pointer
     algo::cstring              filter;                           // Current filter text
     bool                       running;                          //   true  Event loop control
-    i32                        term_hei;                         //   0  Terminal height
-    i32                        term_wid;                         //   0  Terminal width
+    i32                        term_hei;                         //   40  Terminal height
+    i32                        term_wid;                         //   120  Terminal width
     acr_nav::FNavstyle*        navstyle_lary[32];                // level array
     i32                        navstyle_n;                       // number of elements in array
     acr_nav::FNavstyle**       ind_navstyle_buckets_elems;       // pointer to bucket array

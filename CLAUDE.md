@@ -66,6 +66,8 @@ make clean                   # git clean -dfx build temp
 
 **Never hand-edit `cpp/gen/` or `include/gen/`** — overwritten by `amc`.
 
+**When re-capturing test goldens** (`atf_comp <tests> -capture`): run without `-capture` first and confirm behavior; review diffs before committing. Prefer capturing a single test when only one scenario changed. Never `-capture` on a known-failing or unreviewed run — a bad capture encodes bugs as truth.
+
 **Never hand-edit `data/**/*.ssim`** — use `acr -insert -write` or `acr_ed`. `acr` enforces sort order (per `dmmeta.ssimsort`) and referential integrity. Hand-editing risks breaking deterministic ordering.
 
 **When modifying amc itself**, use `sandbox amc -reset -diff -- amc` to test safely. A broken amc can prevent itself from being fixed.

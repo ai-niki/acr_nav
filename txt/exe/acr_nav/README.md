@@ -6,8 +6,16 @@ Navigate with arrow keys, press Enter to follow a field reference to its target 
 press Backspace to go back. Press `/` to filter ctypes by name.
 
 When stdout is not a TTY or when `-headless` is specified, `acr_nav` enters headless mode:
-it reads structured commands (`acr_nav.SendKey`, `acr_nav.Screenshot`) from stdin and emits
-structured screen state records on stdout. This enables agent-driven testing without a terminal.
+it reads structured commands (`acr_nav.SendKey`, `acr_nav.Screenshot`, `acr_nav.SetTermSize`,
+`acr_nav.Navigate`, `acr_nav.Summary`, etc.) from stdin and emits structured screen state
+records on stdout. This enables agent-driven testing without a terminal.
+
+**Headless viewport:** defaults to `term_hei` 40 × `term_wid` 120 (from `dmmeta.field`).
+Interactive TTY mode still queries the OS for geometry. To capture all left-panel rows in one
+screenshot (old unbounded behavior), send `acr_nav.SetTermSize  term_hei:100000  term_wid:120`
+as the first command. In-repo comptests `acr_nav.LeftItems` and `acr_nav.FilterCycleComplete`
+do this via `atfdb.tmsg` `099990.in`. Prefer `acr_nav.Summary` for state checks; use
+`acr_nav.Screenshot` when visible row content matters.
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
