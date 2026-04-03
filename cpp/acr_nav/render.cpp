@@ -265,12 +265,7 @@ static void EmitStyledPreviewHeader(cstring &buf, algo::strptr hdr, acr_nav::FVi
 // Emit a text region [rs, re) from right_cell, splitting at overlay boundaries.
 // base_style is applied to non-overlay portions (NULL for plain text).
 // overlay_style replaces base_style inside [ov_start, ov_end).
-static void EmitRegionWithOverlay(cstring &buf, algo::strptr right_cell,
-                                   int rs, int re, bool right_sel,
-                                   acr_nav::FNavstyle *sel_style,
-                                   acr_nav::FNavstyle *base_style,
-                                   int ov_start, int ov_end,
-                                   acr_nav::FNavstyle *overlay_style) {
+static void EmitRegionWithOverlay(cstring &buf, algo::strptr right_cell, int rs, int re, bool right_sel, acr_nav::FNavstyle *sel_style, acr_nav::FNavstyle *base_style, int ov_start, int ov_end, acr_nav::FNavstyle *overlay_style) {
     // Before overlay
     if (rs < ov_start && rs < re) {
         int seg_end = i32_Min(ov_start, re);
@@ -318,12 +313,7 @@ static void EmitRegionWithOverlay(cstring &buf, algo::strptr right_cell,
 // Uses span-boundary runs for clean SESE flow. span_cursor advances monotonically across
 // visible lines for O(visible) total scan cost.
 // overlay_start/overlay_end define a region where overlay_style replaces base styles.
-static void EmitStyledLine(cstring &buf, algo::strptr right_cell, bool right_sel,
-                           acr_nav::FViewmode &vm, int line_idx, int &span_cursor,
-                           acr_nav::FNavstyle *sel_style,
-                           int overlay_start, int overlay_end,
-                           acr_nav::FNavstyle *overlay_style,
-                           int skip_bytes = 0) {
+static void EmitStyledLine(cstring &buf, algo::strptr right_cell, bool right_sel, acr_nav::FViewmode &vm, int line_idx, int &span_cursor, acr_nav::FNavstyle *sel_style, int overlay_start, int overlay_end, acr_nav::FNavstyle *overlay_style, int skip_bytes = 0) {
     int cell_n = elems_N(right_cell);
     int prev_end = 0;
     int ov_start = (overlay_start >= 0 && overlay_style) ? overlay_start + 1 : cell_n + 1;
@@ -443,15 +433,12 @@ static void RenderLeftCell(RenderCtx &ctx, int row) {
 }
 
 // Compute the preview nav-cell overlay region for the selected row.
-// Sets ov_start/ov_end to byte offsets within the right cell, ov_style to the
+// Sets ov_start/ov_end to byte offsets within the right cell, *p_ov_style to the
 // overlay style.  When no overlay applies, ov_start and ov_end remain -1.
-static void DetectPreviewOverlay(RenderCtx &ctx, int right_data_idx, int skip_bytes,
-                                  bool right_sel,
-                                  int &ov_start, int &ov_end,
-                                  acr_nav::FNavstyle *&ov_style) {
+static void DetectPreviewOverlay(RenderCtx &ctx, int right_data_idx, int skip_bytes, bool right_sel, int &ov_start, int &ov_end, acr_nav::FNavstyle **p_ov_style) {
     ov_start = -1;
     ov_end = -1;
-    ov_style = nullptr;
+    *p_ov_style = nullptr;
     acr_nav::FViewmode &pvm = *acr_nav::ind_viewmode_Find("preview");
     if (right_sel && !ctx.left_focused
         && acr_nav::_db.p_cur_viewmode == &pvm) {
@@ -463,7 +450,7 @@ static void DetectPreviewOverlay(RenderCtx &ctx, int right_data_idx, int skip_by
             int ov_raw_e = DisplayToByte(data_line, nc.col_start + nc.col_wid);
             ov_start = ov_raw_s - skip_bytes;
             ov_end = ov_raw_e - skip_bytes;
-            ov_style = ch_N(nc.target_ctype) > 0
+            *p_ov_style = ch_N(nc.target_ctype) > 0
                 ? acr_nav::ind_navstyle_Find("line_nav_cell")
                 : acr_nav::ind_navstyle_Find("line_nav_cell_nofk");
         }
@@ -525,7 +512,7 @@ static void RenderRightCell(RenderCtx &ctx, int row, int &span_cursor) {
         int ov_start = -1;
         int ov_end = -1;
         acr_nav::FNavstyle *ov_style = nullptr;
-        DetectPreviewOverlay(ctx, right_data_idx, skip_bytes, right_sel, ov_start, ov_end, ov_style);
+        DetectPreviewOverlay(ctx, right_data_idx, skip_bytes, right_sel, ov_start, ov_end, &ov_style);
         EmitStyledLine(ctx.buf, strptr(right_cell), right_focused_sel, *acr_nav::_db.p_cur_viewmode, right_data_idx, span_cursor, right_focused_sel ? ctx.p_sel_focus : nullptr, ov_start, ov_end, ov_style, skip_bytes);
         ctx.buf << "\x1b[0m\x1b[K\r\n";
     } else {

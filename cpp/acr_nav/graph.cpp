@@ -81,8 +81,7 @@ struct GraphEdgeGroup {
 
 // Add a field to the dep-path edge group matching (neighbor, is_left).
 // Creates a new group if none exists and capacity allows.
-static void AddDepEdge(GraphEdgeGroup *groups, int &n_group, int max_groups,
-                       acr_nav::FCtype *neighbor, bool is_left, acr_nav::FField &field) {
+static void AddDepEdge(GraphEdgeGroup *groups, int &n_group, int max_groups, acr_nav::FCtype *neighbor, bool is_left, acr_nav::FField &field) {
     int gi = -1;
     for (int i = 0; i < n_group; i++) {
         if (groups[i].p_neighbor == neighbor && groups[i].is_left == is_left) {
@@ -147,9 +146,7 @@ static int CollectGraphEdges(acr_nav::FCtype &center, GraphEdgeGroup *groups, in
 }
 
 // Partition edge groups into right-column and left-column index arrays.
-static void PartitionEdgeGroups(GraphEdgeGroup *groups, int n_group,
-                                int *right_groups, int &n_right,
-                                int *left_groups, int &n_left) {
+static void PartitionEdgeGroups(GraphEdgeGroup *groups, int n_group, int *right_groups, int &n_right, int *left_groups, int &n_left) {
     n_right = 0;
     n_left = 0;
     for (int i = 0; i < n_group; i++) {
@@ -231,8 +228,7 @@ int acr_nav::GraphFindCtypeLine(acr_nav::FCtype &center, acr_nav::FCtype *target
 }
 
 // Measure maximum label and name widths across all edge groups for column positioning.
-static void MeasureGraphWidths(GraphEdgeGroup *groups, int n_group,
-                               int &max_left_name, int &max_left_label, int &max_right_label) {
+static void MeasureGraphWidths(GraphEdgeGroup *groups, int n_group, int &max_left_name, int &max_left_label, int &max_right_label) {
     max_left_name = 0;
     max_left_label = 0;
     max_right_label = 0;

@@ -49,6 +49,10 @@ namespace acr_nav { // update-hdr
     // void viewmode_preview_ensure_content(acr_nav::FCtype &ct); // gstatic/acr_navdb.viewmode:preview
     // void viewmode_codegen_ensure_content(acr_nav::FCtype &ct); // gstatic/acr_navdb.viewmode:codegen
     // void viewmode_nsdep_ensure_content(acr_nav::FCtype &ct); // gstatic/acr_navdb.viewmode:nsdep
+    // void viewmode_fields_ensure_content(acr_nav::FCtype &); // gstatic/acr_navdb.viewmode:fields
+    // void viewmode_xref_ensure_content(acr_nav::FCtype &); // gstatic/acr_navdb.viewmode:xref
+    // void viewmode_help_ensure_content(acr_nav::FCtype &); // gstatic/acr_navdb.viewmode:help
+    // void viewmode_detail_ensure_content(acr_nav::FCtype &); // gstatic/acr_navdb.viewmode:detail
     // void viewmode_nsdep_detail_ensure_content(acr_nav::FCtype &ct); // gstatic/acr_navdb.viewmode:nsdep_detail
 
     // Load metadata records for a single field from detailsrc ssimfiles.
@@ -133,6 +137,12 @@ namespace acr_nav { // update-hdr
     // void navaction_cycle_viewmode(); // gstatic/acr_navdb.navaction:cycle_viewmode
     void ToggleViewmode(acr_nav::FViewmode *target);
     //     (user-implemented function, prototype is in amc-generated header)
+    // void navaction_toggle_preview(); // gstatic/acr_navdb.navaction:toggle_preview
+    // void navaction_toggle_codegen(); // gstatic/acr_navdb.navaction:toggle_codegen
+    // void navaction_toggle_fields(); // gstatic/acr_navdb.navaction:toggle_fields
+    // void navaction_toggle_xref(); // gstatic/acr_navdb.navaction:toggle_xref
+    // void navaction_toggle_graph(); // gstatic/acr_navdb.navaction:toggle_graph
+    // void navaction_toggle_nsdep_detail(); // gstatic/acr_navdb.navaction:toggle_nsdep_detail
     // void navaction_filter_accept(); // gstatic/acr_navdb.navaction:filter_accept
     // void navaction_filter_start(); // gstatic/acr_navdb.navaction:filter_start
     // void navaction_filter_cancel(); // gstatic/acr_navdb.navaction:filter_cancel

@@ -67,8 +67,7 @@ static void FormatPreviewRow(cstring &out, algo::Tuple &tuple, int *display_wid,
 
 // First-pass scan of mmap'd ssimfile: determine column names from the first tuple,
 // compute max display widths across all rows.
-static void MeasurePreviewColumns(algo_lib::MmapFile &file, algo::cstring *col_name,
-                                   int *display_wid, int &n_col) {
+static void MeasurePreviewColumns(algo_lib::MmapFile &file, algo::cstring *col_name, int *display_wid, int &n_col) {
     n_col = 0;
     ind_beg(Line_curs, line, file.text) {
         algo::Tuple tuple;
@@ -94,8 +93,7 @@ static void MeasurePreviewColumns(algo_lib::MmapFile &file, algo::cstring *col_n
 }
 
 // Build PreviewNavCol entries for each column, detect FK targets for navigable columns.
-static void DetectNavColumns(acr_nav::FViewmode &vm, acr_nav::FCtype *field_base,
-                              algo::cstring *col_name, int *display_wid, int n_col) {
+static void DetectNavColumns(acr_nav::FViewmode &vm, acr_nav::FCtype *field_base, algo::cstring *col_name, int *display_wid, int n_col) {
     int col_pos = 0;
     for (int c = 0; c < n_col; c++) {
         if (c > 0) {
@@ -118,8 +116,7 @@ static void DetectNavColumns(acr_nav::FViewmode &vm, acr_nav::FCtype *field_base
 }
 
 // Find comment column index, build aligned header string from column names.
-static void BuildPreviewHeader(acr_nav::FViewmode &vm, algo::cstring *col_name,
-                                int *display_wid, int n_col, int &comment_col) {
+static void BuildPreviewHeader(acr_nav::FViewmode &vm, algo::cstring *col_name, int *display_wid, int n_col, int &comment_col) {
     comment_col = -1;
     for (int c = 0; c < n_col; c++) {
         if (algo::strptr_Eq(strptr(col_name[c]), "comment")) {
@@ -142,8 +139,7 @@ static void BuildPreviewHeader(acr_nav::FViewmode &vm, algo::cstring *col_name,
 
 // Second-pass scan of mmap'd ssimfile: format data rows with aligned columns,
 // add color spans for pkey and comment columns.
-static void FormatPreviewRows(acr_nav::FViewmode &vm, algo_lib::MmapFile &file,
-                                int *display_wid, int n_col, int comment_col) {
+static void FormatPreviewRows(acr_nav::FViewmode &vm, algo_lib::MmapFile &file, int *display_wid, int n_col, int comment_col) {
     ind_beg(Line_curs, line, file.text) {
         algo::Tuple tuple;
         if (algo::Tuple_ReadStrptr(tuple, line, false)) {
@@ -347,8 +343,7 @@ struct NsFieldGroup {
 
 // Format a sorted section of namespace dependency counts as highlighted text lines.
 // Sorts deps[0..n) by count descending, emits a header line and one row per dep.
-static void FormatNsDepSection(acr_nav::FViewmode &vm, algo::strptr header,
-                               NsDep *deps, int n) {
+static void FormatNsDepSection(acr_nav::FViewmode &vm, algo::strptr header, NsDep *deps, int n) {
     // Sort by count descending (insertion sort)
     for (int i = 1; i < n; i++) {
         NsDep tmp = deps[i];
@@ -441,9 +436,7 @@ static void AccumNsDep(NsDep *deps, int &n, int max_n, acr_nav::FNs *ns) {
 // Format one direction (upstream or downstream) of per-field namespace dependency detail.
 // Sorts groups by field count descending, emits section header with totals,
 // per-namespace sub-headers with field rows, or "(none)" if empty.
-static void FormatNsDepDetailSection(acr_nav::FViewmode &vm, algo::strptr header,
-                                      NsFieldGroup *groups, int n,
-                                      int arg_col, int ref_col) {
+static void FormatNsDepDetailSection(acr_nav::FViewmode &vm, algo::strptr header, NsFieldGroup *groups, int n, int arg_col, int ref_col) {
     // Sort groups by field count descending (insertion sort)
     for (int i = 1; i < n; i++) {
         NsFieldGroup tmp = groups[i];
@@ -578,10 +571,14 @@ void acr_nav::viewmode_nsdep_ensure_content(acr_nav::FCtype &ct) {
     }
 }
 
-void acr_nav::viewmode_fields_ensure_content(acr_nav::FCtype &) {}
-void acr_nav::viewmode_xref_ensure_content(acr_nav::FCtype &) {}
-void acr_nav::viewmode_help_ensure_content(acr_nav::FCtype &) {}
-void acr_nav::viewmode_detail_ensure_content(acr_nav::FCtype &) {}
+void acr_nav::viewmode_fields_ensure_content(acr_nav::FCtype &) {
+}
+void acr_nav::viewmode_xref_ensure_content(acr_nav::FCtype &) {
+}
+void acr_nav::viewmode_help_ensure_content(acr_nav::FCtype &) {
+}
+void acr_nav::viewmode_detail_ensure_content(acr_nav::FCtype &) {
+}
 
 // Per-field cross-namespace dependency detail.
 // Groups fields by foreign namespace, showing the actual field→arg references.

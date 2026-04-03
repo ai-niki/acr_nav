@@ -75,9 +75,7 @@ static int FindLeftItemByNsHeader(algo::strptr ns_key) {
 // -----------------------------------------------------------------------------
 
 // Collect namespaces that have at least one ctype matching the filter.
-static void CollectMatchingNamespaces(acr_nav::FNs **ns_arr, int &n_ns,
-                                       algo_lib::Regx &filter_regx, bool has_filter,
-                                       acr_nav::FFiltertarget &ft) {
+static void CollectMatchingNamespaces(acr_nav::FNs **ns_arr, int &n_ns, algo_lib::Regx &filter_regx, bool has_filter, acr_nav::FFiltertarget &ft) {
     n_ns = 0;
     ind_beg(acr_nav::_db_ns_curs, ns, acr_nav::_db) {
         int n_match = 0;
@@ -621,12 +619,18 @@ void acr_nav::ToggleViewmode(acr_nav::FViewmode *target) {
     acr_nav::_db.p_cur_viewmode = can_enter ? target : acr_nav::_db.p_default_viewmode;
 }
 
-void acr_nav::navaction_toggle_preview() {}
-void acr_nav::navaction_toggle_codegen() {}
-void acr_nav::navaction_toggle_fields() {}
-void acr_nav::navaction_toggle_xref() {}
-void acr_nav::navaction_toggle_graph() {}
-void acr_nav::navaction_toggle_nsdep_detail() {}
+void acr_nav::navaction_toggle_preview() {
+}
+void acr_nav::navaction_toggle_codegen() {
+}
+void acr_nav::navaction_toggle_fields() {
+}
+void acr_nav::navaction_toggle_xref() {
+}
+void acr_nav::navaction_toggle_graph() {
+}
+void acr_nav::navaction_toggle_nsdep_detail() {
+}
 
 // -----------------------------------------------------------------------------
 
