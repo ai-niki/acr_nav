@@ -6,4 +6,5 @@ RUN apt-get update && apt-get install -y \
     libreadline-dev libsqlite3-dev libcurl4-openssl-dev liblz4-dev \
     curl wget git ca-certificates procps \
     less vim ncurses-dev \
+    cppcheck \
     && rm -rf /var/lib/apt/lists/*
