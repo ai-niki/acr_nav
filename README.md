@@ -1,39 +1,75 @@
-<!-- This file is a copy of txt/README.md -->
-<!-- Don't edit this file, edit txt/README.md -->
-## OpenACR
-<a href="#openacr"></a>
+# acr_nav
 
-This is OpenACR, a meta-programming language for generative systems programming.
-It consists of a powerful and extensible set of tools for creating programs and meta-algorithms,
-and writing code as data. OpenACR is published at [https://github.com/alexeilebedev/openacr](https://github.com/alexeilebedev/openacr)
+A TUI for exploring OpenACR schema.
 
-It is the result of over 15 years of development and
-production use. OpenACR was used to build mission-critical financial systems that handle hundreds of billions
-of messages daily at microsecond latencies, financial exchanges, distributed HFT platforms, CI systems, deployment systems, alerts
-and monitoring systems. It was also used to build itself -- 95% of all the source code here is generated
-by OpenACR's code generator (amc) from ascii relational tables.
+## Demo
 
-There are two key concepts in OpenACR: [Ssimfiles](ssim.md) and [C++ code generation](/txt/exe/amc/README.md).
+<!-- video -->
 
-The ideal use case is realized when it is taken as a core of a project, forming an ecosystem of commands and corresponding
-configuration data files, around which the project is grown an co-evolved with the schema.
-It can also be used if your project doesn't use C++ (in this case, focus on ssimfiles and [acr](/txt/exe/acr/README.md).
+## Origin
 
-### Table Of Contents
-<a href="#table-of-contents"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
-<!-- dev.mdmark  mdmark:TOC  state:BEG_AUTO  param:Toc -->
-&#128196; [Setup And Installation](/txt/setup.md)<br/>
-&#128196; [Ssim Fundamentals](/txt/ssim.md)<br/>
-&#128193; [Recipes](/txt/recipe/README.md)<br/>
-&#128193; [Tutorials](/txt/tut/README.md)<br/>
-&#128193; [Ssim Databases](/txt/ssimdb/README.md)<br/>
-&#128193; [Executables](/txt/exe/README.md)<br/>
-&#128193; [Libraries](/txt/lib/README.md)<br/>
-&#128193; [Protocols](/txt/protocol/README.md)<br/>
-&#128193; [Scripts](/txt/script/README.md)<br/>
+I was learning the OpenACR schema through `acr` queries. After a while I wanted something I could navigate interactively — follow a field reference, go back, filter without constructing queries. So I built this.
 
-<!-- dev.mdmark  mdmark:TOC  state:END_AUTO  param:Toc -->
+## What It Does
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
+- **Two-panel layout** — ctypes on the left, fields for the selected ctype on the right
+- **Navigation** — `Enter` follows a field reference, `Backspace` pops the stack; breadcrumb bar shows where you are
+- **Filter** — live filter by ctype name; `Tab` switches to field name/comment search
+- **Viewmodes** — fields, reverse xrefs, ssimfile preview, codegen, access path graph, namespace deps, field detail drilldown
+- **Namespace tree** — collapsible groups with record counts
+- **Graph view** — interactive access path diagram, reftype-colored edges, bidirectional (forward fields + reverse xrefs)
+- **Headless protocol** — stdin/stdout ssim interface for agent-driven use (see below)
 
+## Headless Protocol
+
+acr_nav accepts a `-headless` flag that replaces the TUI with a structured protocol: commands in as ssim tuples, state out as ssim tuples.
+
+```
+acr_nav.Navigate  ctype:amc.FField
+acr_nav.Summary
+→ acr_nav.Screen       ctype:amc.FField  navmode:browse  ...
+→ acr_nav.PanelState   side:right  n_item:42  sel:0  ...
+```
+
+Commands: `Navigate`, `SetFilter`, `SetView`, `GoBack`, `Summary`, `Screenshot`, `SendKey`, `SetTermSize`.
+
+`Summary` emits ~400 bytes of typed state. `Screenshot` emits full panel contents as `VisibleField` / `VisibleLeftItem` records. No screen scraping — the program exposes its internal state as ssim projections.
+
+## Agent Testing
+
+Two Claude Code skills ship with the repo:
+
+**`/agent-test`** — exploratory testing via parallel subagents. Each agent drives acr_nav through the headless protocol, probing combinations across orthogonal state axes (navmode × viewmode × filter × navstack depth). Findings get captured as `atf_comp` regression tests.
+
+**`/agent-test-demo`** — plants a real previously-fixed bug, rebuilds, then launches a blind subagent to find it through the protocol alone. No source inspection.
+
+Component tests live in `test/atf_comp/acr_nav.*` and run with `normalize comp`.
+
+## The Bigger Idea
+
+Every amc-generated program has typed pools in `_db`. acr_nav exposes its state through a hand-written headless protocol. But amc already knows every pool via `gen_detectinst()` — it could generate a `StateDump()` function for any opted-in program automatically.
+
+One new record:
+
+```
+dmmeta.nsdump  ns:acr_nav
+```
+
+→ amc emits `acr_nav::StateDump(out, filter)` that walks every Lary/Inlary pool, emits a census (ctype name + count) and record-by-record dumps for ctypes with print support. Triggered via `-dump` flag or `acr_nav.StateDump` headless command.
+
+Any amc program becomes agent-inspectable at runtime — one generator, one opt-in record per namespace.
+
+- General idea: [`.claude/plans/runtime_state_inspection.md`](.claude/plans/runtime_state_inspection.md)
+- MVP plan: [`.claude/plans/state_dump_plan.md`](.claude/plans/state_dump_plan.md)
+
+## Getting Started
+
+```bash
+ai                              # bootstrap build
+abt -build -install acr_nav     # build acr_nav
+acr_nav                         # run
+```
+
+---
+
+Built on [OpenACR](README_OPENACR.md).
