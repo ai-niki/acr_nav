@@ -660,8 +660,8 @@ bool acr_nav::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && acr_nav::LoadTuplesFile(algo::SsimFname(root,"acr_navdb.reftypestyle"),recursive);
         retval = retval && acr_nav::LoadTuplesFile(algo::SsimFname(root,"acr_navdb.panel"),recursive);
         retval = retval && acr_nav::LoadTuplesFile(algo::SsimFname(root,"acr_navdb.navmode"),recursive);
-        retval = retval && acr_nav::LoadTuplesFile(algo::SsimFname(root,"acr_navdb.helpgroup"),recursive);
         retval = retval && acr_nav::LoadTuplesFile(algo::SsimFname(root,"acr_navdb.keybind"),recursive);
+        retval = retval && acr_nav::LoadTuplesFile(algo::SsimFname(root,"acr_navdb.helpgroup"),recursive);
         retval = retval && acr_nav::LoadTuplesFile(algo::SsimFname(root,"acr_navdb.filtertarget"),recursive);
         retval = retval && acr_nav::LoadTuplesFile(algo::SsimFname(root,"acr_navdb.detailsrc"),recursive);
     } else {
@@ -5449,7 +5449,6 @@ void acr_nav::FNavaction_Init(acr_nav::FNavaction& navaction) {
     navaction.sort_order = i32(0);
     navaction.passive = bool(false);
     navaction.need_no_overlay = bool(false);
-    navaction.target_viewmode = algo::strptr("");
     navaction.p_helpgroup = NULL;
     navaction.ind_navaction_next = (acr_nav::FNavaction*)-1; // (acr_nav.FDb.ind_navaction) not-in-hash
     navaction.ind_navaction_hashval = 0; // stored hash value
