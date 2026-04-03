@@ -25,6 +25,7 @@ For more information, see [Reftypes](/txt/exe/amc/reftypes.md).
 |hasalloc|bool|[Val](/txt/exe/amc/reftypes.md#val)||Generte Alloc/Delete functions for arg type|
 |inst|bool|[Val](/txt/exe/amc/reftypes.md#val)||Field creates an instance of arg type (directly or indirectly)|
 |varlen|bool|[Val](/txt/exe/amc/reftypes.md#val)||This pool supports varlen allocations|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
 
@@ -33,6 +34,7 @@ For more information, see [Reftypes](/txt/exe/amc/reftypes.md).
 <!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Related -->
 These ssimfiles reference dmmeta.reftype
 
+* [acr_navdb.reftypestyle via reftype](/txt/ssimdb/acr_navdb/reftypestyle.md) - Mapping from reftype to navstyle for field coloring 
 * [dmmeta.field via reftype](/txt/ssimdb/dmmeta/field.md) - Type constructor 
 * [dmmeta.fprefix via reftype](/txt/ssimdb/dmmeta/fprefix.md) - Mapping between field prefix and Reftype 
 
@@ -52,6 +54,7 @@ These ssimfiles reference dmmeta.reftype
 <!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:ImdbUses -->
 
 * [abt_md](/txt/exe/abt_md/internals.md) as [abt_md.FReftype](/txt/exe/abt_md/internals.md#abt_md-freftype)
+* [acr_nav](/txt/exe/acr_nav/internals.md) as [acr_nav.FReftype](/txt/exe/acr_nav/internals.md#acr_nav-freftype)
 * [amc](/txt/exe/amc/internals.md) as [amc.FReftype](/txt/exe/amc/internals.md#amc-freftype)
 * [amc_vis](/txt/exe/amc_vis/internals.md) as [amc_vis.FReftype](/txt/exe/amc_vis/internals.md#amc_vis-freftype)
 

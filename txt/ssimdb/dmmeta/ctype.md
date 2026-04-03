@@ -99,6 +99,7 @@ These ssimfiles reference dmmeta.ctype
 * [acr_compl](/txt/exe/acr_compl/internals.md) as [acr_compl.FCtype](/txt/exe/acr_compl/internals.md#acr_compl-fctype)
 * [acr_ed](/txt/exe/acr_ed/internals.md) as [acr_ed.FCtype](/txt/exe/acr_ed/internals.md#acr_ed-fctype)
 * [acr_in](/txt/exe/acr_in/internals.md) as [acr_in.FCtype](/txt/exe/acr_in/internals.md#acr_in-fctype)
+* [acr_nav](/txt/exe/acr_nav/internals.md) as [acr_nav.FCtype](/txt/exe/acr_nav/internals.md#acr_nav-fctype)
 * [amc](/txt/exe/amc/internals.md) as [amc.FCtype](/txt/exe/amc/internals.md#amc-fctype)
 * [amc_vis](/txt/exe/amc_vis/internals.md) as [amc_vis.FCtype](/txt/exe/amc_vis/internals.md#amc_vis-fctype)
 * [apm](/txt/exe/apm/internals.md) as [apm.FCtype](/txt/exe/apm/internals.md#apm-fctype)

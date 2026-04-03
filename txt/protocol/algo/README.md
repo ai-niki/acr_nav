@@ -1184,6 +1184,13 @@ Other ctypes in this namespace which don't have own readme files
 |---|---|---|---|---|
 |ary|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftypes.md#tary)|||
 
+#### algo.TermColor - ANSI terminal foreground color
+<a href="#algo-termcolor"></a>
+
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|value|u32|[Val](/txt/exe/amc/reftypes.md#val)|||
+
 #### algo.U16Ary - Array of u16
 <a href="#algo-u16ary"></a>
 

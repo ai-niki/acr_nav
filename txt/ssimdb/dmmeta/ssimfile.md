@@ -62,6 +62,7 @@ These ssimfiles reference dmmeta.ssimfile
 * [acr_ed](/txt/exe/acr_ed/internals.md) as [acr_ed.FSsimfile](/txt/exe/acr_ed/internals.md#acr_ed-fssimfile)
 * [acr_in](/txt/exe/acr_in/internals.md) as [acr_in.FSsimfile](/txt/exe/acr_in/internals.md#acr_in-fssimfile)
 * [acr_my](/txt/exe/acr_my/internals.md) as [acr_my.FSsimfile](/txt/exe/acr_my/internals.md#acr_my-fssimfile)
+* [acr_nav](/txt/exe/acr_nav/internals.md) as [acr_nav.FSsimfile](/txt/exe/acr_nav/internals.md#acr_nav-fssimfile)
 * [amc](/txt/exe/amc/internals.md) as [amc.FSsimfile](/txt/exe/amc/internals.md#amc-fssimfile)
 * [apm](/txt/exe/apm/internals.md) as [apm.FSsimfile](/txt/exe/apm/internals.md#apm-fssimfile)
 * [atf_ci](/txt/exe/atf_ci/internals.md) as [atf_ci.FSsimfile](/txt/exe/atf_ci/internals.md#atf_ci-fssimfile)

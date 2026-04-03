@@ -5,6 +5,7 @@
 <a href="#table-of-contents"></a>
 <!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
 <!-- dev.mdmark  mdmark:TOC  state:BEG_AUTO  param:Toc -->
+&#128193; [acr_navdb - Configuration tables for acr_nav TUI schema explorer](/txt/ssimdb/acr_navdb/README.md)<br/>
 &#128193; [amcdb - Algo Model Compiler support tables](/txt/ssimdb/amcdb/README.md)<br/>
 &#128193; [amsdb - AMS configuration (ssim database)](/txt/ssimdb/amsdb/README.md)<br/>
 &#128193; [atfdb - Support tables for testing](/txt/ssimdb/atfdb/README.md)<br/>

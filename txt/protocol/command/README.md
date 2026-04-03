@@ -214,6 +214,14 @@ Other ctypes in this namespace which don't have own readme files
 |shell|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|Connect to local mysql server|
 |serv|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|Start mysql with TCP/IP service enabled|
 
+#### command.acr_nav - Command line for [acr_nav](/txt/exe/acr_nav/README.md)
+<a href="#command-acr_nav"></a>
+
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|headless|bool|[Val](/txt/exe/amc/reftypes.md#val)||Headless mode: structured I/O for agent testing|
+|in|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|"data"|Input directory or filename, - for stdin|
+
 #### command.amc - Command line for [amc](/txt/exe/amc/README.md)
 <a href="#command-amc"></a>
 
