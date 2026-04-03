@@ -1,4 +1,4 @@
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1417  n_ctype:1418  n_field:5696  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1420  n_ctype:1421  n_field:5709  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:10  scroll_offset:0  n_items:93  sel_value:acr_navdb
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
@@ -9,7 +9,7 @@ acr_nav.VisibleLeftItem  row:5  value:acr_dm  kind:ns  collapsed:Y  n_match:6  n
 acr_nav.VisibleLeftItem  row:6  value:acr_ed  kind:ns  collapsed:Y  n_match:19  n_record:0
 acr_nav.VisibleLeftItem  row:7  value:acr_in  kind:ns  collapsed:Y  n_match:12  n_record:0
 acr_nav.VisibleLeftItem  row:8  value:acr_my  kind:ns  collapsed:Y  n_match:3  n_record:0
-acr_nav.VisibleLeftItem  row:9  value:acr_nav  kind:ns  collapsed:Y  n_match:38  n_record:0
+acr_nav.VisibleLeftItem  row:9  value:acr_nav  kind:ns  collapsed:Y  n_match:39  n_record:0
 acr_nav.VisibleLeftItem  row:10  value:acr_navdb  kind:ns  collapsed:N  n_match:10  n_record:0
 acr_nav.VisibleLeftItem  row:11  value:acr_navdb.Detailsrc  kind:ctype  collapsed:N  n_match:0  n_record:5
 acr_nav.VisibleLeftItem  row:12  value:acr_navdb.Filtertarget  kind:ctype  collapsed:N  n_match:0  n_record:5
@@ -23,7 +23,7 @@ acr_nav.VisibleLeftItem  row:19  value:acr_navdb.Reftypestyle  kind:ctype  colla
 acr_nav.VisibleLeftItem  row:20  value:acr_navdb.Viewmode  kind:ctype  collapsed:N  n_match:0  n_record:9
 acr_nav.VisibleLeftItem  row:21  value:algo  kind:ns  collapsed:Y  n_match:225  n_record:0
 acr_nav.VisibleLeftItem  row:22  value:algo_lib  kind:ns  collapsed:Y  n_match:35  n_record:0
-acr_nav.VisibleLeftItem  row:23  value:amc  kind:ns  collapsed:Y  n_match:131  n_record:0
+acr_nav.VisibleLeftItem  row:23  value:amc  kind:ns  collapsed:Y  n_match:132  n_record:0
 acr_nav.VisibleLeftItem  row:24  value:amc_gc  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:25  value:amc_vis  kind:ns  collapsed:Y  n_match:12  n_record:0
 acr_nav.VisibleLeftItem  row:26  value:amcdb  kind:ns  collapsed:Y  n_match:7  n_record:0
@@ -46,7 +46,7 @@ acr_nav.VisibleLine  row:4  value:""
 acr_nav.VisibleLine  row:5  value:"Downstream (imports from acr_navdb):"
 acr_nav.VisibleLine  row:6  value:"  acr_nav     12 fields"
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1417  n_ctype:1418  n_field:5696  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1420  n_ctype:1421  n_field:5709  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:10  scroll_offset:0  n_items:93  sel_value:acr_navdb
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
@@ -57,7 +57,7 @@ acr_nav.VisibleLeftItem  row:5  value:acr_dm  kind:ns  collapsed:Y  n_match:6  n
 acr_nav.VisibleLeftItem  row:6  value:acr_ed  kind:ns  collapsed:Y  n_match:19  n_record:0
 acr_nav.VisibleLeftItem  row:7  value:acr_in  kind:ns  collapsed:Y  n_match:12  n_record:0
 acr_nav.VisibleLeftItem  row:8  value:acr_my  kind:ns  collapsed:Y  n_match:3  n_record:0
-acr_nav.VisibleLeftItem  row:9  value:acr_nav  kind:ns  collapsed:Y  n_match:38  n_record:0
+acr_nav.VisibleLeftItem  row:9  value:acr_nav  kind:ns  collapsed:Y  n_match:39  n_record:0
 acr_nav.VisibleLeftItem  row:10  value:acr_navdb  kind:ns  collapsed:N  n_match:10  n_record:0
 acr_nav.VisibleLeftItem  row:11  value:acr_navdb.Detailsrc  kind:ctype  collapsed:N  n_match:0  n_record:5
 acr_nav.VisibleLeftItem  row:12  value:acr_navdb.Filtertarget  kind:ctype  collapsed:N  n_match:0  n_record:5
@@ -71,7 +71,7 @@ acr_nav.VisibleLeftItem  row:19  value:acr_navdb.Reftypestyle  kind:ctype  colla
 acr_nav.VisibleLeftItem  row:20  value:acr_navdb.Viewmode  kind:ctype  collapsed:N  n_match:0  n_record:9
 acr_nav.VisibleLeftItem  row:21  value:algo  kind:ns  collapsed:Y  n_match:225  n_record:0
 acr_nav.VisibleLeftItem  row:22  value:algo_lib  kind:ns  collapsed:Y  n_match:35  n_record:0
-acr_nav.VisibleLeftItem  row:23  value:amc  kind:ns  collapsed:Y  n_match:131  n_record:0
+acr_nav.VisibleLeftItem  row:23  value:amc  kind:ns  collapsed:Y  n_match:132  n_record:0
 acr_nav.VisibleLeftItem  row:24  value:amc_gc  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:25  value:amc_vis  kind:ns  collapsed:Y  n_match:12  n_record:0
 acr_nav.VisibleLeftItem  row:26  value:amcdb  kind:ns  collapsed:Y  n_match:7  n_record:0

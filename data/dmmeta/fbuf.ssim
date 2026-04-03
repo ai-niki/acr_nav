@@ -1,3 +1,4 @@
+dmmeta.fbuf  field:acr_nav.FIpcconn.in  max:8192  fbuftype:Linebuf  insready:acr_nav.FDb.cd_ipcconn_read  inseof:acr_nav.FDb.cd_ipcconn_eof  iotype:standard  comment:""
 dmmeta.fbuf  field:atf_amc.Bytebuf.in  max:64  fbuftype:Bytebuf  insready:""  inseof:""  iotype:nofd  comment:""
 dmmeta.fbuf  field:atf_amc.BytebufDyn.in  max:0  fbuftype:Bytebuf  insready:""  inseof:""  iotype:nofd  comment:""
 dmmeta.fbuf  field:atf_amc.Linebuf.in  max:64  fbuftype:Linebuf  insready:""  inseof:""  iotype:nofd  comment:""

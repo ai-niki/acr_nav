@@ -37,15 +37,18 @@
 #include "include/gen/acr_navdb_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
+#include "include/gen/lib_netio_gen.h"
+#include "include/gen/lib_netio_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
-algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
-acr_nav::FDb    acr_nav::_db;     // dependency found via dev.targdep
+lib_json::FDb    lib_json::_db;     // dependency found via dev.targdep
+algo_lib::FDb    algo_lib::_db;     // dependency found via dev.targdep
+lib_netio::FDb   lib_netio::_db;    // dependency found via dev.targdep
+acr_nav::FDb     acr_nav::_db;      // dependency found via dev.targdep
 
 namespace acr_nav {
 const char *acr_nav_help =
@@ -55,6 +58,7 @@ const char *acr_nav_help =
 "    -headless                   Headless mode: structured I/O for agent testing\n"
 "    -in         string  \"data\"  Input directory or filename, - for stdin\n"
 "    -dump       string  \"\"      Dump state matching regex and exit\n"
+"    -ipc                        Enable IPC socket for runtime inspection\n"
 "    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
 "    -help                       Print help and exit; alias -h\n"
@@ -98,12 +102,36 @@ namespace acr_nav { // gen:ns_print_proto
     static void          viewmode_LoadStatic() __attribute__((nothrow));
     // func:acr_nav.FDb.filtertarget.InputMaybe
     static bool          filtertarget_InputMaybe(acr_navdb::Filtertarget &elem) __attribute__((nothrow));
+    // First element of index changed.
+    // func:acr_nav.FDb.cd_ipcconn_read.FirstChanged
+    static void          cd_ipcconn_read_FirstChanged() __attribute__((nothrow));
+    // Update cycles count from previous clock capture
+    // func:acr_nav.FDb.cd_ipcconn_read.UpdateCycles
+    inline static void   cd_ipcconn_read_UpdateCycles() __attribute__((nothrow));
+    // func:acr_nav.FDb.cd_ipcconn_read.Call
+    inline static void   cd_ipcconn_read_Call() __attribute__((nothrow));
+    // First element of index changed.
+    // func:acr_nav.FDb.cd_ipcconn_eof.FirstChanged
+    static void          cd_ipcconn_eof_FirstChanged() __attribute__((nothrow));
+    // Update cycles count from previous clock capture
+    // func:acr_nav.FDb.cd_ipcconn_eof.UpdateCycles
+    inline static void   cd_ipcconn_eof_UpdateCycles() __attribute__((nothrow));
+    // func:acr_nav.FDb.cd_ipcconn_eof.Call
+    inline static void   cd_ipcconn_eof_Call() __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     // func:acr_nav.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
     // func:acr_nav.FDb.trace.N
     inline static i32    trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // Internal function to scan for a message
+    //
+    // func:acr_nav.FIpcconn.in.ScanMsg
+    static void          in_ScanMsg(acr_nav::FIpcconn& ipcconn) __attribute__((nothrow));
+    // Internal function to shift data left
+    // Shift existing bytes over to the beginning of the buffer
+    // func:acr_nav.FIpcconn.in.Shift
+    static void          in_Shift(acr_nav::FIpcconn& ipcconn) __attribute__((nothrow));
     // func:acr_nav...SizeCheck
     inline static void   SizeCheck();
 } // gen:ns_print_proto
@@ -525,12 +553,14 @@ void acr_nav::MainLoop() {
 // --- acr_nav.FDb._db.Step
 // Main step
 void acr_nav::Step() {
+    cd_ipcconn_read_Call();
+    cd_ipcconn_eof_Call();
 }
 
 // --- acr_nav.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void acr_nav::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("acr_nav", acr_nav::InsertStrptrMaybe, NULL, acr_nav::MainLoop, NULL, algo::Comment()));
+    algo_lib::imdb_InsertMaybe(algo::Imdb("acr_nav", acr_nav::InsertStrptrMaybe, acr_nav::Step, acr_nav::MainLoop, NULL, algo::Comment()));
 
     algo::Imtable t_trace;
     t_trace.imtable         = "acr_nav.trace";
@@ -544,6 +574,7 @@ static void acr_nav::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Ipc'  signature:'067bcd35533fc0dd979a27570cee9276c0092f4d'");
     algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'9a1cb99e0e8ea1374d88bd69d9232d2e6f95e8ea'");
 }
 
@@ -724,6 +755,7 @@ bool acr_nav::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
 // --- acr_nav.FDb._db.Steps
 // Calls Step function of dependencies
 void acr_nav::Steps() {
+    acr_nav::Step(); // dependent namespace specified via (dev.targdep)
     algo_lib::Step(); // dependent namespace specified via (dev.targdep)
 }
 
@@ -4777,6 +4809,329 @@ void acr_nav::overlay_stack_Insary(algo::aryptr<acr_nav::OverlayEntry> rhs, int 
     _db.overlay_stack_n += nnew;
 }
 
+// --- acr_nav.FDb.ipcconn.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+acr_nav::FIpcconn& acr_nav::ipcconn_Alloc() {
+    acr_nav::FIpcconn* row = ipcconn_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("acr_nav.out_of_mem  field:acr_nav.FDb.ipcconn  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- acr_nav.FDb.ipcconn.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+acr_nav::FIpcconn* acr_nav::ipcconn_AllocMaybe() {
+    acr_nav::FIpcconn *row = (acr_nav::FIpcconn*)ipcconn_AllocMem();
+    if (row) {
+        new (row) acr_nav::FIpcconn; // call constructor
+    }
+    return row;
+}
+
+// --- acr_nav.FDb.ipcconn.Delete
+// Remove row from all global and cross indices, then deallocate row
+void acr_nav::ipcconn_Delete(acr_nav::FIpcconn &row) {
+    row.~FIpcconn();
+    ipcconn_FreeMem(row);
+}
+
+// --- acr_nav.FDb.ipcconn.AllocMem
+// Allocate space for one element
+// If no memory available, return NULL.
+void* acr_nav::ipcconn_AllocMem() {
+    acr_nav::FIpcconn *row = _db.ipcconn_free;
+    if (UNLIKELY(!row)) {
+        ipcconn_Reserve(1);
+        row = _db.ipcconn_free;
+    }
+    if (row) {
+        _db.ipcconn_free = row->ipcconn_next;
+    }
+    return row;
+}
+
+// --- acr_nav.FDb.ipcconn.FreeMem
+// Remove mem from all global and cross indices, then deallocate mem
+void acr_nav::ipcconn_FreeMem(acr_nav::FIpcconn &row) {
+    if (UNLIKELY(row.ipcconn_next != (acr_nav::FIpcconn*)-1)) {
+        FatalErrorExit("acr_nav.tpool_double_delete  pool:acr_nav.FDb.ipcconn  comment:'double deletion caught'");
+    }
+    row.ipcconn_next = _db.ipcconn_free; // insert into free list
+    _db.ipcconn_free  = &row;
+}
+
+// --- acr_nav.FDb.ipcconn.Reserve
+// Preallocate memory for N more elements
+// Return number of elements actually reserved.
+u64 acr_nav::ipcconn_Reserve(u64 n_elems) {
+    u64 ret = 0;
+    while (ret < n_elems) {
+        u64 size = _db.ipcconn_blocksize; // underlying allocator is probably Lpool
+        u64 reserved = ipcconn_ReserveMem(size);
+        ret += reserved;
+        if (reserved == 0) {
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- acr_nav.FDb.ipcconn.ReserveMem
+// Allocate block of given size, break up into small elements and append to free list.
+// Return number of elements reserved.
+u64 acr_nav::ipcconn_ReserveMem(u64 size) {
+    u64 ret = 0;
+    if (size >= sizeof(acr_nav::FIpcconn)) {
+        acr_nav::FIpcconn *mem = (acr_nav::FIpcconn*)algo_lib::malloc_AllocMem(size);
+        ret = mem ? size / sizeof(acr_nav::FIpcconn) : 0;
+        // add newly allocated elements to the free list;
+        for (u64 i=0; i < ret; i++) {
+            mem[i].ipcconn_next = _db.ipcconn_free;
+            _db.ipcconn_free = mem+i;
+        }
+    }
+    return ret;
+}
+
+// --- acr_nav.FDb.ipcconn.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool acr_nav::ipcconn_XrefMaybe(acr_nav::FIpcconn &row) {
+    bool retval = true;
+    (void)row;
+    return retval;
+}
+
+// --- acr_nav.FDb.cd_ipcconn_read.Insert
+// Insert row into linked list. If row is already in linked list, do nothing.
+void acr_nav::cd_ipcconn_read_Insert(acr_nav::FIpcconn& row) {
+    if (!cd_ipcconn_read_InLlistQ(row)) {
+        if (_db.cd_ipcconn_read_head) {
+            row.cd_ipcconn_read_next = _db.cd_ipcconn_read_head;
+            row.cd_ipcconn_read_prev = _db.cd_ipcconn_read_head->cd_ipcconn_read_prev;
+            row.cd_ipcconn_read_prev->cd_ipcconn_read_next = &row;
+            row.cd_ipcconn_read_next->cd_ipcconn_read_prev = &row;
+        } else {
+            row.cd_ipcconn_read_next = &row;
+            row.cd_ipcconn_read_prev = &row;
+            _db.cd_ipcconn_read_head = &row;
+        }
+        _db.cd_ipcconn_read_n++;
+        if (_db.cd_ipcconn_read_head == &row) {
+            cd_ipcconn_read_FirstChanged();
+        }
+    }
+}
+
+// --- acr_nav.FDb.cd_ipcconn_read.Remove
+// Remove element from index. If element is not in index, do nothing.
+void acr_nav::cd_ipcconn_read_Remove(acr_nav::FIpcconn& row) {
+    if (cd_ipcconn_read_InLlistQ(row)) {
+        acr_nav::FIpcconn* old_head       = _db.cd_ipcconn_read_head;
+        (void)old_head; // in case it's not used
+        acr_nav::FIpcconn *oldnext = row.cd_ipcconn_read_next;
+        acr_nav::FIpcconn *oldprev = row.cd_ipcconn_read_prev;
+        oldnext->cd_ipcconn_read_prev = oldprev; // remove element from list
+        oldprev->cd_ipcconn_read_next = oldnext;
+        _db.cd_ipcconn_read_n--;  // adjust count
+        if (&row == _db.cd_ipcconn_read_head) {
+            _db.cd_ipcconn_read_head = oldnext==&row ? NULL : oldnext; // adjust list head
+        }
+        row.cd_ipcconn_read_next = (acr_nav::FIpcconn*)-1; // mark element as not-in-list);
+        row.cd_ipcconn_read_prev = NULL; // clear back-pointer
+        if (old_head != _db.cd_ipcconn_read_head) {
+            cd_ipcconn_read_FirstChanged();
+        }
+    }
+}
+
+// --- acr_nav.FDb.cd_ipcconn_read.RemoveAll
+// Empty the index. (The rows are not deleted)
+void acr_nav::cd_ipcconn_read_RemoveAll() {
+    acr_nav::FIpcconn* row = _db.cd_ipcconn_read_head;
+    acr_nav::FIpcconn* head = _db.cd_ipcconn_read_head;
+    _db.cd_ipcconn_read_head = NULL;
+    _db.cd_ipcconn_read_n = 0;
+    bool do_fire = (NULL != row);
+    while (row) {
+        acr_nav::FIpcconn* row_next = row->cd_ipcconn_read_next;
+        row->cd_ipcconn_read_next  = (acr_nav::FIpcconn*)-1;
+        row->cd_ipcconn_read_prev  = NULL;
+        row = row_next != head  ? row_next : NULL;
+    }
+    if (do_fire) {
+        cd_ipcconn_read_FirstChanged();
+    }
+}
+
+// --- acr_nav.FDb.cd_ipcconn_read.RemoveFirst
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// Call FirstChanged trigger.
+acr_nav::FIpcconn* acr_nav::cd_ipcconn_read_RemoveFirst() {
+    acr_nav::FIpcconn *row = NULL;
+    row = _db.cd_ipcconn_read_head;
+    if (row) {
+        bool hasmore = row!=row->cd_ipcconn_read_next;
+        _db.cd_ipcconn_read_head = hasmore ? row->cd_ipcconn_read_next : NULL;
+        row->cd_ipcconn_read_next->cd_ipcconn_read_prev = row->cd_ipcconn_read_prev;
+        row->cd_ipcconn_read_prev->cd_ipcconn_read_next = row->cd_ipcconn_read_next;
+        row->cd_ipcconn_read_prev = NULL;
+        _db.cd_ipcconn_read_n--;
+        row->cd_ipcconn_read_next = (acr_nav::FIpcconn*)-1; // mark as not-in-list
+        cd_ipcconn_read_FirstChanged();
+    }
+    return row;
+}
+
+// --- acr_nav.FDb.cd_ipcconn_read.RotateFirst
+// If linked list is empty, return NULL.
+// Otherwise return head item and advance head to the next item.
+acr_nav::FIpcconn* acr_nav::cd_ipcconn_read_RotateFirst() {
+    acr_nav::FIpcconn *row = NULL;
+    row = _db.cd_ipcconn_read_head;
+    if (row) {
+        _db.cd_ipcconn_read_head = row->cd_ipcconn_read_next;
+    }
+    return row;
+}
+
+// --- acr_nav.FDb.cd_ipcconn_read.FirstChanged
+// First element of index changed.
+static void acr_nav::cd_ipcconn_read_FirstChanged() {
+}
+
+// --- acr_nav.FDb.cd_ipcconn_read.UpdateCycles
+// Update cycles count from previous clock capture
+inline static void acr_nav::cd_ipcconn_read_UpdateCycles() {
+    u64 cur_cycles                      = algo::get_cycles();
+    algo_lib::_db.clock                 = algo::SchedTime(cur_cycles);
+}
+
+// --- acr_nav.FDb.cd_ipcconn_read.Call
+inline static void acr_nav::cd_ipcconn_read_Call() {
+    if (!acr_nav::cd_ipcconn_read_EmptyQ()) { // fstep:acr_nav.FDb.cd_ipcconn_read
+        acr_nav::cd_ipcconn_read_Step(); // steptype:Inline: call function on every step
+        cd_ipcconn_read_UpdateCycles();
+        algo_lib::_db.next_loop = algo_lib::_db.clock;
+    }
+}
+
+// --- acr_nav.FDb.cd_ipcconn_eof.Insert
+// Insert row into linked list. If row is already in linked list, do nothing.
+void acr_nav::cd_ipcconn_eof_Insert(acr_nav::FIpcconn& row) {
+    if (!cd_ipcconn_eof_InLlistQ(row)) {
+        if (_db.cd_ipcconn_eof_head) {
+            row.cd_ipcconn_eof_next = _db.cd_ipcconn_eof_head;
+            row.cd_ipcconn_eof_prev = _db.cd_ipcconn_eof_head->cd_ipcconn_eof_prev;
+            row.cd_ipcconn_eof_prev->cd_ipcconn_eof_next = &row;
+            row.cd_ipcconn_eof_next->cd_ipcconn_eof_prev = &row;
+        } else {
+            row.cd_ipcconn_eof_next = &row;
+            row.cd_ipcconn_eof_prev = &row;
+            _db.cd_ipcconn_eof_head = &row;
+        }
+        _db.cd_ipcconn_eof_n++;
+        if (_db.cd_ipcconn_eof_head == &row) {
+            cd_ipcconn_eof_FirstChanged();
+        }
+    }
+}
+
+// --- acr_nav.FDb.cd_ipcconn_eof.Remove
+// Remove element from index. If element is not in index, do nothing.
+void acr_nav::cd_ipcconn_eof_Remove(acr_nav::FIpcconn& row) {
+    if (cd_ipcconn_eof_InLlistQ(row)) {
+        acr_nav::FIpcconn* old_head       = _db.cd_ipcconn_eof_head;
+        (void)old_head; // in case it's not used
+        acr_nav::FIpcconn *oldnext = row.cd_ipcconn_eof_next;
+        acr_nav::FIpcconn *oldprev = row.cd_ipcconn_eof_prev;
+        oldnext->cd_ipcconn_eof_prev = oldprev; // remove element from list
+        oldprev->cd_ipcconn_eof_next = oldnext;
+        _db.cd_ipcconn_eof_n--;  // adjust count
+        if (&row == _db.cd_ipcconn_eof_head) {
+            _db.cd_ipcconn_eof_head = oldnext==&row ? NULL : oldnext; // adjust list head
+        }
+        row.cd_ipcconn_eof_next = (acr_nav::FIpcconn*)-1; // mark element as not-in-list);
+        row.cd_ipcconn_eof_prev = NULL; // clear back-pointer
+        if (old_head != _db.cd_ipcconn_eof_head) {
+            cd_ipcconn_eof_FirstChanged();
+        }
+    }
+}
+
+// --- acr_nav.FDb.cd_ipcconn_eof.RemoveAll
+// Empty the index. (The rows are not deleted)
+void acr_nav::cd_ipcconn_eof_RemoveAll() {
+    acr_nav::FIpcconn* row = _db.cd_ipcconn_eof_head;
+    acr_nav::FIpcconn* head = _db.cd_ipcconn_eof_head;
+    _db.cd_ipcconn_eof_head = NULL;
+    _db.cd_ipcconn_eof_n = 0;
+    bool do_fire = (NULL != row);
+    while (row) {
+        acr_nav::FIpcconn* row_next = row->cd_ipcconn_eof_next;
+        row->cd_ipcconn_eof_next  = (acr_nav::FIpcconn*)-1;
+        row->cd_ipcconn_eof_prev  = NULL;
+        row = row_next != head  ? row_next : NULL;
+    }
+    if (do_fire) {
+        cd_ipcconn_eof_FirstChanged();
+    }
+}
+
+// --- acr_nav.FDb.cd_ipcconn_eof.RemoveFirst
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// Call FirstChanged trigger.
+acr_nav::FIpcconn* acr_nav::cd_ipcconn_eof_RemoveFirst() {
+    acr_nav::FIpcconn *row = NULL;
+    row = _db.cd_ipcconn_eof_head;
+    if (row) {
+        bool hasmore = row!=row->cd_ipcconn_eof_next;
+        _db.cd_ipcconn_eof_head = hasmore ? row->cd_ipcconn_eof_next : NULL;
+        row->cd_ipcconn_eof_next->cd_ipcconn_eof_prev = row->cd_ipcconn_eof_prev;
+        row->cd_ipcconn_eof_prev->cd_ipcconn_eof_next = row->cd_ipcconn_eof_next;
+        row->cd_ipcconn_eof_prev = NULL;
+        _db.cd_ipcconn_eof_n--;
+        row->cd_ipcconn_eof_next = (acr_nav::FIpcconn*)-1; // mark as not-in-list
+        cd_ipcconn_eof_FirstChanged();
+    }
+    return row;
+}
+
+// --- acr_nav.FDb.cd_ipcconn_eof.RotateFirst
+// If linked list is empty, return NULL.
+// Otherwise return head item and advance head to the next item.
+acr_nav::FIpcconn* acr_nav::cd_ipcconn_eof_RotateFirst() {
+    acr_nav::FIpcconn *row = NULL;
+    row = _db.cd_ipcconn_eof_head;
+    if (row) {
+        _db.cd_ipcconn_eof_head = row->cd_ipcconn_eof_next;
+    }
+    return row;
+}
+
+// --- acr_nav.FDb.cd_ipcconn_eof.FirstChanged
+// First element of index changed.
+static void acr_nav::cd_ipcconn_eof_FirstChanged() {
+}
+
+// --- acr_nav.FDb.cd_ipcconn_eof.UpdateCycles
+// Update cycles count from previous clock capture
+inline static void acr_nav::cd_ipcconn_eof_UpdateCycles() {
+    u64 cur_cycles                      = algo::get_cycles();
+    algo_lib::_db.clock                 = algo::SchedTime(cur_cycles);
+}
+
+// --- acr_nav.FDb.cd_ipcconn_eof.Call
+inline static void acr_nav::cd_ipcconn_eof_Call() {
+    if (!acr_nav::cd_ipcconn_eof_EmptyQ()) { // fstep:acr_nav.FDb.cd_ipcconn_eof
+        acr_nav::cd_ipcconn_eof_Step(); // steptype:Inline: call function on every step
+        cd_ipcconn_eof_UpdateCycles();
+        algo_lib::_db.next_loop = algo_lib::_db.clock;
+    }
+}
+
 // --- acr_nav.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr acr_nav::trace_RowidFind(int t) {
@@ -5107,6 +5462,13 @@ void acr_nav::FDb_Init() {
     _db.overlay_stack_elems 	= 0; // (acr_nav.FDb.overlay_stack)
     _db.overlay_stack_n     	= 0; // (acr_nav.FDb.overlay_stack)
     _db.overlay_stack_max   	= 0; // (acr_nav.FDb.overlay_stack)
+    // ipcconn: initialize Tpool
+    _db.ipcconn_free      = NULL;
+    _db.ipcconn_blocksize = algo::BumpToPow2(64 * sizeof(acr_nav::FIpcconn)); // allocate 64-127 elements at a time
+    _db.cd_ipcconn_read_head = NULL; // (acr_nav.FDb.cd_ipcconn_read)
+    _db.cd_ipcconn_read_n = 0; // (acr_nav.FDb.cd_ipcconn_read)
+    _db.cd_ipcconn_eof_head = NULL; // (acr_nav.FDb.cd_ipcconn_eof)
+    _db.cd_ipcconn_eof_n = 0; // (acr_nav.FDb.cd_ipcconn_eof)
 
     acr_nav::InitReflection();
     navaction_LoadStatic(); // gen:ns_gstatic  gstatic:acr_nav.FDb.navaction  load acr_nav.FNavaction records
@@ -5382,6 +5744,257 @@ void acr_nav::helpgroup_CopyIn(acr_nav::FHelpgroup &row, acr_navdb::Helpgroup &i
 void acr_nav::FHelpgroup_Uninit(acr_nav::FHelpgroup& helpgroup) {
     acr_nav::FHelpgroup &row = helpgroup; (void)row;
     ind_helpgroup_Remove(row); // remove helpgroup from index ind_helpgroup
+}
+
+// --- acr_nav.FIpcconn.in.BeginRead
+// Attach fbuf to Iohook for reading
+// Attach file descriptor and begin reading using edge-triggered epoll.
+// File descriptor becomes owned by acr_nav::FIpcconn.in via FIohook field.
+// Whenever the file descriptor becomes readable, insert ipcconn into cd_ipcconn_read.
+void acr_nav::in_BeginRead(acr_nav::FIpcconn& ipcconn, algo::Fildes fd) {
+    ipcconn.in_iohook.fildes = fd;
+    callback_Set1(ipcconn.in_iohook, ipcconn, acr_nav::cd_ipcconn_read_Insert);
+    IOEvtFlags flags;
+    read_Set(flags, true);
+    if (ipcconn.in_epoll_enable) {
+        algo_lib::IohookAdd(ipcconn.in_iohook, flags);
+    } else {
+        acr_nav::cd_ipcconn_read_Insert(ipcconn);
+    }
+}
+
+// --- acr_nav.FIpcconn.in.EndRead
+// Set EOF flag
+void acr_nav::in_EndRead(acr_nav::FIpcconn& ipcconn) {
+    if (ValidQ(ipcconn.in_iohook.fildes)) {
+        ipcconn.in_eof = true;
+        acr_nav::cd_ipcconn_read_Insert(ipcconn);
+    }
+}
+
+// --- acr_nav.FIpcconn.in.GetMsg
+// Detect incoming message in buffer and return it
+// Look for valid message at current position in the buffer.
+// If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).
+// If there is no message, read once from underlying file descriptor and try again.
+// The message is found by looking for delimiter '\n'.
+// The return value is an aryptr. If ret.elems is non-NULL, the message is valid (possibly empty).
+// If ret.elems is NULL, no message can be extracted from buffer.
+// The returned aryptr excludes the trailing deliminter.
+// SkipMsg will skip both the line and the deliminter.
+// A partial line at the end of input is NOT returned (TODO?)
+// 
+algo::aryptr<char> acr_nav::in_GetMsg(acr_nav::FIpcconn& ipcconn) {
+    algo::aryptr<char> ret;
+    if (!ipcconn.in_msgvalid) {
+        in_ScanMsg(ipcconn);
+        if (!ipcconn.in_msgvalid) {
+            bool readable = in_Refill(ipcconn);
+            if (readable) {
+                in_ScanMsg(ipcconn);
+            }
+        }
+    }
+    char *hdr = (char*)(ipcconn.in_elems + ipcconn.in_start);
+    if (ipcconn.in_msgvalid) {
+        ret.elems = hdr;
+        ret.n_elems = ipcconn.in_msglen;
+    }
+    if (!ipcconn.in_msgvalid && ipcconn.in_eof) { // all messages processed
+        acr_nav::cd_ipcconn_eof_Insert(ipcconn);
+    }
+    return ret;
+}
+
+// --- acr_nav.FIpcconn.in.Realloc
+// Set buffer size.
+// Unconditionally reallocate buffer to have size NEW_MAX
+// If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
+// (best to call this before filling the buffer)
+void acr_nav::in_Realloc(acr_nav::FIpcconn& ipcconn, int new_max) {
+    new_max = i32_Max(new_max, ipcconn.in_end);
+    u8 *new_mem = ipcconn.in_elems
+    ? (u8*)algo_lib::malloc_ReallocMem(ipcconn.in_elems, ipcconn.in_max, new_max)
+    : (u8*)algo_lib::malloc_AllocMem(new_max);
+    if (UNLIKELY(!new_mem)) {
+        FatalErrorExit("acr_nav.fbuf_nomem  field:acr_nav.FIpcconn.in  comment:'out of memory'");
+    }
+    ipcconn.in_elems = new_mem;
+    ipcconn.in_max = new_max;
+}
+
+// --- acr_nav.FIpcconn.in.Refill
+// Refill buffer. Return false if no further refill possible (input buffer exhausted)
+bool acr_nav::in_Refill(acr_nav::FIpcconn& ipcconn) {
+    bool readable = ValidQ(ipcconn.in_iohook.fildes);
+    if (readable) {
+        int fd     = ipcconn.in_iohook.fildes.value;
+        i32 max    = in_Max(ipcconn);
+        i32 end    = ipcconn.in_end;
+        i32 nbytes = end - ipcconn.in_start; // # bytes currently in buffer
+        i32 nfree  = max - end; // bytes available at the end of buffer
+        if (nbytes == 0 || nfree == 0) { // make more room for reading (or take advantage of free shift)
+            in_Shift(ipcconn);
+            end = ipcconn.in_end;
+            nfree = max - end;
+        }
+        ssize_t ret         = read(fd, ipcconn.in_elems + end, nfree);
+        readable            = !(ret < 0 && errno == EAGAIN);
+        bool error          = ret < 0 && errno != EAGAIN; // detect permanent error on this fd
+        bool eof            = error || (ret == 0 && nfree > 0);
+        ipcconn.in_end += i32_Max(ret,0); // new end of bytes
+        if (error) {
+            ipcconn.in_err = algo::FromErrno(errno); // fetch errno
+        }
+        ipcconn.in_eof |= eof;
+    }
+    if (!readable && ipcconn.in_epoll_enable) {
+        acr_nav::cd_ipcconn_read_Remove(ipcconn);
+    }
+    return readable;
+}
+
+// --- acr_nav.FIpcconn.in.RemoveAll
+// Empty bfufer
+// Discard contents of the buffer.
+void acr_nav::in_RemoveAll(acr_nav::FIpcconn& ipcconn) {
+    ipcconn.in_start    = 0;
+    ipcconn.in_end      = 0;
+    ipcconn.in_msgvalid = false;
+}
+
+// --- acr_nav.FIpcconn.in.ScanMsg
+// Internal function to scan for a message
+// 
+static void acr_nav::in_ScanMsg(acr_nav::FIpcconn& ipcconn) {
+    char *hdr = (char*)(ipcconn.in_elems + ipcconn.in_start);
+    i32 avail = in_N(ipcconn);
+    i32 msglen;
+    bool found = false;
+    // scan for delimiter starting from the previous place where we left off.
+    // at the end, save offset back to ipcconn so we don't have to re-scan.
+    // returned message length **does not include delimiter**.
+    // a line that exceeds buffer length is not returned.
+    for (msglen = ipcconn.in_msglen; msglen < avail; msglen += sizeof(char)) {
+        if (hdr[msglen] == '\n') { // delimiter?
+            found = true;
+            break;
+        }
+    }
+    if (!found && msglen >= in_Max(ipcconn)) {
+        ipcconn.in_eof = true; // cause user to detect eof
+        ipcconn.in_err = algo::FromErrno(E2BIG); // argument list too big -- closest error code
+    }
+    ipcconn.in_msglen = msglen;
+    ipcconn.in_msgvalid = found;
+}
+
+// --- acr_nav.FIpcconn.in.Shift
+// Internal function to shift data left
+// Shift existing bytes over to the beginning of the buffer
+static void acr_nav::in_Shift(acr_nav::FIpcconn& ipcconn) {
+    i32 start = ipcconn.in_start;
+    i32 bytes_n = ipcconn.in_end - start;
+    if (bytes_n > 0) {
+        memmove(ipcconn.in_elems, ipcconn.in_elems + start, bytes_n);
+    }
+    ipcconn.in_end = bytes_n;
+    ipcconn.in_start = 0;
+}
+
+// --- acr_nav.FIpcconn.in.SkipBytes
+// Skip N bytes when reading
+// Mark some buffer contents as read.
+// 
+void acr_nav::in_SkipBytes(acr_nav::FIpcconn& ipcconn, int n) {
+    int avail = ipcconn.in_end - ipcconn.in_start;
+    n = i32_Min(n,avail);
+    ipcconn.in_start += n;
+    ipcconn.in_msgvalid = false;
+}
+
+// --- acr_nav.FIpcconn.in.SkipMsg
+// Skip current message, if any
+// Skip current message, if any.
+void acr_nav::in_SkipMsg(acr_nav::FIpcconn& ipcconn) {
+    if (ipcconn.in_msgvalid) {
+        int skip = ipcconn.in_msglen;
+        skip += ssizeof(char); // delimiter
+        i32 start = ipcconn.in_start;
+        start += skip;
+        ipcconn.in_start = start;
+        ipcconn.in_msgvalid = false;
+        ipcconn.in_msglen   = 0; // reset message length -- important for delimited streams
+    }
+}
+
+// --- acr_nav.FIpcconn.in.WriteAll
+// Attempt to write buffer contents to fbuf, return success
+// Write bytes to the buffer. If the entire block is written, return true,
+// Otherwise return false.
+// Bytes in the buffer are potentially shifted left to make room for the message.
+// 
+bool acr_nav::in_WriteAll(acr_nav::FIpcconn& ipcconn, u8 *in, i32 in_n) {
+    int max = in_Max(ipcconn);
+    // check if message doesn't fit. if so, shift bytes over.
+    if (ipcconn.in_end + in_n > max) {
+        in_Shift(ipcconn);
+    }
+    // now try to write the message.
+    i32 end = ipcconn.in_end;
+    bool fits = end + in_n <= max;
+    if (fits) {
+        if (in_n > 0) {
+            memcpy(ipcconn.in_elems + end, in, in_n);
+            ipcconn.in_end = end + in_n;
+        }
+    }
+    return fits;
+}
+
+// --- acr_nav.FIpcconn.in.WriteReserve
+// Write buffer contents to fbuf, reallocate as needed
+// Write bytes to the buffer. The entire block is always written
+void acr_nav::in_WriteReserve(acr_nav::FIpcconn& ipcconn, u8 *in, i32 in_n) {
+    if (!in_WriteAll(ipcconn, in, in_n)) {
+        in_Realloc(ipcconn, ipcconn.in_max*2);
+        if (!in_WriteAll(ipcconn, in, in_n)) {
+            FatalErrorExit("in: out of memory");
+        }
+    }
+}
+
+// --- acr_nav.FIpcconn..Init
+// Set all fields to initial values.
+void acr_nav::FIpcconn_Init(acr_nav::FIpcconn& ipcconn) {
+    ipcconn.in_elems = NULL; // in: initialize
+    ipcconn.in_max = 0; // in: initialize
+    ipcconn.in_end = 0; // in: initialize
+    ipcconn.in_start = 0; // in: initialize
+    ipcconn.in_eof = false; // in: initialize
+    ipcconn.in_msgvalid = false; // in: initialize
+    ipcconn.in_msglen = 0; // in: initialize
+    ipcconn.in_epoll_enable = true; // in: initialize
+    in_Realloc(ipcconn, 8192);
+    ipcconn.ipcconn_next = (acr_nav::FIpcconn*)-1; // (acr_nav.FDb.ipcconn) not-in-tpool's freelist
+    ipcconn.cd_ipcconn_read_next = (acr_nav::FIpcconn*)-1; // (acr_nav.FDb.cd_ipcconn_read) not-in-list
+    ipcconn.cd_ipcconn_read_prev = NULL; // (acr_nav.FDb.cd_ipcconn_read)
+    ipcconn.cd_ipcconn_eof_next = (acr_nav::FIpcconn*)-1; // (acr_nav.FDb.cd_ipcconn_eof) not-in-list
+    ipcconn.cd_ipcconn_eof_prev = NULL; // (acr_nav.FDb.cd_ipcconn_eof)
+}
+
+// --- acr_nav.FIpcconn..Uninit
+void acr_nav::FIpcconn_Uninit(acr_nav::FIpcconn& ipcconn) {
+    acr_nav::FIpcconn &row = ipcconn; (void)row;
+    cd_ipcconn_read_Remove(row); // remove ipcconn from index cd_ipcconn_read
+    cd_ipcconn_eof_Remove(row); // remove ipcconn from index cd_ipcconn_eof
+
+    // acr_nav.FIpcconn.in.Uninit (Fbuf)  //
+    if (ipcconn.in_elems) {
+        algo_lib::malloc_FreeMem(ipcconn.in_elems, sizeof(char)*ipcconn.in_max); // (acr_nav.FIpcconn.in)
+    }
+    ipcconn.in_elems = NULL;
+    ipcconn.in_max = 0;
 }
 
 // --- acr_nav.FKeybind.base.CopyOut
@@ -6610,6 +7223,76 @@ void acr_nav::InputError_Print(acr_nav::InputError& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"msg", temp);
 }
 
+// --- acr_nav.IpcCase.value.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* acr_nav::value_ToCstr(const acr_nav::IpcCase& parent) {
+    const char *ret = NULL;
+    switch(value_GetEnum(parent)) {
+        case acr_nav_IpcCase_acr_nav_RequestStateDump: ret = "acr_nav.RequestStateDump";  break;
+    }
+    return ret;
+}
+
+// --- acr_nav.IpcCase.value.Print
+// Convert value to a string. First, attempt conversion to a known string.
+// If no string matches, print value as a numeric value.
+void acr_nav::value_Print(const acr_nav::IpcCase& parent, algo::cstring &lhs) {
+    const char *strval = value_ToCstr(parent);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << parent.value;
+    }
+}
+
+// --- acr_nav.IpcCase.value.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool acr_nav::value_SetStrptrMaybe(acr_nav::IpcCase& parent, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 24: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','c','r','_','n','a','v','.'): {
+                    if (memcmp(rhs.elems+8,"RequestStateDump",16)==0) { value_SetEnum(parent,acr_nav_IpcCase_acr_nav_RequestStateDump); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- acr_nav.IpcCase.value.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void acr_nav::value_SetStrptr(acr_nav::IpcCase& parent, algo::strptr rhs, acr_nav_IpcCaseEnum dflt) {
+    if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
+}
+
+// --- acr_nav.IpcCase.value.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool acr_nav::value_ReadStrptrMaybe(acr_nav::IpcCase& parent, algo::strptr rhs) {
+    bool retval = false;
+    retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
+    if (!retval) { // didn't work? try reading as underlying type
+        retval = u32_ReadStrptrMaybe(parent.value,rhs);
+    }
+    return retval;
+}
+
+// --- acr_nav.IpcCase..ReadStrptrMaybe
+// Read fields of acr_nav::IpcCase from an ascii string.
+// The format of the string is the format of the acr_nav::IpcCase's only field
+bool acr_nav::IpcCase_ReadStrptrMaybe(acr_nav::IpcCase &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = retval && value_ReadStrptrMaybe(parent, in_str);
+    return retval;
+}
+
 // --- acr_nav.Naventry..Init
 // Set all fields to initial values.
 void acr_nav::Naventry_Init(acr_nav::Naventry& parent) {
@@ -7263,6 +7946,35 @@ void acr_nav::StaticCheck() {
     algo_assert(sizeof(acr_nav::navaction_step_hook) == 8); // csize:acr_nav.navaction_step_hook
     algo_assert(sizeof(acr_nav::viewmode_ensure_content_hook) == 8); // csize:acr_nav.viewmode_ensure_content_hook
     algo_assert(_offset_of(acr_nav::FieldId, value) + sizeof(((acr_nav::FieldId*)0)->value) == sizeof(acr_nav::FieldId));
+    algo_assert(_offset_of(acr_nav::IpcCase, value) + sizeof(((acr_nav::IpcCase*)0)->value) == sizeof(acr_nav::IpcCase));
+}
+
+// --- acr_nav.Ipc..ReadStrptr
+// Parse ascii representation of message into binary, appending new data to BUF.
+acr_nav::IpcCase acr_nav::Ipc_ReadStrptr(algo::strptr str, algo::ByteAry &buf) {
+    bool ok = false;
+    tempstr msgtype_str;
+    algo::StringIter iter(str);
+    cstring_ReadCmdarg(msgtype_str, iter, false); // read first word
+    acr_nav::IpcCase msgtype;
+    value_SetStrptrMaybe(msgtype, msgtype_str); // map string -> enum
+    switch (value_GetEnum(msgtype)) { // what message is it?
+        case acr_nav_IpcCase_acr_nav_RequestStateDump: {
+            int len = sizeof(acr_nav::RequestStateDump);
+            acr_nav::RequestStateDump *ctype = new(ary_AllocN(buf, len).elems) acr_nav::RequestStateDump; // default values
+            ok = RequestStateDump_ReadStrptrMaybe(*ctype, str); // now read attributes
+        } break; // acr_nav::RequestStateDump case
+
+        default: break;
+    }
+    return ok ? msgtype : acr_nav::IpcCase();
+}
+
+// --- acr_nav.Ipc..ReadStrptrMaybe
+// Parse ascii representation of message into binary, appending new data to BUF.
+bool acr_nav::Ipc_ReadStrptrMaybe(algo::strptr str, algo::ByteAry &buf) {
+    acr_nav::IpcCase msgtype = Ipc_ReadStrptr(str,buf);
+    return !(msgtype == acr_nav::IpcCase());
 }
 
 // --- acr_nav...StateDump
@@ -7624,11 +8336,47 @@ void acr_nav::StateDump(algo::cstring& out, algo_lib::Regx& filter) {
     }
 }
 
+// --- acr_nav...cd_ipcconn_read_Step
+void acr_nav::cd_ipcconn_read_Step() {
+    acr_nav::FIpcconn& conn = *acr_nav::cd_ipcconn_read_RotateFirst();
+    algo::strptr line = in_GetMsg(conn);
+    if (line.elems) {
+        acr_nav::IpcProcessLine(conn, line);
+        in_SkipMsg(conn);
+    }
+}
+
+// --- acr_nav...IpcProcessLine
+void acr_nav::IpcProcessLine(acr_nav::FIpcconn& conn, algo::strptr line) {
+    acr_nav::RequestStateDump cmd;
+    if (acr_nav::RequestStateDump_ReadStrptrMaybe(cmd, line)) {
+        algo_lib::Regx filter;
+        Regx_ReadSql(filter, cmd.filter, true);
+        algo::cstring out;
+        acr_nav::StateDump(out, filter);
+        ssize_t nw = write(conn.outfd.value, out.ch_elems, out.ch_n);
+        (void)nw;
+    }
+}
+
+// --- acr_nav...cd_ipcconn_eof_Step
+void acr_nav::cd_ipcconn_eof_Step() {
+    acr_nav::FIpcconn& conn = *acr_nav::cd_ipcconn_eof_First();
+    close(conn.outfd.value);
+    acr_nav::ipcconn_Delete(conn);
+}
+
+// --- acr_nav...IpcCleanup
+void acr_nav::IpcCleanup() {
+    unlink(acr_nav::_db.ipc_socket_path.ch_elems);
+}
+
 // --- acr_nav...main
 int main(int argc, char **argv) {
     try {
         lib_json::FDb_Init();
         algo_lib::FDb_Init();
+        lib_netio::FDb_Init();
         acr_nav::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
@@ -7645,6 +8393,7 @@ int main(int argc, char **argv) {
     }
     try {
         acr_nav::FDb_Uninit();
+        lib_netio::FDb_Uninit();
         algo_lib::FDb_Uninit();
         lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {

@@ -719,6 +719,9 @@ static void CountSsimfileRecords() {
 void acr_nav::Main() {
     CountSsimfileRecords();
     BuildLeftItems();
+    if (_db.cmdline.ipc) {
+        acr_nav::IpcInit();
+    }
     bool do_dump = ch_N(_db.cmdline.dump) > 0;
     bool headless = _db.cmdline.headless || !isatty(STDOUT_FILENO);
     if (do_dump) {
@@ -727,6 +730,8 @@ void acr_nav::Main() {
         algo::cstring out;
         StateDump(out, filter);
         prlog(out);
+    } else if (_db.cmdline.ipc) {
+        acr_nav::MainLoop();
     } else if (headless) {
         HeadlessMain();
     } else {

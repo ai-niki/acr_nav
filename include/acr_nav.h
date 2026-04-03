@@ -89,6 +89,17 @@ namespace acr_nav { // update-hdr
     // void viewmode_graph_ensure_content(acr_nav::FCtype &ct); // gstatic/acr_navdb.viewmode:graph
 
     // -------------------------------------------------------------------
+    // cpp/acr_nav/ipc.cpp
+    //
+
+    // IpcInit -- create Unix domain socket, bind, listen, register with event loop
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void IpcInit();
+
+    // IpcAccept -- accept incoming connection, allocate FIpcconn, start reading
+    // void IpcAccept();
+
+    // -------------------------------------------------------------------
     // cpp/acr_nav/main.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)

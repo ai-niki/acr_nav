@@ -422,6 +422,7 @@ const char *dmmeta_Ssimfile_ssimfile_dmmeta_nsdump            = "dmmeta.nsdump";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_nsfast      = "dmmeta.nsfast";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_nsinclude   = "dmmeta.nsinclude";
 
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_nsipc     = "dmmeta.nsipc";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_nsjs      = "dmmeta.nsjs";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_nsproto   = "dmmeta.nsproto";
 
@@ -7915,6 +7916,55 @@ void dmmeta::Nsinclude_Print(dmmeta::Nsinclude& row, algo::cstring& str) {
 
     bool_Print(row.sys, temp);
     PrintAttrSpaceReset(str,"sys", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
+}
+
+// --- dmmeta.Nsipc..ReadFieldMaybe
+bool dmmeta::Nsipc_ReadFieldMaybe(dmmeta::Nsipc& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    dmmeta::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case dmmeta_FieldId_ns: {
+            retval = algo::Smallstr16_ReadStrptrMaybe(parent.ns, strval);
+        } break;
+        case dmmeta_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- dmmeta.Nsipc..ReadStrptrMaybe
+// Read fields of dmmeta::Nsipc from an ascii string.
+// The format of the string is an ssim Tuple
+bool dmmeta::Nsipc_ReadStrptrMaybe(dmmeta::Nsipc &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "dmmeta.nsipc") || algo::StripTypeTag(in_str, "dmmeta.Nsipc");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Nsipc_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- dmmeta.Nsipc..Print
+// print string representation of ROW to string STR
+// cfmt:dmmeta.Nsipc.String  printfmt:Tuple
+void dmmeta::Nsipc_Print(dmmeta::Nsipc& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "dmmeta.nsipc";
+
+    algo::Smallstr16_Print(row.ns, temp);
+    PrintAttrSpaceReset(str,"ns", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);

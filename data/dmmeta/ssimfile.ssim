@@ -174,6 +174,7 @@ dmmeta.ssimfile  ssimfile:dmmeta.nsdb  ctype:dmmeta.Nsdb
 dmmeta.ssimfile  ssimfile:dmmeta.nsdump  ctype:dmmeta.Nsdump
 dmmeta.ssimfile  ssimfile:dmmeta.nsfast  ctype:dmmeta.Nsfast
 dmmeta.ssimfile  ssimfile:dmmeta.nsinclude  ctype:dmmeta.Nsinclude
+dmmeta.ssimfile  ssimfile:dmmeta.nsipc  ctype:dmmeta.Nsipc
 dmmeta.ssimfile  ssimfile:dmmeta.nsjs  ctype:dmmeta.Nsjs
 dmmeta.ssimfile  ssimfile:dmmeta.nsproto  ctype:dmmeta.Nsproto
 dmmeta.ssimfile  ssimfile:dmmeta.nstype  ctype:dmmeta.Nstype

@@ -223,6 +223,8 @@ dmmeta.xref  field:acr_nav.FReftype.c_reftypestyle  inscond:true  via:acr_nav.FD
 dmmeta.xref  field:acr_nav.FSsimfile.p_ctype  inscond:true  via:acr_nav.FDb.ind_ctype/dmmeta.Ssimfile.ctype
 dmmeta.xref  field:acr_nav.FNs.c_ctype  inscond:true  via:acr_nav.FDb.ind_ns/dmmeta.Ctype.ns
 dmmeta.xref  field:acr_nav.FDb.ind_filtertarget  inscond:true  via:""
+dmmeta.xref  field:acr_nav.FDb.cd_ipcconn_read  inscond:false  via:""
+dmmeta.xref  field:acr_nav.FDb.cd_ipcconn_eof  inscond:false  via:""
 dmmeta.xref  field:algo_lib.FDb.ind_imtable  inscond:true  via:""
 dmmeta.xref  field:algo_lib.FDb.bh_timehook  inscond:false  via:""
 dmmeta.xref  field:algo_lib.FDb.ind_dispsigcheck  inscond:true  via:""
@@ -483,6 +485,7 @@ dmmeta.xref  field:amc.FField.c_fkafka  inscond:true  via:amc.FDb.ind_field/dmme
 dmmeta.xref  field:amc.FDb.ind_steptype  inscond:true  via:""
 dmmeta.xref  field:amc.FFstep.p_steptype  inscond:true  via:amc.FDb.ind_steptype/dmmeta.Fstep.steptype
 dmmeta.xref  field:amc.FNs.c_nsdump  inscond:true  via:amc.FDb.ind_ns/dmmeta.Nsdump.ns
+dmmeta.xref  field:amc.FNs.c_nsipc  inscond:true  via:amc.FDb.ind_ns/dmmeta.Nsipc.ns
 dmmeta.xref  field:amc_vis.FDb.ind_ctype  inscond:true  via:""
 dmmeta.xref  field:amc_vis.FDb.ind_field  inscond:true  via:""
 dmmeta.xref  field:amc_vis.FDb.ind_node  inscond:true  via:""

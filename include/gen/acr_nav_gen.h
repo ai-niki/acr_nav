@@ -53,6 +53,15 @@ enum acr_nav_FieldIdEnum {              // acr_nav.FieldId.value
 enum { acr_nav_FieldIdEnum_N = 14 };
 
 
+// --- acr_nav_IpcCaseEnum
+
+enum acr_nav_IpcCaseEnum {                           // acr_nav.IpcCase.value
+     acr_nav_IpcCase_acr_nav_RequestStateDump   = 1
+};
+
+enum { acr_nav_IpcCaseEnum_N = 1 };
+
+
 // --- acr_nav_TableIdEnum
 
 enum acr_nav_TableIdEnum {                           // acr_nav.TableId.value
@@ -112,6 +121,7 @@ namespace acr_navdb { struct Reftypestyle; }
 namespace acr_nav { struct FNavstyle; }
 namespace dmmeta { struct Ssimfile; }
 namespace acr_navdb { struct Viewmode; }
+namespace acr_nav { struct RequestStateDump; }
 namespace acr_nav { struct ContentRow_nav_target_curs; }
 namespace acr_nav { struct ctype_c_field_curs; }
 namespace acr_nav { struct ctype_c_field_arg_curs; }
@@ -133,6 +143,8 @@ namespace acr_nav { struct _db_viewmode_curs; }
 namespace acr_nav { struct _db_left_item_curs; }
 namespace acr_nav { struct _db_filtertarget_curs; }
 namespace acr_nav { struct _db_overlay_stack_curs; }
+namespace acr_nav { struct _db_cd_ipcconn_read_curs; }
+namespace acr_nav { struct _db_cd_ipcconn_eof_curs; }
 namespace acr_nav { struct ns_c_ctype_curs; }
 namespace acr_nav { struct viewmode_cspan_curs; }
 namespace acr_nav { struct viewmode_nav_col_curs; }
@@ -145,6 +157,7 @@ namespace acr_nav { struct FDetailsrc; }
 namespace acr_nav { struct FField; }
 namespace acr_nav { struct FFiltertarget; }
 namespace acr_nav { struct FHelpgroup; }
+namespace acr_nav { struct FIpcconn; }
 namespace acr_nav { struct FKeybind; }
 namespace acr_nav { struct FNavmode; }
 namespace acr_nav { struct FPanel; }
@@ -154,6 +167,7 @@ namespace acr_nav { struct FViewmode; }
 namespace acr_nav { struct FieldId; }
 namespace acr_nav { struct GoBack; }
 namespace acr_nav { struct InputError; }
+namespace acr_nav { struct IpcCase; }
 namespace acr_nav { struct LeftItem; }
 namespace acr_nav { struct LineColorSpan; }
 namespace acr_nav { struct Naventry; }
@@ -161,7 +175,6 @@ namespace acr_nav { struct Navigate; }
 namespace acr_nav { struct OverlayEntry; }
 namespace acr_nav { struct PanelState; }
 namespace acr_nav { struct PreviewNavCol; }
-namespace acr_nav { struct RequestStateDump; }
 namespace acr_nav { struct Screen; }
 namespace acr_nav { struct Screenshot; }
 namespace acr_nav { struct SendKey; }
@@ -581,6 +594,14 @@ struct FDb { // acr_nav.FDb
     acr_nav::OverlayEntry*     overlay_stack_elems;              // pointer to elements
     u32                        overlay_stack_n;                  // number of elements in array
     u32                        overlay_stack_max;                // max. capacity of array before realloc
+    algo_lib::FIohook          ipc_listen;                       // Listen socket iohook
+    algo::cstring              ipc_socket_path;                  // Bound socket path
+    u64                        ipcconn_blocksize;                // # bytes per block
+    acr_nav::FIpcconn*         ipcconn_free;                     //
+    acr_nav::FIpcconn*         cd_ipcconn_read_head;             // zero-terminated doubly linked list
+    i32                        cd_ipcconn_read_n;                // zero-terminated doubly linked list
+    acr_nav::FIpcconn*         cd_ipcconn_eof_head;              // zero-terminated doubly linked list
+    i32                        cd_ipcconn_eof_n;                 // zero-terminated doubly linked list
     acr_nav::trace             trace;                            //
 };
 
@@ -1844,6 +1865,126 @@ algo::aryptr<acr_nav::OverlayEntry> overlay_stack_AllocNVal(int n_elems, const a
 // func:acr_nav.FDb.overlay_stack.Insary
 void                 overlay_stack_Insary(algo::aryptr<acr_nav::OverlayEntry> rhs, int at) __attribute__((nothrow));
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:acr_nav.FDb.ipcconn.Alloc
+acr_nav::FIpcconn&   ipcconn_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:acr_nav.FDb.ipcconn.AllocMaybe
+acr_nav::FIpcconn*   ipcconn_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Remove row from all global and cross indices, then deallocate row
+// func:acr_nav.FDb.ipcconn.Delete
+void                 ipcconn_Delete(acr_nav::FIpcconn &row) __attribute__((nothrow));
+// Allocate space for one element
+// If no memory available, return NULL.
+// func:acr_nav.FDb.ipcconn.AllocMem
+void*                ipcconn_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Remove mem from all global and cross indices, then deallocate mem
+// func:acr_nav.FDb.ipcconn.FreeMem
+void                 ipcconn_FreeMem(acr_nav::FIpcconn &row) __attribute__((nothrow));
+// Preallocate memory for N more elements
+// Return number of elements actually reserved.
+// func:acr_nav.FDb.ipcconn.Reserve
+u64                  ipcconn_Reserve(u64 n_elems) __attribute__((nothrow));
+// Allocate block of given size, break up into small elements and append to free list.
+// Return number of elements reserved.
+// func:acr_nav.FDb.ipcconn.ReserveMem
+u64                  ipcconn_ReserveMem(u64 size) __attribute__((nothrow));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:acr_nav.FDb.ipcconn.XrefMaybe
+bool                 ipcconn_XrefMaybe(acr_nav::FIpcconn &row);
+
+// Return true if index is empty
+// func:acr_nav.FDb.cd_ipcconn_read.EmptyQ
+inline bool          cd_ipcconn_read_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
+// If index empty, return NULL. Otherwise return pointer to first element in index
+// func:acr_nav.FDb.cd_ipcconn_read.First
+inline acr_nav::FIpcconn* cd_ipcconn_read_First() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return true if row is in the linked list, false otherwise
+// func:acr_nav.FDb.cd_ipcconn_read.InLlistQ
+inline bool          cd_ipcconn_read_InLlistQ(acr_nav::FIpcconn& row) __attribute__((__warn_unused_result__, nothrow));
+// Insert row into linked list. If row is already in linked list, do nothing.
+// func:acr_nav.FDb.cd_ipcconn_read.Insert
+void                 cd_ipcconn_read_Insert(acr_nav::FIpcconn& row) __attribute__((nothrow));
+// If index empty, return NULL. Otherwise return pointer to last element in index
+// func:acr_nav.FDb.cd_ipcconn_read.Last
+inline acr_nav::FIpcconn* cd_ipcconn_read_Last() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return number of items in the linked list
+// func:acr_nav.FDb.cd_ipcconn_read.N
+inline i32           cd_ipcconn_read_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to next element in the list
+// func:acr_nav.FDb.cd_ipcconn_read.Next
+inline acr_nav::FIpcconn* cd_ipcconn_read_Next(acr_nav::FIpcconn &row) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to previous element in the list
+// func:acr_nav.FDb.cd_ipcconn_read.Prev
+inline acr_nav::FIpcconn* cd_ipcconn_read_Prev(acr_nav::FIpcconn &row) __attribute__((__warn_unused_result__, nothrow));
+// Remove element from index. If element is not in index, do nothing.
+// func:acr_nav.FDb.cd_ipcconn_read.Remove
+void                 cd_ipcconn_read_Remove(acr_nav::FIpcconn& row) __attribute__((nothrow));
+// Empty the index. (The rows are not deleted)
+// func:acr_nav.FDb.cd_ipcconn_read.RemoveAll
+void                 cd_ipcconn_read_RemoveAll() __attribute__((nothrow));
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// Call FirstChanged trigger.
+// func:acr_nav.FDb.cd_ipcconn_read.RemoveFirst
+acr_nav::FIpcconn*   cd_ipcconn_read_RemoveFirst() __attribute__((nothrow));
+// If linked list is empty, return NULL.
+// Otherwise return head item and advance head to the next item.
+// func:acr_nav.FDb.cd_ipcconn_read.RotateFirst
+acr_nav::FIpcconn*   cd_ipcconn_read_RotateFirst() __attribute__((nothrow));
+// Return reference to last element in the index. No bounds checking.
+// func:acr_nav.FDb.cd_ipcconn_read.qLast
+inline acr_nav::FIpcconn& cd_ipcconn_read_qLast() __attribute__((__warn_unused_result__, nothrow));
+// func:acr_nav.FDb.cd_ipcconn_read.Step
+// this function is 'extrn' and implemented by user
+void                 cd_ipcconn_read_Step() __attribute__((nothrow));
+
+// Return true if index is empty
+// func:acr_nav.FDb.cd_ipcconn_eof.EmptyQ
+inline bool          cd_ipcconn_eof_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
+// If index empty, return NULL. Otherwise return pointer to first element in index
+// func:acr_nav.FDb.cd_ipcconn_eof.First
+inline acr_nav::FIpcconn* cd_ipcconn_eof_First() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return true if row is in the linked list, false otherwise
+// func:acr_nav.FDb.cd_ipcconn_eof.InLlistQ
+inline bool          cd_ipcconn_eof_InLlistQ(acr_nav::FIpcconn& row) __attribute__((__warn_unused_result__, nothrow));
+// Insert row into linked list. If row is already in linked list, do nothing.
+// func:acr_nav.FDb.cd_ipcconn_eof.Insert
+void                 cd_ipcconn_eof_Insert(acr_nav::FIpcconn& row) __attribute__((nothrow));
+// If index empty, return NULL. Otherwise return pointer to last element in index
+// func:acr_nav.FDb.cd_ipcconn_eof.Last
+inline acr_nav::FIpcconn* cd_ipcconn_eof_Last() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return number of items in the linked list
+// func:acr_nav.FDb.cd_ipcconn_eof.N
+inline i32           cd_ipcconn_eof_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to next element in the list
+// func:acr_nav.FDb.cd_ipcconn_eof.Next
+inline acr_nav::FIpcconn* cd_ipcconn_eof_Next(acr_nav::FIpcconn &row) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to previous element in the list
+// func:acr_nav.FDb.cd_ipcconn_eof.Prev
+inline acr_nav::FIpcconn* cd_ipcconn_eof_Prev(acr_nav::FIpcconn &row) __attribute__((__warn_unused_result__, nothrow));
+// Remove element from index. If element is not in index, do nothing.
+// func:acr_nav.FDb.cd_ipcconn_eof.Remove
+void                 cd_ipcconn_eof_Remove(acr_nav::FIpcconn& row) __attribute__((nothrow));
+// Empty the index. (The rows are not deleted)
+// func:acr_nav.FDb.cd_ipcconn_eof.RemoveAll
+void                 cd_ipcconn_eof_RemoveAll() __attribute__((nothrow));
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// Call FirstChanged trigger.
+// func:acr_nav.FDb.cd_ipcconn_eof.RemoveFirst
+acr_nav::FIpcconn*   cd_ipcconn_eof_RemoveFirst() __attribute__((nothrow));
+// If linked list is empty, return NULL.
+// Otherwise return head item and advance head to the next item.
+// func:acr_nav.FDb.cd_ipcconn_eof.RotateFirst
+acr_nav::FIpcconn*   cd_ipcconn_eof_RotateFirst() __attribute__((nothrow));
+// Return reference to last element in the index. No bounds checking.
+// func:acr_nav.FDb.cd_ipcconn_eof.qLast
+inline acr_nav::FIpcconn& cd_ipcconn_eof_qLast() __attribute__((__warn_unused_result__, nothrow));
+// func:acr_nav.FDb.cd_ipcconn_eof.Step
+// this function is 'extrn' and implemented by user
+void                 cd_ipcconn_eof_Step() __attribute__((nothrow));
+
 // cursor points to valid item
 // func:acr_nav.FDb.ctype_curs.Reset
 inline void          _db_ctype_curs_Reset(_db_ctype_curs &curs, acr_nav::FDb &parent) __attribute__((nothrow));
@@ -2057,6 +2198,30 @@ inline bool          _db_overlay_stack_curs_ValidQ(_db_overlay_stack_curs &curs)
 // item access
 // func:acr_nav.FDb.overlay_stack_curs.Access
 inline acr_nav::OverlayEntry& _db_overlay_stack_curs_Access(_db_overlay_stack_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_nav.FDb.cd_ipcconn_read_curs.Reset
+inline void          _db_cd_ipcconn_read_curs_Reset(_db_cd_ipcconn_read_curs &curs, acr_nav::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_nav.FDb.cd_ipcconn_read_curs.ValidQ
+inline bool          _db_cd_ipcconn_read_curs_ValidQ(_db_cd_ipcconn_read_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:acr_nav.FDb.cd_ipcconn_read_curs.Next
+inline void          _db_cd_ipcconn_read_curs_Next(_db_cd_ipcconn_read_curs &curs) __attribute__((nothrow));
+// item access
+// func:acr_nav.FDb.cd_ipcconn_read_curs.Access
+inline acr_nav::FIpcconn& _db_cd_ipcconn_read_curs_Access(_db_cd_ipcconn_read_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_nav.FDb.cd_ipcconn_eof_curs.Reset
+inline void          _db_cd_ipcconn_eof_curs_Reset(_db_cd_ipcconn_eof_curs &curs, acr_nav::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_nav.FDb.cd_ipcconn_eof_curs.ValidQ
+inline bool          _db_cd_ipcconn_eof_curs_ValidQ(_db_cd_ipcconn_eof_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:acr_nav.FDb.cd_ipcconn_eof_curs.Next
+inline void          _db_cd_ipcconn_eof_curs_Next(_db_cd_ipcconn_eof_curs &curs) __attribute__((nothrow));
+// item access
+// func:acr_nav.FDb.cd_ipcconn_eof_curs.Access
+inline acr_nav::FIpcconn& _db_cd_ipcconn_eof_curs_Access(_db_cd_ipcconn_eof_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr_nav.FDb..Init
 void                 FDb_Init();
@@ -2249,6 +2414,111 @@ void                 helpgroup_CopyIn(acr_nav::FHelpgroup &row, acr_navdb::Helpg
 inline void          FHelpgroup_Init(acr_nav::FHelpgroup& helpgroup);
 // func:acr_nav.FHelpgroup..Uninit
 void                 FHelpgroup_Uninit(acr_nav::FHelpgroup& helpgroup) __attribute__((nothrow));
+
+// --- acr_nav.FIpcconn
+// create: acr_nav.FDb.ipcconn (Tpool)
+// global access: cd_ipcconn_read (Llist)
+// global access: cd_ipcconn_eof (Llist)
+struct FIpcconn { // acr_nav.FIpcconn: Per-client IPC connection
+    acr_nav::FIpcconn*   ipcconn_next;           // Pointer to next free element int tpool
+    acr_nav::FIpcconn*   cd_ipcconn_read_next;   // zslist link; -1 means not-in-list
+    acr_nav::FIpcconn*   cd_ipcconn_read_prev;   // previous element
+    acr_nav::FIpcconn*   cd_ipcconn_eof_next;    // zslist link; -1 means not-in-list
+    acr_nav::FIpcconn*   cd_ipcconn_eof_prev;    // previous element
+    u8*                  in_elems;               //   NULL  pointer to elements of indirect array
+    u32                  in_max;                 //   0  current length of allocated array
+    i32                  in_start;               // beginning of valid bytes (in bytes)
+    i32                  in_end;                 // end of valid bytes (in bytes)
+    i32                  in_msglen;              // current message length
+    algo::Errcode        in_err;                 // system error code
+    algo_lib::FIohook    in_iohook;              // edge-triggered hook for the buffer
+    bool                 in_eof;                 // no more data will be written to buffer
+    bool                 in_msgvalid;            // current message is valid
+    bool                 in_epoll_enable;        // use epoll?
+    algo::Fildes         outfd;                  // Client socket for writing responses
+    // field acr_nav.FIpcconn.in prevents copy
+    // func:acr_nav.FIpcconn..AssignOp
+    inline acr_nav::FIpcconn& operator =(const acr_nav::FIpcconn &rhs) = delete;
+    // field acr_nav.FIpcconn.in prevents copy
+    // func:acr_nav.FIpcconn..CopyCtor
+    inline               FIpcconn(const acr_nav::FIpcconn &rhs) = delete;
+private:
+    // func:acr_nav.FIpcconn..Ctor
+    inline               FIpcconn() __attribute__((nothrow));
+    // func:acr_nav.FIpcconn..Dtor
+    inline               ~FIpcconn() __attribute__((nothrow));
+    friend acr_nav::FIpcconn&   ipcconn_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr_nav::FIpcconn*   ipcconn_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 ipcconn_Delete(acr_nav::FIpcconn &row) __attribute__((nothrow));
+};
+
+// Attach fbuf to Iohook for reading
+// Attach file descriptor and begin reading using edge-triggered epoll.
+// File descriptor becomes owned by acr_nav::FIpcconn.in via FIohook field.
+// Whenever the file descriptor becomes readable, insert ipcconn into cd_ipcconn_read.
+// func:acr_nav.FIpcconn.in.BeginRead
+void                 in_BeginRead(acr_nav::FIpcconn& ipcconn, algo::Fildes fd) __attribute__((nothrow));
+// Set EOF flag
+// func:acr_nav.FIpcconn.in.EndRead
+void                 in_EndRead(acr_nav::FIpcconn& ipcconn) __attribute__((nothrow));
+// Detect incoming message in buffer and return it
+// Look for valid message at current position in the buffer.
+// If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).
+// If there is no message, read once from underlying file descriptor and try again.
+// The message is found by looking for delimiter '\n'.
+// The return value is an aryptr. If ret.elems is non-NULL, the message is valid (possibly empty).
+// If ret.elems is NULL, no message can be extracted from buffer.
+// The returned aryptr excludes the trailing deliminter.
+// SkipMsg will skip both the line and the deliminter.
+// A partial line at the end of input is NOT returned (TODO?)
+//
+// func:acr_nav.FIpcconn.in.GetMsg
+algo::aryptr<char>   in_GetMsg(acr_nav::FIpcconn& ipcconn) __attribute__((nothrow));
+// Set buffer size.
+// Unconditionally reallocate buffer to have size NEW_MAX
+// If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
+// (best to call this before filling the buffer)
+// func:acr_nav.FIpcconn.in.Realloc
+void                 in_Realloc(acr_nav::FIpcconn& ipcconn, int new_max) __attribute__((nothrow));
+// Return max. number of bytes in the buffer.
+// func:acr_nav.FIpcconn.in.Max
+inline i32           in_Max(acr_nav::FIpcconn& ipcconn) __attribute__((nothrow));
+// Return number of bytes in the buffer.
+// func:acr_nav.FIpcconn.in.N
+inline i32           in_N(acr_nav::FIpcconn& ipcconn) __attribute__((__warn_unused_result__, nothrow, pure));
+// Refill buffer. Return false if no further refill possible (input buffer exhausted)
+// func:acr_nav.FIpcconn.in.Refill
+bool                 in_Refill(acr_nav::FIpcconn& ipcconn) __attribute__((nothrow));
+// Empty bfufer
+// Discard contents of the buffer.
+// func:acr_nav.FIpcconn.in.RemoveAll
+void                 in_RemoveAll(acr_nav::FIpcconn& ipcconn) __attribute__((nothrow));
+// Skip N bytes when reading
+// Mark some buffer contents as read.
+//
+// func:acr_nav.FIpcconn.in.SkipBytes
+void                 in_SkipBytes(acr_nav::FIpcconn& ipcconn, int n) __attribute__((nothrow));
+// Skip current message, if any
+// Skip current message, if any.
+// func:acr_nav.FIpcconn.in.SkipMsg
+void                 in_SkipMsg(acr_nav::FIpcconn& ipcconn) __attribute__((nothrow));
+// Attempt to write buffer contents to fbuf, return success
+// Write bytes to the buffer. If the entire block is written, return true,
+// Otherwise return false.
+// Bytes in the buffer are potentially shifted left to make room for the message.
+//
+// func:acr_nav.FIpcconn.in.WriteAll
+bool                 in_WriteAll(acr_nav::FIpcconn& ipcconn, u8 *in, i32 in_n) __attribute__((nothrow));
+// Write buffer contents to fbuf, reallocate as needed
+// Write bytes to the buffer. The entire block is always written
+// func:acr_nav.FIpcconn.in.WriteReserve
+void                 in_WriteReserve(acr_nav::FIpcconn& ipcconn, u8 *in, i32 in_n) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:acr_nav.FIpcconn..Init
+void                 FIpcconn_Init(acr_nav::FIpcconn& ipcconn);
+// func:acr_nav.FIpcconn..Uninit
+void                 FIpcconn_Uninit(acr_nav::FIpcconn& ipcconn) __attribute__((nothrow));
 
 // --- acr_nav.FKeybind
 // create: acr_nav.FDb.keybind (Lary)
@@ -3152,6 +3422,56 @@ inline void          InputError_Init(acr_nav::InputError& parent);
 // func:acr_nav.InputError..Print
 void                 InputError_Print(acr_nav::InputError& row, algo::cstring& str) __attribute__((nothrow));
 
+// --- acr_nav.IpcCase
+#pragma pack(push,1)
+struct IpcCase { // acr_nav.IpcCase: Enum for dispatch acr_nav.Ipc
+    u32   value;   //   0
+    // func:acr_nav.IpcCase.value.Cast
+    inline               operator acr_nav_IpcCaseEnum() const __attribute__((nothrow));
+    // func:acr_nav.IpcCase..Ctor
+    inline               IpcCase() __attribute__((nothrow));
+    // func:acr_nav.IpcCase..FieldwiseCtor
+    explicit inline               IpcCase(u32 in_value) __attribute__((nothrow));
+    // func:acr_nav.IpcCase..EnumCtor
+    inline               IpcCase(acr_nav_IpcCaseEnum arg) __attribute__((nothrow));
+};
+#pragma pack(pop)
+
+// Get value of field as enum type
+// func:acr_nav.IpcCase.value.GetEnum
+inline acr_nav_IpcCaseEnum value_GetEnum(const acr_nav::IpcCase& parent) __attribute__((nothrow));
+// Set value of field from enum type.
+// func:acr_nav.IpcCase.value.SetEnum
+inline void          value_SetEnum(acr_nav::IpcCase& parent, acr_nav_IpcCaseEnum rhs) __attribute__((nothrow));
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+// func:acr_nav.IpcCase.value.ToCstr
+const char*          value_ToCstr(const acr_nav::IpcCase& parent) __attribute__((nothrow));
+// Convert value to a string. First, attempt conversion to a known string.
+// If no string matches, print value as a numeric value.
+// func:acr_nav.IpcCase.value.Print
+void                 value_Print(const acr_nav::IpcCase& parent, algo::cstring &lhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+// func:acr_nav.IpcCase.value.SetStrptrMaybe
+bool                 value_SetStrptrMaybe(acr_nav::IpcCase& parent, algo::strptr rhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+// func:acr_nav.IpcCase.value.SetStrptr
+void                 value_SetStrptr(acr_nav::IpcCase& parent, algo::strptr rhs, acr_nav_IpcCaseEnum dflt) __attribute__((nothrow));
+// Convert string to field. Return success value
+// func:acr_nav.IpcCase.value.ReadStrptrMaybe
+bool                 value_ReadStrptrMaybe(acr_nav::IpcCase& parent, algo::strptr rhs) __attribute__((nothrow));
+
+// Read fields of acr_nav::IpcCase from an ascii string.
+// The format of the string is the format of the acr_nav::IpcCase's only field
+// func:acr_nav.IpcCase..ReadStrptrMaybe
+bool                 IpcCase_ReadStrptrMaybe(acr_nav::IpcCase &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:acr_nav.IpcCase..Init
+inline void          IpcCase_Init(acr_nav::IpcCase& parent);
+
 // --- acr_nav.LeftItem
 // create: acr_nav.FDb.left_item (Tary)
 struct LeftItem { // acr_nav.LeftItem: One display row in the left panel
@@ -3686,6 +4006,28 @@ struct _db_overlay_stack_curs {// cursor
 };
 
 
+struct _db_cd_ipcconn_read_curs {// fcurs:acr_nav.FDb.cd_ipcconn_read/curs
+    typedef acr_nav::FIpcconn ChildType;
+    acr_nav::FIpcconn* row;
+    acr_nav::FIpcconn** head; // address of head element
+    _db_cd_ipcconn_read_curs() {
+        row = NULL;
+        head = NULL;
+    }
+};
+
+
+struct _db_cd_ipcconn_eof_curs {// fcurs:acr_nav.FDb.cd_ipcconn_eof/curs
+    typedef acr_nav::FIpcconn ChildType;
+    acr_nav::FIpcconn* row;
+    acr_nav::FIpcconn** head; // address of head element
+    _db_cd_ipcconn_eof_curs() {
+        row = NULL;
+        head = NULL;
+    }
+};
+
+
 struct ns_c_ctype_curs {// fcurs:acr_nav.FNs.c_ctype/curs
     typedef acr_nav::FCtype ChildType;
     acr_nav::FCtype** elems;
@@ -3873,8 +4215,28 @@ void                 viewmode_preview_ensure_content(acr_nav::FCtype&);
 void                 viewmode_xref_ensure_content(acr_nav::FCtype&);
 // func:acr_nav...StaticCheck
 void                 StaticCheck();
+// Parse ascii representation of message into binary, appending new data to BUF.
+// func:acr_nav.Ipc..ReadStrptr
+acr_nav::IpcCase     Ipc_ReadStrptr(algo::strptr str, algo::ByteAry &buf);
+// Parse ascii representation of message into binary, appending new data to BUF.
+// func:acr_nav.Ipc..ReadStrptrMaybe
+bool                 Ipc_ReadStrptrMaybe(algo::strptr str, algo::ByteAry &buf);
 // func:acr_nav...StateDump
 void                 StateDump(algo::cstring& out, algo_lib::Regx& filter);
+// func:acr_nav...IpcInit
+// this function is 'extrn' and implemented by user
+void                 IpcInit();
+// func:acr_nav...IpcAccept
+// this function is 'extrn' and implemented by user
+void                 IpcAccept();
+// func:acr_nav...cd_ipcconn_read_Step
+void                 cd_ipcconn_read_Step();
+// func:acr_nav...IpcProcessLine
+void                 IpcProcessLine(acr_nav::FIpcconn& conn, algo::strptr line);
+// func:acr_nav...cd_ipcconn_eof_Step
+void                 cd_ipcconn_eof_Step();
+// func:acr_nav...IpcCleanup
+void                 IpcCleanup();
 } // gen:ns_func
 // func:acr_nav...main
 int                  main(int argc, char **argv);

@@ -1,3 +1,4 @@
+dmmeta.dispatch  dispatch:acr_nav.Ipc  unk:N  read:Y  print:N  haslen:N  call:N  strict:N  dyn:N  kafka:N  comment:"IPC command dispatch"
 dmmeta.dispatch  dispatch:atf_amc.Disp  unk:N  read:N  print:N  haslen:N  call:N  strict:N  dyn:N  kafka:N  comment:""
 dmmeta.dispatch  dispatch:atf_amc.Msgs  unk:N  read:Y  print:N  haslen:N  call:N  strict:N  dyn:N  kafka:N  comment:""
 dmmeta.dispatch  dispatch:atf_amc.Ssimfiles  unk:N  read:Y  print:N  haslen:N  call:N  strict:N  dyn:N  kafka:N  comment:""

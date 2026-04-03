@@ -1144,6 +1144,10 @@ inline  dmmeta::Nsinclude::Nsinclude() {
     dmmeta::Nsinclude_Init(*this);
 }
 
+// --- dmmeta.Nsipc..Ctor
+inline  dmmeta::Nsipc::Nsipc() {
+}
+
 // --- dmmeta.Nsjs..Init
 // Set all fields to initial values.
 inline void dmmeta::Nsjs_Init(dmmeta::Nsjs& parent) {
@@ -2022,6 +2026,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Nsfast
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Nsinclude &row) {// cfmt:dmmeta.Nsinclude.String
     dmmeta::Nsinclude_Print(const_cast<dmmeta::Nsinclude&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Nsipc &row) {// cfmt:dmmeta.Nsipc.String
+    dmmeta::Nsipc_Print(const_cast<dmmeta::Nsipc&>(row), str);
     return str;
 }
 

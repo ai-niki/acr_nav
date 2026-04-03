@@ -1,17 +1,18 @@
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:dmmeta.Ns  navstack_depth:0  n_sel_ctype:11  n_ctype:1418  n_field:5696  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
-acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:12  sel_value:dmmeta.Ns
-acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:11  n_record:0
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:dmmeta.Ns  navstack_depth:0  n_sel_ctype:12  n_ctype:1421  n_field:5709  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
+acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:13  sel_value:dmmeta.Ns
+acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:12  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:dmmeta.Ns  kind:ctype  collapsed:N  n_match:0  n_record:85
 acr_nav.VisibleLeftItem  row:2  value:dmmeta.Nscpp  kind:ctype  collapsed:N  n_match:0  n_record:84
 acr_nav.VisibleLeftItem  row:3  value:dmmeta.Nsdb  kind:ctype  collapsed:N  n_match:0  n_record:12
 acr_nav.VisibleLeftItem  row:4  value:dmmeta.Nsdump  kind:ctype  collapsed:N  n_match:0  n_record:1
 acr_nav.VisibleLeftItem  row:5  value:dmmeta.Nsfast  kind:ctype  collapsed:N  n_match:0  n_record:0
 acr_nav.VisibleLeftItem  row:6  value:dmmeta.Nsinclude  kind:ctype  collapsed:N  n_match:0  n_record:7
-acr_nav.VisibleLeftItem  row:7  value:dmmeta.Nsjs  kind:ctype  collapsed:N  n_match:0  n_record:2
-acr_nav.VisibleLeftItem  row:8  value:dmmeta.Nsproto  kind:ctype  collapsed:N  n_match:0  n_record:12
-acr_nav.VisibleLeftItem  row:9  value:dmmeta.Nstype  kind:ctype  collapsed:N  n_match:0  n_record:6
-acr_nav.VisibleLeftItem  row:10  value:dmmeta.Nsversion  kind:ctype  collapsed:N  n_match:0  n_record:17
-acr_nav.VisibleLeftItem  row:11  value:dmmeta.Nsx  kind:ctype  collapsed:N  n_match:0  n_record:68
+acr_nav.VisibleLeftItem  row:7  value:dmmeta.Nsipc  kind:ctype  collapsed:N  n_match:0  n_record:1
+acr_nav.VisibleLeftItem  row:8  value:dmmeta.Nsjs  kind:ctype  collapsed:N  n_match:0  n_record:2
+acr_nav.VisibleLeftItem  row:9  value:dmmeta.Nsproto  kind:ctype  collapsed:N  n_match:0  n_record:12
+acr_nav.VisibleLeftItem  row:10  value:dmmeta.Nstype  kind:ctype  collapsed:N  n_match:0  n_record:6
+acr_nav.VisibleLeftItem  row:11  value:dmmeta.Nsversion  kind:ctype  collapsed:N  n_match:0  n_record:17
+acr_nav.VisibleLeftItem  row:12  value:dmmeta.Nsx  kind:ctype  collapsed:N  n_match:0  n_record:68
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:85  sel_value:"              protocol  GPL                                                                              "
 acr_nav.VisibleLine  row:0  value:"              protocol  GPL                                                                              "
 acr_nav.VisibleLine  row:1  value:"abt           exe       GPL      Algo Build Tool - build & link C++ targets                              "
@@ -55,20 +56,21 @@ acr_nav.PreviewNavCol  col_start:14  col_wid:8  name_len:6  col_name:nstype  tar
 acr_nav.PreviewNavCol  col_start:24  col_wid:7  name_len:7  col_name:license  target_ctype:dev.License
 acr_nav.PreviewNavCol  col_start:33  col_wid:72  name_len:7  col_name:comment  target_ctype:""
 
-acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Ns  navstack_depth:0  n_sel_ctype:11  n_ctype:1418  n_field:5696  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:1
-acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:12  sel_value:dmmeta.Ns
-acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:11  n_record:0
+acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Ns  navstack_depth:0  n_sel_ctype:12  n_ctype:1421  n_field:5709  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:1
+acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:13  sel_value:dmmeta.Ns
+acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:12  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:dmmeta.Ns  kind:ctype  collapsed:N  n_match:0  n_record:85
 acr_nav.VisibleLeftItem  row:2  value:dmmeta.Nscpp  kind:ctype  collapsed:N  n_match:0  n_record:84
 acr_nav.VisibleLeftItem  row:3  value:dmmeta.Nsdb  kind:ctype  collapsed:N  n_match:0  n_record:12
 acr_nav.VisibleLeftItem  row:4  value:dmmeta.Nsdump  kind:ctype  collapsed:N  n_match:0  n_record:1
 acr_nav.VisibleLeftItem  row:5  value:dmmeta.Nsfast  kind:ctype  collapsed:N  n_match:0  n_record:0
 acr_nav.VisibleLeftItem  row:6  value:dmmeta.Nsinclude  kind:ctype  collapsed:N  n_match:0  n_record:7
-acr_nav.VisibleLeftItem  row:7  value:dmmeta.Nsjs  kind:ctype  collapsed:N  n_match:0  n_record:2
-acr_nav.VisibleLeftItem  row:8  value:dmmeta.Nsproto  kind:ctype  collapsed:N  n_match:0  n_record:12
-acr_nav.VisibleLeftItem  row:9  value:dmmeta.Nstype  kind:ctype  collapsed:N  n_match:0  n_record:6
-acr_nav.VisibleLeftItem  row:10  value:dmmeta.Nsversion  kind:ctype  collapsed:N  n_match:0  n_record:17
-acr_nav.VisibleLeftItem  row:11  value:dmmeta.Nsx  kind:ctype  collapsed:N  n_match:0  n_record:68
+acr_nav.VisibleLeftItem  row:7  value:dmmeta.Nsipc  kind:ctype  collapsed:N  n_match:0  n_record:1
+acr_nav.VisibleLeftItem  row:8  value:dmmeta.Nsjs  kind:ctype  collapsed:N  n_match:0  n_record:2
+acr_nav.VisibleLeftItem  row:9  value:dmmeta.Nsproto  kind:ctype  collapsed:N  n_match:0  n_record:12
+acr_nav.VisibleLeftItem  row:10  value:dmmeta.Nstype  kind:ctype  collapsed:N  n_match:0  n_record:6
+acr_nav.VisibleLeftItem  row:11  value:dmmeta.Nsversion  kind:ctype  collapsed:N  n_match:0  n_record:17
+acr_nav.VisibleLeftItem  row:12  value:dmmeta.Nsx  kind:ctype  collapsed:N  n_match:0  n_record:68
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:85  sel_value:"              protocol  GPL                                                                              "
 acr_nav.VisibleLine  row:0  value:"              protocol  GPL                                                                              "
 acr_nav.VisibleLine  row:1  value:"abt           exe       GPL      Algo Build Tool - build & link C++ targets                              "
@@ -112,20 +114,21 @@ acr_nav.PreviewNavCol  col_start:14  col_wid:8  name_len:6  col_name:nstype  tar
 acr_nav.PreviewNavCol  col_start:24  col_wid:7  name_len:7  col_name:license  target_ctype:dev.License
 acr_nav.PreviewNavCol  col_start:33  col_wid:72  name_len:7  col_name:comment  target_ctype:""
 
-acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Ns  navstack_depth:0  n_sel_ctype:11  n_ctype:1418  n_field:5696  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:2
-acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:12  sel_value:dmmeta.Ns
-acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:11  n_record:0
+acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Ns  navstack_depth:0  n_sel_ctype:12  n_ctype:1421  n_field:5709  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:2
+acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:13  sel_value:dmmeta.Ns
+acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:12  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:dmmeta.Ns  kind:ctype  collapsed:N  n_match:0  n_record:85
 acr_nav.VisibleLeftItem  row:2  value:dmmeta.Nscpp  kind:ctype  collapsed:N  n_match:0  n_record:84
 acr_nav.VisibleLeftItem  row:3  value:dmmeta.Nsdb  kind:ctype  collapsed:N  n_match:0  n_record:12
 acr_nav.VisibleLeftItem  row:4  value:dmmeta.Nsdump  kind:ctype  collapsed:N  n_match:0  n_record:1
 acr_nav.VisibleLeftItem  row:5  value:dmmeta.Nsfast  kind:ctype  collapsed:N  n_match:0  n_record:0
 acr_nav.VisibleLeftItem  row:6  value:dmmeta.Nsinclude  kind:ctype  collapsed:N  n_match:0  n_record:7
-acr_nav.VisibleLeftItem  row:7  value:dmmeta.Nsjs  kind:ctype  collapsed:N  n_match:0  n_record:2
-acr_nav.VisibleLeftItem  row:8  value:dmmeta.Nsproto  kind:ctype  collapsed:N  n_match:0  n_record:12
-acr_nav.VisibleLeftItem  row:9  value:dmmeta.Nstype  kind:ctype  collapsed:N  n_match:0  n_record:6
-acr_nav.VisibleLeftItem  row:10  value:dmmeta.Nsversion  kind:ctype  collapsed:N  n_match:0  n_record:17
-acr_nav.VisibleLeftItem  row:11  value:dmmeta.Nsx  kind:ctype  collapsed:N  n_match:0  n_record:68
+acr_nav.VisibleLeftItem  row:7  value:dmmeta.Nsipc  kind:ctype  collapsed:N  n_match:0  n_record:1
+acr_nav.VisibleLeftItem  row:8  value:dmmeta.Nsjs  kind:ctype  collapsed:N  n_match:0  n_record:2
+acr_nav.VisibleLeftItem  row:9  value:dmmeta.Nsproto  kind:ctype  collapsed:N  n_match:0  n_record:12
+acr_nav.VisibleLeftItem  row:10  value:dmmeta.Nstype  kind:ctype  collapsed:N  n_match:0  n_record:6
+acr_nav.VisibleLeftItem  row:11  value:dmmeta.Nsversion  kind:ctype  collapsed:N  n_match:0  n_record:17
+acr_nav.VisibleLeftItem  row:12  value:dmmeta.Nsx  kind:ctype  collapsed:N  n_match:0  n_record:68
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:85  sel_value:"              protocol  GPL                                                                              "
 acr_nav.VisibleLine  row:0  value:"              protocol  GPL                                                                              "
 acr_nav.VisibleLine  row:1  value:"abt           exe       GPL      Algo Build Tool - build & link C++ targets                              "
@@ -169,20 +172,21 @@ acr_nav.PreviewNavCol  col_start:14  col_wid:8  name_len:6  col_name:nstype  tar
 acr_nav.PreviewNavCol  col_start:24  col_wid:7  name_len:7  col_name:license  target_ctype:dev.License
 acr_nav.PreviewNavCol  col_start:33  col_wid:72  name_len:7  col_name:comment  target_ctype:""
 
-acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Ns  navstack_depth:0  n_sel_ctype:11  n_ctype:1418  n_field:5696  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:2
-acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:12  sel_value:dmmeta.Ns
-acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:11  n_record:0
+acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Ns  navstack_depth:0  n_sel_ctype:12  n_ctype:1421  n_field:5709  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:2
+acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:13  sel_value:dmmeta.Ns
+acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:12  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:dmmeta.Ns  kind:ctype  collapsed:N  n_match:0  n_record:85
 acr_nav.VisibleLeftItem  row:2  value:dmmeta.Nscpp  kind:ctype  collapsed:N  n_match:0  n_record:84
 acr_nav.VisibleLeftItem  row:3  value:dmmeta.Nsdb  kind:ctype  collapsed:N  n_match:0  n_record:12
 acr_nav.VisibleLeftItem  row:4  value:dmmeta.Nsdump  kind:ctype  collapsed:N  n_match:0  n_record:1
 acr_nav.VisibleLeftItem  row:5  value:dmmeta.Nsfast  kind:ctype  collapsed:N  n_match:0  n_record:0
 acr_nav.VisibleLeftItem  row:6  value:dmmeta.Nsinclude  kind:ctype  collapsed:N  n_match:0  n_record:7
-acr_nav.VisibleLeftItem  row:7  value:dmmeta.Nsjs  kind:ctype  collapsed:N  n_match:0  n_record:2
-acr_nav.VisibleLeftItem  row:8  value:dmmeta.Nsproto  kind:ctype  collapsed:N  n_match:0  n_record:12
-acr_nav.VisibleLeftItem  row:9  value:dmmeta.Nstype  kind:ctype  collapsed:N  n_match:0  n_record:6
-acr_nav.VisibleLeftItem  row:10  value:dmmeta.Nsversion  kind:ctype  collapsed:N  n_match:0  n_record:17
-acr_nav.VisibleLeftItem  row:11  value:dmmeta.Nsx  kind:ctype  collapsed:N  n_match:0  n_record:68
+acr_nav.VisibleLeftItem  row:7  value:dmmeta.Nsipc  kind:ctype  collapsed:N  n_match:0  n_record:1
+acr_nav.VisibleLeftItem  row:8  value:dmmeta.Nsjs  kind:ctype  collapsed:N  n_match:0  n_record:2
+acr_nav.VisibleLeftItem  row:9  value:dmmeta.Nsproto  kind:ctype  collapsed:N  n_match:0  n_record:12
+acr_nav.VisibleLeftItem  row:10  value:dmmeta.Nstype  kind:ctype  collapsed:N  n_match:0  n_record:6
+acr_nav.VisibleLeftItem  row:11  value:dmmeta.Nsversion  kind:ctype  collapsed:N  n_match:0  n_record:17
+acr_nav.VisibleLeftItem  row:12  value:dmmeta.Nsx  kind:ctype  collapsed:N  n_match:0  n_record:68
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:85  sel_value:"              protocol  GPL                                                                              "
 acr_nav.VisibleLine  row:0  value:"              protocol  GPL                                                                              "
 acr_nav.VisibleLine  row:1  value:"abt           exe       GPL      Algo Build Tool - build & link C++ targets                              "
@@ -226,20 +230,21 @@ acr_nav.PreviewNavCol  col_start:14  col_wid:8  name_len:6  col_name:nstype  tar
 acr_nav.PreviewNavCol  col_start:24  col_wid:7  name_len:7  col_name:license  target_ctype:dev.License
 acr_nav.PreviewNavCol  col_start:33  col_wid:72  name_len:7  col_name:comment  target_ctype:""
 
-acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Ns  navstack_depth:0  n_sel_ctype:11  n_ctype:1418  n_field:5696  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:1
-acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:12  sel_value:dmmeta.Ns
-acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:11  n_record:0
+acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Ns  navstack_depth:0  n_sel_ctype:12  n_ctype:1421  n_field:5709  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:1
+acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:13  sel_value:dmmeta.Ns
+acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:12  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:dmmeta.Ns  kind:ctype  collapsed:N  n_match:0  n_record:85
 acr_nav.VisibleLeftItem  row:2  value:dmmeta.Nscpp  kind:ctype  collapsed:N  n_match:0  n_record:84
 acr_nav.VisibleLeftItem  row:3  value:dmmeta.Nsdb  kind:ctype  collapsed:N  n_match:0  n_record:12
 acr_nav.VisibleLeftItem  row:4  value:dmmeta.Nsdump  kind:ctype  collapsed:N  n_match:0  n_record:1
 acr_nav.VisibleLeftItem  row:5  value:dmmeta.Nsfast  kind:ctype  collapsed:N  n_match:0  n_record:0
 acr_nav.VisibleLeftItem  row:6  value:dmmeta.Nsinclude  kind:ctype  collapsed:N  n_match:0  n_record:7
-acr_nav.VisibleLeftItem  row:7  value:dmmeta.Nsjs  kind:ctype  collapsed:N  n_match:0  n_record:2
-acr_nav.VisibleLeftItem  row:8  value:dmmeta.Nsproto  kind:ctype  collapsed:N  n_match:0  n_record:12
-acr_nav.VisibleLeftItem  row:9  value:dmmeta.Nstype  kind:ctype  collapsed:N  n_match:0  n_record:6
-acr_nav.VisibleLeftItem  row:10  value:dmmeta.Nsversion  kind:ctype  collapsed:N  n_match:0  n_record:17
-acr_nav.VisibleLeftItem  row:11  value:dmmeta.Nsx  kind:ctype  collapsed:N  n_match:0  n_record:68
+acr_nav.VisibleLeftItem  row:7  value:dmmeta.Nsipc  kind:ctype  collapsed:N  n_match:0  n_record:1
+acr_nav.VisibleLeftItem  row:8  value:dmmeta.Nsjs  kind:ctype  collapsed:N  n_match:0  n_record:2
+acr_nav.VisibleLeftItem  row:9  value:dmmeta.Nsproto  kind:ctype  collapsed:N  n_match:0  n_record:12
+acr_nav.VisibleLeftItem  row:10  value:dmmeta.Nstype  kind:ctype  collapsed:N  n_match:0  n_record:6
+acr_nav.VisibleLeftItem  row:11  value:dmmeta.Nsversion  kind:ctype  collapsed:N  n_match:0  n_record:17
+acr_nav.VisibleLeftItem  row:12  value:dmmeta.Nsx  kind:ctype  collapsed:N  n_match:0  n_record:68
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:85  sel_value:"              protocol  GPL                                                                              "
 acr_nav.VisibleLine  row:0  value:"              protocol  GPL                                                                              "
 acr_nav.VisibleLine  row:1  value:"abt           exe       GPL      Algo Build Tool - build & link C++ targets                              "
@@ -283,20 +288,21 @@ acr_nav.PreviewNavCol  col_start:14  col_wid:8  name_len:6  col_name:nstype  tar
 acr_nav.PreviewNavCol  col_start:24  col_wid:7  name_len:7  col_name:license  target_ctype:dev.License
 acr_nav.PreviewNavCol  col_start:33  col_wid:72  name_len:7  col_name:comment  target_ctype:""
 
-acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Ns  navstack_depth:0  n_sel_ctype:11  n_ctype:1418  n_field:5696  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:1
-acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:12  sel_value:dmmeta.Ns
-acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:11  n_record:0
+acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Ns  navstack_depth:0  n_sel_ctype:12  n_ctype:1421  n_field:5709  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:1
+acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:13  sel_value:dmmeta.Ns
+acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:12  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:dmmeta.Ns  kind:ctype  collapsed:N  n_match:0  n_record:85
 acr_nav.VisibleLeftItem  row:2  value:dmmeta.Nscpp  kind:ctype  collapsed:N  n_match:0  n_record:84
 acr_nav.VisibleLeftItem  row:3  value:dmmeta.Nsdb  kind:ctype  collapsed:N  n_match:0  n_record:12
 acr_nav.VisibleLeftItem  row:4  value:dmmeta.Nsdump  kind:ctype  collapsed:N  n_match:0  n_record:1
 acr_nav.VisibleLeftItem  row:5  value:dmmeta.Nsfast  kind:ctype  collapsed:N  n_match:0  n_record:0
 acr_nav.VisibleLeftItem  row:6  value:dmmeta.Nsinclude  kind:ctype  collapsed:N  n_match:0  n_record:7
-acr_nav.VisibleLeftItem  row:7  value:dmmeta.Nsjs  kind:ctype  collapsed:N  n_match:0  n_record:2
-acr_nav.VisibleLeftItem  row:8  value:dmmeta.Nsproto  kind:ctype  collapsed:N  n_match:0  n_record:12
-acr_nav.VisibleLeftItem  row:9  value:dmmeta.Nstype  kind:ctype  collapsed:N  n_match:0  n_record:6
-acr_nav.VisibleLeftItem  row:10  value:dmmeta.Nsversion  kind:ctype  collapsed:N  n_match:0  n_record:17
-acr_nav.VisibleLeftItem  row:11  value:dmmeta.Nsx  kind:ctype  collapsed:N  n_match:0  n_record:68
+acr_nav.VisibleLeftItem  row:7  value:dmmeta.Nsipc  kind:ctype  collapsed:N  n_match:0  n_record:1
+acr_nav.VisibleLeftItem  row:8  value:dmmeta.Nsjs  kind:ctype  collapsed:N  n_match:0  n_record:2
+acr_nav.VisibleLeftItem  row:9  value:dmmeta.Nsproto  kind:ctype  collapsed:N  n_match:0  n_record:12
+acr_nav.VisibleLeftItem  row:10  value:dmmeta.Nstype  kind:ctype  collapsed:N  n_match:0  n_record:6
+acr_nav.VisibleLeftItem  row:11  value:dmmeta.Nsversion  kind:ctype  collapsed:N  n_match:0  n_record:17
+acr_nav.VisibleLeftItem  row:12  value:dmmeta.Nsx  kind:ctype  collapsed:N  n_match:0  n_record:68
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:85  sel_value:"              protocol  GPL                                                                              "
 acr_nav.VisibleLine  row:0  value:"              protocol  GPL                                                                              "
 acr_nav.VisibleLine  row:1  value:"abt           exe       GPL      Algo Build Tool - build & link C++ targets                              "

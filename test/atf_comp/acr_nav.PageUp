@@ -1,13 +1,13 @@
 acr_nav.Ack  ack:acr_nav.Navigate  ok:Y  ctype:dmmeta.Ctype  viewmode:fields  navstack_depth:0  msg:""
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1417  n_ctype:1418  n_field:5696  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
-acr_nav.PanelState  panel:ctype_list  sel_row:96  scroll_offset:60  n_items:212  sel_value:dmmeta.Floadtuples
-acr_nav.VisibleLeftItem  row:60  value:dmmeta.Ctypelen  kind:ctype  collapsed:N  n_match:0  n_record:1331
-acr_nav.VisibleLeftItem  row:61  value:dmmeta.Dispatch  kind:ctype  collapsed:N  n_match:0  n_record:9
-acr_nav.VisibleLeftItem  row:62  value:dmmeta.DispatchMsg  kind:ctype  collapsed:N  n_match:0  n_record:28
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1420  n_ctype:1421  n_field:5709  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
+acr_nav.PanelState  panel:ctype_list  sel_row:96  scroll_offset:60  n_items:213  sel_value:dmmeta.Floadtuples
+acr_nav.VisibleLeftItem  row:60  value:dmmeta.Ctypelen  kind:ctype  collapsed:N  n_match:0  n_record:1334
+acr_nav.VisibleLeftItem  row:61  value:dmmeta.Dispatch  kind:ctype  collapsed:N  n_match:0  n_record:10
+acr_nav.VisibleLeftItem  row:62  value:dmmeta.DispatchMsg  kind:ctype  collapsed:N  n_match:0  n_record:29
 acr_nav.VisibleLeftItem  row:63  value:dmmeta.Dispctx  kind:ctype  collapsed:N  n_match:0  n_record:2
 acr_nav.VisibleLeftItem  row:64  value:dmmeta.Dispfilter  kind:ctype  collapsed:N  n_match:0  n_record:1
-acr_nav.VisibleLeftItem  row:65  value:dmmeta.Dispsig  kind:ctype  collapsed:N  n_match:0  n_record:41
+acr_nav.VisibleLeftItem  row:65  value:dmmeta.Dispsig  kind:ctype  collapsed:N  n_match:0  n_record:42
 acr_nav.VisibleLeftItem  row:66  value:dmmeta.Dispsigcheck  kind:ctype  collapsed:N  n_match:0  n_record:0
 acr_nav.VisibleLeftItem  row:67  value:dmmeta.Disptrace  kind:ctype  collapsed:N  n_match:0  n_record:2
 acr_nav.VisibleLeftItem  row:68  value:dmmeta.Falias  kind:ctype  collapsed:N  n_match:0  n_record:4
@@ -17,7 +17,7 @@ acr_nav.VisibleLeftItem  row:71  value:dmmeta.Fastop  kind:ctype  collapsed:N  n
 acr_nav.VisibleLeftItem  row:72  value:dmmeta.Fbase  kind:ctype  collapsed:N  n_match:0  n_record:80
 acr_nav.VisibleLeftItem  row:73  value:dmmeta.Fbigend  kind:ctype  collapsed:N  n_match:0  n_record:14
 acr_nav.VisibleLeftItem  row:74  value:dmmeta.Fbitset  kind:ctype  collapsed:N  n_match:0  n_record:7
-acr_nav.VisibleLeftItem  row:75  value:dmmeta.Fbuf  kind:ctype  collapsed:N  n_match:0  n_record:13
+acr_nav.VisibleLeftItem  row:75  value:dmmeta.Fbuf  kind:ctype  collapsed:N  n_match:0  n_record:14
 acr_nav.VisibleLeftItem  row:76  value:dmmeta.Fbufdir  kind:ctype  collapsed:N  n_match:0  n_record:2
 acr_nav.VisibleLeftItem  row:77  value:dmmeta.Fbufiotype  kind:ctype  collapsed:N  n_match:0  n_record:3
 acr_nav.VisibleLeftItem  row:78  value:dmmeta.Fbuftype  kind:ctype  collapsed:N  n_match:0  n_record:4
@@ -33,9 +33,9 @@ acr_nav.VisibleLeftItem  row:87  value:dmmeta.Fdec  kind:ctype  collapsed:N  n_m
 acr_nav.VisibleLeftItem  row:88  value:dmmeta.Fdelay  kind:ctype  collapsed:N  n_match:0  n_record:4
 acr_nav.VisibleLeftItem  row:89  value:dmmeta.Ffast  kind:ctype  collapsed:N  n_match:0  n_record:0
 acr_nav.VisibleLeftItem  row:90  value:dmmeta.Fflag  kind:ctype  collapsed:N  n_match:0  n_record:2
-acr_nav.VisibleLeftItem  row:91  value:dmmeta.Field  kind:ctype  collapsed:N  n_match:0  n_record:5696
+acr_nav.VisibleLeftItem  row:91  value:dmmeta.Field  kind:ctype  collapsed:N  n_match:0  n_record:5709
 acr_nav.VisibleLeftItem  row:92  value:dmmeta.Findrem  kind:ctype  collapsed:N  n_match:0  n_record:2
-acr_nav.VisibleLeftItem  row:93  value:dmmeta.Finput  kind:ctype  collapsed:N  n_match:0  n_record:317
+acr_nav.VisibleLeftItem  row:93  value:dmmeta.Finput  kind:ctype  collapsed:N  n_match:0  n_record:318
 acr_nav.VisibleLeftItem  row:94  value:dmmeta.Fkafka  kind:ctype  collapsed:N  n_match:0  n_record:0
 acr_nav.VisibleLeftItem  row:95  value:dmmeta.Fldoffset  kind:ctype  collapsed:N  n_match:0  n_record:2
 acr_nav.VisibleLeftItem  row:96  value:dmmeta.Floadtuples  kind:ctype  collapsed:N  n_match:0  n_record:40
@@ -44,15 +44,15 @@ acr_nav.VisibleField  row:0  field:dmmeta.Floadtuples.field  arg:dmmeta.Field  r
 acr_nav.VisibleField  row:1  field:dmmeta.Floadtuples.ctype  arg:dmmeta.Ctype  reftype:Pkey  style:field_upref  navigable:Y  match:N
 acr_nav.VisibleField  row:2  field:dmmeta.Floadtuples.comment  arg:algo.Comment  reftype:Val  style:field_val  navigable:Y  match:N
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1417  n_ctype:1418  n_field:5696  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
-acr_nav.PanelState  panel:ctype_list  sel_row:59  scroll_offset:59  n_items:212  sel_value:dmmeta.Ctype
-acr_nav.VisibleLeftItem  row:59  value:dmmeta.Ctype  kind:ctype  collapsed:N  n_match:0  n_record:1418
-acr_nav.VisibleLeftItem  row:60  value:dmmeta.Ctypelen  kind:ctype  collapsed:N  n_match:0  n_record:1331
-acr_nav.VisibleLeftItem  row:61  value:dmmeta.Dispatch  kind:ctype  collapsed:N  n_match:0  n_record:9
-acr_nav.VisibleLeftItem  row:62  value:dmmeta.DispatchMsg  kind:ctype  collapsed:N  n_match:0  n_record:28
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1420  n_ctype:1421  n_field:5709  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
+acr_nav.PanelState  panel:ctype_list  sel_row:59  scroll_offset:59  n_items:213  sel_value:dmmeta.Ctype
+acr_nav.VisibleLeftItem  row:59  value:dmmeta.Ctype  kind:ctype  collapsed:N  n_match:0  n_record:1421
+acr_nav.VisibleLeftItem  row:60  value:dmmeta.Ctypelen  kind:ctype  collapsed:N  n_match:0  n_record:1334
+acr_nav.VisibleLeftItem  row:61  value:dmmeta.Dispatch  kind:ctype  collapsed:N  n_match:0  n_record:10
+acr_nav.VisibleLeftItem  row:62  value:dmmeta.DispatchMsg  kind:ctype  collapsed:N  n_match:0  n_record:29
 acr_nav.VisibleLeftItem  row:63  value:dmmeta.Dispctx  kind:ctype  collapsed:N  n_match:0  n_record:2
 acr_nav.VisibleLeftItem  row:64  value:dmmeta.Dispfilter  kind:ctype  collapsed:N  n_match:0  n_record:1
-acr_nav.VisibleLeftItem  row:65  value:dmmeta.Dispsig  kind:ctype  collapsed:N  n_match:0  n_record:41
+acr_nav.VisibleLeftItem  row:65  value:dmmeta.Dispsig  kind:ctype  collapsed:N  n_match:0  n_record:42
 acr_nav.VisibleLeftItem  row:66  value:dmmeta.Dispsigcheck  kind:ctype  collapsed:N  n_match:0  n_record:0
 acr_nav.VisibleLeftItem  row:67  value:dmmeta.Disptrace  kind:ctype  collapsed:N  n_match:0  n_record:2
 acr_nav.VisibleLeftItem  row:68  value:dmmeta.Falias  kind:ctype  collapsed:N  n_match:0  n_record:4
@@ -62,7 +62,7 @@ acr_nav.VisibleLeftItem  row:71  value:dmmeta.Fastop  kind:ctype  collapsed:N  n
 acr_nav.VisibleLeftItem  row:72  value:dmmeta.Fbase  kind:ctype  collapsed:N  n_match:0  n_record:80
 acr_nav.VisibleLeftItem  row:73  value:dmmeta.Fbigend  kind:ctype  collapsed:N  n_match:0  n_record:14
 acr_nav.VisibleLeftItem  row:74  value:dmmeta.Fbitset  kind:ctype  collapsed:N  n_match:0  n_record:7
-acr_nav.VisibleLeftItem  row:75  value:dmmeta.Fbuf  kind:ctype  collapsed:N  n_match:0  n_record:13
+acr_nav.VisibleLeftItem  row:75  value:dmmeta.Fbuf  kind:ctype  collapsed:N  n_match:0  n_record:14
 acr_nav.VisibleLeftItem  row:76  value:dmmeta.Fbufdir  kind:ctype  collapsed:N  n_match:0  n_record:2
 acr_nav.VisibleLeftItem  row:77  value:dmmeta.Fbufiotype  kind:ctype  collapsed:N  n_match:0  n_record:3
 acr_nav.VisibleLeftItem  row:78  value:dmmeta.Fbuftype  kind:ctype  collapsed:N  n_match:0  n_record:4
@@ -78,9 +78,9 @@ acr_nav.VisibleLeftItem  row:87  value:dmmeta.Fdec  kind:ctype  collapsed:N  n_m
 acr_nav.VisibleLeftItem  row:88  value:dmmeta.Fdelay  kind:ctype  collapsed:N  n_match:0  n_record:4
 acr_nav.VisibleLeftItem  row:89  value:dmmeta.Ffast  kind:ctype  collapsed:N  n_match:0  n_record:0
 acr_nav.VisibleLeftItem  row:90  value:dmmeta.Fflag  kind:ctype  collapsed:N  n_match:0  n_record:2
-acr_nav.VisibleLeftItem  row:91  value:dmmeta.Field  kind:ctype  collapsed:N  n_match:0  n_record:5696
+acr_nav.VisibleLeftItem  row:91  value:dmmeta.Field  kind:ctype  collapsed:N  n_match:0  n_record:5709
 acr_nav.VisibleLeftItem  row:92  value:dmmeta.Findrem  kind:ctype  collapsed:N  n_match:0  n_record:2
-acr_nav.VisibleLeftItem  row:93  value:dmmeta.Finput  kind:ctype  collapsed:N  n_match:0  n_record:317
+acr_nav.VisibleLeftItem  row:93  value:dmmeta.Finput  kind:ctype  collapsed:N  n_match:0  n_record:318
 acr_nav.VisibleLeftItem  row:94  value:dmmeta.Fkafka  kind:ctype  collapsed:N  n_match:0  n_record:0
 acr_nav.VisibleLeftItem  row:95  value:dmmeta.Fldoffset  kind:ctype  collapsed:N  n_match:0  n_record:2
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:4  sel_value:dmmeta.Ctype.ctype
@@ -89,15 +89,15 @@ acr_nav.VisibleField  row:1  field:dmmeta.Ctype.ns  arg:dmmeta.Ns  reftype:Pkey 
 acr_nav.VisibleField  row:2  field:dmmeta.Ctype.name  arg:algo.Smallstr100  reftype:Val  style:field_val  navigable:Y  match:N
 acr_nav.VisibleField  row:3  field:dmmeta.Ctype.comment  arg:algo.Comment  reftype:Val  style:field_val  navigable:Y  match:N
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1417  n_ctype:1418  n_field:5696  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
-acr_nav.PanelState  panel:ctype_list  sel_row:59  scroll_offset:59  n_items:212  sel_value:dmmeta.Ctype
-acr_nav.VisibleLeftItem  row:59  value:dmmeta.Ctype  kind:ctype  collapsed:N  n_match:0  n_record:1418
-acr_nav.VisibleLeftItem  row:60  value:dmmeta.Ctypelen  kind:ctype  collapsed:N  n_match:0  n_record:1331
-acr_nav.VisibleLeftItem  row:61  value:dmmeta.Dispatch  kind:ctype  collapsed:N  n_match:0  n_record:9
-acr_nav.VisibleLeftItem  row:62  value:dmmeta.DispatchMsg  kind:ctype  collapsed:N  n_match:0  n_record:28
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1420  n_ctype:1421  n_field:5709  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
+acr_nav.PanelState  panel:ctype_list  sel_row:59  scroll_offset:59  n_items:213  sel_value:dmmeta.Ctype
+acr_nav.VisibleLeftItem  row:59  value:dmmeta.Ctype  kind:ctype  collapsed:N  n_match:0  n_record:1421
+acr_nav.VisibleLeftItem  row:60  value:dmmeta.Ctypelen  kind:ctype  collapsed:N  n_match:0  n_record:1334
+acr_nav.VisibleLeftItem  row:61  value:dmmeta.Dispatch  kind:ctype  collapsed:N  n_match:0  n_record:10
+acr_nav.VisibleLeftItem  row:62  value:dmmeta.DispatchMsg  kind:ctype  collapsed:N  n_match:0  n_record:29
 acr_nav.VisibleLeftItem  row:63  value:dmmeta.Dispctx  kind:ctype  collapsed:N  n_match:0  n_record:2
 acr_nav.VisibleLeftItem  row:64  value:dmmeta.Dispfilter  kind:ctype  collapsed:N  n_match:0  n_record:1
-acr_nav.VisibleLeftItem  row:65  value:dmmeta.Dispsig  kind:ctype  collapsed:N  n_match:0  n_record:41
+acr_nav.VisibleLeftItem  row:65  value:dmmeta.Dispsig  kind:ctype  collapsed:N  n_match:0  n_record:42
 acr_nav.VisibleLeftItem  row:66  value:dmmeta.Dispsigcheck  kind:ctype  collapsed:N  n_match:0  n_record:0
 acr_nav.VisibleLeftItem  row:67  value:dmmeta.Disptrace  kind:ctype  collapsed:N  n_match:0  n_record:2
 acr_nav.VisibleLeftItem  row:68  value:dmmeta.Falias  kind:ctype  collapsed:N  n_match:0  n_record:4
@@ -107,7 +107,7 @@ acr_nav.VisibleLeftItem  row:71  value:dmmeta.Fastop  kind:ctype  collapsed:N  n
 acr_nav.VisibleLeftItem  row:72  value:dmmeta.Fbase  kind:ctype  collapsed:N  n_match:0  n_record:80
 acr_nav.VisibleLeftItem  row:73  value:dmmeta.Fbigend  kind:ctype  collapsed:N  n_match:0  n_record:14
 acr_nav.VisibleLeftItem  row:74  value:dmmeta.Fbitset  kind:ctype  collapsed:N  n_match:0  n_record:7
-acr_nav.VisibleLeftItem  row:75  value:dmmeta.Fbuf  kind:ctype  collapsed:N  n_match:0  n_record:13
+acr_nav.VisibleLeftItem  row:75  value:dmmeta.Fbuf  kind:ctype  collapsed:N  n_match:0  n_record:14
 acr_nav.VisibleLeftItem  row:76  value:dmmeta.Fbufdir  kind:ctype  collapsed:N  n_match:0  n_record:2
 acr_nav.VisibleLeftItem  row:77  value:dmmeta.Fbufiotype  kind:ctype  collapsed:N  n_match:0  n_record:3
 acr_nav.VisibleLeftItem  row:78  value:dmmeta.Fbuftype  kind:ctype  collapsed:N  n_match:0  n_record:4
@@ -123,9 +123,9 @@ acr_nav.VisibleLeftItem  row:87  value:dmmeta.Fdec  kind:ctype  collapsed:N  n_m
 acr_nav.VisibleLeftItem  row:88  value:dmmeta.Fdelay  kind:ctype  collapsed:N  n_match:0  n_record:4
 acr_nav.VisibleLeftItem  row:89  value:dmmeta.Ffast  kind:ctype  collapsed:N  n_match:0  n_record:0
 acr_nav.VisibleLeftItem  row:90  value:dmmeta.Fflag  kind:ctype  collapsed:N  n_match:0  n_record:2
-acr_nav.VisibleLeftItem  row:91  value:dmmeta.Field  kind:ctype  collapsed:N  n_match:0  n_record:5696
+acr_nav.VisibleLeftItem  row:91  value:dmmeta.Field  kind:ctype  collapsed:N  n_match:0  n_record:5709
 acr_nav.VisibleLeftItem  row:92  value:dmmeta.Findrem  kind:ctype  collapsed:N  n_match:0  n_record:2
-acr_nav.VisibleLeftItem  row:93  value:dmmeta.Finput  kind:ctype  collapsed:N  n_match:0  n_record:317
+acr_nav.VisibleLeftItem  row:93  value:dmmeta.Finput  kind:ctype  collapsed:N  n_match:0  n_record:318
 acr_nav.VisibleLeftItem  row:94  value:dmmeta.Fkafka  kind:ctype  collapsed:N  n_match:0  n_record:0
 acr_nav.VisibleLeftItem  row:95  value:dmmeta.Fldoffset  kind:ctype  collapsed:N  n_match:0  n_record:2
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:4  sel_value:dmmeta.Ctype.ctype

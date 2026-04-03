@@ -30,6 +30,7 @@
 #include <net/if.h>
 #include <net/if_arp.h>
 #include <netdb.h>
+#include <sys/un.h>
 
 namespace lib_netio { // update-hdr
     // Dear human:
@@ -51,6 +52,9 @@ namespace lib_netio { // update-hdr
     // Create Netlink socket
     algo::Fildes CreateNetlinkSocket();
 
+    // Create Unix domain socket
+    algo::Fildes CreateUnixSocket();
+
     // Wrapper for bind() -- Ipport
     bool Bind(algo::Fildes sock, ietf::Ipport ipport);
 
@@ -59,6 +63,10 @@ namespace lib_netio { // update-hdr
 
     // Wrapper for bind to netlink
     bool BindNetlink(algo::Fildes sock);
+
+    // Wrapper for bind() to Unix domain socket path
+    // Unlinks the path first in case a stale socket file exists
+    bool BindUnix(algo::Fildes sock, strptr path);
 
     // send GETLINK netlink request
     bool RequestLinkDump(algo::Fildes sock);
@@ -75,6 +83,10 @@ namespace lib_netio { // update-hdr
     // accept remote connection:
     // return connection socket and fills ipport with client address/port
     algo::Fildes Accept(algo::Fildes listen_sock, ietf::Ipport &ipport);
+
+    // Accept connection on Unix domain socket
+    // No client address extraction needed for Unix sockets
+    algo::Fildes AcceptUnix(algo::Fildes listen_sock);
 
     // Get socket error -- getsockopt(SO_ERROR);
     // in case of getsockopt failure, return errno

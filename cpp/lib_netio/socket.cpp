@@ -30,6 +30,7 @@
 
 #include <linux/netlink.h>
 #include <linux/rtnetlink.h>
+#include <sys/un.h>
 
 //------------------------------------------------------------------------------
 
@@ -50,6 +51,13 @@ algo::Fildes lib_netio::CreateUdpSocket() {
 // Create Netlink socket
 algo::Fildes lib_netio::CreateNetlinkSocket() {
     return algo::Fildes(socket(AF_NETLINK, SOCK_RAW, NETLINK_ROUTE));
+}
+
+//------------------------------------------------------------------------------
+
+// Create Unix domain socket
+algo::Fildes lib_netio::CreateUnixSocket() {
+    return algo::Fildes(socket(AF_UNIX, SOCK_STREAM, 0));
 }
 
 //------------------------------------------------------------------------------
@@ -88,6 +96,25 @@ bool lib_netio::BindNetlink(algo::Fildes sock) {
     sa.nl_groups = RTMGRP_LINK;
     return bind(sock.value, (sockaddr *)&sa, sizeof sa) == 0;
 };
+
+//------------------------------------------------------------------------------
+
+// Wrapper for bind() to Unix domain socket path
+// Unlinks the path first in case a stale socket file exists
+bool lib_netio::BindUnix(algo::Fildes sock, strptr path) {
+    sockaddr_un sa;
+    algo::ZeroBytes(sa);
+    sa.sun_family = AF_UNIX;
+    int maxlen = sizeof(sa.sun_path) - 1;
+    int copylen = i32_Min(elems_N(path), maxlen);
+    memcpy(sa.sun_path, path.elems, copylen);
+    sa.sun_path[copylen] = 0;
+    tempstr zpath(path);
+    unlink(Zeroterm(zpath));
+    return bind(sock.value, (sockaddr *)&sa, sizeof sa) == 0;
+}
+
+//------------------------------------------------------------------------------
 
 // send GETLINK netlink request
 bool lib_netio::RequestLinkDump(algo::Fildes sock) {
@@ -154,6 +181,16 @@ algo::Fildes lib_netio::Accept(algo::Fildes listen_sock, ietf::Ipport &ipport) {
     sock.value = accept(listen_sock.value, (sockaddr *)&client_addr, &client_addr_len);
     ipport.ip.ipv4 = ntohl(client_addr.sin_addr.s_addr);
     ipport.port = ntohs(client_addr.sin_port);
+    return sock;
+}
+
+//------------------------------------------------------------------------------
+
+// Accept connection on Unix domain socket
+// No client address extraction needed for Unix sockets
+algo::Fildes lib_netio::AcceptUnix(algo::Fildes listen_sock) {
+    algo::Fildes sock;
+    sock.value = accept(listen_sock.value, NULL, NULL);
     return sock;
 }
 

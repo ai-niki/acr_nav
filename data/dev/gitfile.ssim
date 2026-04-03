@@ -196,6 +196,7 @@ dev.gitfile  gitfile:cpp/acr_in/data.cpp
 dev.gitfile  gitfile:cpp/acr_my/acr_my.cpp
 dev.gitfile  gitfile:cpp/acr_nav/content.cpp
 dev.gitfile  gitfile:cpp/acr_nav/graph.cpp
+dev.gitfile  gitfile:cpp/acr_nav/ipc.cpp
 dev.gitfile  gitfile:cpp/acr_nav/main.cpp
 dev.gitfile  gitfile:cpp/acr_nav/nav.cpp
 dev.gitfile  gitfile:cpp/acr_nav/render.cpp
@@ -247,6 +248,7 @@ dev.gitfile  gitfile:cpp/amc/hook.cpp
 dev.gitfile  gitfile:cpp/amc/include.cpp
 dev.gitfile  gitfile:cpp/amc/inlary.cpp
 dev.gitfile  gitfile:cpp/amc/io.cpp
+dev.gitfile  gitfile:cpp/amc/ipc.cpp
 dev.gitfile  gitfile:cpp/amc/js.cpp
 dev.gitfile  gitfile:cpp/amc/kafka.cpp
 dev.gitfile  gitfile:cpp/amc/lary.cpp
@@ -721,6 +723,7 @@ dev.gitfile  gitfile:data/dmmeta/nsdb.ssim
 dev.gitfile  gitfile:data/dmmeta/nsdump.ssim
 dev.gitfile  gitfile:data/dmmeta/nsfast.ssim
 dev.gitfile  gitfile:data/dmmeta/nsinclude.ssim
+dev.gitfile  gitfile:data/dmmeta/nsipc.ssim
 dev.gitfile  gitfile:data/dmmeta/nsjs.ssim
 dev.gitfile  gitfile:data/dmmeta/nsproto.ssim
 dev.gitfile  gitfile:data/dmmeta/nstype.ssim
@@ -1783,6 +1786,7 @@ dev.gitfile  gitfile:txt/ssimdb/dmmeta/nsdb.md
 dev.gitfile  gitfile:txt/ssimdb/dmmeta/nsdump.md
 dev.gitfile  gitfile:txt/ssimdb/dmmeta/nsfast.md
 dev.gitfile  gitfile:txt/ssimdb/dmmeta/nsinclude.md
+dev.gitfile  gitfile:txt/ssimdb/dmmeta/nsipc.md
 dev.gitfile  gitfile:txt/ssimdb/dmmeta/nsjs.md
 dev.gitfile  gitfile:txt/ssimdb/dmmeta/nsproto.md
 dev.gitfile  gitfile:txt/ssimdb/dmmeta/nstype.md

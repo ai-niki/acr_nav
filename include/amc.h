@@ -1013,6 +1013,18 @@ namespace amc { // update-hdr
     // void tfunc_Io_LoadStatic(); // gstatic/amcdb.tfunc:Io.LoadStatic
 
     // -------------------------------------------------------------------
+    // cpp/amc/ipc.cpp
+    //
+
+    // For each namespace with both nsipc and nsdump records, generate IPC
+    // socket listener functions that expose the StateDump interface via
+    // a Unix domain socket.  The schema already declares FIpcconn, FDb
+    // fields (ipc_listen, ipc_socket_path, ipcconn pool/list), fbuf, Tpool,
+    // and Llist -- this generator only fills in the function bodies.
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void gen_ns_ipc(); // gstatic/amcdb.gen:ns_ipc
+
+    // -------------------------------------------------------------------
     // cpp/amc/js.cpp
     //
 
@@ -1694,8 +1706,9 @@ namespace amc { // update-hdr
     //
 
     // For each namespace with an nsdump record, generate a StateDump function
-    // that emits a pool census (record count per pool) plus filtered record dump
-    // for pools whose arg ctype has a cfmt with print:Y.
+    // that emits a pool census (record count per pool) plus filtered record dump.
+    // Pools whose arg ctype has a cfmt with print:Y use the cfmt printer.
+    // Pools without cfmt get field-by-field serialization.
     // Only Lary and Inlary pools are covered — Tpool/Lpool/Sbrk have no cursor.
     //     (user-implemented function, prototype is in amc-generated header)
     // void gen_ns_state_dump(); // gstatic/amcdb.gen:ns_state_dump

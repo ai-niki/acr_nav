@@ -1,7 +1,7 @@
-report.PoolCensus  ctype:acr_nav.FCtype  n_record:1418
+report.PoolCensus  ctype:acr_nav.FCtype  n_record:1421
 report.PoolCensus  ctype:acr_nav.FDetailsrc  n_record:5
 report.PoolCensus  ctype:acr_nav.FHelpgroup  n_record:5
-report.PoolCensus  ctype:acr_nav.FField  n_record:5696
+report.PoolCensus  ctype:acr_nav.FField  n_record:5709
 report.PoolCensus  ctype:acr_nav.FNs  n_record:85
 report.PoolCensus  ctype:acr_nav.FReftype  n_record:35
 report.PoolCensus  ctype:acr_nav.FNavaction  n_record:28
@@ -10,7 +10,7 @@ report.PoolCensus  ctype:acr_nav.FPanel  n_record:2
 report.PoolCensus  ctype:acr_nav.FNavmode  n_record:2
 report.PoolCensus  ctype:acr_nav.FNavstyle  n_record:22
 report.PoolCensus  ctype:acr_nav.FReftypestyle  n_record:35
-report.PoolCensus  ctype:acr_nav.FSsimfile  n_record:259
+report.PoolCensus  ctype:acr_nav.FSsimfile  n_record:260
 report.PoolCensus  ctype:acr_nav.FViewmode  n_record:9
 report.PoolCensus  ctype:acr_nav.FFiltertarget  n_record:5
 

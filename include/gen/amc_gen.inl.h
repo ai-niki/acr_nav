@@ -8303,6 +8303,48 @@ inline amc::FNsdump& amc::nsdump_qFind(u64 t) {
     return _db.nsdump_lary[bsr][index];
 }
 
+// --- amc.FDb.nsipc.EmptyQ
+// Return true if index is empty
+inline bool amc::nsipc_EmptyQ() {
+    return _db.nsipc_n == 0;
+}
+
+// --- amc.FDb.nsipc.Find
+// Look up row by row id. Return NULL if out of range
+inline amc::FNsipc* amc::nsipc_Find(u64 t) {
+    amc::FNsipc *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.nsipc_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.nsipc_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- amc.FDb.nsipc.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline amc::FNsipc* amc::nsipc_Last() {
+    return nsipc_Find(u64(_db.nsipc_n-1));
+}
+
+// --- amc.FDb.nsipc.N
+// Return number of items in the pool
+inline i32 amc::nsipc_N() {
+    return _db.nsipc_n;
+}
+
+// --- amc.FDb.nsipc.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline amc::FNsipc& amc::nsipc_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.nsipc_lary[bsr][index];
+}
+
 // --- amc.FDb.fsort_curs.Reset
 // cursor points to valid item
 inline void amc::_db_fsort_curs_Reset(_db_fsort_curs &curs, amc::FDb &parent) {
@@ -11542,6 +11584,31 @@ inline void amc::_db_nsdump_curs_Next(_db_nsdump_curs &curs) {
 // item access
 inline amc::FNsdump& amc::_db_nsdump_curs_Access(_db_nsdump_curs &curs) {
     return nsdump_qFind(u64(curs.index));
+}
+
+// --- amc.FDb.nsipc_curs.Reset
+// cursor points to valid item
+inline void amc::_db_nsipc_curs_Reset(_db_nsipc_curs &curs, amc::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- amc.FDb.nsipc_curs.ValidQ
+// cursor points to valid item
+inline bool amc::_db_nsipc_curs_ValidQ(_db_nsipc_curs &curs) {
+    return curs.index < _db.nsipc_n;
+}
+
+// --- amc.FDb.nsipc_curs.Next
+// proceed to next item
+inline void amc::_db_nsipc_curs_Next(_db_nsipc_curs &curs) {
+    curs.index++;
+}
+
+// --- amc.FDb.nsipc_curs.Access
+// item access
+inline amc::FNsipc& amc::_db_nsipc_curs_Access(_db_nsipc_curs &curs) {
+    return nsipc_qFind(u64(curs.index));
 }
 
 // --- amc.FDispatch.c_dispfilter.InsertMaybe
@@ -15522,6 +15589,26 @@ inline void amc::c_nsdump_Remove(amc::FNs& ns, amc::FNsdump& row) {
     }
 }
 
+// --- amc.FNs.c_nsipc.InsertMaybe
+// Insert row into pointer index. Return final membership status.
+inline bool amc::c_nsipc_InsertMaybe(amc::FNs& ns, amc::FNsipc& row) {
+    amc::FNsipc* ptr = ns.c_nsipc;
+    bool retval = (ptr == NULL) | (ptr == &row);
+    if (retval) {
+        ns.c_nsipc = &row;
+    }
+    return retval;
+}
+
+// --- amc.FNs.c_nsipc.Remove
+// Remove element from index. If element is not in index, do nothing.
+inline void amc::c_nsipc_Remove(amc::FNs& ns, amc::FNsipc& row) {
+    amc::FNsipc *ptr = ns.c_nsipc;
+    if (LIKELY(ptr == &row)) {
+        ns.c_nsipc = NULL;
+    }
+}
+
 // --- amc.FNs.c_ctype_curs.Reset
 inline void amc::ns_c_ctype_curs_Reset(ns_c_ctype_curs &curs, amc::FNs &parent) {
     curs.elems = parent.c_ctype_elems;
@@ -15974,6 +16061,15 @@ inline  amc::FNsinclude::FNsinclude() {
 // --- amc.FNsinclude..Dtor
 inline  amc::FNsinclude::~FNsinclude() {
     amc::FNsinclude_Uninit(*this);
+}
+
+// --- amc.FNsipc..Ctor
+inline  amc::FNsipc::FNsipc() {
+}
+
+// --- amc.FNsipc..Dtor
+inline  amc::FNsipc::~FNsipc() {
+    amc::FNsipc_Uninit(*this);
 }
 
 // --- amc.FNsjs..Init

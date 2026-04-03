@@ -170,6 +170,7 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_serv          : ret = "serv";  break;
         case command_FieldId_headless      : ret = "headless";  break;
         case command_FieldId_dump          : ret = "dump";  break;
+        case command_FieldId_ipc           : ret = "ipc";  break;
         case command_FieldId_in_dir        : ret = "in_dir";  break;
         case command_FieldId_out_dir       : ret = "out_dir";  break;
         case command_FieldId_proto         : ret = "proto";  break;
@@ -498,6 +499,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR3('g','e','n'): {
                     value_SetEnum(parent,command_FieldId_gen); ret = true; break;
+                }
+                case LE_STR3('i','p','c'): {
+                    value_SetEnum(parent,command_FieldId_ipc); ret = true; break;
                 }
                 case LE_STR3('k','e','y'): {
                     value_SetEnum(parent,command_FieldId_key); ret = true; break;
@@ -7214,6 +7218,9 @@ bool command::acr_nav_ReadFieldMaybe(command::acr_nav& parent, algo::strptr fiel
         case command_FieldId_dump: {
             retval = algo::cstring_ReadStrptrMaybe(parent.dump, strval);
         } break;
+        case command_FieldId_ipc: {
+            retval = bool_ReadStrptrMaybe(parent.ipc, strval);
+        } break;
         default: {
             retval = false;
             algo_lib::AppendErrtext("comment", "unrecognized attr");
@@ -7280,6 +7287,12 @@ void command::acr_nav_PrintArgv(command::acr_nav& row, algo::cstring& str) {
         str << " -dump:";
         strptr_PrintBash(temp,str);
     }
+    if (!(row.ipc == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.ipc, temp);
+        str << " -ipc:";
+        strptr_PrintBash(temp,str);
+    }
 }
 
 // --- command.acr_nav..NArgs
@@ -7299,6 +7312,11 @@ i32 command::acr_nav_NArgs(command::FieldId field, algo::strptr& out_dflt, bool*
         } break;
         case command_FieldId_dump: { //
             *out_anon = false;
+        } break;
+        case command_FieldId_ipc: { // bool: no argument required but value may be specified as ipc:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
         } break;
         default:
         retval=-1; // unrecognized
@@ -7460,6 +7478,12 @@ void command::acr_nav_ToArgv(command::acr_nav_proc& parent, algo::StringAry& arg
         cstring *arg = &ary_Alloc(args);
         *arg << "-dump:";
         cstring_Print(parent.cmd.dump, *arg);
+    }
+
+    if (parent.cmd.ipc != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-ipc:";
+        bool_Print(parent.cmd.ipc, *arg);
     }
     for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
         ary_Alloc(args) << "-verbose";

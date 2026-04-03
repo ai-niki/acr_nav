@@ -663,6 +663,7 @@ extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_nsdb;                 // dm
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_nsdump;               // dmmeta.nsdump                fconst:dmmeta.Ssimfile.ssimfile/dmmeta.nsdump
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_nsfast;               // dmmeta.nsfast                fconst:dmmeta.Ssimfile.ssimfile/dmmeta.nsfast
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_nsinclude;            // dmmeta.nsinclude             fconst:dmmeta.Ssimfile.ssimfile/dmmeta.nsinclude
+extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_nsipc;                // dmmeta.nsipc                 fconst:dmmeta.Ssimfile.ssimfile/dmmeta.nsipc
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_nsjs;                 // dmmeta.nsjs                  fconst:dmmeta.Ssimfile.ssimfile/dmmeta.nsjs
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_nsproto;              // dmmeta.nsproto               fconst:dmmeta.Ssimfile.ssimfile/dmmeta.nsproto
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_nstype;               // dmmeta.nstype                fconst:dmmeta.Ssimfile.ssimfile/dmmeta.nstype
@@ -913,6 +914,7 @@ namespace dmmeta { struct Nsdb; }
 namespace dmmeta { struct Nsdump; }
 namespace dmmeta { struct Nsfast; }
 namespace dmmeta { struct Nsinclude; }
+namespace dmmeta { struct Nsipc; }
 namespace dmmeta { struct Nsjs; }
 namespace dmmeta { struct Nsproto; }
 namespace dmmeta { struct Nstype; }
@@ -3505,6 +3507,25 @@ inline void          Nsinclude_Init(dmmeta::Nsinclude& parent);
 // func:dmmeta.Nsinclude..Print
 void                 Nsinclude_Print(dmmeta::Nsinclude& row, algo::cstring& str) __attribute__((nothrow));
 
+// --- dmmeta.Nsipc
+struct Nsipc { // dmmeta.Nsipc
+    algo::Smallstr16   ns;        //
+    algo::Comment      comment;   //
+    // func:dmmeta.Nsipc..Ctor
+    inline               Nsipc() __attribute__((nothrow));
+};
+
+// func:dmmeta.Nsipc..ReadFieldMaybe
+bool                 Nsipc_ReadFieldMaybe(dmmeta::Nsipc& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dmmeta::Nsipc from an ascii string.
+// The format of the string is an ssim Tuple
+// func:dmmeta.Nsipc..ReadStrptrMaybe
+bool                 Nsipc_ReadStrptrMaybe(dmmeta::Nsipc &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dmmeta.Nsipc.String  printfmt:Tuple
+// func:dmmeta.Nsipc..Print
+void                 Nsipc_Print(dmmeta::Nsipc& row, algo::cstring& str) __attribute__((nothrow));
+
 // --- dmmeta.Nsjs
 struct Nsjs { // dmmeta.Nsjs: Generate JavaScript code for this namespace
     algo::Smallstr16   ns;           //
@@ -4547,6 +4568,7 @@ inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Nsdb &row);/
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Nsdump &row);// cfmt:dmmeta.Nsdump.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Nsfast &row);// cfmt:dmmeta.Nsfast.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Nsinclude &row);// cfmt:dmmeta.Nsinclude.String
+inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Nsipc &row);// cfmt:dmmeta.Nsipc.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Nsjs &row);// cfmt:dmmeta.Nsjs.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Nsproto &row);// cfmt:dmmeta.Nsproto.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Nstype &row);// cfmt:dmmeta.Nstype.String

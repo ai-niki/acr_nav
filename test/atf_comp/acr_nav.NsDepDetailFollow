@@ -1,15 +1,15 @@
 acr_nav.Ack  ack:acr_nav.Navigate  ok:Y  ctype:dmmeta.Anonfld  viewmode:fields  navstack_depth:0  msg:""
 
-acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:1  n_sel_ctype:1417  n_ctype:1418  n_field:5696  viewmode:fields  breadcrumb:"dmmeta › algo.Comment"  filtertarget:ctype  hints:"↑↓←→  Backspace:back  Enter:follow  Tab:view  d:detail  ?:help  q:quit"  sel_nav_col:0
-acr_nav.PanelState  panel:ctype_list  sel_row:16  scroll_offset:2  n_items:437  sel_value:algo.Comment
+acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:1  n_sel_ctype:1420  n_ctype:1421  n_field:5709  viewmode:fields  breadcrumb:"dmmeta › algo.Comment"  filtertarget:ctype  hints:"↑↓←→  Backspace:back  Enter:follow  Tab:view  d:detail  ?:help  q:quit"  sel_nav_col:0
+acr_nav.PanelState  panel:ctype_list  sel_row:16  scroll_offset:2  n_items:438  sel_value:algo.Comment
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:1  sel_value:algo.Comment.value
 
-acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:0  n_sel_ctype:1417  n_ctype:1418  n_field:5696  viewmode:nsdep_detail  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
-acr_nav.PanelState  panel:ctype_list  sel_row:262  scroll_offset:226  n_items:437  sel_value:dmmeta
-acr_nav.PanelState  panel:content  sel_row:2  scroll_offset:0  n_items:611  sel_value:"  dmmeta.Anonfld.comment                 algo.Comment           Val"
+acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:0  n_sel_ctype:1420  n_ctype:1421  n_field:5709  viewmode:nsdep_detail  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
+acr_nav.PanelState  panel:ctype_list  sel_row:262  scroll_offset:226  n_items:438  sel_value:dmmeta
+acr_nav.PanelState  panel:content  sel_row:2  scroll_offset:0  n_items:613  sel_value:"  dmmeta.Anonfld.comment                 algo.Comment           Val"
 
-acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:0  n_sel_ctype:1417  n_ctype:1418  n_field:5696  viewmode:nsdep_detail  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
-acr_nav.PanelState  panel:ctype_list  sel_row:262  scroll_offset:226  n_items:437  sel_value:dmmeta
+acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:0  n_sel_ctype:1420  n_ctype:1421  n_field:5709  viewmode:nsdep_detail  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
+acr_nav.PanelState  panel:ctype_list  sel_row:262  scroll_offset:226  n_items:438  sel_value:dmmeta
 acr_nav.VisibleLeftItem  row:226  value:algo.UnDiff  kind:ctype  collapsed:N  n_match:0  n_record:0
 acr_nav.VisibleLeftItem  row:227  value:algo.UnTime  kind:ctype  collapsed:N  n_match:0  n_record:0
 acr_nav.VisibleLeftItem  row:228  value:algo.UnixDiff  kind:ctype  collapsed:N  n_match:0  n_record:0
@@ -22,7 +22,7 @@ acr_nav.VisibleLeftItem  row:234  value:algo.i32_Range  kind:ctype  collapsed:N 
 acr_nav.VisibleLeftItem  row:235  value:algo.memptr  kind:ctype  collapsed:N  n_match:0  n_record:0
 acr_nav.VisibleLeftItem  row:236  value:algo.strptr  kind:ctype  collapsed:N  n_match:0  n_record:0
 acr_nav.VisibleLeftItem  row:237  value:algo_lib  kind:ns  collapsed:Y  n_match:35  n_record:0
-acr_nav.VisibleLeftItem  row:238  value:amc  kind:ns  collapsed:Y  n_match:131  n_record:0
+acr_nav.VisibleLeftItem  row:238  value:amc  kind:ns  collapsed:Y  n_match:132  n_record:0
 acr_nav.VisibleLeftItem  row:239  value:amc_gc  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:240  value:amc_vis  kind:ns  collapsed:Y  n_match:12  n_record:0
 acr_nav.VisibleLeftItem  row:241  value:amcdb  kind:ns  collapsed:Y  n_match:7  n_record:0
@@ -46,10 +46,10 @@ acr_nav.VisibleLeftItem  row:258  value:atfdb  kind:ns  collapsed:Y  n_match:16 
 acr_nav.VisibleLeftItem  row:259  value:bash2html  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:260  value:command  kind:ns  collapsed:Y  n_match:48  n_record:0
 acr_nav.VisibleLeftItem  row:261  value:dev  kind:ns  collapsed:Y  n_match:48  n_record:0
-acr_nav.VisibleLeftItem  row:262  value:dmmeta  kind:ns  collapsed:N  n_match:129  n_record:0
-acr_nav.PanelState  panel:content  sel_row:2  scroll_offset:0  n_items:611  sel_value:"  dmmeta.Anonfld.comment                 algo.Comment           Val"
-acr_nav.VisibleLine  row:0  value:"Upstream (dmmeta imports from): 313 fields, 4 namespaces"
-acr_nav.VisibleLine  row:1  value:"── algo (200 fields) ─────────────────────────────"
+acr_nav.VisibleLeftItem  row:262  value:dmmeta  kind:ns  collapsed:N  n_match:130  n_record:0
+acr_nav.PanelState  panel:content  sel_row:2  scroll_offset:0  n_items:613  sel_value:"  dmmeta.Anonfld.comment                 algo.Comment           Val"
+acr_nav.VisibleLine  row:0  value:"Upstream (dmmeta imports from): 314 fields, 4 namespaces"
+acr_nav.VisibleLine  row:1  value:"── algo (201 fields) ─────────────────────────────"
 acr_nav.VisibleLine  row:2  value:"  dmmeta.Anonfld.comment                 algo.Comment           Val"
 acr_nav.VisibleLine  row:3  value:"  dmmeta.Argvtype.argvtype               algo.Smallstr50        Val"
 acr_nav.VisibleLine  row:4  value:"  dmmeta.Argvtype.comment                algo.Comment           Val"

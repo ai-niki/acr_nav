@@ -1384,6 +1384,118 @@ inline u64 acr_nav::overlay_stack_rowid_Get(acr_nav::OverlayEntry &elem) {
     return u64(id);
 }
 
+// --- acr_nav.FDb.cd_ipcconn_read.EmptyQ
+// Return true if index is empty
+inline bool acr_nav::cd_ipcconn_read_EmptyQ() {
+    return _db.cd_ipcconn_read_head == NULL;
+}
+
+// --- acr_nav.FDb.cd_ipcconn_read.First
+// If index empty, return NULL. Otherwise return pointer to first element in index
+inline acr_nav::FIpcconn* acr_nav::cd_ipcconn_read_First() {
+    acr_nav::FIpcconn *row = NULL;
+    row = _db.cd_ipcconn_read_head;
+    return row;
+}
+
+// --- acr_nav.FDb.cd_ipcconn_read.InLlistQ
+// Return true if row is in the linked list, false otherwise
+inline bool acr_nav::cd_ipcconn_read_InLlistQ(acr_nav::FIpcconn& row) {
+    bool result = false;
+    result = !(row.cd_ipcconn_read_next == (acr_nav::FIpcconn*)-1);
+    return result;
+}
+
+// --- acr_nav.FDb.cd_ipcconn_read.Last
+// If index empty, return NULL. Otherwise return pointer to last element in index
+inline acr_nav::FIpcconn* acr_nav::cd_ipcconn_read_Last() {
+    acr_nav::FIpcconn *row = NULL;
+    row = _db.cd_ipcconn_read_head ? _db.cd_ipcconn_read_head->cd_ipcconn_read_prev : NULL;
+    return row;
+}
+
+// --- acr_nav.FDb.cd_ipcconn_read.N
+// Return number of items in the linked list
+inline i32 acr_nav::cd_ipcconn_read_N() {
+    return _db.cd_ipcconn_read_n;
+}
+
+// --- acr_nav.FDb.cd_ipcconn_read.Next
+// Return pointer to next element in the list
+inline acr_nav::FIpcconn* acr_nav::cd_ipcconn_read_Next(acr_nav::FIpcconn &row) {
+    return row.cd_ipcconn_read_next;
+}
+
+// --- acr_nav.FDb.cd_ipcconn_read.Prev
+// Return pointer to previous element in the list
+inline acr_nav::FIpcconn* acr_nav::cd_ipcconn_read_Prev(acr_nav::FIpcconn &row) {
+    return row.cd_ipcconn_read_prev;
+}
+
+// --- acr_nav.FDb.cd_ipcconn_read.qLast
+// Return reference to last element in the index. No bounds checking.
+inline acr_nav::FIpcconn& acr_nav::cd_ipcconn_read_qLast() {
+    acr_nav::FIpcconn *row = NULL;
+    row = _db.cd_ipcconn_read_head ? _db.cd_ipcconn_read_head->cd_ipcconn_read_prev : NULL;
+    return *row;
+}
+
+// --- acr_nav.FDb.cd_ipcconn_eof.EmptyQ
+// Return true if index is empty
+inline bool acr_nav::cd_ipcconn_eof_EmptyQ() {
+    return _db.cd_ipcconn_eof_head == NULL;
+}
+
+// --- acr_nav.FDb.cd_ipcconn_eof.First
+// If index empty, return NULL. Otherwise return pointer to first element in index
+inline acr_nav::FIpcconn* acr_nav::cd_ipcconn_eof_First() {
+    acr_nav::FIpcconn *row = NULL;
+    row = _db.cd_ipcconn_eof_head;
+    return row;
+}
+
+// --- acr_nav.FDb.cd_ipcconn_eof.InLlistQ
+// Return true if row is in the linked list, false otherwise
+inline bool acr_nav::cd_ipcconn_eof_InLlistQ(acr_nav::FIpcconn& row) {
+    bool result = false;
+    result = !(row.cd_ipcconn_eof_next == (acr_nav::FIpcconn*)-1);
+    return result;
+}
+
+// --- acr_nav.FDb.cd_ipcconn_eof.Last
+// If index empty, return NULL. Otherwise return pointer to last element in index
+inline acr_nav::FIpcconn* acr_nav::cd_ipcconn_eof_Last() {
+    acr_nav::FIpcconn *row = NULL;
+    row = _db.cd_ipcconn_eof_head ? _db.cd_ipcconn_eof_head->cd_ipcconn_eof_prev : NULL;
+    return row;
+}
+
+// --- acr_nav.FDb.cd_ipcconn_eof.N
+// Return number of items in the linked list
+inline i32 acr_nav::cd_ipcconn_eof_N() {
+    return _db.cd_ipcconn_eof_n;
+}
+
+// --- acr_nav.FDb.cd_ipcconn_eof.Next
+// Return pointer to next element in the list
+inline acr_nav::FIpcconn* acr_nav::cd_ipcconn_eof_Next(acr_nav::FIpcconn &row) {
+    return row.cd_ipcconn_eof_next;
+}
+
+// --- acr_nav.FDb.cd_ipcconn_eof.Prev
+// Return pointer to previous element in the list
+inline acr_nav::FIpcconn* acr_nav::cd_ipcconn_eof_Prev(acr_nav::FIpcconn &row) {
+    return row.cd_ipcconn_eof_prev;
+}
+
+// --- acr_nav.FDb.cd_ipcconn_eof.qLast
+// Return reference to last element in the index. No bounds checking.
+inline acr_nav::FIpcconn& acr_nav::cd_ipcconn_eof_qLast() {
+    acr_nav::FIpcconn *row = NULL;
+    row = _db.cd_ipcconn_eof_head ? _db.cd_ipcconn_eof_head->cd_ipcconn_eof_prev : NULL;
+    return *row;
+}
+
 // --- acr_nav.FDb.ctype_curs.Reset
 // cursor points to valid item
 inline void acr_nav::_db_ctype_curs_Reset(_db_ctype_curs &curs, acr_nav::FDb &parent) {
@@ -1834,6 +1946,64 @@ inline acr_nav::OverlayEntry& acr_nav::_db_overlay_stack_curs_Access(_db_overlay
     return curs.elems[curs.index];
 }
 
+// --- acr_nav.FDb.cd_ipcconn_read_curs.Reset
+// cursor points to valid item
+inline void acr_nav::_db_cd_ipcconn_read_curs_Reset(_db_cd_ipcconn_read_curs &curs, acr_nav::FDb &parent) {
+    curs.row = parent.cd_ipcconn_read_head;
+    curs.head = &parent.cd_ipcconn_read_head;
+}
+
+// --- acr_nav.FDb.cd_ipcconn_read_curs.ValidQ
+// cursor points to valid item
+inline bool acr_nav::_db_cd_ipcconn_read_curs_ValidQ(_db_cd_ipcconn_read_curs &curs) {
+    return curs.row != NULL;
+}
+
+// --- acr_nav.FDb.cd_ipcconn_read_curs.Next
+// proceed to next item
+inline void acr_nav::_db_cd_ipcconn_read_curs_Next(_db_cd_ipcconn_read_curs &curs) {
+    acr_nav::FIpcconn *next = (*curs.row).cd_ipcconn_read_next;
+    curs.row = next;
+    if (curs.row == *curs.head) {
+        curs.row = NULL;
+    }
+}
+
+// --- acr_nav.FDb.cd_ipcconn_read_curs.Access
+// item access
+inline acr_nav::FIpcconn& acr_nav::_db_cd_ipcconn_read_curs_Access(_db_cd_ipcconn_read_curs &curs) {
+    return *curs.row;
+}
+
+// --- acr_nav.FDb.cd_ipcconn_eof_curs.Reset
+// cursor points to valid item
+inline void acr_nav::_db_cd_ipcconn_eof_curs_Reset(_db_cd_ipcconn_eof_curs &curs, acr_nav::FDb &parent) {
+    curs.row = parent.cd_ipcconn_eof_head;
+    curs.head = &parent.cd_ipcconn_eof_head;
+}
+
+// --- acr_nav.FDb.cd_ipcconn_eof_curs.ValidQ
+// cursor points to valid item
+inline bool acr_nav::_db_cd_ipcconn_eof_curs_ValidQ(_db_cd_ipcconn_eof_curs &curs) {
+    return curs.row != NULL;
+}
+
+// --- acr_nav.FDb.cd_ipcconn_eof_curs.Next
+// proceed to next item
+inline void acr_nav::_db_cd_ipcconn_eof_curs_Next(_db_cd_ipcconn_eof_curs &curs) {
+    acr_nav::FIpcconn *next = (*curs.row).cd_ipcconn_eof_next;
+    curs.row = next;
+    if (curs.row == *curs.head) {
+        curs.row = NULL;
+    }
+}
+
+// --- acr_nav.FDb.cd_ipcconn_eof_curs.Access
+// item access
+inline acr_nav::FIpcconn& acr_nav::_db_cd_ipcconn_eof_curs_Access(_db_cd_ipcconn_eof_curs &curs) {
+    return *curs.row;
+}
+
 // --- acr_nav.FDetailsrc..Init
 // Set all fields to initial values.
 inline void acr_nav::FDetailsrc_Init(acr_nav::FDetailsrc& detailsrc) {
@@ -1887,6 +2057,30 @@ inline  acr_nav::FHelpgroup::FHelpgroup() {
 // --- acr_nav.FHelpgroup..Dtor
 inline  acr_nav::FHelpgroup::~FHelpgroup() {
     acr_nav::FHelpgroup_Uninit(*this);
+}
+
+// --- acr_nav.FIpcconn.in.Max
+// Return max. number of bytes in the buffer.
+inline i32 acr_nav::in_Max(acr_nav::FIpcconn& ipcconn) {
+    return ipcconn.in_max;
+}
+
+// --- acr_nav.FIpcconn.in.N
+// Return number of bytes in the buffer.
+inline i32 acr_nav::in_N(acr_nav::FIpcconn& ipcconn) {
+    return ipcconn.in_end - ipcconn.in_start;
+}
+
+// --- acr_nav.FIpcconn..Ctor
+inline  acr_nav::FIpcconn::FIpcconn() {
+    acr_nav::FIpcconn_Init(*this);
+    // added because acr_nav.FIpcconn.in (Fbuf) does not need initialization
+    // coverity[uninit_member]
+}
+
+// --- acr_nav.FIpcconn..Dtor
+inline  acr_nav::FIpcconn::~FIpcconn() {
+    acr_nav::FIpcconn_Uninit(*this);
 }
 
 // --- acr_nav.FKeybind..Init
@@ -2506,6 +2700,45 @@ inline void acr_nav::InputError_Init(acr_nav::InputError& parent) {
 // --- acr_nav.InputError..Ctor
 inline  acr_nav::InputError::InputError() {
     acr_nav::InputError_Init(*this);
+}
+
+// --- acr_nav.IpcCase.value.GetEnum
+// Get value of field as enum type
+inline acr_nav_IpcCaseEnum acr_nav::value_GetEnum(const acr_nav::IpcCase& parent) {
+    return acr_nav_IpcCaseEnum(parent.value);
+}
+
+// --- acr_nav.IpcCase.value.SetEnum
+// Set value of field from enum type.
+inline void acr_nav::value_SetEnum(acr_nav::IpcCase& parent, acr_nav_IpcCaseEnum rhs) {
+    parent.value = u32(rhs);
+}
+
+// --- acr_nav.IpcCase.value.Cast
+inline  acr_nav::IpcCase::operator acr_nav_IpcCaseEnum() const {
+    return acr_nav_IpcCaseEnum((*this).value);
+}
+
+// --- acr_nav.IpcCase..Init
+// Set all fields to initial values.
+inline void acr_nav::IpcCase_Init(acr_nav::IpcCase& parent) {
+    parent.value = u32(0);
+}
+
+// --- acr_nav.IpcCase..Ctor
+inline  acr_nav::IpcCase::IpcCase() {
+    acr_nav::IpcCase_Init(*this);
+}
+
+// --- acr_nav.IpcCase..FieldwiseCtor
+inline  acr_nav::IpcCase::IpcCase(u32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- acr_nav.IpcCase..EnumCtor
+inline  acr_nav::IpcCase::IpcCase(acr_nav_IpcCaseEnum arg) {
+    this->value = u32(arg);
 }
 
 // --- acr_nav.LeftItem..Ctor

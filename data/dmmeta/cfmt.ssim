@@ -613,6 +613,7 @@ dmmeta.cfmt  cfmt:dmmeta.Nsdb.String  printfmt:Tuple  read:Y  print:Y  sep:""  g
 dmmeta.cfmt  cfmt:dmmeta.Nsdump.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
 dmmeta.cfmt  cfmt:dmmeta.Nsfast.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
 dmmeta.cfmt  cfmt:dmmeta.Nsinclude.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+dmmeta.cfmt  cfmt:dmmeta.Nsipc.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
 dmmeta.cfmt  cfmt:dmmeta.Nsjs.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
 dmmeta.cfmt  cfmt:dmmeta.Nsproto.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
 dmmeta.cfmt  cfmt:dmmeta.Nstype.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""

@@ -570,6 +570,7 @@ inline void command::acr_nav_Init(command::acr_nav& parent) {
     parent.headless = bool(false);
     parent.in = algo::strptr("data");
     parent.dump = algo::strptr("");
+    parent.ipc = bool(false);
 }
 
 // --- command.acr_nav..Ctor
