@@ -1600,13 +1600,16 @@ dev.gitfile  gitfile:txt/setup.md
 dev.gitfile  gitfile:txt/ssim.md
 dev.gitfile  gitfile:txt/ssimdb/README.md
 dev.gitfile  gitfile:txt/ssimdb/acr_navdb/README.md
+dev.gitfile  gitfile:txt/ssimdb/acr_navdb/detailsrc.md
 dev.gitfile  gitfile:txt/ssimdb/acr_navdb/filtertarget.md
+dev.gitfile  gitfile:txt/ssimdb/acr_navdb/helpgroup.md
 dev.gitfile  gitfile:txt/ssimdb/acr_navdb/keybind.md
 dev.gitfile  gitfile:txt/ssimdb/acr_navdb/navaction.md
 dev.gitfile  gitfile:txt/ssimdb/acr_navdb/navmode.md
 dev.gitfile  gitfile:txt/ssimdb/acr_navdb/navstyle.md
 dev.gitfile  gitfile:txt/ssimdb/acr_navdb/panel.md
 dev.gitfile  gitfile:txt/ssimdb/acr_navdb/reftypestyle.md
+dev.gitfile  gitfile:txt/ssimdb/acr_navdb/viewmode.md
 dev.gitfile  gitfile:txt/ssimdb/amcdb/README.md
 dev.gitfile  gitfile:txt/ssimdb/amcdb/bltin.md
 dev.gitfile  gitfile:txt/ssimdb/amcdb/curstype.md

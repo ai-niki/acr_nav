@@ -5,7 +5,9 @@
   },
   "containerEnv": {
     "PATH": "/root/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/workspaces/openacr/bin",
-    "TERM": "xterm-256color"
+    "TERM": "xterm-256color",
+    "USER": "root",
+    "LANG": "C.UTF-8"
   },
   "mounts": [
     "source=openacr-build,target=/workspaces/openacr/build,type=volume",

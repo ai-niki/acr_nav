@@ -250,9 +250,17 @@ int acr_nav::Utf8ExtraBytes(algo::strptr s) {
     int extra = 0;
     for (int i = 0; i < s.n_elems; i++) {
         unsigned char c = s.elems[i];
-        if (c >= 0xF0)      { extra += 3; }
-        else if (c >= 0xE0) { extra += 2; }
-        else if (c >= 0xC0) { extra += 1; }
+        int add = 0;
+        if (c >= 0xF0) {
+            add = 3;
+        }
+        if (add == 0 && c >= 0xE0) {
+            add = 2;
+        }
+        if (add == 0 && c >= 0xC0) {
+            add = 1;
+        }
+        extra += add;
     }
     return extra;
 }

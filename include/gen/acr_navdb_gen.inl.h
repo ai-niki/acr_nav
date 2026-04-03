@@ -95,7 +95,6 @@ inline void acr_navdb::Navaction_Init(acr_navdb::Navaction& parent) {
     parent.sort_order = i32(0);
     parent.passive = bool(false);
     parent.need_no_overlay = bool(false);
-    parent.target_viewmode = algo::strptr("");
 }
 
 // --- acr_navdb.Navaction..Ctor
