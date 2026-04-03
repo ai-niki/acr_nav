@@ -139,7 +139,7 @@ dmmeta.ctypelen  ctype:acr_my.FSsimfile  len:154  alignment:1  padbytes:0  plain
 dmmeta.ctypelen  ctype:acr_nav.Ack  len:232  alignment:8  padbytes:5  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.ContentRow  len:432  alignment:8  padbytes:4  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FCtype  len:328  alignment:8  padbytes:13  plaindata:N
-dmmeta.ctypelen  ctype:acr_nav.FDb  len:4576  alignment:8  padbytes:97  plaindata:N
+dmmeta.ctypelen  ctype:acr_nav.FDb  len:4592  alignment:8  padbytes:97  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FDetailsrc  len:216  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FField  len:704  alignment:8  padbytes:6  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FFiltertarget  len:344  alignment:8  padbytes:0  plaindata:N
@@ -163,6 +163,7 @@ dmmeta.ctypelen  ctype:acr_nav.Navigate  len:206  alignment:1  padbytes:0  plain
 dmmeta.ctypelen  ctype:acr_nav.OverlayEntry  len:60  alignment:4  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:acr_nav.PanelState  len:80  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.PreviewNavCol  len:168  alignment:4  padbytes:2  plaindata:Y
+dmmeta.ctypelen  ctype:acr_nav.RequestStateDump  len:16  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.Screen  len:288  alignment:8  padbytes:12  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.Screenshot  len:52  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:acr_nav.SendKey  len:52  alignment:1  padbytes:0  plaindata:Y
@@ -467,7 +468,7 @@ dmmeta.ctypelen  ctype:amc.FCsize  len:112  alignment:4  padbytes:2  plaindata:Y
 dmmeta.ctypelen  ctype:amc.FCstr  len:103  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:amc.FCtype  len:936  alignment:8  padbytes:53  plaindata:N
 dmmeta.ctypelen  ctype:amc.FCtypelen  len:120  alignment:4  padbytes:5  plaindata:Y
-dmmeta.ctypelen  ctype:amc.FDb  len:37136  alignment:16  padbytes:498  plaindata:N
+dmmeta.ctypelen  ctype:amc.FDb  len:37392  alignment:16  padbytes:494  plaindata:N
 dmmeta.ctypelen  ctype:amc.FDispatch  len:168  alignment:8  padbytes:11  plaindata:N
 dmmeta.ctypelen  ctype:amc.FDispatchmsg  len:144  alignment:8  padbytes:9  plaindata:N
 dmmeta.ctypelen  ctype:amc.FDispctx  len:168  alignment:8  padbytes:6  plaindata:N
@@ -529,9 +530,10 @@ dmmeta.ctypelen  ctype:amc.FMsgtype  len:368  alignment:8  padbytes:6  plaindata
 dmmeta.ctypelen  ctype:amc.FNocascdel  len:102  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:amc.FNossimfile  len:254  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:amc.FNoxref  len:102  alignment:1  padbytes:0  plaindata:Y
-dmmeta.ctypelen  ctype:amc.FNs  len:760  alignment:8  padbytes:13  plaindata:N
+dmmeta.ctypelen  ctype:amc.FNs  len:768  alignment:8  padbytes:13  plaindata:N
 dmmeta.ctypelen  ctype:amc.FNscpp  len:170  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:amc.FNsdb  len:170  alignment:1  padbytes:0  plaindata:Y
+dmmeta.ctypelen  ctype:amc.FNsdump  len:170  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:amc.FNsinclude  len:206  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:amc.FNsjs  len:172  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:amc.FNsproto  len:170  alignment:1  padbytes:0  plaindata:Y
@@ -815,7 +817,7 @@ dmmeta.ctypelen  ctype:command.acr_dm  len:40  alignment:8  padbytes:5  plaindat
 dmmeta.ctypelen  ctype:command.acr_ed  len:1608  alignment:8  padbytes:50  plaindata:N
 dmmeta.ctypelen  ctype:command.acr_in  len:184  alignment:8  padbytes:11  plaindata:N
 dmmeta.ctypelen  ctype:command.acr_my  len:80  alignment:8  padbytes:0  plaindata:N
-dmmeta.ctypelen  ctype:command.acr_nav  len:24  alignment:8  padbytes:7  plaindata:N
+dmmeta.ctypelen  ctype:command.acr_nav  len:40  alignment:8  padbytes:7  plaindata:N
 dmmeta.ctypelen  ctype:command.amc  len:96  alignment:8  padbytes:4  plaindata:N
 dmmeta.ctypelen  ctype:command.amc_gc  len:104  alignment:8  padbytes:7  plaindata:N
 dmmeta.ctypelen  ctype:command.amc_vis  len:80  alignment:8  padbytes:3  plaindata:N
@@ -993,6 +995,7 @@ dmmeta.ctypelen  ctype:dmmeta.Noxref  len:254  alignment:1  padbytes:0  plaindat
 dmmeta.ctypelen  ctype:dmmeta.Ns  len:274  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:dmmeta.Nscpp  len:170  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:dmmeta.Nsdb  len:170  alignment:1  padbytes:0  plaindata:Y
+dmmeta.ctypelen  ctype:dmmeta.Nsdump  len:170  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:dmmeta.Nsfast  len:170  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:dmmeta.Nsinclude  len:205  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:dmmeta.Nsjs  len:172  alignment:1  padbytes:0  plaindata:Y
@@ -1218,6 +1221,7 @@ dmmeta.ctypelen  ctype:orgfile.FFilename  len:104  alignment:8  padbytes:17  pla
 dmmeta.ctypelen  ctype:orgfile.FTimefmt  len:255  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:orgfile.dedup  len:48  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:orgfile.move  len:48  alignment:8  padbytes:0  plaindata:N
+dmmeta.ctypelen  ctype:report.PoolCensus  len:108  alignment:4  padbytes:2  plaindata:Y
 dmmeta.ctypelen  ctype:report.abt  len:68  alignment:4  padbytes:4  plaindata:Y
 dmmeta.ctypelen  ctype:report.acr  len:24  alignment:4  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:report.acr_check  len:8  alignment:4  padbytes:0  plaindata:Y

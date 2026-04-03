@@ -1125,6 +1125,10 @@ inline  dmmeta::Nscpp::Nscpp(const algo::strptr& in_ns, const algo::Comment& in_
 inline  dmmeta::Nsdb::Nsdb() {
 }
 
+// --- dmmeta.Nsdump..Ctor
+inline  dmmeta::Nsdump::Nsdump() {
+}
+
 // --- dmmeta.Nsfast..Ctor
 inline  dmmeta::Nsfast::Nsfast() {
 }
@@ -2003,6 +2007,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Nscpp 
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Nsdb &row) {// cfmt:dmmeta.Nsdb.String
     dmmeta::Nsdb_Print(const_cast<dmmeta::Nsdb&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Nsdump &row) {// cfmt:dmmeta.Nsdump.String
+    dmmeta::Nsdump_Print(const_cast<dmmeta::Nsdump&>(row), str);
     return str;
 }
 

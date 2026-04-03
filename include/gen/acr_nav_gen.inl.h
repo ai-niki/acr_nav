@@ -2573,6 +2573,10 @@ inline  acr_nav::PreviewNavCol::PreviewNavCol() {
     acr_nav::PreviewNavCol_Init(*this);
 }
 
+// --- acr_nav.RequestStateDump..Ctor
+inline  acr_nav::RequestStateDump::RequestStateDump() {
+}
+
 // --- acr_nav.Screen..Ctor
 inline  acr_nav::Screen::Screen() {
     acr_nav::Screen_Init(*this);

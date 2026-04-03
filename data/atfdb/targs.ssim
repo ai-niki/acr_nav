@@ -178,6 +178,8 @@ atfdb.targs  comptest:acr_nav.CachedKeyInvalidation  args:-headless
 atfdb.targs  comptest:acr_nav.Codegen  args:-headless
 atfdb.targs  comptest:acr_nav.Collapse  args:-headless
 atfdb.targs  comptest:acr_nav.Detail  args:-headless
+atfdb.targs  comptest:acr_nav.DumpAll  args:'-dump:".*"'
+atfdb.targs  comptest:acr_nav.DumpHeadless  args:-headless
 atfdb.targs  comptest:acr_nav.FieldFilter  args:-headless
 atfdb.targs  comptest:acr_nav.FieldFilterCancel  args:-headless
 atfdb.targs  comptest:acr_nav.FieldFilterNavstack  args:-headless

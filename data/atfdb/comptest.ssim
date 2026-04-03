@@ -178,6 +178,8 @@ atfdb.comptest  comptest:acr_nav.CachedKeyInvalidation  timeout:10  memcheck:Y  
 atfdb.comptest  comptest:acr_nav.Codegen  timeout:30  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Generated code preview"
 atfdb.comptest  comptest:acr_nav.Collapse  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Namespace collapse and expand"
 atfdb.comptest  comptest:acr_nav.Detail  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Field detail drilldown and overlay nesting"
+atfdb.comptest  comptest:acr_nav.DumpAll  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Dump all pools via CLI flag"
+atfdb.comptest  comptest:acr_nav.DumpHeadless  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Dump pools via headless stdin command"
 atfdb.comptest  comptest:acr_nav.FieldFilter  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Field search: Tab to field target, type filter, verify match count"
 atfdb.comptest  comptest:acr_nav.FieldFilterCancel  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Field search cancel resets filtertarget to ctype"
 atfdb.comptest  comptest:acr_nav.FieldFilterNavstack  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Field search accept preserves filtertarget, Escape clears it"

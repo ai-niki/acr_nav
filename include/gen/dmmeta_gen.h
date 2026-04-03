@@ -660,6 +660,7 @@ extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_noxref;               // dm
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_ns;                   // dmmeta.ns                    fconst:dmmeta.Ssimfile.ssimfile/dmmeta.ns
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_nscpp;                // dmmeta.nscpp                 fconst:dmmeta.Ssimfile.ssimfile/dmmeta.nscpp
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_nsdb;                 // dmmeta.nsdb                  fconst:dmmeta.Ssimfile.ssimfile/dmmeta.nsdb
+extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_nsdump;               // dmmeta.nsdump                fconst:dmmeta.Ssimfile.ssimfile/dmmeta.nsdump
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_nsfast;               // dmmeta.nsfast                fconst:dmmeta.Ssimfile.ssimfile/dmmeta.nsfast
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_nsinclude;            // dmmeta.nsinclude             fconst:dmmeta.Ssimfile.ssimfile/dmmeta.nsinclude
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_nsjs;                 // dmmeta.nsjs                  fconst:dmmeta.Ssimfile.ssimfile/dmmeta.nsjs
@@ -909,6 +910,7 @@ namespace dmmeta { struct Noxref; }
 namespace dmmeta { struct Ns; }
 namespace dmmeta { struct Nscpp; }
 namespace dmmeta { struct Nsdb; }
+namespace dmmeta { struct Nsdump; }
 namespace dmmeta { struct Nsfast; }
 namespace dmmeta { struct Nsinclude; }
 namespace dmmeta { struct Nsjs; }
@@ -3430,6 +3432,25 @@ bool                 Nsdb_ReadStrptrMaybe(dmmeta::Nsdb &parent, algo::strptr in_
 // func:dmmeta.Nsdb..Print
 void                 Nsdb_Print(dmmeta::Nsdb& row, algo::cstring& str) __attribute__((nothrow));
 
+// --- dmmeta.Nsdump
+struct Nsdump { // dmmeta.Nsdump: Enable runtime state dump for namespace
+    algo::Smallstr16   ns;        //
+    algo::Comment      comment;   //
+    // func:dmmeta.Nsdump..Ctor
+    inline               Nsdump() __attribute__((nothrow));
+};
+
+// func:dmmeta.Nsdump..ReadFieldMaybe
+bool                 Nsdump_ReadFieldMaybe(dmmeta::Nsdump& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dmmeta::Nsdump from an ascii string.
+// The format of the string is an ssim Tuple
+// func:dmmeta.Nsdump..ReadStrptrMaybe
+bool                 Nsdump_ReadStrptrMaybe(dmmeta::Nsdump &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dmmeta.Nsdump.String  printfmt:Tuple
+// func:dmmeta.Nsdump..Print
+void                 Nsdump_Print(dmmeta::Nsdump& row, algo::cstring& str) __attribute__((nothrow));
+
 // --- dmmeta.Nsfast
 struct Nsfast { // dmmeta.Nsfast: Whether namespace is FAST
     algo::Smallstr16   ns;        //
@@ -4523,6 +4544,7 @@ inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Noxref &row)
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Ns &row);// cfmt:dmmeta.Ns.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Nscpp &row);// cfmt:dmmeta.Nscpp.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Nsdb &row);// cfmt:dmmeta.Nsdb.String
+inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Nsdump &row);// cfmt:dmmeta.Nsdump.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Nsfast &row);// cfmt:dmmeta.Nsfast.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Nsinclude &row);// cfmt:dmmeta.Nsinclude.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Nsjs &row);// cfmt:dmmeta.Nsjs.String

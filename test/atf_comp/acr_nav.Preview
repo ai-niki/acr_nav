@@ -1,4 +1,4 @@
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:dmmeta.Reftype  navstack_depth:0  n_sel_ctype:1  n_ctype:1414  n_field:5687  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:dmmeta.Reftype  navstack_depth:0  n_sel_ctype:1  n_ctype:1418  n_field:5696  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:2  sel_value:dmmeta.Reftype
 acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:dmmeta.Reftype  kind:ctype  collapsed:N  n_match:0  n_record:35
@@ -52,7 +52,7 @@ acr_nav.PreviewNavCol  col_start:82  col_wid:4  name_len:4  col_name:inst  targe
 acr_nav.PreviewNavCol  col_start:88  col_wid:6  name_len:6  col_name:varlen  target_ctype:""
 acr_nav.PreviewNavCol  col_start:96  col_wid:71  name_len:7  col_name:comment  target_ctype:""
 
-acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Reftype  navstack_depth:0  n_sel_ctype:1  n_ctype:1414  n_field:5687  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Reftype  navstack_depth:0  n_sel_ctype:1  n_ctype:1418  n_field:5696  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:2  sel_value:dmmeta.Reftype
 acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:dmmeta.Reftype  kind:ctype  collapsed:N  n_match:0  n_record:35
@@ -106,7 +106,7 @@ acr_nav.PreviewNavCol  col_start:82  col_wid:4  name_len:4  col_name:inst  targe
 acr_nav.PreviewNavCol  col_start:88  col_wid:6  name_len:6  col_name:varlen  target_ctype:""
 acr_nav.PreviewNavCol  col_start:96  col_wid:71  name_len:7  col_name:comment  target_ctype:""
 
-acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Reftype  navstack_depth:0  n_sel_ctype:1  n_ctype:1414  n_field:5687  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  d:detail  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Reftype  navstack_depth:0  n_sel_ctype:1  n_ctype:1418  n_field:5696  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  d:detail  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:2  sel_value:dmmeta.Reftype
 acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:dmmeta.Reftype  kind:ctype  collapsed:N  n_match:0  n_record:35
@@ -125,7 +125,7 @@ acr_nav.VisibleField  row:10  field:dmmeta.Reftype.inst  arg:bool  reftype:Val  
 acr_nav.VisibleField  row:11  field:dmmeta.Reftype.varlen  arg:bool  reftype:Val  style:field_val  navigable:Y  match:N
 acr_nav.VisibleField  row:12  field:dmmeta.Reftype.comment  arg:algo.Comment  reftype:Val  style:field_val  navigable:Y  match:N
 
-acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Reftype  navstack_depth:0  n_sel_ctype:1  n_ctype:1414  n_field:5687  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  d:detail  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Reftype  navstack_depth:0  n_sel_ctype:1  n_ctype:1418  n_field:5696  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  d:detail  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:2  sel_value:dmmeta.Reftype
 acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:dmmeta.Reftype  kind:ctype  collapsed:N  n_match:0  n_record:35

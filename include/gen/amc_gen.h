@@ -333,61 +333,63 @@ enum amc_TableIdEnum {                            // amc.TableId.value
     ,amc_TableId_dmmeta_nscpp             = 77    // dmmeta.nscpp -> amc.FNscpp
     ,amc_TableId_dmmeta_Nsdb              = 78    // dmmeta.Nsdb -> amc.FNsdb
     ,amc_TableId_dmmeta_nsdb              = 78    // dmmeta.nsdb -> amc.FNsdb
-    ,amc_TableId_dmmeta_Nsinclude         = 79    // dmmeta.Nsinclude -> amc.FNsinclude
-    ,amc_TableId_dmmeta_nsinclude         = 79    // dmmeta.nsinclude -> amc.FNsinclude
-    ,amc_TableId_dmmeta_Nsjs              = 80    // dmmeta.Nsjs -> amc.FNsjs
-    ,amc_TableId_dmmeta_nsjs              = 80    // dmmeta.nsjs -> amc.FNsjs
-    ,amc_TableId_dmmeta_Nsproto           = 81    // dmmeta.Nsproto -> amc.FNsproto
-    ,amc_TableId_dmmeta_nsproto           = 81    // dmmeta.nsproto -> amc.FNsproto
-    ,amc_TableId_dmmeta_Nsx               = 82    // dmmeta.Nsx -> amc.FNsx
-    ,amc_TableId_dmmeta_nsx               = 82    // dmmeta.nsx -> amc.FNsx
-    ,amc_TableId_dmmeta_Numstr            = 83    // dmmeta.Numstr -> amc.FNumstr
-    ,amc_TableId_dmmeta_numstr            = 83    // dmmeta.numstr -> amc.FNumstr
-    ,amc_TableId_dmmeta_Pack              = 84    // dmmeta.Pack -> amc.FPack
-    ,amc_TableId_dmmeta_pack              = 84    // dmmeta.pack -> amc.FPack
-    ,amc_TableId_dmmeta_Pmaskfld          = 85    // dmmeta.Pmaskfld -> amc.FPmaskfld
-    ,amc_TableId_dmmeta_pmaskfld          = 85    // dmmeta.pmaskfld -> amc.FPmaskfld
-    ,amc_TableId_dmmeta_PmaskfldMember    = 86    // dmmeta.PmaskfldMember -> amc.FPmaskfldMember
-    ,amc_TableId_dmmeta_pmaskfld_member   = 86    // dmmeta.pmaskfld_member -> amc.FPmaskfldMember
-    ,amc_TableId_dmmeta_Pnew              = 87    // dmmeta.Pnew -> amc.FPnew
-    ,amc_TableId_dmmeta_pnew              = 87    // dmmeta.pnew -> amc.FPnew
-    ,amc_TableId_dmmeta_Ptrary            = 88    // dmmeta.Ptrary -> amc.FPtrary
-    ,amc_TableId_dmmeta_ptrary            = 88    // dmmeta.ptrary -> amc.FPtrary
-    ,amc_TableId_dmmeta_Rowid             = 89    // dmmeta.Rowid -> amc.FRowid
-    ,amc_TableId_dmmeta_rowid             = 89    // dmmeta.rowid -> amc.FRowid
-    ,amc_TableId_dmmeta_Smallstr          = 90    // dmmeta.Smallstr -> amc.FSmallstr
-    ,amc_TableId_dmmeta_smallstr          = 90    // dmmeta.smallstr -> amc.FSmallstr
-    ,amc_TableId_dmmeta_Sortfld           = 91    // dmmeta.Sortfld -> amc.FSortfld
-    ,amc_TableId_dmmeta_sortfld           = 91    // dmmeta.sortfld -> amc.FSortfld
-    ,amc_TableId_dmmeta_Ssimfile          = 92    // dmmeta.Ssimfile -> amc.FSsimfile
-    ,amc_TableId_dmmeta_ssimfile          = 92    // dmmeta.ssimfile -> amc.FSsimfile
-    ,amc_TableId_dmmeta_Ssimsort          = 93    // dmmeta.Ssimsort -> amc.FSsimsort
-    ,amc_TableId_dmmeta_ssimsort          = 93    // dmmeta.ssimsort -> amc.FSsimsort
-    ,amc_TableId_dmmeta_Ssimvolatile      = 94    // dmmeta.Ssimvolatile -> amc.FSsimvolatile
-    ,amc_TableId_dmmeta_ssimvolatile      = 94    // dmmeta.ssimvolatile -> amc.FSsimvolatile
-    ,amc_TableId_dmmeta_Steptype          = 95    // dmmeta.Steptype -> amc.FSteptype
-    ,amc_TableId_dmmeta_steptype          = 95    // dmmeta.steptype -> amc.FSteptype
-    ,amc_TableId_dmmeta_Substr            = 96    // dmmeta.Substr -> amc.FSubstr
-    ,amc_TableId_dmmeta_substr            = 96    // dmmeta.substr -> amc.FSubstr
-    ,amc_TableId_dev_Targdep              = 97    // dev.Targdep -> amc.FTargdep
-    ,amc_TableId_dev_targdep              = 97    // dev.targdep -> amc.FTargdep
-    ,amc_TableId_dev_Target               = 98    // dev.Target -> amc.FTarget
-    ,amc_TableId_dev_target               = 98    // dev.target -> amc.FTarget
-    ,amc_TableId_dmmeta_Tary              = 99    // dmmeta.Tary -> amc.FTary
-    ,amc_TableId_dmmeta_tary              = 99    // dmmeta.tary -> amc.FTary
-    ,amc_TableId_amcdb_Tcurs              = 100   // amcdb.Tcurs -> amc.FTcurs
-    ,amc_TableId_amcdb_tcurs              = 100   // amcdb.tcurs -> amc.FTcurs
-    ,amc_TableId_dmmeta_Thash             = 101   // dmmeta.Thash -> amc.FThash
-    ,amc_TableId_dmmeta_thash             = 101   // dmmeta.thash -> amc.FThash
-    ,amc_TableId_dmmeta_Typefld           = 102   // dmmeta.Typefld -> amc.FTypefld
-    ,amc_TableId_dmmeta_typefld           = 102   // dmmeta.typefld -> amc.FTypefld
-    ,amc_TableId_dmmeta_Usertracefld      = 103   // dmmeta.Usertracefld -> amc.FUsertracefld
-    ,amc_TableId_dmmeta_usertracefld      = 103   // dmmeta.usertracefld -> amc.FUsertracefld
-    ,amc_TableId_dmmeta_Xref              = 104   // dmmeta.Xref -> amc.FXref
-    ,amc_TableId_dmmeta_xref              = 104   // dmmeta.xref -> amc.FXref
+    ,amc_TableId_dmmeta_Nsdump            = 79    // dmmeta.Nsdump -> amc.FNsdump
+    ,amc_TableId_dmmeta_nsdump            = 79    // dmmeta.nsdump -> amc.FNsdump
+    ,amc_TableId_dmmeta_Nsinclude         = 80    // dmmeta.Nsinclude -> amc.FNsinclude
+    ,amc_TableId_dmmeta_nsinclude         = 80    // dmmeta.nsinclude -> amc.FNsinclude
+    ,amc_TableId_dmmeta_Nsjs              = 81    // dmmeta.Nsjs -> amc.FNsjs
+    ,amc_TableId_dmmeta_nsjs              = 81    // dmmeta.nsjs -> amc.FNsjs
+    ,amc_TableId_dmmeta_Nsproto           = 82    // dmmeta.Nsproto -> amc.FNsproto
+    ,amc_TableId_dmmeta_nsproto           = 82    // dmmeta.nsproto -> amc.FNsproto
+    ,amc_TableId_dmmeta_Nsx               = 83    // dmmeta.Nsx -> amc.FNsx
+    ,amc_TableId_dmmeta_nsx               = 83    // dmmeta.nsx -> amc.FNsx
+    ,amc_TableId_dmmeta_Numstr            = 84    // dmmeta.Numstr -> amc.FNumstr
+    ,amc_TableId_dmmeta_numstr            = 84    // dmmeta.numstr -> amc.FNumstr
+    ,amc_TableId_dmmeta_Pack              = 85    // dmmeta.Pack -> amc.FPack
+    ,amc_TableId_dmmeta_pack              = 85    // dmmeta.pack -> amc.FPack
+    ,amc_TableId_dmmeta_Pmaskfld          = 86    // dmmeta.Pmaskfld -> amc.FPmaskfld
+    ,amc_TableId_dmmeta_pmaskfld          = 86    // dmmeta.pmaskfld -> amc.FPmaskfld
+    ,amc_TableId_dmmeta_PmaskfldMember    = 87    // dmmeta.PmaskfldMember -> amc.FPmaskfldMember
+    ,amc_TableId_dmmeta_pmaskfld_member   = 87    // dmmeta.pmaskfld_member -> amc.FPmaskfldMember
+    ,amc_TableId_dmmeta_Pnew              = 88    // dmmeta.Pnew -> amc.FPnew
+    ,amc_TableId_dmmeta_pnew              = 88    // dmmeta.pnew -> amc.FPnew
+    ,amc_TableId_dmmeta_Ptrary            = 89    // dmmeta.Ptrary -> amc.FPtrary
+    ,amc_TableId_dmmeta_ptrary            = 89    // dmmeta.ptrary -> amc.FPtrary
+    ,amc_TableId_dmmeta_Rowid             = 90    // dmmeta.Rowid -> amc.FRowid
+    ,amc_TableId_dmmeta_rowid             = 90    // dmmeta.rowid -> amc.FRowid
+    ,amc_TableId_dmmeta_Smallstr          = 91    // dmmeta.Smallstr -> amc.FSmallstr
+    ,amc_TableId_dmmeta_smallstr          = 91    // dmmeta.smallstr -> amc.FSmallstr
+    ,amc_TableId_dmmeta_Sortfld           = 92    // dmmeta.Sortfld -> amc.FSortfld
+    ,amc_TableId_dmmeta_sortfld           = 92    // dmmeta.sortfld -> amc.FSortfld
+    ,amc_TableId_dmmeta_Ssimfile          = 93    // dmmeta.Ssimfile -> amc.FSsimfile
+    ,amc_TableId_dmmeta_ssimfile          = 93    // dmmeta.ssimfile -> amc.FSsimfile
+    ,amc_TableId_dmmeta_Ssimsort          = 94    // dmmeta.Ssimsort -> amc.FSsimsort
+    ,amc_TableId_dmmeta_ssimsort          = 94    // dmmeta.ssimsort -> amc.FSsimsort
+    ,amc_TableId_dmmeta_Ssimvolatile      = 95    // dmmeta.Ssimvolatile -> amc.FSsimvolatile
+    ,amc_TableId_dmmeta_ssimvolatile      = 95    // dmmeta.ssimvolatile -> amc.FSsimvolatile
+    ,amc_TableId_dmmeta_Steptype          = 96    // dmmeta.Steptype -> amc.FSteptype
+    ,amc_TableId_dmmeta_steptype          = 96    // dmmeta.steptype -> amc.FSteptype
+    ,amc_TableId_dmmeta_Substr            = 97    // dmmeta.Substr -> amc.FSubstr
+    ,amc_TableId_dmmeta_substr            = 97    // dmmeta.substr -> amc.FSubstr
+    ,amc_TableId_dev_Targdep              = 98    // dev.Targdep -> amc.FTargdep
+    ,amc_TableId_dev_targdep              = 98    // dev.targdep -> amc.FTargdep
+    ,amc_TableId_dev_Target               = 99    // dev.Target -> amc.FTarget
+    ,amc_TableId_dev_target               = 99    // dev.target -> amc.FTarget
+    ,amc_TableId_dmmeta_Tary              = 100   // dmmeta.Tary -> amc.FTary
+    ,amc_TableId_dmmeta_tary              = 100   // dmmeta.tary -> amc.FTary
+    ,amc_TableId_amcdb_Tcurs              = 101   // amcdb.Tcurs -> amc.FTcurs
+    ,amc_TableId_amcdb_tcurs              = 101   // amcdb.tcurs -> amc.FTcurs
+    ,amc_TableId_dmmeta_Thash             = 102   // dmmeta.Thash -> amc.FThash
+    ,amc_TableId_dmmeta_thash             = 102   // dmmeta.thash -> amc.FThash
+    ,amc_TableId_dmmeta_Typefld           = 103   // dmmeta.Typefld -> amc.FTypefld
+    ,amc_TableId_dmmeta_typefld           = 103   // dmmeta.typefld -> amc.FTypefld
+    ,amc_TableId_dmmeta_Usertracefld      = 104   // dmmeta.Usertracefld -> amc.FUsertracefld
+    ,amc_TableId_dmmeta_usertracefld      = 104   // dmmeta.usertracefld -> amc.FUsertracefld
+    ,amc_TableId_dmmeta_Xref              = 105   // dmmeta.Xref -> amc.FXref
+    ,amc_TableId_dmmeta_xref              = 105   // dmmeta.xref -> amc.FXref
 };
 
-enum { amc_TableIdEnum_N = 210 };
+enum { amc_TableIdEnum_N = 212 };
 
 namespace amc { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -490,6 +492,7 @@ namespace dmmeta { struct Ns; }
 namespace amc { struct FLicense; }
 namespace dmmeta { struct Nscpp; }
 namespace dmmeta { struct Nsdb; }
+namespace dmmeta { struct Nsdump; }
 namespace dmmeta { struct Nsinclude; }
 namespace dmmeta { struct Nsjs; }
 namespace dmmeta { struct Nsproto; }
@@ -671,6 +674,7 @@ namespace amc { struct _db_ckafka_curs; }
 namespace amc { struct _db_fkafka_curs; }
 namespace amc { struct _db_userfunc_curs; }
 namespace amc { struct _db_steptype_curs; }
+namespace amc { struct _db_nsdump_curs; }
 namespace amc { struct dispatch_c_dispatch_msg_curs; }
 namespace amc { struct enumstr_c_fconst_curs; }
 namespace amc { struct enumstr_len_bh_enumstr_curs; }
@@ -788,6 +792,7 @@ namespace amc { struct FNoxref; }
 namespace amc { struct JsNs; }
 namespace amc { struct FNscpp; }
 namespace amc { struct FNsdb; }
+namespace amc { struct FNsdump; }
 namespace amc { struct FNsinclude; }
 namespace amc { struct FNsjs; }
 namespace amc { struct FNsproto; }
@@ -3412,6 +3417,8 @@ struct FDb { // amc.FDb: In-memory database for amc
     amc::FSteptype**        ind_steptype_buckets_elems;               // pointer to bucket array
     i32                     ind_steptype_buckets_n;                   // number of elements in bucket array
     i32                     ind_steptype_n;                           // number of elements in the hash table
+    amc::FNsdump*           nsdump_lary[32];                          // level array
+    i32                     nsdump_n;                                 // number of elements in array
     amc::trace              trace;                                    //
 };
 
@@ -9432,6 +9439,46 @@ void                 ind_steptype_Reserve(int n) __attribute__((nothrow));
 // func:amc.FDb.ind_steptype.AbsReserve
 void                 ind_steptype_AbsReserve(int n) __attribute__((nothrow));
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:amc.FDb.nsdump.Alloc
+amc::FNsdump&        nsdump_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:amc.FDb.nsdump.AllocMaybe
+amc::FNsdump*        nsdump_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:amc.FDb.nsdump.InsertMaybe
+amc::FNsdump*        nsdump_InsertMaybe(const dmmeta::Nsdump &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:amc.FDb.nsdump.AllocMem
+void*                nsdump_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:amc.FDb.nsdump.EmptyQ
+inline bool          nsdump_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:amc.FDb.nsdump.Find
+inline amc::FNsdump* nsdump_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:amc.FDb.nsdump.Last
+inline amc::FNsdump* nsdump_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:amc.FDb.nsdump.N
+inline i32           nsdump_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:amc.FDb.nsdump.RemoveAll
+void                 nsdump_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:amc.FDb.nsdump.RemoveLast
+void                 nsdump_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:amc.FDb.nsdump.qFind
+inline amc::FNsdump& nsdump_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:amc.FDb.nsdump.XrefMaybe
+bool                 nsdump_XrefMaybe(amc::FNsdump &row);
+
 // cursor points to valid item
 // func:amc.FDb.fsort_curs.Reset
 inline void          _db_fsort_curs_Reset(_db_fsort_curs &curs, amc::FDb &parent) __attribute__((nothrow));
@@ -10978,6 +11025,18 @@ inline void          _db_steptype_curs_Next(_db_steptype_curs &curs) __attribute
 // item access
 // func:amc.FDb.steptype_curs.Access
 inline amc::FSteptype& _db_steptype_curs_Access(_db_steptype_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:amc.FDb.nsdump_curs.Reset
+inline void          _db_nsdump_curs_Reset(_db_nsdump_curs &curs, amc::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:amc.FDb.nsdump_curs.ValidQ
+inline bool          _db_nsdump_curs_ValidQ(_db_nsdump_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:amc.FDb.nsdump_curs.Next
+inline void          _db_nsdump_curs_Next(_db_nsdump_curs &curs) __attribute__((nothrow));
+// item access
+// func:amc.FDb.nsdump_curs.Access
+inline amc::FNsdump& _db_nsdump_curs_Access(_db_nsdump_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:amc.FDb..Init
 void                 FDb_Init();
@@ -14872,6 +14931,7 @@ struct FNs { // amc.FNs
     amc::FLicense*      p_license;           // reference to parent row
     amc::JsNs           js;                  //
     amc::FNsjs*         c_nsjs;              // optional pointer
+    amc::FNsdump*       c_nsdump;            // optional pointer
     // reftype Ptrary of amc.FNs.c_ctype prohibits copy
     // reftype Ptrary of amc.FNs.c_func prohibits copy
     // reftype Ptrary of amc.FNs.c_dispatch prohibits copy
@@ -14897,6 +14957,7 @@ struct FNs { // amc.FNs
     // x-reference on amc.FNs.c_nscpp prevents copy
     // x-reference on amc.FNs.p_license prevents copy
     // x-reference on amc.FNs.c_nsjs prevents copy
+    // x-reference on amc.FNs.c_nsdump prevents copy
     // func:amc.FNs..AssignOp
     amc::FNs&            operator =(const amc::FNs &rhs) = delete;
     // reftype Ptrary of amc.FNs.c_ctype prohibits copy
@@ -14924,6 +14985,7 @@ struct FNs { // amc.FNs
     // x-reference on amc.FNs.c_nscpp prevents copy
     // x-reference on amc.FNs.p_license prevents copy
     // x-reference on amc.FNs.c_nsjs prevents copy
+    // x-reference on amc.FNs.c_nsdump prevents copy
     // func:amc.FNs..CopyCtor
     FNs(const amc::FNs &rhs) = delete;
 private:
@@ -15685,6 +15747,13 @@ inline bool          c_nsjs_InsertMaybe(amc::FNs& ns, amc::FNsjs& row) __attribu
 // func:amc.FNs.c_nsjs.Remove
 inline void          c_nsjs_Remove(amc::FNs& ns, amc::FNsjs& row) __attribute__((nothrow));
 
+// Insert row into pointer index. Return final membership status.
+// func:amc.FNs.c_nsdump.InsertMaybe
+inline bool          c_nsdump_InsertMaybe(amc::FNs& ns, amc::FNsdump& row) __attribute__((nothrow));
+// Remove element from index. If element is not in index, do nothing.
+// func:amc.FNs.c_nsdump.Remove
+inline void          c_nsdump_Remove(amc::FNs& ns, amc::FNsdump& row) __attribute__((nothrow));
+
 // Set all fields to initial values.
 // func:amc.FNs..Init
 void                 FNs_Init(amc::FNs& ns);
@@ -15929,6 +15998,38 @@ void                 nsdb_CopyIn(amc::FNsdb &row, dmmeta::Nsdb &in) __attribute_
 
 // func:amc.FNsdb..Uninit
 void                 FNsdb_Uninit(amc::FNsdb& nsdb) __attribute__((nothrow));
+
+// --- amc.FNsdump
+// create: amc.FDb.nsdump (Lary)
+// global access: nsdump (Lary, by rowid)
+// access: amc.FNs.c_nsdump (Ptr)
+struct FNsdump { // amc.FNsdump
+    algo::Smallstr16   ns;        //
+    algo::Comment      comment;   //
+    // func:amc.FNsdump..AssignOp
+    inline amc::FNsdump& operator =(const amc::FNsdump &rhs) = delete;
+    // func:amc.FNsdump..CopyCtor
+    inline               FNsdump(const amc::FNsdump &rhs) = delete;
+private:
+    // func:amc.FNsdump..Ctor
+    inline               FNsdump() __attribute__((nothrow));
+    // func:amc.FNsdump..Dtor
+    inline               ~FNsdump() __attribute__((nothrow));
+    friend amc::FNsdump&        nsdump_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend amc::FNsdump*        nsdump_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 nsdump_RemoveAll() __attribute__((nothrow));
+    friend void                 nsdump_RemoveLast() __attribute__((nothrow));
+};
+
+// Copy fields out of row
+// func:amc.FNsdump.msghdr.CopyOut
+void                 nsdump_CopyOut(amc::FNsdump &row, dmmeta::Nsdump &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:amc.FNsdump.msghdr.CopyIn
+void                 nsdump_CopyIn(amc::FNsdump &row, dmmeta::Nsdump &in) __attribute__((nothrow));
+
+// func:amc.FNsdump..Uninit
+void                 FNsdump_Uninit(amc::FNsdump& nsdump) __attribute__((nothrow));
 
 // --- amc.FNsinclude
 // create: amc.FDb.nsinclude (Lary)
@@ -18861,6 +18962,14 @@ struct _db_steptype_curs {// cursor
 };
 
 
+struct _db_nsdump_curs {// cursor
+    typedef amc::FNsdump ChildType;
+    amc::FDb *parent;
+    i64 index;
+    _db_nsdump_curs(){ parent=NULL; index=0; }
+};
+
+
 struct dispatch_c_dispatch_msg_curs {// fcurs:amc.FDispatch.c_dispatch_msg/curs
     typedef amc::FDispatchmsg ChildType;
     amc::FDispatchmsg** elems;
@@ -21390,6 +21499,10 @@ void                 gen_ns_dispatch();
 // func:amc...gen_ns_pnew
 // this function is 'extrn' and implemented by user
 void                 gen_ns_pnew();
+// User-implemented function from gstatic:amc.FDb.gen
+// func:amc...gen_ns_state_dump
+// this function is 'extrn' and implemented by user
+void                 gen_ns_state_dump();
 // User-implemented function from gstatic:amc.FDb.gen
 // func:amc...gen_ns_funcindex
 // this function is 'extrn' and implemented by user

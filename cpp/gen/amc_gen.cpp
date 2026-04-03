@@ -427,6 +427,8 @@ namespace amc { // gen:ns_print_proto
     static bool          fkafka_InputMaybe(dmmeta::Fkafka &elem) __attribute__((nothrow));
     // func:amc.FDb.steptype.InputMaybe
     static bool          steptype_InputMaybe(dmmeta::Steptype &elem) __attribute__((nothrow));
+    // func:amc.FDb.nsdump.InputMaybe
+    static bool          nsdump_InputMaybe(dmmeta::Nsdump &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     // func:amc.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
@@ -6942,7 +6944,7 @@ static void amc::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc.Input'  signature:'dcef24cf11d5533b270d4be5e0651a9024d4443a'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc.Input'  signature:'0fa4ae78a51afcfdc0d90125643471cf429092c6'");
 }
 
 // --- amc.FDb._db.InsertStrptrMaybe
@@ -7583,6 +7585,12 @@ bool amc::InsertStrptrMaybe(algo::strptr str) {
             retval = retval && steptype_InputMaybe(elem);
             break;
         }
+        case amc_TableId_dmmeta_Nsdump: { // finput:amc.FDb.nsdump
+            dmmeta::Nsdump elem;
+            retval = dmmeta::Nsdump_ReadStrptrMaybe(elem, str);
+            retval = retval && nsdump_InputMaybe(elem);
+            break;
+        }
         default:
         break;
     } //switch
@@ -7629,6 +7637,7 @@ bool amc::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nsproto"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nsjs"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nsinclude"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nsdump"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nscpp"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.noxref"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nossimfile"),recursive);
@@ -16494,6 +16503,7 @@ static void amc::gen_LoadStatic() {
         ,{ "amcdb.gen  gen:ns_fast  perns:Y  comment:\"Generate FAST decode\"", amc::gen_ns_fast }
         ,{ "amcdb.gen  gen:ns_dispatch  perns:Y  comment:\"Generate dispatch code\"", amc::gen_ns_dispatch }
         ,{ "amcdb.gen  gen:ns_pnew  perns:Y  comment:\"Generate custom constructors (placement new)\"", amc::gen_ns_pnew }
+        ,{ "amcdb.gen  gen:ns_state_dump  perns:Y  comment:\"Generate FDb state dump function\"", amc::gen_ns_state_dump }
         ,{ "amcdb.gen  gen:ns_funcindex  perns:Y  comment:\"Generate index of functions per field/ctype\"", amc::gen_ns_funcindex }
         ,{ "amcdb.gen  gen:ns_print_proto  perns:Y  comment:\"Print function prototypes\"", amc::gen_ns_print_proto }
         ,{ "amcdb.gen  gen:ns_print_struct  perns:Y  comment:\"Print structs and their function declarations\"", amc::gen_ns_print_struct }
@@ -23989,6 +23999,118 @@ void amc::ind_steptype_AbsReserve(int n) {
     }
 }
 
+// --- amc.FDb.nsdump.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+amc::FNsdump& amc::nsdump_Alloc() {
+    amc::FNsdump* row = nsdump_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("amc.out_of_mem  field:amc.FDb.nsdump  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- amc.FDb.nsdump.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+amc::FNsdump* amc::nsdump_AllocMaybe() {
+    amc::FNsdump *row = (amc::FNsdump*)nsdump_AllocMem();
+    if (row) {
+        new (row) amc::FNsdump; // call constructor
+    }
+    return row;
+}
+
+// --- amc.FDb.nsdump.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+amc::FNsdump* amc::nsdump_InsertMaybe(const dmmeta::Nsdump &value) {
+    amc::FNsdump *row = &nsdump_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    nsdump_CopyIn(*row,const_cast<dmmeta::Nsdump&>(value));
+    bool ok = nsdump_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        nsdump_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- amc.FDb.nsdump.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* amc::nsdump_AllocMem() {
+    u64 new_nelems     = _db.nsdump_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    amc::FNsdump*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.nsdump_lary[bsr];
+        if (!lev) {
+            lev=(amc::FNsdump*)amc::lpool_AllocMem(sizeof(amc::FNsdump) * (u64(1)<<bsr));
+            _db.nsdump_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.nsdump_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- amc.FDb.nsdump.RemoveAll
+// Remove all elements from Lary
+void amc::nsdump_RemoveAll() {
+    for (u64 n = _db.nsdump_n; n>0; ) {
+        n--;
+        nsdump_qFind(u64(n)).~FNsdump(); // destroy last element
+        _db.nsdump_n = i32(n);
+    }
+}
+
+// --- amc.FDb.nsdump.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void amc::nsdump_RemoveLast() {
+    u64 n = _db.nsdump_n;
+    if (n > 0) {
+        n -= 1;
+        nsdump_qFind(u64(n)).~FNsdump();
+        _db.nsdump_n = i32(n);
+    }
+}
+
+// --- amc.FDb.nsdump.InputMaybe
+static bool amc::nsdump_InputMaybe(dmmeta::Nsdump &elem) {
+    bool retval = true;
+    retval = nsdump_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- amc.FDb.nsdump.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool amc::nsdump_XrefMaybe(amc::FNsdump &row) {
+    bool retval = true;
+    (void)row;
+    amc::FNs* p_ns = amc::ind_ns_Find(row.ns);
+    if (UNLIKELY(!p_ns)) {
+        algo_lib::ResetErrtext() << "amc.bad_xref  index:amc.FDb.ind_ns" << Keyval("key", row.ns);
+        return false;
+    }
+    // insert nsdump into index c_nsdump
+    if (true) { // user-defined insert condition
+        bool success = c_nsdump_InsertMaybe(*p_ns, row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "amc.duplicate_key  xref:amc.FNs.c_nsdump"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
 // --- amc.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr amc::trace_RowidFind(int t) {
@@ -25738,6 +25860,17 @@ void amc::FDb_Init() {
         FatalErrorExit("out of memory"); // (amc.FDb.ind_steptype)
     }
     memset(_db.ind_steptype_buckets_elems, 0, sizeof(amc::FSteptype*)*_db.ind_steptype_buckets_n); // (amc.FDb.ind_steptype)
+    // initialize LAry nsdump (amc.FDb.nsdump)
+    _db.nsdump_n = 0;
+    memset(_db.nsdump_lary, 0, sizeof(_db.nsdump_lary)); // zero out all level pointers
+    amc::FNsdump* nsdump_first = (amc::FNsdump*)amc::lpool_AllocMem(sizeof(amc::FNsdump) * (u64(1)<<4));
+    if (!nsdump_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.nsdump_lary[i]  = nsdump_first;
+        nsdump_first    += 1ULL<<i;
+    }
 
     amc::InitReflection();
     tclass_LoadStatic(); // gen:ns_gstatic  gstatic:amc.FDb.tclass  load amc.FTclass records
@@ -25749,6 +25882,9 @@ void amc::FDb_Init() {
 // --- amc.FDb..Uninit
 void amc::FDb_Uninit() {
     amc::FDb &row = _db; (void)row;
+
+    // amc.FDb.nsdump.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // amc.FDb.ind_steptype.Uninit (Thash)  //
     // skip destruction of ind_steptype in global scope
@@ -30921,6 +31057,7 @@ void amc::FNs_Init(amc::FNs& ns) {
     ns.c_nscpp = NULL;
     ns.p_license = NULL;
     ns.c_nsjs = NULL;
+    ns.c_nsdump = NULL;
     ns.ind_ns_next = (amc::FNs*)-1; // (amc.FDb.ind_ns) not-in-hash
     ns.ind_ns_hashval = 0; // stored hash value
 }
@@ -31026,6 +31163,29 @@ void amc::FNsdb_Uninit(amc::FNsdb& nsdb) {
     amc::FNs* p_ns = amc::ind_ns_Find(row.ns);
     if (p_ns)  {
         c_nsdb_Remove(*p_ns, row);// remove nsdb from index c_nsdb
+    }
+}
+
+// --- amc.FNsdump.msghdr.CopyOut
+// Copy fields out of row
+void amc::nsdump_CopyOut(amc::FNsdump &row, dmmeta::Nsdump &out) {
+    out.ns = row.ns;
+    out.comment = row.comment;
+}
+
+// --- amc.FNsdump.msghdr.CopyIn
+// Copy fields in to row
+void amc::nsdump_CopyIn(amc::FNsdump &row, dmmeta::Nsdump &in) {
+    row.ns = in.ns;
+    row.comment = in.comment;
+}
+
+// --- amc.FNsdump..Uninit
+void amc::FNsdump_Uninit(amc::FNsdump& nsdump) {
+    amc::FNsdump &row = nsdump; (void)row;
+    amc::FNs* p_ns = amc::ind_ns_Find(row.ns);
+    if (p_ns)  {
+        c_nsdump_Remove(*p_ns, row);// remove nsdump from index c_nsdump
     }
 }
 
@@ -32551,6 +32711,7 @@ const char* amc::value_ToCstr(const amc::TableId& parent) {
         case amc_TableId_dmmeta_Ns         : ret = "dmmeta.Ns";  break;
         case amc_TableId_dmmeta_Nscpp      : ret = "dmmeta.Nscpp";  break;
         case amc_TableId_dmmeta_Nsdb       : ret = "dmmeta.Nsdb";  break;
+        case amc_TableId_dmmeta_Nsdump     : ret = "dmmeta.Nsdump";  break;
         case amc_TableId_dmmeta_Nsinclude  : ret = "dmmeta.Nsinclude";  break;
         case amc_TableId_dmmeta_Nsjs       : ret = "dmmeta.Nsjs";  break;
         case amc_TableId_dmmeta_Nsproto    : ret = "dmmeta.Nsproto";  break;
@@ -32868,6 +33029,7 @@ bool amc::value_SetStrptrMaybe(amc::TableId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('d','m','m','e','t','a','.','N'): {
                     if (memcmp(rhs.elems+8,"oxref",5)==0) { value_SetEnum(parent,amc_TableId_dmmeta_Noxref); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"sdump",5)==0) { value_SetEnum(parent,amc_TableId_dmmeta_Nsdump); ret = true; break; }
                     if (memcmp(rhs.elems+8,"umstr",5)==0) { value_SetEnum(parent,amc_TableId_dmmeta_Numstr); ret = true; break; }
                     break;
                 }
@@ -32915,6 +33077,7 @@ bool amc::value_SetStrptrMaybe(amc::TableId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('d','m','m','e','t','a','.','n'): {
                     if (memcmp(rhs.elems+8,"oxref",5)==0) { value_SetEnum(parent,amc_TableId_dmmeta_noxref); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"sdump",5)==0) { value_SetEnum(parent,amc_TableId_dmmeta_nsdump); ret = true; break; }
                     if (memcmp(rhs.elems+8,"umstr",5)==0) { value_SetEnum(parent,amc_TableId_dmmeta_numstr); ret = true; break; }
                     break;
                 }

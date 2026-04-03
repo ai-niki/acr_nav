@@ -642,6 +642,7 @@ static void DispatchHeadlessCommand(algo::strptr line, int lineno) {
     acr_nav::SetView setview_cmd;
     acr_nav::GoBack goback_cmd;
     acr_nav::Summary summary_cmd;
+    acr_nav::RequestStateDump statedump_cmd;
     if (elems_N(algo::Trimmed(line)) == 0) {
         // empty lines are ssim separators, not errors
     } else if (acr_nav::SendKey_ReadStrptrMaybe(send_key, line)) {
@@ -665,6 +666,12 @@ static void DispatchHeadlessCommand(algo::strptr line, int lineno) {
         HeadlessGoBack();
     } else if (acr_nav::Summary_ReadStrptrMaybe(summary_cmd, line)) {
         EmitSummary();
+    } else if (acr_nav::RequestStateDump_ReadStrptrMaybe(statedump_cmd, line)) {
+        algo_lib::Regx filter;
+        Regx_ReadSql(filter, statedump_cmd.filter, true);
+        algo::cstring out;
+        acr_nav::StateDump(out, filter);
+        prlog(out);
     } else {
         acr_nav::InputError err;
         err.lineno = lineno;
@@ -712,8 +719,15 @@ static void CountSsimfileRecords() {
 void acr_nav::Main() {
     CountSsimfileRecords();
     BuildLeftItems();
+    bool do_dump = ch_N(_db.cmdline.dump) > 0;
     bool headless = _db.cmdline.headless || !isatty(STDOUT_FILENO);
-    if (headless) {
+    if (do_dump) {
+        algo_lib::Regx filter;
+        Regx_ReadSql(filter, _db.cmdline.dump, true);
+        algo::cstring out;
+        StateDump(out, filter);
+        prlog(out);
+    } else if (headless) {
         HeadlessMain();
     } else {
         InitPanels();

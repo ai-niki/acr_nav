@@ -169,6 +169,7 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_shell         : ret = "shell";  break;
         case command_FieldId_serv          : ret = "serv";  break;
         case command_FieldId_headless      : ret = "headless";  break;
+        case command_FieldId_dump          : ret = "dump";  break;
         case command_FieldId_in_dir        : ret = "in_dir";  break;
         case command_FieldId_out_dir       : ret = "out_dir";  break;
         case command_FieldId_proto         : ret = "proto";  break;
@@ -580,6 +581,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR4('d','s','t','r'): {
                     value_SetEnum(parent,command_FieldId_dstr); ret = true; break;
+                }
+                case LE_STR4('d','u','m','p'): {
+                    value_SetEnum(parent,command_FieldId_dump); ret = true; break;
                 }
                 case LE_STR4('e','x','e','c'): {
                     value_SetEnum(parent,command_FieldId_exec); ret = true; break;
@@ -7207,6 +7211,9 @@ bool command::acr_nav_ReadFieldMaybe(command::acr_nav& parent, algo::strptr fiel
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
         } break;
+        case command_FieldId_dump: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.dump, strval);
+        } break;
         default: {
             retval = false;
             algo_lib::AppendErrtext("comment", "unrecognized attr");
@@ -7267,6 +7274,12 @@ void command::acr_nav_PrintArgv(command::acr_nav& row, algo::cstring& str) {
         str << " -in:";
         strptr_PrintBash(temp,str);
     }
+    if (!(row.dump == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.dump, temp);
+        str << " -dump:";
+        strptr_PrintBash(temp,str);
+    }
 }
 
 // --- command.acr_nav..NArgs
@@ -7282,6 +7295,9 @@ i32 command::acr_nav_NArgs(command::FieldId field, algo::strptr& out_dflt, bool*
             out_dflt="Y";
         } break;
         case command_FieldId_in: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_dump: { //
             *out_anon = false;
         } break;
         default:
@@ -7438,6 +7454,12 @@ void command::acr_nav_ToArgv(command::acr_nav_proc& parent, algo::StringAry& arg
         cstring *arg = &ary_Alloc(args);
         *arg << "-in:";
         cstring_Print(parent.cmd.in, *arg);
+    }
+
+    if (parent.cmd.dump != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-dump:";
+        cstring_Print(parent.cmd.dump, *arg);
     }
     for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
         ary_Alloc(args) << "-verbose";

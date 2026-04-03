@@ -274,6 +274,7 @@ dev.gitfile  gitfile:cpp/amc/signature.cpp
 dev.gitfile  gitfile:cpp/amc/size.cpp
 dev.gitfile  gitfile:cpp/amc/smallstr.cpp
 dev.gitfile  gitfile:cpp/amc/sort.cpp
+dev.gitfile  gitfile:cpp/amc/state_dump.cpp
 dev.gitfile  gitfile:cpp/amc/step.cpp
 dev.gitfile  gitfile:cpp/amc/struct.cpp
 dev.gitfile  gitfile:cpp/amc/substr.cpp
@@ -717,6 +718,7 @@ dev.gitfile  gitfile:data/dmmeta/noxref.ssim
 dev.gitfile  gitfile:data/dmmeta/ns.ssim
 dev.gitfile  gitfile:data/dmmeta/nscpp.ssim
 dev.gitfile  gitfile:data/dmmeta/nsdb.ssim
+dev.gitfile  gitfile:data/dmmeta/nsdump.ssim
 dev.gitfile  gitfile:data/dmmeta/nsfast.ssim
 dev.gitfile  gitfile:data/dmmeta/nsinclude.ssim
 dev.gitfile  gitfile:data/dmmeta/nsjs.ssim
@@ -1778,6 +1780,7 @@ dev.gitfile  gitfile:txt/ssimdb/dmmeta/noxref.md
 dev.gitfile  gitfile:txt/ssimdb/dmmeta/ns.md
 dev.gitfile  gitfile:txt/ssimdb/dmmeta/nscpp.md
 dev.gitfile  gitfile:txt/ssimdb/dmmeta/nsdb.md
+dev.gitfile  gitfile:txt/ssimdb/dmmeta/nsdump.md
 dev.gitfile  gitfile:txt/ssimdb/dmmeta/nsfast.md
 dev.gitfile  gitfile:txt/ssimdb/dmmeta/nsinclude.md
 dev.gitfile  gitfile:txt/ssimdb/dmmeta/nsjs.md

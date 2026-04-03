@@ -1,5 +1,5 @@
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:comment  navstack_depth:0  n_sel_ctype:218  n_ctype:1414  n_field:5687  viewmode:fields  breadcrumb:""  filtertarget:field  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
-acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:238  sel_value:acr.FQuery
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:comment  navstack_depth:0  n_sel_ctype:219  n_ctype:1418  n_field:5696  viewmode:fields  breadcrumb:""  filtertarget:field  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
+acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:239  sel_value:acr.FQuery
 acr_nav.VisibleLeftItem  row:0  value:acr  kind:ns  collapsed:N  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:acr.FQuery  kind:ctype  collapsed:N  n_match:0  n_record:0
 acr_nav.VisibleLeftItem  row:2  value:acr_navdb  kind:ns  collapsed:N  n_match:10  n_record:0
@@ -19,7 +19,7 @@ acr_nav.VisibleLeftItem  row:15  value:algo.Imtable  kind:ctype  collapsed:N  n_
 acr_nav.VisibleLeftItem  row:16  value:amcdb  kind:ns  collapsed:N  n_match:7  n_record:0
 acr_nav.VisibleLeftItem  row:17  value:amcdb.Bltin  kind:ctype  collapsed:N  n_match:0  n_record:14
 acr_nav.VisibleLeftItem  row:18  value:amcdb.Curstype  kind:ctype  collapsed:N  n_match:0  n_record:5
-acr_nav.VisibleLeftItem  row:19  value:amcdb.Gen  kind:ctype  collapsed:N  n_match:0  n_record:90
+acr_nav.VisibleLeftItem  row:19  value:amcdb.Gen  kind:ctype  collapsed:N  n_match:0  n_record:91
 acr_nav.VisibleLeftItem  row:20  value:amcdb.Regxtype  kind:ctype  collapsed:N  n_match:0  n_record:4
 acr_nav.VisibleLeftItem  row:21  value:amcdb.Tclass  kind:ctype  collapsed:N  n_match:0  n_record:52
 acr_nav.VisibleLeftItem  row:22  value:amcdb.Tcurs  kind:ctype  collapsed:N  n_match:0  n_record:13
@@ -36,7 +36,7 @@ acr_nav.VisibleLeftItem  row:32  value:atfdb.Amctest  kind:ctype  collapsed:N  n
 acr_nav.VisibleLeftItem  row:33  value:atfdb.Cijob  kind:ctype  collapsed:N  n_match:0  n_record:4
 acr_nav.VisibleLeftItem  row:34  value:atfdb.Cipackage  kind:ctype  collapsed:N  n_match:0  n_record:2
 acr_nav.VisibleLeftItem  row:35  value:atfdb.Citest  kind:ctype  collapsed:N  n_match:0  n_record:40
-acr_nav.VisibleLeftItem  row:36  value:atfdb.Comptest  kind:ctype  collapsed:N  n_match:0  n_record:287
+acr_nav.VisibleLeftItem  row:36  value:atfdb.Comptest  kind:ctype  collapsed:N  n_match:0  n_record:289
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:13  sel_value:acr.FQuery.queryop
 acr_nav.VisibleField  row:0  field:acr.FQuery.queryop  arg:acr.Queryop  reftype:Val  style:field_val  navigable:Y  match:N
 acr_nav.VisibleField  row:1  field:acr.FQuery.query  arg:acr.AttrRegx  reftype:Val  style:field_val  navigable:Y  match:N
@@ -52,7 +52,7 @@ acr_nav.VisibleField  row:10  field:acr.FQuery.n_visit_field  arg:i32  reftype:V
 acr_nav.VisibleField  row:11  field:acr.FQuery.n_visit_ctype  arg:i32  reftype:Val  style:field_val  navigable:Y  match:N
 acr_nav.VisibleField  row:12  field:acr.FQuery.n_mod_rec  arg:i32  reftype:Val  style:field_val  navigable:Y  match:N
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1413  n_ctype:1414  n_field:5687  viewmode:nsdep  breadcrumb:""  filtertarget:field  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1417  n_ctype:1418  n_field:5696  viewmode:nsdep  breadcrumb:""  filtertarget:field  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:83  sel_value:""
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
@@ -63,11 +63,11 @@ acr_nav.VisibleLeftItem  row:5  value:acr_dm  kind:ns  collapsed:Y  n_match:6  n
 acr_nav.VisibleLeftItem  row:6  value:acr_ed  kind:ns  collapsed:Y  n_match:19  n_record:0
 acr_nav.VisibleLeftItem  row:7  value:acr_in  kind:ns  collapsed:Y  n_match:12  n_record:0
 acr_nav.VisibleLeftItem  row:8  value:acr_my  kind:ns  collapsed:Y  n_match:3  n_record:0
-acr_nav.VisibleLeftItem  row:9  value:acr_nav  kind:ns  collapsed:Y  n_match:37  n_record:0
+acr_nav.VisibleLeftItem  row:9  value:acr_nav  kind:ns  collapsed:Y  n_match:38  n_record:0
 acr_nav.VisibleLeftItem  row:10  value:acr_navdb  kind:ns  collapsed:Y  n_match:10  n_record:0
 acr_nav.VisibleLeftItem  row:11  value:algo  kind:ns  collapsed:Y  n_match:225  n_record:0
 acr_nav.VisibleLeftItem  row:12  value:algo_lib  kind:ns  collapsed:Y  n_match:35  n_record:0
-acr_nav.VisibleLeftItem  row:13  value:amc  kind:ns  collapsed:Y  n_match:130  n_record:0
+acr_nav.VisibleLeftItem  row:13  value:amc  kind:ns  collapsed:Y  n_match:131  n_record:0
 acr_nav.VisibleLeftItem  row:14  value:amc_gc  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:15  value:amc_vis  kind:ns  collapsed:Y  n_match:12  n_record:0
 acr_nav.VisibleLeftItem  row:16  value:amcdb  kind:ns  collapsed:Y  n_match:7  n_record:0
@@ -105,7 +105,7 @@ acr_nav.VisibleLine  row:9  value:"           amc     78 fields"
 acr_nav.VisibleLine  row:10  value:"           acr     62 fields"
 acr_nav.VisibleLine  row:11  value:"       acr_nav     53 fields"
 acr_nav.VisibleLine  row:12  value:"         kafka     53 fields"
-acr_nav.VisibleLine  row:13  value:"        report     43 fields"
+acr_nav.VisibleLine  row:13  value:"        report     44 fields"
 acr_nav.VisibleLine  row:14  value:"           ams     38 fields"
 acr_nav.VisibleLine  row:15  value:"       lib_ams     38 fields"
 acr_nav.VisibleLine  row:16  value:"           dev     37 fields"
@@ -130,7 +130,7 @@ acr_nav.VisibleLine  row:34  value:"            fm      9 fields"
 acr_nav.VisibleLine  row:35  value:"        abt_md      8 fields"
 acr_nav.VisibleLine  row:36  value:"        acr_in      8 fields"
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1413  n_ctype:1414  n_field:5687  viewmode:nsdep  breadcrumb:""  filtertarget:field  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1417  n_ctype:1418  n_field:5696  viewmode:nsdep  breadcrumb:""  filtertarget:field  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:83  sel_value:""
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
@@ -141,11 +141,11 @@ acr_nav.VisibleLeftItem  row:5  value:acr_dm  kind:ns  collapsed:Y  n_match:6  n
 acr_nav.VisibleLeftItem  row:6  value:acr_ed  kind:ns  collapsed:Y  n_match:19  n_record:0
 acr_nav.VisibleLeftItem  row:7  value:acr_in  kind:ns  collapsed:Y  n_match:12  n_record:0
 acr_nav.VisibleLeftItem  row:8  value:acr_my  kind:ns  collapsed:Y  n_match:3  n_record:0
-acr_nav.VisibleLeftItem  row:9  value:acr_nav  kind:ns  collapsed:Y  n_match:37  n_record:0
+acr_nav.VisibleLeftItem  row:9  value:acr_nav  kind:ns  collapsed:Y  n_match:38  n_record:0
 acr_nav.VisibleLeftItem  row:10  value:acr_navdb  kind:ns  collapsed:Y  n_match:10  n_record:0
 acr_nav.VisibleLeftItem  row:11  value:algo  kind:ns  collapsed:Y  n_match:225  n_record:0
 acr_nav.VisibleLeftItem  row:12  value:algo_lib  kind:ns  collapsed:Y  n_match:35  n_record:0
-acr_nav.VisibleLeftItem  row:13  value:amc  kind:ns  collapsed:Y  n_match:130  n_record:0
+acr_nav.VisibleLeftItem  row:13  value:amc  kind:ns  collapsed:Y  n_match:131  n_record:0
 acr_nav.VisibleLeftItem  row:14  value:amc_gc  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:15  value:amc_vis  kind:ns  collapsed:Y  n_match:12  n_record:0
 acr_nav.VisibleLeftItem  row:16  value:amcdb  kind:ns  collapsed:Y  n_match:7  n_record:0
@@ -183,7 +183,7 @@ acr_nav.VisibleLine  row:9  value:"           amc     78 fields"
 acr_nav.VisibleLine  row:10  value:"           acr     62 fields"
 acr_nav.VisibleLine  row:11  value:"       acr_nav     53 fields"
 acr_nav.VisibleLine  row:12  value:"         kafka     53 fields"
-acr_nav.VisibleLine  row:13  value:"        report     43 fields"
+acr_nav.VisibleLine  row:13  value:"        report     44 fields"
 acr_nav.VisibleLine  row:14  value:"           ams     38 fields"
 acr_nav.VisibleLine  row:15  value:"       lib_ams     38 fields"
 acr_nav.VisibleLine  row:16  value:"           dev     37 fields"

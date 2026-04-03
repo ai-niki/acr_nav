@@ -54,6 +54,7 @@ const char *acr_nav_help =
 "    OPTION      TYPE    DFLT    COMMENT\n"
 "    -headless                   Headless mode: structured I/O for agent testing\n"
 "    -in         string  \"data\"  Input directory or filename, - for stdin\n"
+"    -dump       string  \"\"      Dump state matching regex and exit\n"
 "    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
 "    -help                       Print help and exit; alias -h\n"
@@ -4049,12 +4050,12 @@ static void acr_nav::viewmode_LoadStatic() {
         { "acr_navdb.viewmode  viewmode:codegen  title:\"Generated code\"  next:graph  empty_msg:\"no generated code\"  has_fields:N  is_overlay:N  need_ssimfile:N  is_reverse:N  status_hint:\"Tab:view  ?:help  q:quit\"  scope_ns:N  comment:\"amc-generated C++ struct for selected ctype\"", acr_nav::viewmode_codegen_ensure_content }
         ,{ "acr_navdb.viewmode  viewmode:detail  title:Detail  next:fields  empty_msg:\"press d on a field\"  has_fields:N  is_overlay:Y  need_ssimfile:N  is_reverse:N  status_hint:\"d/Esc:dismiss  ?:help  q:quit\"  scope_ns:N  comment:\"Per-field metadata from across dmmeta tables\"", acr_nav::viewmode_detail_ensure_content }
         ,{ "acr_navdb.viewmode  viewmode:fields  title:Fields  next:xref  empty_msg:\"no fields\"  has_fields:Y  is_overlay:N  need_ssimfile:N  is_reverse:N  status_hint:\"Enter:follow  Tab:view  d:detail  ?:help  q:quit\"  scope_ns:N  comment:\"Forward fields of selected ctype\"", acr_nav::viewmode_fields_ensure_content }
+        ,{ "acr_navdb.viewmode  viewmode:graph  title:Graph  next:fields  empty_msg:\"no access paths\"  has_fields:N  is_overlay:N  need_ssimfile:N  is_reverse:N  status_hint:\"Enter:follow  Tab:view  ?:help  q:quit\"  scope_ns:N  comment:\"Interactive access path diagram\"", acr_nav::viewmode_graph_ensure_content }
         ,{ "acr_navdb.viewmode  viewmode:help  title:Help  next:fields  empty_msg:\"\"  has_fields:N  is_overlay:Y  need_ssimfile:N  is_reverse:N  status_hint:\"Esc/?:dismiss  q:quit\"  scope_ns:N  comment:\"Keybinding help\"", acr_nav::viewmode_help_ensure_content }
+        ,{ "acr_navdb.viewmode  viewmode:nsdep  title:\"Namespace dependencies\"  next:nsdep_detail  empty_msg:\"no cross-ns deps\"  has_fields:N  is_overlay:N  need_ssimfile:N  is_reverse:N  status_hint:\"Enter:jump  Tab:view  ?:help  q:quit\"  scope_ns:Y  comment:\"Cross-namespace field dependencies for selected namespace\"", acr_nav::viewmode_nsdep_ensure_content }
+        ,{ "acr_navdb.viewmode  viewmode:nsdep_detail  title:\"Namespace deps (detail)\"  next:nsdep  empty_msg:\"no cross-ns deps\"  has_fields:N  is_overlay:N  need_ssimfile:N  is_reverse:N  status_hint:\"Enter:follow  Tab:view  ?:help  q:quit\"  scope_ns:Y  comment:\"Per-field cross-namespace dependencies grouped by namespace\"", acr_nav::viewmode_nsdep_detail_ensure_content }
         ,{ "acr_navdb.viewmode  viewmode:preview  title:Preview  next:codegen  empty_msg:\"no ssimfile\"  has_fields:N  is_overlay:N  need_ssimfile:Y  is_reverse:N  status_hint:\"Enter:follow  Tab:view  ?:help  q:quit\"  scope_ns:N  comment:\"Ssimfile record content preview\"", acr_nav::viewmode_preview_ensure_content }
         ,{ "acr_navdb.viewmode  viewmode:xref  title:Xrefs  next:preview  empty_msg:\"no xrefs\"  has_fields:Y  is_overlay:N  need_ssimfile:N  is_reverse:Y  status_hint:\"Enter:follow  Tab:view  d:detail  ?:help  q:quit\"  scope_ns:N  comment:\"Reverse cross-references to selected ctype\"", acr_nav::viewmode_xref_ensure_content }
-        ,{ "acr_navdb.viewmode  viewmode:nsdep  title:\"Namespace dependencies\"  next:nsdep_detail  empty_msg:\"no cross-ns deps\"  has_fields:N  is_overlay:N  need_ssimfile:N  is_reverse:N  status_hint:\"Enter:jump  Tab:view  ?:help  q:quit\"  scope_ns:Y  comment:\"Cross-namespace field dependencies for selected namespace\"", acr_nav::viewmode_nsdep_ensure_content }
-        ,{ "acr_navdb.viewmode  viewmode:graph  title:Graph  next:fields  empty_msg:\"no access paths\"  has_fields:N  is_overlay:N  need_ssimfile:N  is_reverse:N  status_hint:\"Enter:follow  Tab:view  ?:help  q:quit\"  scope_ns:N  comment:\"Interactive access path diagram\"", acr_nav::viewmode_graph_ensure_content }
-        ,{ "acr_navdb.viewmode  viewmode:nsdep_detail  title:\"Namespace deps (detail)\"  next:nsdep  empty_msg:\"no cross-ns deps\"  has_fields:N  is_overlay:N  need_ssimfile:N  is_reverse:N  status_hint:\"Enter:follow  Tab:view  ?:help  q:quit\"  scope_ns:Y  comment:\"Per-field cross-namespace dependencies grouped by namespace\"", acr_nav::viewmode_nsdep_detail_ensure_content }
         ,{NULL, NULL}
     };
     (void)data;
@@ -6418,10 +6419,10 @@ const char* acr_nav::value_ToCstr(const acr_nav::FieldId& parent) {
         case acr_nav_FieldId_navigate      : ret = "navigate";  break;
         case acr_nav_FieldId_ctype         : ret = "ctype";  break;
         case acr_nav_FieldId_viewmode      : ret = "viewmode";  break;
+        case acr_nav_FieldId_filter        : ret = "filter";  break;
         case acr_nav_FieldId_screenshot    : ret = "screenshot";  break;
         case acr_nav_FieldId_key           : ret = "key";  break;
         case acr_nav_FieldId_set_filter    : ret = "set_filter";  break;
-        case acr_nav_FieldId_filter        : ret = "filter";  break;
         case acr_nav_FieldId_target        : ret = "target";  break;
         case acr_nav_FieldId_term_hei      : ret = "term_hei";  break;
         case acr_nav_FieldId_term_wid      : ret = "term_wid";  break;
@@ -6701,6 +6702,38 @@ void acr_nav::PreviewNavCol_Print(acr_nav::PreviewNavCol& row, algo::cstring& st
 
     algo::Smallstr100_Print(row.target_ctype, temp);
     PrintAttrSpaceReset(str,"target_ctype", temp);
+}
+
+// --- acr_nav.RequestStateDump..ReadFieldMaybe
+bool acr_nav::RequestStateDump_ReadFieldMaybe(acr_nav::RequestStateDump& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    acr_nav::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case acr_nav_FieldId_filter: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.filter, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- acr_nav.RequestStateDump..ReadStrptrMaybe
+// Read fields of acr_nav::RequestStateDump from an ascii string.
+// The format of the string is an ssim Tuple
+bool acr_nav::RequestStateDump_ReadStrptrMaybe(acr_nav::RequestStateDump &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "acr_nav.RequestStateDump");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && RequestStateDump_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
 }
 
 // --- acr_nav.Screen..Init
@@ -7230,6 +7263,72 @@ void acr_nav::StaticCheck() {
     algo_assert(sizeof(acr_nav::navaction_step_hook) == 8); // csize:acr_nav.navaction_step_hook
     algo_assert(sizeof(acr_nav::viewmode_ensure_content_hook) == 8); // csize:acr_nav.viewmode_ensure_content_hook
     algo_assert(_offset_of(acr_nav::FieldId, value) + sizeof(((acr_nav::FieldId*)0)->value) == sizeof(acr_nav::FieldId));
+}
+
+// --- acr_nav...StateDump
+void acr_nav::StateDump(algo::cstring& out, algo_lib::Regx& filter) {
+    report::PoolCensus census;
+    (void)filter;
+    census.ctype = "acr_nav.FCtype";
+    census.n_record = acr_nav::ctype_N();
+    report::PoolCensus_Print(census, out);
+    out << '\n';
+    census.ctype = "acr_nav.FDetailsrc";
+    census.n_record = acr_nav::detailsrc_N();
+    report::PoolCensus_Print(census, out);
+    out << '\n';
+    census.ctype = "acr_nav.FHelpgroup";
+    census.n_record = acr_nav::helpgroup_N();
+    report::PoolCensus_Print(census, out);
+    out << '\n';
+    census.ctype = "acr_nav.FField";
+    census.n_record = acr_nav::field_N();
+    report::PoolCensus_Print(census, out);
+    out << '\n';
+    census.ctype = "acr_nav.FNs";
+    census.n_record = acr_nav::ns_N();
+    report::PoolCensus_Print(census, out);
+    out << '\n';
+    census.ctype = "acr_nav.FReftype";
+    census.n_record = acr_nav::reftype_N();
+    report::PoolCensus_Print(census, out);
+    out << '\n';
+    census.ctype = "acr_nav.FNavaction";
+    census.n_record = acr_nav::navaction_N();
+    report::PoolCensus_Print(census, out);
+    out << '\n';
+    census.ctype = "acr_nav.FKeybind";
+    census.n_record = acr_nav::keybind_N();
+    report::PoolCensus_Print(census, out);
+    out << '\n';
+    census.ctype = "acr_nav.FPanel";
+    census.n_record = acr_nav::panel_N();
+    report::PoolCensus_Print(census, out);
+    out << '\n';
+    census.ctype = "acr_nav.FNavmode";
+    census.n_record = acr_nav::navmode_N();
+    report::PoolCensus_Print(census, out);
+    out << '\n';
+    census.ctype = "acr_nav.FNavstyle";
+    census.n_record = acr_nav::navstyle_N();
+    report::PoolCensus_Print(census, out);
+    out << '\n';
+    census.ctype = "acr_nav.FReftypestyle";
+    census.n_record = acr_nav::reftypestyle_N();
+    report::PoolCensus_Print(census, out);
+    out << '\n';
+    census.ctype = "acr_nav.FSsimfile";
+    census.n_record = acr_nav::ssimfile_N();
+    report::PoolCensus_Print(census, out);
+    out << '\n';
+    census.ctype = "acr_nav.FViewmode";
+    census.n_record = acr_nav::viewmode_N();
+    report::PoolCensus_Print(census, out);
+    out << '\n';
+    census.ctype = "acr_nav.FFiltertarget";
+    census.n_record = acr_nav::filtertarget_N();
+    report::PoolCensus_Print(census, out);
+    out << '\n';
 }
 
 // --- acr_nav...main

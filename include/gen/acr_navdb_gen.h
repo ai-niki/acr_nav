@@ -178,7 +178,7 @@ inline void          FieldId_Init(acr_navdb::FieldId& parent);
 void                 FieldId_Print(acr_navdb::FieldId& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- acr_navdb.Filtertarget
-struct Filtertarget { // acr_navdb.Filtertarget
+struct Filtertarget { // acr_navdb.Filtertarget: Filter search target for acr_nav
     algo::Smallstr50   filtertarget;         //
     algo::Smallstr16   label;                // Status bar indicator prefix
     algo::Smallstr50   next;                 // Next filtertarget in Tab cycle

@@ -417,8 +417,10 @@ const char *dmmeta_Ssimfile_ssimfile_dmmeta_noxref            = "dmmeta.noxref";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_ns                = "dmmeta.ns";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_nscpp             = "dmmeta.nscpp";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_nsdb              = "dmmeta.nsdb";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_nsfast            = "dmmeta.nsfast";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_nsinclude         = "dmmeta.nsinclude";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_nsdump            = "dmmeta.nsdump";
+
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_nsfast      = "dmmeta.nsfast";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_nsinclude   = "dmmeta.nsinclude";
 
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_nsjs      = "dmmeta.nsjs";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_nsproto   = "dmmeta.nsproto";
@@ -7722,6 +7724,55 @@ bool dmmeta::Nsdb_ReadStrptrMaybe(dmmeta::Nsdb &parent, algo::strptr in_str) {
 void dmmeta::Nsdb_Print(dmmeta::Nsdb& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "dmmeta.nsdb";
+
+    algo::Smallstr16_Print(row.ns, temp);
+    PrintAttrSpaceReset(str,"ns", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
+}
+
+// --- dmmeta.Nsdump..ReadFieldMaybe
+bool dmmeta::Nsdump_ReadFieldMaybe(dmmeta::Nsdump& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    dmmeta::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case dmmeta_FieldId_ns: {
+            retval = algo::Smallstr16_ReadStrptrMaybe(parent.ns, strval);
+        } break;
+        case dmmeta_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- dmmeta.Nsdump..ReadStrptrMaybe
+// Read fields of dmmeta::Nsdump from an ascii string.
+// The format of the string is an ssim Tuple
+bool dmmeta::Nsdump_ReadStrptrMaybe(dmmeta::Nsdump &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "dmmeta.nsdump") || algo::StripTypeTag(in_str, "dmmeta.Nsdump");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Nsdump_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- dmmeta.Nsdump..Print
+// print string representation of ROW to string STR
+// cfmt:dmmeta.Nsdump.String  printfmt:Tuple
+void dmmeta::Nsdump_Print(dmmeta::Nsdump& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "dmmeta.nsdump";
 
     algo::Smallstr16_Print(row.ns, temp);
     PrintAttrSpaceReset(str,"ns", temp);

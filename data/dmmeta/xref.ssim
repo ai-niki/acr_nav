@@ -482,6 +482,7 @@ dmmeta.xref  field:amc.FCtype.c_ckafka  inscond:true  via:amc.FDb.ind_ctype/dmme
 dmmeta.xref  field:amc.FField.c_fkafka  inscond:true  via:amc.FDb.ind_field/dmmeta.Fkafka.field
 dmmeta.xref  field:amc.FDb.ind_steptype  inscond:true  via:""
 dmmeta.xref  field:amc.FFstep.p_steptype  inscond:true  via:amc.FDb.ind_steptype/dmmeta.Fstep.steptype
+dmmeta.xref  field:amc.FNs.c_nsdump  inscond:true  via:amc.FDb.ind_ns/dmmeta.Nsdump.ns
 dmmeta.xref  field:amc_vis.FDb.ind_ctype  inscond:true  via:""
 dmmeta.xref  field:amc_vis.FDb.ind_field  inscond:true  via:""
 dmmeta.xref  field:amc_vis.FDb.ind_node  inscond:true  via:""

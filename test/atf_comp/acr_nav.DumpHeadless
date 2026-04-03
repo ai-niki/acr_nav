@@ -1,10 +1,18 @@
-acr_nav.Ack  ack:acr_nav.SetView  ok:N  ctype:""  viewmode:help  navstack_depth:0  msg:"namespace-scoped viewmode is context-sensitive"
-
-acr_nav.Ack  ack:acr_nav.SetView  ok:N  ctype:""  viewmode:help  navstack_depth:0  msg:"use SendKey key:d on a field"
-
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1417  n_ctype:1418  n_field:5696  viewmode:help  breadcrumb:""  filtertarget:ctype  hints:"Esc/?:dismiss  q:quit"  sel_nav_col:0
-acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:83  sel_value:""
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:23  sel_value:"── Movement keys ───────────────────"
+report.PoolCensus  ctype:acr_nav.FCtype  n_record:1418
+report.PoolCensus  ctype:acr_nav.FDetailsrc  n_record:5
+report.PoolCensus  ctype:acr_nav.FHelpgroup  n_record:5
+report.PoolCensus  ctype:acr_nav.FField  n_record:5696
+report.PoolCensus  ctype:acr_nav.FNs  n_record:85
+report.PoolCensus  ctype:acr_nav.FReftype  n_record:35
+report.PoolCensus  ctype:acr_nav.FNavaction  n_record:28
+report.PoolCensus  ctype:acr_nav.FKeybind  n_record:42
+report.PoolCensus  ctype:acr_nav.FPanel  n_record:2
+report.PoolCensus  ctype:acr_nav.FNavmode  n_record:2
+report.PoolCensus  ctype:acr_nav.FNavstyle  n_record:22
+report.PoolCensus  ctype:acr_nav.FReftypestyle  n_record:35
+report.PoolCensus  ctype:acr_nav.FSsimfile  n_record:259
+report.PoolCensus  ctype:acr_nav.FViewmode  n_record:9
+report.PoolCensus  ctype:acr_nav.FFiltertarget  n_record:5
 
 acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1417  n_ctype:1418  n_field:5696  viewmode:help  breadcrumb:""  filtertarget:ctype  hints:"Esc/?:dismiss  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:83  sel_value:""

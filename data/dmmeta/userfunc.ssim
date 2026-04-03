@@ -215,6 +215,7 @@ dmmeta.userfunc  userfunc:amc...gen_ns_pnew  acrkey:gstatic/amcdb.gen:ns_pnew  c
 dmmeta.userfunc  userfunc:amc...gen_ns_print_proto  acrkey:gstatic/amcdb.gen:ns_print_proto  cppname:amc.gen_ns_print_proto  comment:""
 dmmeta.userfunc  userfunc:amc...gen_ns_print_struct  acrkey:gstatic/amcdb.gen:ns_print_struct  cppname:amc.gen_ns_print_struct  comment:""
 dmmeta.userfunc  userfunc:amc...gen_ns_size_enums  acrkey:gstatic/amcdb.gen:ns_size_enums  cppname:amc.gen_ns_size_enums  comment:""
+dmmeta.userfunc  userfunc:amc...gen_ns_state_dump  acrkey:gstatic/amcdb.gen:ns_state_dump  cppname:amc.gen_ns_state_dump  comment:""
 dmmeta.userfunc  userfunc:amc...gen_ns_tclass_ctype  acrkey:gstatic/amcdb.gen:ns_tclass_ctype  cppname:amc.gen_ns_tclass_ctype  comment:""
 dmmeta.userfunc  userfunc:amc...gen_ns_tclass_field  acrkey:gstatic/amcdb.gen:ns_tclass_field  cppname:amc.gen_ns_tclass_field  comment:""
 dmmeta.userfunc  userfunc:amc...gen_ns_tclass_ns  acrkey:gstatic/amcdb.gen:ns_tclass_ns  cppname:amc.gen_ns_tclass_ns  comment:""

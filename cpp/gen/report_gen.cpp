@@ -39,6 +39,8 @@ namespace report { // gen:ns_print_proto
 const char* report::value_ToCstr(const report::FieldId& parent) {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
+        case report_FieldId_ctype          : ret = "ctype";  break;
+        case report_FieldId_n_record       : ret = "n_record";  break;
         case report_FieldId_n_target       : ret = "n_target";  break;
         case report_FieldId_time           : ret = "time";  break;
         case report_FieldId_hitrate        : ret = "hitrate";  break;
@@ -135,6 +137,9 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
         }
         case 5: {
             switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+                case LE_STR5('c','t','y','p','e'): {
+                    value_SetEnum(parent,report_FieldId_ctype); ret = true; break;
+                }
                 case LE_STR5('n','_','e','r','r'): {
                     value_SetEnum(parent,report_FieldId_n_err); ret = true; break;
                 }
@@ -221,6 +226,9 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('n','_','i','n','s','e','r','t'): {
                     value_SetEnum(parent,report_FieldId_n_insert); ret = true; break;
+                }
+                case LE_STR8('n','_','r','e','c','o','r','d'): {
+                    value_SetEnum(parent,report_FieldId_n_record); ret = true; break;
                 }
                 case LE_STR8('n','_','s','e','l','e','c','t'): {
                     value_SetEnum(parent,report_FieldId_n_select); ret = true; break;
@@ -370,6 +378,55 @@ bool report::FieldId_ReadStrptrMaybe(report::FieldId &parent, algo::strptr in_st
 // cfmt:report.FieldId.String  printfmt:Raw
 void report::FieldId_Print(report::FieldId& row, algo::cstring& str) {
     report::value_Print(row, str);
+}
+
+// --- report.PoolCensus..ReadFieldMaybe
+bool report::PoolCensus_ReadFieldMaybe(report::PoolCensus& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    report::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case report_FieldId_ctype: {
+            retval = algo::Smallstr100_ReadStrptrMaybe(parent.ctype, strval);
+        } break;
+        case report_FieldId_n_record: {
+            retval = i32_ReadStrptrMaybe(parent.n_record, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- report.PoolCensus..ReadStrptrMaybe
+// Read fields of report::PoolCensus from an ascii string.
+// The format of the string is an ssim Tuple
+bool report::PoolCensus_ReadStrptrMaybe(report::PoolCensus &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "report.PoolCensus");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && PoolCensus_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- report.PoolCensus..Print
+// print string representation of ROW to string STR
+// cfmt:report.PoolCensus.String  printfmt:Tuple
+void report::PoolCensus_Print(report::PoolCensus& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "report.PoolCensus";
+
+    algo::Smallstr100_Print(row.ctype, temp);
+    PrintAttrSpaceReset(str,"ctype", temp);
+
+    i32_Print(row.n_record, temp);
+    PrintAttrSpaceReset(str,"n_record", temp);
 }
 
 // --- report.abt..ReadFieldMaybe

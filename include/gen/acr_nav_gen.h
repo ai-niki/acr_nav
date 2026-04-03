@@ -38,10 +38,10 @@ enum acr_nav_FieldIdEnum {              // acr_nav.FieldId.value
     ,acr_nav_FieldId_navigate     = 1
     ,acr_nav_FieldId_ctype        = 2
     ,acr_nav_FieldId_viewmode     = 3
-    ,acr_nav_FieldId_screenshot   = 4
-    ,acr_nav_FieldId_key          = 5
-    ,acr_nav_FieldId_set_filter   = 6
-    ,acr_nav_FieldId_filter       = 7
+    ,acr_nav_FieldId_filter       = 4
+    ,acr_nav_FieldId_screenshot   = 5
+    ,acr_nav_FieldId_key          = 6
+    ,acr_nav_FieldId_set_filter   = 7
     ,acr_nav_FieldId_target       = 8
     ,acr_nav_FieldId_term_hei     = 9
     ,acr_nav_FieldId_term_wid     = 10
@@ -161,6 +161,7 @@ namespace acr_nav { struct Navigate; }
 namespace acr_nav { struct OverlayEntry; }
 namespace acr_nav { struct PanelState; }
 namespace acr_nav { struct PreviewNavCol; }
+namespace acr_nav { struct RequestStateDump; }
 namespace acr_nav { struct Screen; }
 namespace acr_nav { struct Screenshot; }
 namespace acr_nav { struct SendKey; }
@@ -3267,6 +3268,20 @@ inline void          PreviewNavCol_Init(acr_nav::PreviewNavCol& parent);
 // func:acr_nav.PreviewNavCol..Print
 void                 PreviewNavCol_Print(acr_nav::PreviewNavCol& row, algo::cstring& str) __attribute__((nothrow));
 
+// --- acr_nav.RequestStateDump
+struct RequestStateDump { // acr_nav.RequestStateDump: Headless command: request runtime state dump
+    algo::cstring   filter;   // Regex filter on ctype name
+    // func:acr_nav.RequestStateDump..Ctor
+    inline               RequestStateDump() __attribute__((nothrow));
+};
+
+// func:acr_nav.RequestStateDump..ReadFieldMaybe
+bool                 RequestStateDump_ReadFieldMaybe(acr_nav::RequestStateDump& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of acr_nav::RequestStateDump from an ascii string.
+// The format of the string is an ssim Tuple
+// func:acr_nav.RequestStateDump..ReadStrptrMaybe
+bool                 RequestStateDump_ReadStrptrMaybe(acr_nav::RequestStateDump &parent, algo::strptr in_str) __attribute__((nothrow));
+
 // --- acr_nav.Screen
 struct Screen { // acr_nav.Screen: Headless screen state output
     algo::Smallstr50   mode;             // Current UI mode (browse/filter)
@@ -3833,9 +3848,21 @@ void                 viewmode_detail_ensure_content(acr_nav::FCtype&);
 // this function is 'extrn' and implemented by user
 void                 viewmode_fields_ensure_content(acr_nav::FCtype&);
 // User-implemented function from gstatic:acr_nav.FDb.viewmode
+// func:acr_nav...viewmode_graph_ensure_content
+// this function is 'extrn' and implemented by user
+void                 viewmode_graph_ensure_content(acr_nav::FCtype&);
+// User-implemented function from gstatic:acr_nav.FDb.viewmode
 // func:acr_nav...viewmode_help_ensure_content
 // this function is 'extrn' and implemented by user
 void                 viewmode_help_ensure_content(acr_nav::FCtype&);
+// User-implemented function from gstatic:acr_nav.FDb.viewmode
+// func:acr_nav...viewmode_nsdep_ensure_content
+// this function is 'extrn' and implemented by user
+void                 viewmode_nsdep_ensure_content(acr_nav::FCtype&);
+// User-implemented function from gstatic:acr_nav.FDb.viewmode
+// func:acr_nav...viewmode_nsdep_detail_ensure_content
+// this function is 'extrn' and implemented by user
+void                 viewmode_nsdep_detail_ensure_content(acr_nav::FCtype&);
 // User-implemented function from gstatic:acr_nav.FDb.viewmode
 // func:acr_nav...viewmode_preview_ensure_content
 // this function is 'extrn' and implemented by user
@@ -3844,20 +3871,10 @@ void                 viewmode_preview_ensure_content(acr_nav::FCtype&);
 // func:acr_nav...viewmode_xref_ensure_content
 // this function is 'extrn' and implemented by user
 void                 viewmode_xref_ensure_content(acr_nav::FCtype&);
-// User-implemented function from gstatic:acr_nav.FDb.viewmode
-// func:acr_nav...viewmode_nsdep_ensure_content
-// this function is 'extrn' and implemented by user
-void                 viewmode_nsdep_ensure_content(acr_nav::FCtype&);
-// User-implemented function from gstatic:acr_nav.FDb.viewmode
-// func:acr_nav...viewmode_graph_ensure_content
-// this function is 'extrn' and implemented by user
-void                 viewmode_graph_ensure_content(acr_nav::FCtype&);
-// User-implemented function from gstatic:acr_nav.FDb.viewmode
-// func:acr_nav...viewmode_nsdep_detail_ensure_content
-// this function is 'extrn' and implemented by user
-void                 viewmode_nsdep_detail_ensure_content(acr_nav::FCtype&);
 // func:acr_nav...StaticCheck
 void                 StaticCheck();
+// func:acr_nav...StateDump
+void                 StateDump(algo::cstring& out, algo_lib::Regx& filter);
 } // gen:ns_func
 // func:acr_nav...main
 int                  main(int argc, char **argv);

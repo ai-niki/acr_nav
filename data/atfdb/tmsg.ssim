@@ -230,6 +230,7 @@ atfdb.tmsg  tmsg:acr_nav.Detail/100270.in  istuple:N  msg:"acr_nav.SendKey  key:
 atfdb.tmsg  tmsg:acr_nav.Detail/100280.in  istuple:N  msg:acr_nav.Screenshot
 atfdb.tmsg  tmsg:acr_nav.Detail/100290.in  istuple:N  msg:"acr_nav.SendKey  key:d"
 atfdb.tmsg  tmsg:acr_nav.Detail/100300.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.DumpHeadless/100000.in  istuple:N  msg:'acr_nav.RequestStateDump  filter:".*"'
 atfdb.tmsg  tmsg:acr_nav.FieldFilter/100000.in  istuple:N  msg:"acr_nav.SendKey  key:j"
 atfdb.tmsg  tmsg:acr_nav.FieldFilter/100010.in  istuple:N  msg:"acr_nav.SendKey  key:/"
 atfdb.tmsg  tmsg:acr_nav.FieldFilter/100020.in  istuple:N  msg:"acr_nav.SendKey  key:Tab"

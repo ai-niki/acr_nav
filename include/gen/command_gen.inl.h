@@ -569,6 +569,7 @@ inline  command::acr_my_proc::~acr_my_proc() {
 inline void command::acr_nav_Init(command::acr_nav& parent) {
     parent.headless = bool(false);
     parent.in = algo::strptr("data");
+    parent.dump = algo::strptr("");
 }
 
 // --- command.acr_nav..Ctor

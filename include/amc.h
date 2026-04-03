@@ -1690,6 +1690,17 @@ namespace amc { // update-hdr
     // void tfunc_Sort_QuickSort(); // gstatic/amcdb.tfunc:Sort.QuickSort
 
     // -------------------------------------------------------------------
+    // cpp/amc/state_dump.cpp
+    //
+
+    // For each namespace with an nsdump record, generate a StateDump function
+    // that emits a pool census (record count per pool) plus filtered record dump
+    // for pools whose arg ctype has a cfmt with print:Y.
+    // Only Lary and Inlary pools are covered — Tpool/Lpool/Sbrk have no cursor.
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void gen_ns_state_dump(); // gstatic/amcdb.gen:ns_state_dump
+
+    // -------------------------------------------------------------------
     // cpp/amc/step.cpp -- Step functions
     //
     //     (user-implemented function, prototype is in amc-generated header)
