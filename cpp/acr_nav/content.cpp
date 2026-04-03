@@ -338,6 +338,13 @@ static void LoadCodegen(acr_nav::FCtype &ctype) {
 // Per-namespace dependency count for LoadNsDep accumulation.
 struct NsDep { acr_nav::FNs *ns; int count; };
 
+// Per-namespace field group for LoadNsDepDetail accumulation.
+struct NsFieldGroup {
+    acr_nav::FNs *ns;
+    acr_nav::FField *fields[256];
+    int n_field;
+};
+
 // Format a sorted section of namespace dependency counts as highlighted text lines.
 // Sorts deps[0..n) by count descending, emits a header line and one row per dep.
 static void FormatNsDepSection(acr_nav::FViewmode &vm, algo::strptr header,
@@ -431,6 +438,72 @@ static void AccumNsDep(NsDep *deps, int &n, int max_n, acr_nav::FNs *ns) {
     }
 }
 
+// Format one direction (upstream or downstream) of per-field namespace dependency detail.
+// Sorts groups by field count descending, emits section header with totals,
+// per-namespace sub-headers with field rows, or "(none)" if empty.
+static void FormatNsDepDetailSection(acr_nav::FViewmode &vm, algo::strptr header,
+                                      NsFieldGroup *groups, int n,
+                                      int arg_col, int ref_col) {
+    // Sort groups by field count descending (insertion sort)
+    for (int i = 1; i < n; i++) {
+        NsFieldGroup tmp = groups[i];
+        int j = i - 1;
+        while (j >= 0 && groups[j].n_field < tmp.n_field) {
+            groups[j + 1] = groups[j];
+            j--;
+        }
+        groups[j + 1] = tmp;
+    }
+    int total = 0;
+    for (int gi = 0; gi < n; gi++) total += groups[gi].n_field;
+    // Section header with totals
+    {
+        tempstr hdr;
+        hdr << header
+            << total << (total == 1 ? " field, " : " fields, ")
+            << n << (n == 1 ? " namespace" : " namespaces");
+        acr_nav::ContentRow &cr = acr_nav::content_row_Alloc(vm);
+        cr.text = hdr;
+        acr_nav::nav_target_Alloc(cr) = "";
+        AddSpan(vm, acr_nav::content_row_N(vm) - 1, 0, ch_N(hdr), acr_nav::ind_navstyle_Find("line_section"));
+    }
+    for (int gi = 0; gi < n; gi++) {
+        NsFieldGroup &g = groups[gi];
+        tempstr section;
+        section << G_HORIZ << G_HORIZ << " " << NsDisplayName(*g.ns)
+                << " (" << g.n_field << (g.n_field == 1 ? " field) " : " fields) ");
+        int display_width = ch_N(section) - Utf8ExtraBytes(strptr(section));
+        int fill = i32_Max(0, 50 - display_width);
+        for (int i = 0; i < fill; i++) section << G_HORIZ;
+        acr_nav::ContentRow &scr = acr_nav::content_row_Alloc(vm);
+        scr.text = section;
+        acr_nav::nav_target_Alloc(scr) = "";
+        AddSpan(vm, acr_nav::content_row_N(vm) - 1, 0, ch_N(section), acr_nav::ind_navstyle_Find("line_section"));
+        for (int fi = 0; fi < g.n_field; fi++) {
+            acr_nav::FField &fld = *g.fields[fi];
+            tempstr row;
+            row << "  " << fld.field;
+            char_PrintNTimes(' ', row, arg_col - ch_N(row) + 2);
+            int arg_start = ch_N(row);
+            row << fld.p_arg->ctype;
+            int arg_end = ch_N(row);
+            char_PrintNTimes(' ', row, ref_col - ch_N(row) + 2);
+            row << fld.reftype;
+            acr_nav::ContentRow &cr = acr_nav::content_row_Alloc(vm);
+            cr.text = row;
+            acr_nav::nav_target_Alloc(cr) = fld.p_arg->ctype;
+            int li = acr_nav::content_row_N(vm) - 1;
+            AddSpan(vm, li, 2, 2 + ch_N(fld.field), acr_nav::ind_navstyle_Find("line_key"));
+            AddSpan(vm, li, arg_start, arg_end, acr_nav::ind_navstyle_Find("line_comment"));
+        }
+    }
+    if (n == 0) {
+        acr_nav::ContentRow &ncr = acr_nav::content_row_Alloc(vm);
+        ncr.text = "  (none)";
+        acr_nav::nav_target_Alloc(ncr) = "";
+    }
+}
+
 // Compute and display cross-namespace field dependencies for a given namespace.
 // Upstream: namespaces this ns imports from (via field arg references).
 // Downstream: namespaces that import from this ns (via field_arg back-references).
@@ -518,12 +591,6 @@ static void LoadNsDepDetail(acr_nav::FNs &ns) {
     vm.cached_key = ns.ns;
     acr_nav::_db.p_nsdep_ns = &ns;
     algo::strptr display_name = NsDisplayName(ns);
-    // Fixed-size accumulators for per-namespace field lists
-    struct NsFieldGroup {
-        acr_nav::FNs *ns;
-        acr_nav::FField *fields[256];
-        int n_field;
-    };
     NsFieldGroup up_groups[64];
     int n_up = 0;
     NsFieldGroup down_groups[64];
@@ -568,7 +635,7 @@ static void LoadNsDepDetail(acr_nav::FNs &ns) {
             }
         } ind_end;
     } ind_end;
-    // Measure column widths
+    // Measure column widths across both directions
     int max_field_wid = 5;  // "field" header
     int max_arg_wid = 3;    // "arg" header
     int max_ref_wid = 7;    // "reftype" header
@@ -586,126 +653,26 @@ static void LoadNsDepDetail(acr_nav::FNs &ns) {
     }
     int arg_col = max_field_wid + 2;
     int ref_col = arg_col + max_arg_wid + 2;
-    // Add nav_col for the arg column
     acr_nav::PreviewNavCol &nc = acr_nav::nav_col_Alloc(vm);
     nc.col_start = arg_col;
     nc.col_wid = max_arg_wid;
     nc.col_name = "arg";
     nc.target_ctype = "";
-    // Sort groups by field count descending (insertion sort)
-    for (int d = 0; d < 2; d++) {
-        NsFieldGroup *groups = d == 0 ? up_groups : down_groups;
-        int n = d == 0 ? n_up : n_down;
-        for (int i = 1; i < n; i++) {
-            NsFieldGroup tmp = groups[i];
-            int j = i - 1;
-            while (j >= 0 && groups[j].n_field < tmp.n_field) {
-                groups[j + 1] = groups[j];
-                j--;
-            }
-            groups[j + 1] = tmp;
-        }
-    }
-    // Count totals
-    int total_up = 0, total_down = 0;
-    for (int gi = 0; gi < n_up; gi++) total_up += up_groups[gi].n_field;
-    for (int gi = 0; gi < n_down; gi++) total_down += down_groups[gi].n_field;
-    // Emit upstream section
+    // Format upstream and downstream sections
     {
-        tempstr hdr;
-        hdr << "Upstream (" << display_name << " imports from): "
-            << total_up << (total_up == 1 ? " field, " : " fields, ")
-            << n_up << (n_up == 1 ? " namespace" : " namespaces");
-        acr_nav::ContentRow &cr = acr_nav::content_row_Alloc(vm);
-        cr.text = hdr;
-        acr_nav::nav_target_Alloc(cr) = "";
-        AddSpan(vm, acr_nav::content_row_N(vm) - 1, 0, ch_N(hdr), acr_nav::ind_navstyle_Find("line_section"));
-    }
-    for (int gi = 0; gi < n_up; gi++) {
-        NsFieldGroup &g = up_groups[gi];
-        tempstr section;
-        section << G_HORIZ << G_HORIZ << " " << NsDisplayName(*g.ns)
-                << " (" << g.n_field << (g.n_field == 1 ? " field) " : " fields) ");
-        int display_width = ch_N(section) - Utf8ExtraBytes(strptr(section));
-        int fill = i32_Max(0, 50 - display_width);
-        for (int i = 0; i < fill; i++) section << G_HORIZ;
-        acr_nav::ContentRow &scr = acr_nav::content_row_Alloc(vm);
-        scr.text = section;
-        acr_nav::nav_target_Alloc(scr) = "";
-        AddSpan(vm, acr_nav::content_row_N(vm) - 1, 0, ch_N(section), acr_nav::ind_navstyle_Find("line_section"));
-        for (int fi = 0; fi < g.n_field; fi++) {
-            acr_nav::FField &fld = *g.fields[fi];
-            tempstr row;
-            row << "  " << fld.field;
-            char_PrintNTimes(' ', row, arg_col - ch_N(row) + 2);
-            int arg_start = ch_N(row);
-            row << fld.p_arg->ctype;
-            int arg_end = ch_N(row);
-            char_PrintNTimes(' ', row, ref_col - ch_N(row) + 2);
-            row << fld.reftype;
-            acr_nav::ContentRow &cr = acr_nav::content_row_Alloc(vm);
-            cr.text = row;
-            acr_nav::nav_target_Alloc(cr) = fld.p_arg->ctype;
-            int li = acr_nav::content_row_N(vm) - 1;
-            AddSpan(vm, li, 2, 2 + ch_N(fld.field), acr_nav::ind_navstyle_Find("line_key"));
-            AddSpan(vm, li, arg_start, arg_end, acr_nav::ind_navstyle_Find("line_comment"));
-        }
-    }
-    if (n_up == 0) {
-        acr_nav::ContentRow &ncr = acr_nav::content_row_Alloc(vm);
-        ncr.text = "  (none)";
-        acr_nav::nav_target_Alloc(ncr) = "";
+        tempstr up_hdr;
+        up_hdr << "Upstream (" << display_name << " imports from): ";
+        FormatNsDepDetailSection(vm, up_hdr, up_groups, n_up, arg_col, ref_col);
     }
     {
         acr_nav::ContentRow &sep = acr_nav::content_row_Alloc(vm);
         sep.text = "";
         acr_nav::nav_target_Alloc(sep) = "";
     }
-    // Emit downstream section
     {
-        tempstr hdr;
-        hdr << "Downstream (imports from " << display_name << "): "
-            << total_down << (total_down == 1 ? " field, " : " fields, ")
-            << n_down << (n_down == 1 ? " namespace" : " namespaces");
-        acr_nav::ContentRow &dcr = acr_nav::content_row_Alloc(vm);
-        dcr.text = hdr;
-        acr_nav::nav_target_Alloc(dcr) = "";
-        AddSpan(vm, acr_nav::content_row_N(vm) - 1, 0, ch_N(hdr), acr_nav::ind_navstyle_Find("line_section"));
-    }
-    for (int gi = 0; gi < n_down; gi++) {
-        NsFieldGroup &g = down_groups[gi];
-        tempstr section;
-        section << G_HORIZ << G_HORIZ << " " << NsDisplayName(*g.ns)
-                << " (" << g.n_field << (g.n_field == 1 ? " field) " : " fields) ");
-        int display_width = ch_N(section) - Utf8ExtraBytes(strptr(section));
-        int fill = i32_Max(0, 50 - display_width);
-        for (int i = 0; i < fill; i++) section << G_HORIZ;
-        acr_nav::ContentRow &dscr = acr_nav::content_row_Alloc(vm);
-        dscr.text = section;
-        acr_nav::nav_target_Alloc(dscr) = "";
-        AddSpan(vm, acr_nav::content_row_N(vm) - 1, 0, ch_N(section), acr_nav::ind_navstyle_Find("line_section"));
-        for (int fi = 0; fi < g.n_field; fi++) {
-            acr_nav::FField &fld = *g.fields[fi];
-            tempstr row;
-            row << "  " << fld.field;
-            char_PrintNTimes(' ', row, arg_col - ch_N(row) + 2);
-            int arg_start = ch_N(row);
-            row << fld.p_arg->ctype;
-            int arg_end = ch_N(row);
-            char_PrintNTimes(' ', row, ref_col - ch_N(row) + 2);
-            row << fld.reftype;
-            acr_nav::ContentRow &cr = acr_nav::content_row_Alloc(vm);
-            cr.text = row;
-            acr_nav::nav_target_Alloc(cr) = fld.p_arg->ctype;
-            int li = acr_nav::content_row_N(vm) - 1;
-            AddSpan(vm, li, 2, 2 + ch_N(fld.field), acr_nav::ind_navstyle_Find("line_key"));
-            AddSpan(vm, li, arg_start, arg_end, acr_nav::ind_navstyle_Find("line_comment"));
-        }
-    }
-    if (n_down == 0) {
-        acr_nav::ContentRow &ndcr = acr_nav::content_row_Alloc(vm);
-        ndcr.text = "  (none)";
-        acr_nav::nav_target_Alloc(ndcr) = "";
+        tempstr down_hdr;
+        down_hdr << "Downstream (imports from " << display_name << "): ";
+        FormatNsDepDetailSection(vm, down_hdr, down_groups, n_down, arg_col, ref_col);
     }
     vm.header = NsDisplayName(ns);
 }
