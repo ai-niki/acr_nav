@@ -55,6 +55,13 @@ static struct termios acr_nav_orig_termios;
 static bool acr_nav_raw_mode = false;
 static volatile sig_atomic_t acr_nav_sigwinch = 0;
 
+// Non-blocking key parser state for TUI+IPC mode
+static char acr_nav_keybuf[4];
+static int acr_nav_keybuf_n = 0;
+static algo_lib::FTimehook acr_nav_esc_timer;
+static bool acr_nav_esc_timer_armed = false;
+static algo_lib::FTimehook acr_nav_sigwinch_timer;
+
 static void SigwinchHandler(int) {
     acr_nav_sigwinch = 1;
 }
@@ -770,6 +777,180 @@ static void HeadlessIpcInit() {
 
 // -----------------------------------------------------------------------------
 
+// Shared repaint logic for TUI+IPC mode
+static void TuiRepaint() {
+    acr_nav::FCtype *sel_ct = SelectedCtype(*acr_nav::_db.p_left_panel);
+    DetectTerminal();
+    cstring render_buf;
+    Render(render_buf, sel_ct);
+    WriteStdout(render_buf.ch_elems, ch_N(render_buf));
+}
+
+// -----------------------------------------------------------------------------
+
+// Bare-ESC timeout: 50ms passed after ESC with no follow-up byte
+static void EscTimeoutCallback() {
+    acr_nav_esc_timer_armed = false;
+    acr_nav_keybuf_n = 0;
+    bool repaint = ProcessKey("Escape");
+    if (repaint) {
+        TuiRepaint();
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+// Recurrent 50ms check for SIGWINCH flag
+static void SigwinchCheckCallback() {
+    if (acr_nav_sigwinch) {
+        acr_nav_sigwinch = 0;
+        TuiRepaint();
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+// Non-blocking byte-at-a-time VT100 key decoder for TUI+IPC mode.
+// Returns non-empty key name when a complete key is recognized.
+// Returns empty string when more bytes are needed.
+static tempstr DecodeKeyByte(char c) {
+    tempstr ret;
+    if (acr_nav_keybuf_n == 0) {
+        if (c == 3) {
+            acr_nav::_db.running = false;
+        } else if (c == '\x1b') {
+            acr_nav_keybuf[0] = c;
+            acr_nav_keybuf_n = 1;
+            acr_nav_esc_timer_armed = true;
+            algo_lib::ThScheduleIn(acr_nav_esc_timer, algo::ToSchedTime(0.050));
+        } else if (c == '\r' || c == '\n') {
+            ret = "Enter";
+        } else if (c == 127 || c == 8) {
+            ret = "Backspace";
+        } else if (c == 9) {
+            ret = "Tab";
+        } else if (c == ' ') {
+            ret = "Space";
+        } else if (c >= 1 && c <= 26 && c != 3 && c != 8 && c != 9 && c != 10 && c != 13) {
+            ret << "Ctrl-";
+            ret << char('A' + c - 1);
+        } else if (c > 32 && c < 127) {
+            ret << c;
+        }
+    } else if (acr_nav_keybuf_n == 1 && acr_nav_keybuf[0] == '\x1b') {
+        if (acr_nav_esc_timer_armed) {
+            algo_lib::bh_timehook_Remove(acr_nav_esc_timer);
+            acr_nav_esc_timer_armed = false;
+        }
+        if (c == '[') {
+            acr_nav_keybuf[1] = c;
+            acr_nav_keybuf_n = 2;
+        } else {
+            acr_nav_keybuf_n = 0;
+            ret = "Escape";
+        }
+    } else if (acr_nav_keybuf_n == 2) {
+        if (c == 'A') {
+            ret = "Up";
+        } else if (c == 'B') {
+            ret = "Down";
+        } else if (c == 'C') {
+            ret = "Right";
+        } else if (c == 'D') {
+            ret = "Left";
+        } else if (c == 'H') {
+            ret = "Home";
+        } else if (c == 'F') {
+            ret = "End";
+        } else if (c == '5' || c == '6') {
+            acr_nav_keybuf[2] = c;
+            acr_nav_keybuf_n = 3;
+        } else {
+            acr_nav_keybuf_n = 0;
+        }
+        if (ch_N(ret) > 0) {
+            acr_nav_keybuf_n = 0;
+        }
+    } else if (acr_nav_keybuf_n == 3) {
+        if (c == '~') {
+            if (acr_nav_keybuf[2] == '5') {
+                ret = "PgUp";
+            } else {
+                ret = "PgDown";
+            }
+        }
+        acr_nav_keybuf_n = 0;
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Epoll callback for stdin in TUI+IPC mode.
+// Edge-triggered: must drain the fd completely on each invocation.
+// Batches repaints: one render per drain cycle regardless of key count.
+static void TuiStdinReadCallback() {
+    bool done = false;
+    bool any_repaint = false;
+    while (!done && acr_nav::_db.running) {
+        char buf[256];
+        ssize_t nr = read(STDIN_FILENO, buf, sizeof(buf));
+        if (nr > 0) {
+            for (ssize_t i = 0; i < nr && acr_nav::_db.running; i++) {
+                tempstr key_name = DecodeKeyByte(buf[i]);
+                if (ch_N(key_name) > 0) {
+                    any_repaint = ProcessKey(key_name) || any_repaint;
+                }
+            }
+        } else if (nr == 0) {
+            acr_nav::_db.running = false;
+            done = true;
+        } else {
+            if (errno == EAGAIN || errno == EWOULDBLOCK) {
+                done = true;
+            } else {
+                acr_nav::_db.running = false;
+                done = true;
+            }
+        }
+    }
+    if (any_repaint && acr_nav::_db.running) {
+        TuiRepaint();
+    }
+    if (!acr_nav::_db.running) {
+        algo_lib::ReqExitMainLoop();
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+// Set up TUI with non-blocking stdin + IPC socket, both under epoll
+static void TuiIpcInit() {
+    InitPanels();
+    DetectTerminal();
+    EnterRawMode();
+    struct sigaction sa;
+    sa.sa_handler = SigwinchHandler;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+    sigaction(SIGWINCH, &sa, NULL);
+    algo::SetBlockingMode(algo::Fildes(STDIN_FILENO), false);
+    acr_nav::_db.stdin_iohook.fildes = algo::Fildes(STDIN_FILENO);
+    acr_nav::_db.stdin_iohook.nodelete = true;
+    callback_Set0(acr_nav::_db.stdin_iohook, TuiStdinReadCallback);
+    algo::IOEvtFlags flags;
+    read_Set(flags, true);
+    algo_lib::IohookAdd(acr_nav::_db.stdin_iohook, flags);
+    hook_Set0(acr_nav_esc_timer, EscTimeoutCallback);
+    hook_Set0(acr_nav_sigwinch_timer, SigwinchCheckCallback);
+    algo_lib::ThInitRecur(acr_nav_sigwinch_timer, algo::ToSchedTime(0.050));
+    algo_lib::bh_timehook_Insert(acr_nav_sigwinch_timer);
+    acr_nav::_db.running = true;
+    TuiRepaint();
+}
+
+// -----------------------------------------------------------------------------
+
 static void HeadlessMain() {
     InitPanels();
     acr_nav::_db.running = true;
@@ -822,7 +1003,16 @@ void acr_nav::Main() {
         HeadlessIpcInit();
         acr_nav::MainLoop();
     } else if (_db.cmdline.ipc) {
+        TuiIpcInit();
         acr_nav::MainLoop();
+        algo_lib::bh_timehook_Remove(acr_nav_esc_timer);
+        algo_lib::bh_timehook_Remove(acr_nav_sigwinch_timer);
+        struct sigaction sa;
+        sa.sa_handler = SIG_DFL;
+        sigemptyset(&sa.sa_mask);
+        sa.sa_flags = 0;
+        sigaction(SIGWINCH, &sa, NULL);
+        ExitRawMode();
     } else if (headless) {
         HeadlessMain();
     } else {

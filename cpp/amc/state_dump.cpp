@@ -60,10 +60,50 @@ void amc::gen_ns_state_dump() {
         func.proto = "StateDump(algo::cstring& out, algo_lib::Regx& filter)";
         Ins(&R, func.body, "report::PoolCensus census;");
         Ins(&R, func.body, "(void)filter;");
+        // FDb singleton dump -- scalar fields on the global _db
+        Set(R, "$Fdbctype", fdb->ctype);
+        {
+            int n_emittable = 0;
+            ind_beg(amc::ctype_c_field_curs, fdb_field, *fdb) {
+                if (StateDumpFieldQ(fdb_field)) {
+                    amc::FFunc* fdb_print = amc::ind_func_Find(dmmeta::Func_Concat_field_name(fdb_field.field, "Print"));
+                    bool has_custom_print = fdb_print && !fdb_print->ismacro;
+                    bool has_type_print = amc::HasStringPrintQ(*fdb_field.p_arg);
+                    if (has_custom_print || has_type_print) {
+                        n_emittable++;
+                    }
+                }
+            }ind_end;
+            if (n_emittable > 0) {
+                Ins(&R, func.body, "if (Regx_Match(filter, strptr(\"$Fdbctype\"))) {");
+                Ins(&R, func.body, "    algo::tempstr temp;");
+                Ins(&R, func.body, "    out << \"$Fdbctype\";");
+                ind_beg(amc::ctype_c_field_curs, fdb_field, *fdb) {
+                    if (StateDumpFieldQ(fdb_field)) {
+                        Set(R, "$fname", name_Get(fdb_field));
+                        amc::FFunc* custom_print = amc::ind_func_Find(dmmeta::Func_Concat_field_name(fdb_field.field, "Print"));
+                        if (custom_print && !custom_print->ismacro) {
+                            Set(R, "$fns", ns_Get(*fdb));
+                            Ins(&R, func.body, "    $fns::$fname_Print($ns::_db, temp);");
+                            Ins(&R, func.body, "    PrintAttrSpaceReset(out, \"$fname\", temp);");
+                        } else if (amc::HasStringPrintQ(*fdb_field.p_arg)) {
+                            Set(R, "$Ftype", fdb_field.p_arg->cpp_type);
+                            tempstr access(FieldvalExpr(fdb, fdb_field, Subst(R, "$ns::_db")));
+                            Set(R, "$access", access);
+                            Ins(&R, func.body, "    $Ftype_Print($access, temp);");
+                            Ins(&R, func.body, "    PrintAttrSpaceReset(out, \"$fname\", temp);");
+                        }
+                    }
+                }ind_end;
+                Ins(&R, func.body, "    out << '\\n';");
+                Ins(&R, func.body, "}");
+            }
+        }
         ind_beg(amc::ctype_c_field_curs, field, *fdb) {
-            // Only Lary and Inlary pools have _N() and cursors
+            // Lary, Inlary, and Tary have _N() and cursors
             if (field.reftype == dmmeta_Reftype_reftype_Lary
-                || field.reftype == dmmeta_Reftype_reftype_Inlary) {
+                || field.reftype == dmmeta_Reftype_reftype_Inlary
+                || field.reftype == dmmeta_Reftype_reftype_Tary) {
                 Set(R, "$name", name_Get(field));
                 Set(R, "$Cpptype", field.p_arg->cpp_type);
                 Set(R, "$ctype", field.p_arg->ctype);

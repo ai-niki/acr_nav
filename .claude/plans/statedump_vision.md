@@ -219,21 +219,33 @@ Code: `StdinReadCallback()` — edge-triggered epoll callback that drains stdin,
 
 **Key files:** `cpp/amc/ipc.cpp` (generator), `cpp/acr_nav/ipc.cpp`, `cpp/samp_meng/ipc.cpp`, `cpp/samp_meng/samp_meng.cpp`.
 
-### Phase 3.3 -- TUI + IPC integration
+### Phase 3.3 -- TUI + IPC integration (done)
 
 Enable IPC on a running TUI instance so an external process can connect and poll StateDump while the user navigates interactively. This is A's side of the "live debugger demo."
 
-Replace the TUI's blocking `ReadKeyName()` loop (`cpp/acr_nav/main.cpp:754-766`) with epoll-driven `MainLoop()`. Same pattern as Phase 3.1: register stdin as a non-blocking FIohook, register the IPC listen socket alongside it, render after each key dispatch.
+**What was built:**
 
-**Harder than Phase 3.1 because:**
+Replaced the blocking `ReadKeyName()` loop with epoll-driven `MainLoop()` when `-ipc` is set. Same pattern as Phase 3.1: stdin registered as non-blocking FIohook alongside the IPC listen socket.
 
-- **Raw terminal mode.** `ReadKeyName()` parses multi-byte ANSI escape sequences (arrows, function keys). A single keypress may arrive as 1-6 bytes across multiple reads. The callback must accumulate bytes and parse sequences, not assume one read = one key.
-- **SIGWINCH.** Currently the signal handler sets a flag and interrupts blocking `read()` (SA_RESTART disabled). With epoll, SIGWINCH must either use `signalfd` or set the flag and let the next epoll wakeup handle it.
-- **Rendering cycle.** Must render after each key dispatch, not on a timer. The callback processes a key, then writes the rendered frame to stdout.
+- `DecodeKeyByte()` — non-blocking byte-at-a-time VT100 state machine replacing blocking `ReadKeyName()`. State encoded in `acr_nav_keybuf[4]` + `acr_nav_keybuf_n`. Handles ESC sequences across epoll wakeups.
+- `TuiStdinReadCallback()` — edge-triggered drain callback. Feeds bytes to DecodeKeyByte, batches repaints (one render per drain cycle regardless of key count).
+- `TuiIpcInit()` — combined setup: raw mode, non-blocking stdin iohook, SIGWINCH timehook, ESC timeout timehook, initial render.
+- `TuiRepaint()` — shared repaint helper called from stdin callback, SIGWINCH check, and ESC timeout.
+- 50ms `FTimehook` for bare-ESC detection (replaces `ByteAvailable()`'s `poll(fd, 50ms)`).
+- 50ms recurrent `FTimehook` for SIGWINCH (signal interrupts `epoll_wait` but doesn't trigger stdin callback; timehook catches the flag).
+- Blocking TUI loop preserved unchanged when `-ipc` is not set.
 
-**Scope:** Modify the TUI branch in `Main()`. When `-ipc` is set, use `MainLoop()` instead of the blocking `ReadKeyName()` loop. Add a `TuiKeyCallback()` that reads raw bytes, parses escape sequences, calls `ProcessKey()`, and renders. When `-ipc` is not set, the existing blocking loop is preserved (simpler, correct, no need to change).
+**Also added:** FDb singleton dump in `gen_ns_state_dump()`. StateDump now emits scalar Val fields from `_db` itself (filter, running, term dimensions, viewmode state, etc.), not just pool records. Same field-by-field serialization, applied to the global singleton before the pool loop.
 
-**Result:** `acr_nav -ipc` in TUI mode — user navigates normally, external process connects to socket and polls state. The program being inspected doesn't know or care that it's being watched.
+**Verified:** All 63 component tests pass. Live test: `acr_nav -ipc` in TUI, external process connects via socket and reads FDb state + FPanel state + pool census while user navigates.
+
+**Lessons learned:**
+
+10. *amc binary must be rebuilt before `amc` run.* When modifying a generator in `cpp/amc/`, the installed `amc` binary is stale. Must `abt -build -install amc` before `amc` to pick up generator changes. `ai` does bootstrap but may use the old binary for the first `amc` pass.
+
+11. *Edge-triggered stdin requires complete drain.* Same as Phase 3.1's `StdinReadCallback`, but with raw bytes instead of line-buffered commands. Partial escape sequences persist across reads via `acr_nav_keybuf`.
+
+**Key files:** `cpp/acr_nav/main.cpp` (TuiIpcInit, DecodeKeyByte, TuiStdinReadCallback, TuiRepaint), `cpp/amc/state_dump.cpp` (FDb singleton dump).
 
 ### Phase 3.4 -- Live data viewmode (B's side)
 
@@ -282,7 +294,51 @@ Ideas that don't have phases yet. Each would need a use case before committing:
 - **Differential dumps.** Send only what changed since the last poll, not the full state. Useful when B polls A at high frequency and the state is large. Would require sequence numbers or checksums per pool. Premature until Phase 3.4 reveals whether full dumps are actually a bottleneck.
 - **IpcInit/IpcAccept generation.** Currently these are extern (hand-written) because they call `lib_netio` which lives behind the gen/hand-written header boundary. If the generator could emit them directly (e.g., by adding `lib_netio` includes to the generated header), the two extern functions disappear and onboarding a new namespace becomes pure ssim records — zero hand-written code.
 
-## Generator mechanics (verified, updated 2026-04-03)
+## StateDump coverage gaps (identified 2026-04-04)
+
+Discovered during Phase 3.3 live testing: external process connected to running TUI via IPC, could see FPanel records and FDb scalar fields, but could not determine which ctype the user was looking at. Three categories of state are invisible to the current generator.
+
+### Gap 1: Ptr fields on FDb — "what am I looking at"
+
+`StateDumpFieldQ` accepts only Val, Smallstr, Bitfld, Regx reftypes. Ptr fields are excluded. acr_nav.FDb has 12 Ptr fields that carry the most diagnostic value:
+
+| Field | What it tells you |
+|---|---|
+| `p_cur_panel` | Which panel is focused |
+| `p_cur_mode` | Browse or filter mode |
+| `p_cur_viewmode` | Current view (fields, summary, detail, xref, etc.) |
+| `p_detail_field` | Which field is being detailed (null outside detail view) |
+| `p_cur_filtertarget` | What the filter targets (ctype, field, ns, etc.) |
+| `p_nsdep_ns` | Namespace in nsdep dependency view |
+| `p_pre_nsdep_viewmode` | Viewmode saved before nsdep context switch |
+
+**Fix:** For Ptr fields, emit the pkey of the pointed-to record (or empty string for NULL). The pkey is a Smallstr on the target ctype — always printable. Generator change: add Ptr to `StateDumpFieldQ`, emit `pkey_Get(*field)` guarded by NULL check.
+
+### Gap 2: Tary pools — navstack, left_item, overlay_stack
+
+Generator only handles Lary and Inlary pools (line 65-66 of `state_dump.cpp`). Three Tary fields on FDb are skipped:
+
+| Field | Arg type | What it tells you |
+|---|---|---|
+| `navstack` | `acr_nav.Naventry` | Navigation history (filter, mode, scroll, viewmode per level) |
+| `left_item` | `acr_nav.LeftItem` | Display list — **which ctype is at row N** |
+| `overlay_stack` | `acr_nav.OverlayEntry` | Stacked overlay viewmodes |
+
+Tary has `_N()` and cursors, same as Lary. All three arg types have only Val/Smallstr fields (no cfmt) — field-by-field serialization works. `left_item` is the key gap: it maps row indices to ctype names, closing the "sel_row:272 = which ctype?" question.
+
+**Fix:** Add `dmmeta_Reftype_reftype_Tary` to the reftype check at line 65. Tary uses the same `_N()` and `_db_<name>_curs` patterns as Lary. Minimal generator change.
+
+### Gap 3: Tpool pools — no cursor
+
+`ipcconn` (FIpcconn) is in Tpool. Tpool generates no cursor — free-list allocator, can alloc/delete but not scan. Records are reachable via Llist (cd_ipcconn_read, cd_ipcconn_eof). Already documented in "Tpool traversal" section above.
+
+**Fix (deferred):** Follow Llist access paths from FDb to reach Tpool records. More complex than gaps 1-2. Low priority — IPC connections are infrastructure, not diagnostic state.
+
+### Priority
+
+Gap 2 (Tary) is the easiest fix and highest value — one line change in the generator adds `left_item` which directly answers navigation questions. Gap 1 (Ptr) is medium effort, high value — requires NULL-guarded pkey emission. Gap 3 (Tpool) is deferred.
+
+## Generator mechanics (verified, updated 2026-04-04)
 
 95 generators exist in `data/amcdb/gen.ssim`. Two added for state dump: `gen:ns_state_dump` (Phase 1+2) and `gen:ns_ipc` (Phase 3), both `perns:Y`. Adding a new generator requires: 1 ssimfile record, 1 C++ function, 1 targsrc record. Uniform `void()` contract. Generator ordering matters: `ns_ipc` must come after `ns_state_dump` (depends on StateDump existing) and before `ns_funcindex` (which prints function bodies).
 

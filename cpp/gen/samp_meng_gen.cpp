@@ -4922,6 +4922,17 @@ bool samp_meng::Ipc_DispatchText(samp_meng::FIpcconn &ctx, algo::strptr line) {
 void samp_meng::StateDump(algo::cstring& out, algo_lib::Regx& filter) {
     report::PoolCensus census;
     (void)filter;
+    if (Regx_Match(filter, strptr("samp_meng.FDb"))) {
+        algo::tempstr temp;
+        out << "samp_meng.FDb";
+        u64_Print(samp_meng::_db.next_order_id, temp);
+        PrintAttrSpaceReset(out, "next_order_id", temp);
+        algo::cstring_Print(samp_meng::_db.ipc_socket_path, temp);
+        PrintAttrSpaceReset(out, "ipc_socket_path", temp);
+        samp_meng::trace_Print(samp_meng::_db.trace, temp);
+        PrintAttrSpaceReset(out, "trace", temp);
+        out << '\n';
+    }
     census.ctype = "samp_meng.FFdin";
     census.n_record = samp_meng::fdin_N();
     report::PoolCensus_Print(census, out);

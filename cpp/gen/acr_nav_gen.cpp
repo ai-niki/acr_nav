@@ -8203,6 +8203,45 @@ bool acr_nav::Ipc_DispatchText(acr_nav::FIpcconn &ctx, algo::strptr line) {
 void acr_nav::StateDump(algo::cstring& out, algo_lib::Regx& filter) {
     report::PoolCensus census;
     (void)filter;
+    if (Regx_Match(filter, strptr("acr_nav.FDb"))) {
+        algo::tempstr temp;
+        out << "acr_nav.FDb";
+        algo::cstring_Print(acr_nav::_db.filter, temp);
+        PrintAttrSpaceReset(out, "filter", temp);
+        bool_Print(acr_nav::_db.running, temp);
+        PrintAttrSpaceReset(out, "running", temp);
+        i32_Print(acr_nav::_db.term_hei, temp);
+        PrintAttrSpaceReset(out, "term_hei", temp);
+        i32_Print(acr_nav::_db.term_wid, temp);
+        PrintAttrSpaceReset(out, "term_wid", temp);
+        bool_Print(acr_nav::_db.startup_help, temp);
+        PrintAttrSpaceReset(out, "startup_help", temp);
+        i32_Print(acr_nav::_db.n_visible_ctype, temp);
+        PrintAttrSpaceReset(out, "n_visible_ctype", temp);
+        algo_lib::Regx_Print(acr_nav::_db.filter_regx, temp);
+        PrintAttrSpaceReset(out, "filter_regx", temp);
+        algo::cstring_Print(acr_nav::_db.pre_filter_text, temp);
+        PrintAttrSpaceReset(out, "pre_filter_text", temp);
+        algo::Smallstr50_Print(acr_nav::_db.pre_filter_target, temp);
+        PrintAttrSpaceReset(out, "pre_filter_target", temp);
+        i32_Print(acr_nav::_db.pre_filter_sel_row, temp);
+        PrintAttrSpaceReset(out, "pre_filter_sel_row", temp);
+        i32_Print(acr_nav::_db.pre_filter_scroll_offset, temp);
+        PrintAttrSpaceReset(out, "pre_filter_scroll_offset", temp);
+        i32_Print(acr_nav::_db.sel_nav_col, temp);
+        PrintAttrSpaceReset(out, "sel_nav_col", temp);
+        algo::cstring_Print(acr_nav::_db.preview_nav_pending, temp);
+        PrintAttrSpaceReset(out, "preview_nav_pending", temp);
+        i32_Print(acr_nav::_db.sel_nav_col_pending, temp);
+        PrintAttrSpaceReset(out, "sel_nav_col_pending", temp);
+        algo::cstring_Print(acr_nav::_db.ipc_socket_path, temp);
+        PrintAttrSpaceReset(out, "ipc_socket_path", temp);
+        i32_Print(acr_nav::_db.headless_lineno, temp);
+        PrintAttrSpaceReset(out, "headless_lineno", temp);
+        acr_nav::trace_Print(acr_nav::_db.trace, temp);
+        PrintAttrSpaceReset(out, "trace", temp);
+        out << '\n';
+    }
     census.ctype = "acr_nav.FCtype";
     census.n_record = acr_nav::ctype_N();
     report::PoolCensus_Print(census, out);
@@ -8425,6 +8464,39 @@ void acr_nav::StateDump(algo::cstring& out, algo_lib::Regx& filter) {
             out << '\n';
         }ind_end;
     }
+    census.ctype = "acr_nav.Naventry";
+    census.n_record = acr_nav::navstack_N();
+    report::PoolCensus_Print(census, out);
+    out << '\n';
+    if (Regx_Match(filter, strptr("acr_nav.Naventry"))) {
+        ind_beg(acr_nav::_db_navstack_curs, rec, acr_nav::_db) {
+            algo::tempstr temp;
+            out << "acr_nav.Naventry";
+            algo::cstring_Print(rec.filter, temp);
+            PrintAttrSpaceReset(out, "filter", temp);
+            algo::Smallstr50_Print(rec.navmode, temp);
+            PrintAttrSpaceReset(out, "navmode", temp);
+            i32_Print(rec.scroll_offset, temp);
+            PrintAttrSpaceReset(out, "scroll_offset", temp);
+            i32_Print(rec.sel_row, temp);
+            PrintAttrSpaceReset(out, "sel_row", temp);
+            algo::Smallstr50_Print(rec.viewmode, temp);
+            PrintAttrSpaceReset(out, "viewmode", temp);
+            algo::Smallstr100_Print(rec.ctype, temp);
+            PrintAttrSpaceReset(out, "ctype", temp);
+            algo::Smallstr50_Print(rec.filtertarget, temp);
+            PrintAttrSpaceReset(out, "filtertarget", temp);
+            i32_Print(rec.right_sel_row, temp);
+            PrintAttrSpaceReset(out, "right_sel_row", temp);
+            i32_Print(rec.right_scroll_offset, temp);
+            PrintAttrSpaceReset(out, "right_scroll_offset", temp);
+            algo::Smallstr50_Print(rec.focus_panel, temp);
+            PrintAttrSpaceReset(out, "focus_panel", temp);
+            i32_Print(rec.sel_nav_col, temp);
+            PrintAttrSpaceReset(out, "sel_nav_col", temp);
+            out << '\n';
+        }ind_end;
+    }
     census.ctype = "acr_nav.FNavstyle";
     census.n_record = acr_nav::navstyle_N();
     report::PoolCensus_Print(census, out);
@@ -8523,6 +8595,21 @@ void acr_nav::StateDump(algo::cstring& out, algo_lib::Regx& filter) {
             out << '\n';
         }ind_end;
     }
+    census.ctype = "acr_nav.LeftItem";
+    census.n_record = acr_nav::left_item_N();
+    report::PoolCensus_Print(census, out);
+    out << '\n';
+    if (Regx_Match(filter, strptr("acr_nav.LeftItem"))) {
+        ind_beg(acr_nav::_db_left_item_curs, rec, acr_nav::_db) {
+            algo::tempstr temp;
+            out << "acr_nav.LeftItem";
+            algo::Smallstr100_Print(rec.ctype, temp);
+            PrintAttrSpaceReset(out, "ctype", temp);
+            algo::Smallstr16_Print(rec.ns, temp);
+            PrintAttrSpaceReset(out, "ns", temp);
+            out << '\n';
+        }ind_end;
+    }
     census.ctype = "acr_nav.FFiltertarget";
     census.n_record = acr_nav::filtertarget_N();
     report::PoolCensus_Print(census, out);
@@ -8553,6 +8640,23 @@ void acr_nav::StateDump(algo::cstring& out, algo_lib::Regx& filter) {
             PrintAttrSpaceReset(out, "has_field_criteria", temp);
             algo::Comment_Print(rec.comment, temp);
             PrintAttrSpaceReset(out, "comment", temp);
+            out << '\n';
+        }ind_end;
+    }
+    census.ctype = "acr_nav.OverlayEntry";
+    census.n_record = acr_nav::overlay_stack_N();
+    report::PoolCensus_Print(census, out);
+    out << '\n';
+    if (Regx_Match(filter, strptr("acr_nav.OverlayEntry"))) {
+        ind_beg(acr_nav::_db_overlay_stack_curs, rec, acr_nav::_db) {
+            algo::tempstr temp;
+            out << "acr_nav.OverlayEntry";
+            algo::Smallstr50_Print(rec.viewmode, temp);
+            PrintAttrSpaceReset(out, "viewmode", temp);
+            i32_Print(rec.saved_sel_row, temp);
+            PrintAttrSpaceReset(out, "saved_sel_row", temp);
+            i32_Print(rec.saved_scroll_offset, temp);
+            PrintAttrSpaceReset(out, "saved_scroll_offset", temp);
             out << '\n';
         }ind_end;
     }
