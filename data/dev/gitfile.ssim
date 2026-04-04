@@ -230,6 +230,7 @@ dev.gitfile  gitfile:cpp/amc/disp/main.cpp
 dev.gitfile  gitfile:cpp/amc/disp/msg.cpp
 dev.gitfile  gitfile:cpp/amc/disp/print.cpp
 dev.gitfile  gitfile:cpp/amc/disp/read.cpp
+dev.gitfile  gitfile:cpp/amc/disp/textcall.cpp
 dev.gitfile  gitfile:cpp/amc/enum.cpp
 dev.gitfile  gitfile:cpp/amc/exec.cpp
 dev.gitfile  gitfile:cpp/amc/fast.cpp

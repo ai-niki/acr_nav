@@ -1,14 +1,14 @@
 acr_nav.Ack  ack:acr_nav.Navigate  ok:Y  ctype:dmmeta.Field  viewmode:preview  navstack_depth:0  msg:""
 
-acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:0  n_sel_ctype:1420  n_ctype:1421  n_field:5710  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:1
+acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:0  n_sel_ctype:1420  n_ctype:1421  n_field:5712  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:1
 acr_nav.PanelState  panel:ctype_list  sel_row:91  scroll_offset:55  n_items:213  sel_value:dmmeta.Field
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:5710  sel_value:"                                                                            Val                                                                                                                                                     "
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:5712  sel_value:"                                                                            Val                                                                                                                                                     "
 
-acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:1  n_sel_ctype:1420  n_ctype:1421  n_field:5710  viewmode:preview  breadcrumb:"dmmeta.Field › dmmeta.Ctype"  filtertarget:ctype  hints:"↑↓←→  Backspace:back  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:1  n_sel_ctype:1420  n_ctype:1421  n_field:5712  viewmode:preview  breadcrumb:"dmmeta.Field › dmmeta.Ctype"  filtertarget:ctype  hints:"↑↓←→  Backspace:back  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:59  scroll_offset:55  n_items:213  sel_value:dmmeta.Ctype
 acr_nav.PanelState  panel:content  sel_row:880  scroll_offset:845  n_items:1421  sel_value:"dev.Arch                       System architecture                                                                                         "
 
-acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:1  n_sel_ctype:1420  n_ctype:1421  n_field:5710  viewmode:preview  breadcrumb:"dmmeta.Field › dmmeta.Ctype"  filtertarget:ctype  hints:"↑↓←→  Backspace:back  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:1  n_sel_ctype:1420  n_ctype:1421  n_field:5712  viewmode:preview  breadcrumb:"dmmeta.Field › dmmeta.Ctype"  filtertarget:ctype  hints:"↑↓←→  Backspace:back  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:59  scroll_offset:55  n_items:213  sel_value:dmmeta.Ctype
 acr_nav.VisibleLeftItem  row:55  value:dmmeta.Cppkeyword  kind:ctype  collapsed:N  n_match:0  n_record:84
 acr_nav.VisibleLeftItem  row:56  value:dmmeta.Cpptype  kind:ctype  collapsed:N  n_match:0  n_record:404
@@ -16,11 +16,11 @@ acr_nav.VisibleLeftItem  row:57  value:dmmeta.Csize  kind:ctype  collapsed:N  n_
 acr_nav.VisibleLeftItem  row:58  value:dmmeta.Cstr  kind:ctype  collapsed:N  n_match:0  n_record:141
 acr_nav.VisibleLeftItem  row:59  value:dmmeta.Ctype  kind:ctype  collapsed:N  n_match:0  n_record:1421
 acr_nav.VisibleLeftItem  row:60  value:dmmeta.Ctypelen  kind:ctype  collapsed:N  n_match:0  n_record:1334
-acr_nav.VisibleLeftItem  row:61  value:dmmeta.Dispatch  kind:ctype  collapsed:N  n_match:0  n_record:10
-acr_nav.VisibleLeftItem  row:62  value:dmmeta.DispatchMsg  kind:ctype  collapsed:N  n_match:0  n_record:29
-acr_nav.VisibleLeftItem  row:63  value:dmmeta.Dispctx  kind:ctype  collapsed:N  n_match:0  n_record:2
+acr_nav.VisibleLeftItem  row:61  value:dmmeta.Dispatch  kind:ctype  collapsed:N  n_match:0  n_record:11
+acr_nav.VisibleLeftItem  row:62  value:dmmeta.DispatchMsg  kind:ctype  collapsed:N  n_match:0  n_record:38
+acr_nav.VisibleLeftItem  row:63  value:dmmeta.Dispctx  kind:ctype  collapsed:N  n_match:0  n_record:3
 acr_nav.VisibleLeftItem  row:64  value:dmmeta.Dispfilter  kind:ctype  collapsed:N  n_match:0  n_record:1
-acr_nav.VisibleLeftItem  row:65  value:dmmeta.Dispsig  kind:ctype  collapsed:N  n_match:0  n_record:42
+acr_nav.VisibleLeftItem  row:65  value:dmmeta.Dispsig  kind:ctype  collapsed:N  n_match:0  n_record:43
 acr_nav.VisibleLeftItem  row:66  value:dmmeta.Dispsigcheck  kind:ctype  collapsed:N  n_match:0  n_record:0
 acr_nav.VisibleLeftItem  row:67  value:dmmeta.Disptrace  kind:ctype  collapsed:N  n_match:0  n_record:2
 acr_nav.VisibleLeftItem  row:68  value:dmmeta.Falias  kind:ctype  collapsed:N  n_match:0  n_record:4

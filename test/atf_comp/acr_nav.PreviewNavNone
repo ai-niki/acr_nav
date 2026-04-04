@@ -1,4 +1,4 @@
-acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Nstype  navstack_depth:0  n_sel_ctype:1  n_ctype:1421  n_field:5710  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:1
+acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Nstype  navstack_depth:0  n_sel_ctype:1  n_ctype:1421  n_field:5712  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:1
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:2  sel_value:dmmeta.Nstype
 acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:dmmeta.Nstype  kind:ctype  collapsed:N  n_match:0  n_record:6
@@ -12,7 +12,7 @@ acr_nav.VisibleLine  row:5  value:"ssimdb    Ssim database (not a target)       
 acr_nav.PreviewNavCol  col_start:0  col_wid:8  name_len:6  col_name:nstype  target_ctype:""
 acr_nav.PreviewNavCol  col_start:10  col_wid:47  name_len:7  col_name:comment  target_ctype:""
 
-acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Nstype  navstack_depth:0  n_sel_ctype:1  n_ctype:1421  n_field:5710  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:1
+acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Nstype  navstack_depth:0  n_sel_ctype:1  n_ctype:1421  n_field:5712  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:1
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:2  sel_value:dmmeta.Nstype
 acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:dmmeta.Nstype  kind:ctype  collapsed:N  n_match:0  n_record:6

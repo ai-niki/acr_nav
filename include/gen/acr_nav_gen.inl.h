@@ -2691,6 +2691,45 @@ inline  acr_nav::FieldId::FieldId(acr_nav_FieldIdEnum arg) {
 inline  acr_nav::GoBack::GoBack() {
 }
 
+// --- acr_nav.HeadlessCase.value.GetEnum
+// Get value of field as enum type
+inline acr_nav_HeadlessCaseEnum acr_nav::value_GetEnum(const acr_nav::HeadlessCase& parent) {
+    return acr_nav_HeadlessCaseEnum(parent.value);
+}
+
+// --- acr_nav.HeadlessCase.value.SetEnum
+// Set value of field from enum type.
+inline void acr_nav::value_SetEnum(acr_nav::HeadlessCase& parent, acr_nav_HeadlessCaseEnum rhs) {
+    parent.value = u32(rhs);
+}
+
+// --- acr_nav.HeadlessCase.value.Cast
+inline  acr_nav::HeadlessCase::operator acr_nav_HeadlessCaseEnum() const {
+    return acr_nav_HeadlessCaseEnum((*this).value);
+}
+
+// --- acr_nav.HeadlessCase..Init
+// Set all fields to initial values.
+inline void acr_nav::HeadlessCase_Init(acr_nav::HeadlessCase& parent) {
+    parent.value = u32(0);
+}
+
+// --- acr_nav.HeadlessCase..Ctor
+inline  acr_nav::HeadlessCase::HeadlessCase() {
+    acr_nav::HeadlessCase_Init(*this);
+}
+
+// --- acr_nav.HeadlessCase..FieldwiseCtor
+inline  acr_nav::HeadlessCase::HeadlessCase(u32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- acr_nav.HeadlessCase..EnumCtor
+inline  acr_nav::HeadlessCase::HeadlessCase(acr_nav_HeadlessCaseEnum arg) {
+    this->value = u32(arg);
+}
+
 // --- acr_nav.InputError..Init
 // Set all fields to initial values.
 inline void acr_nav::InputError_Init(acr_nav::InputError& parent) {

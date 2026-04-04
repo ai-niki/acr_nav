@@ -1,2 +1,3 @@
+dmmeta.dispctx  dispatch:acr_nav.Ipc  ctype:acr_nav.FIpcconn  comment:""
 dmmeta.dispctx  dispatch:lib_ws.FrameIdx  ctype:lib_ws.FrameIdx  comment:""
 dmmeta.dispctx  dispatch:lib_ws.FrameLen  ctype:i32  comment:""

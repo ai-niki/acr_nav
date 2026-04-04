@@ -336,21 +336,6 @@ inline  dmmeta::Dispatch::Dispatch() {
     dmmeta::Dispatch_Init(*this);
 }
 
-// --- dmmeta.Dispatch..FieldwiseCtor
-inline  dmmeta::Dispatch::Dispatch(const algo::strptr& in_dispatch, bool in_unk, bool in_read, bool in_print, bool in_haslen, bool in_call, bool in_strict, bool in_dyn, bool in_kafka, const algo::Comment& in_comment)
-    : dispatch(in_dispatch)
-    , unk(in_unk)
-    , read(in_read)
-    , print(in_print)
-    , haslen(in_haslen)
-    , call(in_call)
-    , strict(in_strict)
-    , dyn(in_dyn)
-    , kafka(in_kafka)
-    , comment(in_comment)
- {
-}
-
 // --- dmmeta.DispatchMsg..Ctor
 inline  dmmeta::DispatchMsg::DispatchMsg() {
 }

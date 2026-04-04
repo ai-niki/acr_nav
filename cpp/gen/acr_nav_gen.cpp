@@ -574,6 +574,7 @@ static void acr_nav::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Headless'  signature:'416aa31955ee9b8ebe3889466ef6bef40b1c9e9e'");
     algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Ipc'  signature:'067bcd35533fc0dd979a27570cee9276c0092f4d'");
     algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'9a1cb99e0e8ea1374d88bd69d9232d2e6f95e8ea'");
 }
@@ -5469,6 +5470,7 @@ void acr_nav::FDb_Init() {
     _db.cd_ipcconn_read_n = 0; // (acr_nav.FDb.cd_ipcconn_read)
     _db.cd_ipcconn_eof_head = NULL; // (acr_nav.FDb.cd_ipcconn_eof)
     _db.cd_ipcconn_eof_n = 0; // (acr_nav.FDb.cd_ipcconn_eof)
+    _db.headless_lineno = i32(0);
 
     acr_nav::InitReflection();
     navaction_LoadStatic(); // gen:ns_gstatic  gstatic:acr_nav.FDb.navaction  load acr_nav.FNavaction records
@@ -7209,6 +7211,140 @@ bool acr_nav::GoBack_ReadStrptrMaybe(acr_nav::GoBack &parent, algo::strptr in_st
     return retval;
 }
 
+// --- acr_nav.HeadlessCase.value.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* acr_nav::value_ToCstr(const acr_nav::HeadlessCase& parent) {
+    const char *ret = NULL;
+    switch(value_GetEnum(parent)) {
+        case acr_nav_HeadlessCase_acr_nav_GoBack: ret = "acr_nav.GoBack";  break;
+        case acr_nav_HeadlessCase_acr_nav_Navigate: ret = "acr_nav.Navigate";  break;
+        case acr_nav_HeadlessCase_acr_nav_RequestStateDump: ret = "acr_nav.RequestStateDump";  break;
+        case acr_nav_HeadlessCase_acr_nav_Screenshot: ret = "acr_nav.Screenshot";  break;
+        case acr_nav_HeadlessCase_acr_nav_SendKey: ret = "acr_nav.SendKey";  break;
+        case acr_nav_HeadlessCase_acr_nav_SetFilter: ret = "acr_nav.SetFilter";  break;
+        case acr_nav_HeadlessCase_acr_nav_SetTermSize: ret = "acr_nav.SetTermSize";  break;
+        case acr_nav_HeadlessCase_acr_nav_SetView: ret = "acr_nav.SetView";  break;
+        case acr_nav_HeadlessCase_acr_nav_Summary: ret = "acr_nav.Summary";  break;
+    }
+    return ret;
+}
+
+// --- acr_nav.HeadlessCase.value.Print
+// Convert value to a string. First, attempt conversion to a known string.
+// If no string matches, print value as a numeric value.
+void acr_nav::value_Print(const acr_nav::HeadlessCase& parent, algo::cstring &lhs) {
+    const char *strval = value_ToCstr(parent);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << parent.value;
+    }
+}
+
+// --- acr_nav.HeadlessCase.value.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool acr_nav::value_SetStrptrMaybe(acr_nav::HeadlessCase& parent, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 14: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','c','r','_','n','a','v','.'): {
+                    if (memcmp(rhs.elems+8,"GoBack",6)==0) { value_SetEnum(parent,acr_nav_HeadlessCase_acr_nav_GoBack); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 15: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','c','r','_','n','a','v','.'): {
+                    if (memcmp(rhs.elems+8,"SendKey",7)==0) { value_SetEnum(parent,acr_nav_HeadlessCase_acr_nav_SendKey); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"SetView",7)==0) { value_SetEnum(parent,acr_nav_HeadlessCase_acr_nav_SetView); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"Summary",7)==0) { value_SetEnum(parent,acr_nav_HeadlessCase_acr_nav_Summary); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 16: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','c','r','_','n','a','v','.'): {
+                    if (memcmp(rhs.elems+8,"Navigate",8)==0) { value_SetEnum(parent,acr_nav_HeadlessCase_acr_nav_Navigate); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 17: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','c','r','_','n','a','v','.'): {
+                    if (memcmp(rhs.elems+8,"SetFilter",9)==0) { value_SetEnum(parent,acr_nav_HeadlessCase_acr_nav_SetFilter); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 18: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','c','r','_','n','a','v','.'): {
+                    if (memcmp(rhs.elems+8,"Screenshot",10)==0) { value_SetEnum(parent,acr_nav_HeadlessCase_acr_nav_Screenshot); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 19: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','c','r','_','n','a','v','.'): {
+                    if (memcmp(rhs.elems+8,"SetTermSize",11)==0) { value_SetEnum(parent,acr_nav_HeadlessCase_acr_nav_SetTermSize); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 24: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','c','r','_','n','a','v','.'): {
+                    if (memcmp(rhs.elems+8,"RequestStateDump",16)==0) { value_SetEnum(parent,acr_nav_HeadlessCase_acr_nav_RequestStateDump); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- acr_nav.HeadlessCase.value.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void acr_nav::value_SetStrptr(acr_nav::HeadlessCase& parent, algo::strptr rhs, acr_nav_HeadlessCaseEnum dflt) {
+    if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
+}
+
+// --- acr_nav.HeadlessCase.value.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool acr_nav::value_ReadStrptrMaybe(acr_nav::HeadlessCase& parent, algo::strptr rhs) {
+    bool retval = false;
+    retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
+    if (!retval) { // didn't work? try reading as underlying type
+        retval = u32_ReadStrptrMaybe(parent.value,rhs);
+    }
+    return retval;
+}
+
+// --- acr_nav.HeadlessCase..ReadStrptrMaybe
+// Read fields of acr_nav::HeadlessCase from an ascii string.
+// The format of the string is the format of the acr_nav::HeadlessCase's only field
+bool acr_nav::HeadlessCase_ReadStrptrMaybe(acr_nav::HeadlessCase &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = retval && value_ReadStrptrMaybe(parent, in_str);
+    return retval;
+}
+
 // --- acr_nav.InputError..Print
 // print string representation of ROW to string STR
 // cfmt:acr_nav.InputError.String  printfmt:Tuple
@@ -7946,35 +8082,121 @@ void acr_nav::StaticCheck() {
     algo_assert(sizeof(acr_nav::navaction_step_hook) == 8); // csize:acr_nav.navaction_step_hook
     algo_assert(sizeof(acr_nav::viewmode_ensure_content_hook) == 8); // csize:acr_nav.viewmode_ensure_content_hook
     algo_assert(_offset_of(acr_nav::FieldId, value) + sizeof(((acr_nav::FieldId*)0)->value) == sizeof(acr_nav::FieldId));
+    algo_assert(_offset_of(acr_nav::HeadlessCase, value) + sizeof(((acr_nav::HeadlessCase*)0)->value) == sizeof(acr_nav::HeadlessCase));
     algo_assert(_offset_of(acr_nav::IpcCase, value) + sizeof(((acr_nav::IpcCase*)0)->value) == sizeof(acr_nav::IpcCase));
 }
 
-// --- acr_nav.Ipc..ReadStrptr
-// Parse ascii representation of message into binary, appending new data to BUF.
-acr_nav::IpcCase acr_nav::Ipc_ReadStrptr(algo::strptr str, algo::ByteAry &buf) {
-    bool ok = false;
+// --- acr_nav.Headless..DispatchText
+// Dispatch text command to the appropriate handler function.
+bool acr_nav::Headless_DispatchText(algo::strptr line) {
+    bool ret = false;
     tempstr msgtype_str;
-    algo::StringIter iter(str);
+    algo::StringIter iter(line);
     cstring_ReadCmdarg(msgtype_str, iter, false); // read first word
-    acr_nav::IpcCase msgtype;
+    acr_nav::HeadlessCase msgtype;
     value_SetStrptrMaybe(msgtype, msgtype_str); // map string -> enum
-    switch (value_GetEnum(msgtype)) { // what message is it?
-        case acr_nav_IpcCase_acr_nav_RequestStateDump: {
-            int len = sizeof(acr_nav::RequestStateDump);
-            acr_nav::RequestStateDump *ctype = new(ary_AllocN(buf, len).elems) acr_nav::RequestStateDump; // default values
-            ok = RequestStateDump_ReadStrptrMaybe(*ctype, str); // now read attributes
-        } break; // acr_nav::RequestStateDump case
+    switch (value_GetEnum(msgtype)) {
+        case acr_nav_HeadlessCase_acr_nav_GoBack: {
+            acr_nav::GoBack msg;
+            if (GoBack_ReadStrptrMaybe(msg, line)) {
+                acr_nav::Headless_GoBack(msg);
+                ret = true;
+            }
+        } break;
+
+        case acr_nav_HeadlessCase_acr_nav_Navigate: {
+            acr_nav::Navigate msg;
+            if (Navigate_ReadStrptrMaybe(msg, line)) {
+                acr_nav::Headless_Navigate(msg);
+                ret = true;
+            }
+        } break;
+
+        case acr_nav_HeadlessCase_acr_nav_RequestStateDump: {
+            acr_nav::RequestStateDump msg;
+            if (RequestStateDump_ReadStrptrMaybe(msg, line)) {
+                acr_nav::Headless_RequestStateDump(msg);
+                ret = true;
+            }
+        } break;
+
+        case acr_nav_HeadlessCase_acr_nav_Screenshot: {
+            acr_nav::Screenshot msg;
+            if (Screenshot_ReadStrptrMaybe(msg, line)) {
+                acr_nav::Headless_Screenshot(msg);
+                ret = true;
+            }
+        } break;
+
+        case acr_nav_HeadlessCase_acr_nav_SendKey: {
+            acr_nav::SendKey msg;
+            if (SendKey_ReadStrptrMaybe(msg, line)) {
+                acr_nav::Headless_SendKey(msg);
+                ret = true;
+            }
+        } break;
+
+        case acr_nav_HeadlessCase_acr_nav_SetFilter: {
+            acr_nav::SetFilter msg;
+            if (SetFilter_ReadStrptrMaybe(msg, line)) {
+                acr_nav::Headless_SetFilter(msg);
+                ret = true;
+            }
+        } break;
+
+        case acr_nav_HeadlessCase_acr_nav_SetTermSize: {
+            acr_nav::SetTermSize msg;
+            if (SetTermSize_ReadStrptrMaybe(msg, line)) {
+                acr_nav::Headless_SetTermSize(msg);
+                ret = true;
+            }
+        } break;
+
+        case acr_nav_HeadlessCase_acr_nav_SetView: {
+            acr_nav::SetView msg;
+            if (SetView_ReadStrptrMaybe(msg, line)) {
+                acr_nav::Headless_SetView(msg);
+                ret = true;
+            }
+        } break;
+
+        case acr_nav_HeadlessCase_acr_nav_Summary: {
+            acr_nav::Summary msg;
+            if (Summary_ReadStrptrMaybe(msg, line)) {
+                acr_nav::Headless_Summary(msg);
+                ret = true;
+            }
+        } break;
 
         default: break;
     }
-    return ok ? msgtype : acr_nav::IpcCase();
+    if (!ret) {
+        acr_nav::Headless_UnkText(line);
+    }
+    return ret;
 }
 
-// --- acr_nav.Ipc..ReadStrptrMaybe
-// Parse ascii representation of message into binary, appending new data to BUF.
-bool acr_nav::Ipc_ReadStrptrMaybe(algo::strptr str, algo::ByteAry &buf) {
-    acr_nav::IpcCase msgtype = Ipc_ReadStrptr(str,buf);
-    return !(msgtype == acr_nav::IpcCase());
+// --- acr_nav.Ipc..DispatchText
+// Dispatch text command to the appropriate handler function.
+bool acr_nav::Ipc_DispatchText(acr_nav::FIpcconn &ctx, algo::strptr line) {
+    bool ret = false;
+    tempstr msgtype_str;
+    algo::StringIter iter(line);
+    cstring_ReadCmdarg(msgtype_str, iter, false); // read first word
+    acr_nav::IpcCase msgtype;
+    value_SetStrptrMaybe(msgtype, msgtype_str); // map string -> enum
+    switch (value_GetEnum(msgtype)) {
+        case acr_nav_IpcCase_acr_nav_RequestStateDump: {
+            acr_nav::RequestStateDump msg;
+            if (RequestStateDump_ReadStrptrMaybe(msg, line)) {
+                acr_nav::Ipc_RequestStateDump(ctx, msg);
+                ret = true;
+            }
+        } break;
+
+        default: break;
+    }
+    return ret;
 }
 
 // --- acr_nav...StateDump
@@ -8348,15 +8570,7 @@ void acr_nav::cd_ipcconn_read_Step() {
 
 // --- acr_nav...IpcProcessLine
 void acr_nav::IpcProcessLine(acr_nav::FIpcconn& conn, algo::strptr line) {
-    acr_nav::RequestStateDump cmd;
-    if (acr_nav::RequestStateDump_ReadStrptrMaybe(cmd, line)) {
-        algo_lib::Regx filter;
-        Regx_ReadSql(filter, cmd.filter, true);
-        algo::cstring out;
-        acr_nav::StateDump(out, filter);
-        ssize_t nw = write(conn.outfd.value, out.ch_elems, out.ch_n);
-        (void)nw;
-    }
+    acr_nav::Ipc_DispatchText(conn, line);
 }
 
 // --- acr_nav...cd_ipcconn_eof_Step

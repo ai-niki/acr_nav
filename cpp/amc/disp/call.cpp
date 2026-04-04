@@ -44,7 +44,7 @@ static void Call_UpdateCycles(amc::FDispatch &dispatch, amc::FDispatchmsg &dispm
 
 // -----------------------------------------------------------------------------
 
-static void AddCtxProtoArg(amc::FDispatch &dispatch, amc::FFunc &func) {
+void amc::AddCtxProtoArg(amc::FDispatch &dispatch, amc::FFunc &func) {
     if (dispatch.c_dispctx) {
         amc::AddProtoArg(func,tempstr()<<dispatch.c_dispctx->p_ctype->cpp_type<<" &", "ctx");
     }

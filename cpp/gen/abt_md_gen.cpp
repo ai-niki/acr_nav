@@ -713,7 +713,7 @@ static void abt_md::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'abt_md.Input'  signature:'755ed1508431c02febab5213c9ff75f751d21ee2'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'abt_md.Input'  signature:'11c0940ec35a9662aa48dc565650a92160d5237b'");
 }
 
 // --- abt_md.FDb._db.InsertStrptrMaybe
@@ -6770,6 +6770,7 @@ void abt_md::dispatch_CopyOut(abt_md::FDispatch &row, dmmeta::Dispatch &out) {
     out.strict = row.strict;
     out.dyn = row.dyn;
     out.kafka = row.kafka;
+    out.textcall = row.textcall;
     out.comment = row.comment;
 }
 
@@ -6785,6 +6786,7 @@ void abt_md::dispatch_CopyIn(abt_md::FDispatch &row, dmmeta::Dispatch &in) {
     row.strict = in.strict;
     row.dyn = in.dyn;
     row.kafka = in.kafka;
+    row.textcall = in.textcall;
     row.comment = in.comment;
 }
 
@@ -6871,6 +6873,7 @@ void abt_md::FDispatch_Init(abt_md::FDispatch& dispatch) {
     dispatch.strict = bool(false);
     dispatch.dyn = bool(false);
     dispatch.kafka = bool(false);
+    dispatch.textcall = bool(false);
     dispatch.c_dispatch_msg_elems = NULL; // (abt_md.FDispatch.c_dispatch_msg)
     dispatch.c_dispatch_msg_n = 0; // (abt_md.FDispatch.c_dispatch_msg)
     dispatch.c_dispatch_msg_max = 0; // (abt_md.FDispatch.c_dispatch_msg)

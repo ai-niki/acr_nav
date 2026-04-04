@@ -632,51 +632,75 @@ static void HeadlessNavigate(acr_nav::Navigate &cmd) {
 
 // -----------------------------------------------------------------------------
 
+// Headless dispatch handler: send a key
+void acr_nav::Headless_SendKey(acr_nav::SendKey& msg) {
+    ProcessKey(msg.key);
+}
+
+// Headless dispatch handler: take a screenshot
+void acr_nav::Headless_Screenshot(acr_nav::Screenshot&) {
+    HeadlessOutput();
+}
+
+// Headless dispatch handler: resize terminal
+void acr_nav::Headless_SetTermSize(acr_nav::SetTermSize& msg) {
+    acr_nav::_db.term_hei = i32_Max(1, msg.term_hei);
+    acr_nav::_db.term_wid = i32_Max(1, msg.term_wid);
+    acr_nav::FPanel *left = acr_nav::_db.p_left_panel;
+    acr_nav::FCtype *sel_ct = SelectedCtype(*left);
+    AdjustScroll(*left, acr_nav::left_item_N());
+    AdjustScroll(*acr_nav::_db.p_right_panel, RightPanelItemCount(sel_ct));
+}
+
+// Headless dispatch handler: navigate to a ctype
+void acr_nav::Headless_Navigate(acr_nav::Navigate& msg) {
+    HeadlessNavigate(msg);
+}
+
+// Headless dispatch handler: set filter
+void acr_nav::Headless_SetFilter(acr_nav::SetFilter& msg) {
+    HeadlessSetFilter(msg);
+}
+
+// Headless dispatch handler: set view mode
+void acr_nav::Headless_SetView(acr_nav::SetView& msg) {
+    HeadlessSetView(msg);
+}
+
+// Headless dispatch handler: go back
+void acr_nav::Headless_GoBack(acr_nav::GoBack&) {
+    HeadlessGoBack();
+}
+
+// Headless dispatch handler: emit summary
+void acr_nav::Headless_Summary(acr_nav::Summary&) {
+    EmitSummary();
+}
+
+// Headless dispatch handler: request state dump
+void acr_nav::Headless_RequestStateDump(acr_nav::RequestStateDump& msg) {
+    algo_lib::Regx filter;
+    Regx_ReadSql(filter, msg.filter, true);
+    algo::cstring out;
+    acr_nav::StateDump(out, filter);
+    prlog(out);
+}
+
+// Headless dispatch handler: unrecognized text input
+void acr_nav::Headless_UnkText(algo::strptr line) {
+    acr_nav::InputError err;
+    err.lineno = acr_nav::_db.headless_lineno;
+    err.msg << "unrecognized input: " << line;
+    prlog(err);
+}
+
 // Parse and dispatch one headless protocol command
 static void DispatchHeadlessCommand(algo::strptr line, int lineno) {
-    acr_nav::SendKey send_key;
-    acr_nav::Screenshot screenshot;
-    acr_nav::SetTermSize set_term_size;
-    acr_nav::Navigate navigate_cmd;
-    acr_nav::SetFilter setfilter_cmd;
-    acr_nav::SetView setview_cmd;
-    acr_nav::GoBack goback_cmd;
-    acr_nav::Summary summary_cmd;
-    acr_nav::RequestStateDump statedump_cmd;
     if (elems_N(algo::Trimmed(line)) == 0) {
         // empty lines are ssim separators, not errors
-    } else if (acr_nav::SendKey_ReadStrptrMaybe(send_key, line)) {
-        ProcessKey(send_key.key);
-    } else if (acr_nav::Screenshot_ReadStrptrMaybe(screenshot, line)) {
-        HeadlessOutput();
-    } else if (acr_nav::SetTermSize_ReadStrptrMaybe(set_term_size, line)) {
-        acr_nav::_db.term_hei = i32_Max(1, set_term_size.term_hei);
-        acr_nav::_db.term_wid = i32_Max(1, set_term_size.term_wid);
-        acr_nav::FPanel *left = acr_nav::_db.p_left_panel;
-        acr_nav::FCtype *sel_ct = SelectedCtype(*left);
-        AdjustScroll(*left, acr_nav::left_item_N());
-        AdjustScroll(*acr_nav::_db.p_right_panel, RightPanelItemCount(sel_ct));
-    } else if (acr_nav::Navigate_ReadStrptrMaybe(navigate_cmd, line)) {
-        HeadlessNavigate(navigate_cmd);
-    } else if (acr_nav::SetFilter_ReadStrptrMaybe(setfilter_cmd, line)) {
-        HeadlessSetFilter(setfilter_cmd);
-    } else if (acr_nav::SetView_ReadStrptrMaybe(setview_cmd, line)) {
-        HeadlessSetView(setview_cmd);
-    } else if (acr_nav::GoBack_ReadStrptrMaybe(goback_cmd, line)) {
-        HeadlessGoBack();
-    } else if (acr_nav::Summary_ReadStrptrMaybe(summary_cmd, line)) {
-        EmitSummary();
-    } else if (acr_nav::RequestStateDump_ReadStrptrMaybe(statedump_cmd, line)) {
-        algo_lib::Regx filter;
-        Regx_ReadSql(filter, statedump_cmd.filter, true);
-        algo::cstring out;
-        acr_nav::StateDump(out, filter);
-        prlog(out);
     } else {
-        acr_nav::InputError err;
-        err.lineno = lineno;
-        err.msg << "unrecognized input: " << line;
-        prlog(err);
+        acr_nav::_db.headless_lineno = lineno;
+        acr_nav::Headless_DispatchText(line);
     }
 }
 

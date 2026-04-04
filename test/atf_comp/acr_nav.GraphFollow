@@ -1,14 +1,14 @@
 acr_nav.Ack  ack:acr_nav.Navigate  ok:Y  ctype:dmmeta.Ctype  viewmode:graph  navstack_depth:0  msg:""
 
-acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:1  n_sel_ctype:1420  n_ctype:1421  n_field:5710  viewmode:graph  breadcrumb:"dmmeta.Ctype › algo.Smallstr100"  filtertarget:ctype  hints:"↑↓←→  Backspace:back  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:1  n_sel_ctype:1420  n_ctype:1421  n_field:5712  viewmode:graph  breadcrumb:"dmmeta.Ctype › algo.Smallstr100"  filtertarget:ctype  hints:"↑↓←→  Backspace:back  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:183  scroll_offset:148  n_items:438  sel_value:algo.Smallstr100
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:4  sel_value:"╔ algo.Smallstr100"
 
-acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:0  n_sel_ctype:1420  n_ctype:1421  n_field:5710  viewmode:graph  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:0  n_sel_ctype:1420  n_ctype:1421  n_field:5712  viewmode:graph  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:284  scroll_offset:248  n_items:438  sel_value:dmmeta.Ctype
 acr_nav.PanelState  panel:content  sel_row:1  scroll_offset:0  n_items:103  sel_value:"                          ╟ Val ctype ────────▶ algo.Smallstr100"
 
-acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:0  n_sel_ctype:1420  n_ctype:1421  n_field:5710  viewmode:graph  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:0  n_sel_ctype:1420  n_ctype:1421  n_field:5712  viewmode:graph  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:284  scroll_offset:248  n_items:438  sel_value:dmmeta.Ctype
 acr_nav.VisibleLeftItem  row:248  value:atf_amc  kind:ns  collapsed:Y  n_match:99  n_record:0
 acr_nav.VisibleLeftItem  row:249  value:atf_ci  kind:ns  collapsed:Y  n_match:15  n_record:0

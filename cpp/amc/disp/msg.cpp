@@ -31,17 +31,14 @@ void amc::Disp_CreateFromMsg() {
     // Generate a dispatch for each message header.
     ind_beg(amc::_db_typefld_curs, typefld, amc::_db) {
         tempstr key = tempstr() << ctype_Get(typefld) << "Msgs";
-        amc::FDispatch *disp
-            = amc::dispatch_InsertMaybe(dmmeta::Dispatch(key
-                                                         , false // unk
-                                                         , true // read
-                                                         , true // print
-                                                         , false // haslen
-                                                         , false // call
-                                                         , false // strict
-                                                         , typefld.p_field->p_ctype->c_ckafka // dyn
-                                                         , typefld.p_field->p_ctype->c_ckafka // kafka
-                                                         , typefld.p_ctype->comment));
+        dmmeta::Dispatch dispatch_rec;
+        dispatch_rec.dispatch = key;
+        dispatch_rec.read = true;
+        dispatch_rec.print = true;
+        dispatch_rec.dyn = typefld.p_field->p_ctype->c_ckafka;
+        dispatch_rec.kafka = typefld.p_field->p_ctype->c_ckafka;
+        dispatch_rec.comment = typefld.p_ctype->comment;
+        amc::FDispatch *disp = amc::dispatch_InsertMaybe(dispatch_rec);
         (void)disp;
         // loop over all messages that use this header...
         int nmsg=0;

@@ -11121,6 +11121,7 @@ struct FDispatch { // amc.FDispatch
     bool                  strict;                 //   false  Only dispatch if length matches exactly
     bool                  dyn;                    //   false  Use dynamic memory allocation: new, delete instead of  ByteAry
     bool                  kafka;                  //   false  generate kafka codec
+    bool                  textcall;               //   false  Generate text-to-handler dispatch function
     amc::FCtype*          p_ctype_hdr;            // reference to parent row
     amc::FCtype*          p_casetype;             // reference to parent row
     amc::FDispfilter*     c_dispfilter;           // optional pointer

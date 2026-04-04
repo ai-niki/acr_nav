@@ -53,6 +53,23 @@ enum acr_nav_FieldIdEnum {              // acr_nav.FieldId.value
 enum { acr_nav_FieldIdEnum_N = 14 };
 
 
+// --- acr_nav_HeadlessCaseEnum
+
+enum acr_nav_HeadlessCaseEnum {                           // acr_nav.HeadlessCase.value
+     acr_nav_HeadlessCase_acr_nav_GoBack             = 1
+    ,acr_nav_HeadlessCase_acr_nav_Navigate           = 2
+    ,acr_nav_HeadlessCase_acr_nav_RequestStateDump   = 3
+    ,acr_nav_HeadlessCase_acr_nav_Screenshot         = 4
+    ,acr_nav_HeadlessCase_acr_nav_SendKey            = 5
+    ,acr_nav_HeadlessCase_acr_nav_SetFilter          = 6
+    ,acr_nav_HeadlessCase_acr_nav_SetTermSize        = 7
+    ,acr_nav_HeadlessCase_acr_nav_SetView            = 8
+    ,acr_nav_HeadlessCase_acr_nav_Summary            = 9
+};
+
+enum { acr_nav_HeadlessCaseEnum_N = 9 };
+
+
 // --- acr_nav_IpcCaseEnum
 
 enum acr_nav_IpcCaseEnum {                           // acr_nav.IpcCase.value
@@ -121,7 +138,16 @@ namespace acr_navdb { struct Reftypestyle; }
 namespace acr_nav { struct FNavstyle; }
 namespace dmmeta { struct Ssimfile; }
 namespace acr_navdb { struct Viewmode; }
+namespace acr_nav { struct GoBack; }
+namespace acr_nav { struct Navigate; }
 namespace acr_nav { struct RequestStateDump; }
+namespace acr_nav { struct Screenshot; }
+namespace acr_nav { struct SendKey; }
+namespace acr_nav { struct SetFilter; }
+namespace acr_nav { struct SetTermSize; }
+namespace acr_nav { struct SetView; }
+namespace acr_nav { struct Summary; }
+namespace acr_nav { struct FIpcconn; }
 namespace acr_nav { struct ContentRow_nav_target_curs; }
 namespace acr_nav { struct ctype_c_field_curs; }
 namespace acr_nav { struct ctype_c_field_arg_curs; }
@@ -157,7 +183,6 @@ namespace acr_nav { struct FDetailsrc; }
 namespace acr_nav { struct FField; }
 namespace acr_nav { struct FFiltertarget; }
 namespace acr_nav { struct FHelpgroup; }
-namespace acr_nav { struct FIpcconn; }
 namespace acr_nav { struct FKeybind; }
 namespace acr_nav { struct FNavmode; }
 namespace acr_nav { struct FPanel; }
@@ -165,23 +190,16 @@ namespace acr_nav { struct FReftypestyle; }
 namespace acr_nav { struct FSsimfile; }
 namespace acr_nav { struct FViewmode; }
 namespace acr_nav { struct FieldId; }
-namespace acr_nav { struct GoBack; }
+namespace acr_nav { struct HeadlessCase; }
 namespace acr_nav { struct InputError; }
 namespace acr_nav { struct IpcCase; }
 namespace acr_nav { struct LeftItem; }
 namespace acr_nav { struct LineColorSpan; }
 namespace acr_nav { struct Naventry; }
-namespace acr_nav { struct Navigate; }
 namespace acr_nav { struct OverlayEntry; }
 namespace acr_nav { struct PanelState; }
 namespace acr_nav { struct PreviewNavCol; }
 namespace acr_nav { struct Screen; }
-namespace acr_nav { struct Screenshot; }
-namespace acr_nav { struct SendKey; }
-namespace acr_nav { struct SetFilter; }
-namespace acr_nav { struct SetTermSize; }
-namespace acr_nav { struct SetView; }
-namespace acr_nav { struct Summary; }
 namespace acr_nav { struct TableId; }
 namespace acr_nav { struct VisibleField; }
 namespace acr_nav { struct VisibleLeftItem; }
@@ -603,6 +621,7 @@ struct FDb { // acr_nav.FDb
     acr_nav::FIpcconn*         cd_ipcconn_eof_head;              // zero-terminated doubly linked list
     i32                        cd_ipcconn_eof_n;                 // zero-terminated doubly linked list
     algo_lib::FIohook          stdin_iohook;                     // Iohook for stdin in headless+ipc mode
+    i32                        headless_lineno;                  //   0  Current headless input line number for error reporting
     acr_nav::trace             trace;                            //
 };
 
@@ -3407,6 +3426,56 @@ bool                 GoBack_ReadFieldMaybe(acr_nav::GoBack& parent, algo::strptr
 // func:acr_nav.GoBack..ReadStrptrMaybe
 bool                 GoBack_ReadStrptrMaybe(acr_nav::GoBack &parent, algo::strptr in_str) __attribute__((nothrow));
 
+// --- acr_nav.HeadlessCase
+#pragma pack(push,1)
+struct HeadlessCase { // acr_nav.HeadlessCase: Enum for dispatch acr_nav.Headless
+    u32   value;   //   0
+    // func:acr_nav.HeadlessCase.value.Cast
+    inline               operator acr_nav_HeadlessCaseEnum() const __attribute__((nothrow));
+    // func:acr_nav.HeadlessCase..Ctor
+    inline               HeadlessCase() __attribute__((nothrow));
+    // func:acr_nav.HeadlessCase..FieldwiseCtor
+    explicit inline               HeadlessCase(u32 in_value) __attribute__((nothrow));
+    // func:acr_nav.HeadlessCase..EnumCtor
+    inline               HeadlessCase(acr_nav_HeadlessCaseEnum arg) __attribute__((nothrow));
+};
+#pragma pack(pop)
+
+// Get value of field as enum type
+// func:acr_nav.HeadlessCase.value.GetEnum
+inline acr_nav_HeadlessCaseEnum value_GetEnum(const acr_nav::HeadlessCase& parent) __attribute__((nothrow));
+// Set value of field from enum type.
+// func:acr_nav.HeadlessCase.value.SetEnum
+inline void          value_SetEnum(acr_nav::HeadlessCase& parent, acr_nav_HeadlessCaseEnum rhs) __attribute__((nothrow));
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+// func:acr_nav.HeadlessCase.value.ToCstr
+const char*          value_ToCstr(const acr_nav::HeadlessCase& parent) __attribute__((nothrow));
+// Convert value to a string. First, attempt conversion to a known string.
+// If no string matches, print value as a numeric value.
+// func:acr_nav.HeadlessCase.value.Print
+void                 value_Print(const acr_nav::HeadlessCase& parent, algo::cstring &lhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+// func:acr_nav.HeadlessCase.value.SetStrptrMaybe
+bool                 value_SetStrptrMaybe(acr_nav::HeadlessCase& parent, algo::strptr rhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+// func:acr_nav.HeadlessCase.value.SetStrptr
+void                 value_SetStrptr(acr_nav::HeadlessCase& parent, algo::strptr rhs, acr_nav_HeadlessCaseEnum dflt) __attribute__((nothrow));
+// Convert string to field. Return success value
+// func:acr_nav.HeadlessCase.value.ReadStrptrMaybe
+bool                 value_ReadStrptrMaybe(acr_nav::HeadlessCase& parent, algo::strptr rhs) __attribute__((nothrow));
+
+// Read fields of acr_nav::HeadlessCase from an ascii string.
+// The format of the string is the format of the acr_nav::HeadlessCase's only field
+// func:acr_nav.HeadlessCase..ReadStrptrMaybe
+bool                 HeadlessCase_ReadStrptrMaybe(acr_nav::HeadlessCase &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:acr_nav.HeadlessCase..Init
+inline void          HeadlessCase_Init(acr_nav::HeadlessCase& parent);
+
 // --- acr_nav.InputError
 struct InputError { // acr_nav.InputError: Headless error output for unrecognized input
     i32             lineno;   //   0  Input line number (1-based)
@@ -4216,12 +4285,56 @@ void                 viewmode_preview_ensure_content(acr_nav::FCtype&);
 void                 viewmode_xref_ensure_content(acr_nav::FCtype&);
 // func:acr_nav...StaticCheck
 void                 StaticCheck();
-// Parse ascii representation of message into binary, appending new data to BUF.
-// func:acr_nav.Ipc..ReadStrptr
-acr_nav::IpcCase     Ipc_ReadStrptr(algo::strptr str, algo::ByteAry &buf);
-// Parse ascii representation of message into binary, appending new data to BUF.
-// func:acr_nav.Ipc..ReadStrptrMaybe
-bool                 Ipc_ReadStrptrMaybe(algo::strptr str, algo::ByteAry &buf);
+// User-implemented callback function for dispatch acr_nav.Headless
+// func:acr_nav.Headless.acr_nav.GoBack
+// this function is 'extrn' and implemented by user
+void                 Headless_GoBack(acr_nav::GoBack &msg);
+// User-implemented callback function for dispatch acr_nav.Headless
+// func:acr_nav.Headless.acr_nav.Navigate
+// this function is 'extrn' and implemented by user
+void                 Headless_Navigate(acr_nav::Navigate &msg);
+// User-implemented callback function for dispatch acr_nav.Headless
+// func:acr_nav.Headless.acr_nav.RequestStateDump
+// this function is 'extrn' and implemented by user
+void                 Headless_RequestStateDump(acr_nav::RequestStateDump &msg);
+// User-implemented callback function for dispatch acr_nav.Headless
+// func:acr_nav.Headless.acr_nav.Screenshot
+// this function is 'extrn' and implemented by user
+void                 Headless_Screenshot(acr_nav::Screenshot &msg);
+// User-implemented callback function for dispatch acr_nav.Headless
+// func:acr_nav.Headless.acr_nav.SendKey
+// this function is 'extrn' and implemented by user
+void                 Headless_SendKey(acr_nav::SendKey &msg);
+// User-implemented callback function for dispatch acr_nav.Headless
+// func:acr_nav.Headless.acr_nav.SetFilter
+// this function is 'extrn' and implemented by user
+void                 Headless_SetFilter(acr_nav::SetFilter &msg);
+// User-implemented callback function for dispatch acr_nav.Headless
+// func:acr_nav.Headless.acr_nav.SetTermSize
+// this function is 'extrn' and implemented by user
+void                 Headless_SetTermSize(acr_nav::SetTermSize &msg);
+// User-implemented callback function for dispatch acr_nav.Headless
+// func:acr_nav.Headless.acr_nav.SetView
+// this function is 'extrn' and implemented by user
+void                 Headless_SetView(acr_nav::SetView &msg);
+// User-implemented callback function for dispatch acr_nav.Headless
+// func:acr_nav.Headless.acr_nav.Summary
+// this function is 'extrn' and implemented by user
+void                 Headless_Summary(acr_nav::Summary &msg);
+// User-implemented callback for unrecognized text input to dispatch acr_nav.Headless
+// func:acr_nav.Headless..UnkText
+// this function is 'extrn' and implemented by user
+void                 Headless_UnkText(algo::strptr line);
+// Dispatch text command to the appropriate handler function.
+// func:acr_nav.Headless..DispatchText
+bool                 Headless_DispatchText(algo::strptr line);
+// User-implemented callback function for dispatch acr_nav.Ipc
+// func:acr_nav.Ipc.acr_nav.RequestStateDump
+// this function is 'extrn' and implemented by user
+void                 Ipc_RequestStateDump(acr_nav::FIpcconn &ctx, acr_nav::RequestStateDump &msg);
+// Dispatch text command to the appropriate handler function.
+// func:acr_nav.Ipc..DispatchText
+bool                 Ipc_DispatchText(acr_nav::FIpcconn &ctx, algo::strptr line);
 // func:acr_nav...StateDump
 void                 StateDump(algo::cstring& out, algo_lib::Regx& filter);
 // func:acr_nav...IpcInit

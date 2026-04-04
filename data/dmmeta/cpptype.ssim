@@ -287,7 +287,7 @@ dmmeta.cpptype  ctype:dmmeta.Cpptype  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:dmmeta.Csize  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:dmmeta.Ctype  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:dmmeta.Ctypelen  ctor:Y  dtor:Y  cheap_copy:N
-dmmeta.cpptype  ctype:dmmeta.Dispatch  ctor:Y  dtor:Y  cheap_copy:N
+dmmeta.cpptype  ctype:dmmeta.Dispatch  ctor:N  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:dmmeta.DispatchMsg  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:dmmeta.Dispsigcheck  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:dmmeta.Fbitset  ctor:Y  dtor:Y  cheap_copy:N

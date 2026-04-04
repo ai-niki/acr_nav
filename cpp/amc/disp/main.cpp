@@ -57,6 +57,11 @@ void amc::gen_ns_dispatch() {
             Disp_KafkaDecode(disp);
         }
     }ind_end;
+    ind_beg(amc::ns_c_dispatch_curs, disp,ns) {
+        if (disp.textcall) {
+            Disp_TextCall(disp);
+        }
+    }ind_end;
     Filter_Gen(ns);
 }
 

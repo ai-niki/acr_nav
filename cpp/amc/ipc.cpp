@@ -72,15 +72,7 @@ void amc::gen_ns_ipc() {
             func.extrn = false;
             func.ret = "void";
             func.proto = Subst(R, "IpcProcessLine($ns::FIpcconn& conn, algo::strptr line)");
-            Ins(&R, func.body, "$ns::RequestStateDump cmd;");
-            Ins(&R, func.body, "if ($ns::RequestStateDump_ReadStrptrMaybe(cmd, line)) {");
-            Ins(&R, func.body, "    algo_lib::Regx filter;");
-            Ins(&R, func.body, "    Regx_ReadSql(filter, cmd.filter, true);");
-            Ins(&R, func.body, "    algo::cstring out;");
-            Ins(&R, func.body, "    $ns::StateDump(out, filter);");
-            Ins(&R, func.body, "    ssize_t nw = write(conn.outfd.value, out.ch_elems, out.ch_n);");
-            Ins(&R, func.body, "    (void)nw;");
-            Ins(&R, func.body, "}");
+            Ins(&R, func.body, "$ns::Ipc_DispatchText(conn, line);");
         }
 
         // cd_ipcconn_eof_Step -- clean up a disconnected connection

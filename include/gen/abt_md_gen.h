@@ -2715,6 +2715,7 @@ struct FDispatch { // abt_md.FDispatch
     bool                     strict;                 //   false  Only dispatch if length matches exactly
     bool                     dyn;                    //   false  Use dynamic memory allocation: new, delete instead of  ByteAry
     bool                     kafka;                  //   false  generate kafka codec
+    bool                     textcall;               //   false  Generate text-to-handler dispatch function
     algo::Comment            comment;                //
     abt_md::FDispatchMsg**   c_dispatch_msg_elems;   // array of pointers
     u32                      c_dispatch_msg_n;       // array of pointers

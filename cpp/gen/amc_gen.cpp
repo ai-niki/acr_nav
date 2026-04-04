@@ -6946,7 +6946,7 @@ static void amc::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc.Input'  signature:'a56d7f11726fd81fecb25e922550b22ac63c04e2'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc.Input'  signature:'41cf42cfb198ae52ab4fe8d5b2a1e654d53f097b'");
 }
 
 // --- amc.FDb._db.InsertStrptrMaybe
@@ -26524,6 +26524,7 @@ void amc::dispatch_CopyOut(amc::FDispatch &row, dmmeta::Dispatch &out) {
     out.strict = row.strict;
     out.dyn = row.dyn;
     out.kafka = row.kafka;
+    out.textcall = row.textcall;
     // comment: field stripped (see dmmeta.fbase:amc.FDispatch.msghdr)
 }
 
@@ -26539,6 +26540,7 @@ void amc::dispatch_CopyIn(amc::FDispatch &row, dmmeta::Dispatch &in) {
     row.strict = in.strict;
     row.dyn = in.dyn;
     row.kafka = in.kafka;
+    row.textcall = in.textcall;
     // comment: field stripped (see dmmeta.fbase:amc.FDispatch.msghdr)
 }
 
@@ -26625,6 +26627,7 @@ void amc::FDispatch_Init(amc::FDispatch& dispatch) {
     dispatch.strict = bool(false);
     dispatch.dyn = bool(false);
     dispatch.kafka = bool(false);
+    dispatch.textcall = bool(false);
     dispatch.p_ctype_hdr = NULL;
     dispatch.p_casetype = NULL;
     dispatch.c_dispfilter = NULL;

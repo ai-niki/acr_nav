@@ -2089,6 +2089,9 @@ bool dmmeta::Dispatch_ReadFieldMaybe(dmmeta::Dispatch& parent, algo::strptr fiel
         case dmmeta_FieldId_kafka: {
             retval = bool_ReadStrptrMaybe(parent.kafka, strval);
         } break;
+        case dmmeta_FieldId_textcall: {
+            retval = bool_ReadStrptrMaybe(parent.textcall, strval);
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
         } break;
@@ -2126,6 +2129,7 @@ void dmmeta::Dispatch_Init(dmmeta::Dispatch& parent) {
     parent.strict = bool(false);
     parent.dyn = bool(false);
     parent.kafka = bool(false);
+    parent.textcall = bool(false);
 }
 
 // --- dmmeta.Dispatch..Print
@@ -2161,6 +2165,9 @@ void dmmeta::Dispatch_Print(dmmeta::Dispatch& row, algo::cstring& str) {
 
     bool_Print(row.kafka, temp);
     PrintAttrSpaceReset(str,"kafka", temp);
+
+    bool_Print(row.textcall, temp);
+    PrintAttrSpaceReset(str,"textcall", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
@@ -4537,6 +4544,7 @@ const char* dmmeta::value_ToCstr(const dmmeta::FieldId& parent) {
         case dmmeta_FieldId_strict         : ret = "strict";  break;
         case dmmeta_FieldId_dyn            : ret = "dyn";  break;
         case dmmeta_FieldId_kafka          : ret = "kafka";  break;
+        case dmmeta_FieldId_textcall       : ret = "textcall";  break;
         case dmmeta_FieldId_dispatch_msg   : ret = "dispatch_msg";  break;
         case dmmeta_FieldId_match_all      : ret = "match_all";  break;
         case dmmeta_FieldId_dispsig        : ret = "dispsig";  break;
@@ -5192,6 +5200,9 @@ bool dmmeta::value_SetStrptrMaybe(dmmeta::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('s','t','r','e','q','u','i','v'): {
                     value_SetEnum(parent,dmmeta_FieldId_strequiv); ret = true; break;
+                }
+                case LE_STR8('t','e','x','t','c','a','l','l'): {
+                    value_SetEnum(parent,dmmeta_FieldId_textcall); ret = true; break;
                 }
                 case LE_STR8('t','r','a','c','e','f','l','d'): {
                     value_SetEnum(parent,dmmeta_FieldId_tracefld); ret = true; break;

@@ -96,13 +96,46 @@ namespace acr_nav { // update-hdr
     //     (user-implemented function, prototype is in amc-generated header)
     // void IpcInit();
 
+    // IPC dispatch handler: request state dump
+    // void Ipc_RequestStateDump(acr_nav::FIpcconn& conn, acr_nav::RequestStateDump& cmd); // dispatch_msg:acr_nav.Ipc/acr_nav.RequestStateDump
+
     // IpcAccept -- accept incoming connection, allocate FIpcconn, start reading
     // void IpcAccept();
 
     // -------------------------------------------------------------------
     // cpp/acr_nav/main.cpp
     //
+
+    // Headless dispatch handler: send a key
     //     (user-implemented function, prototype is in amc-generated header)
+    // void Headless_SendKey(acr_nav::SendKey& msg); // dispatch_msg:acr_nav.Headless/acr_nav.SendKey
+
+    // Headless dispatch handler: take a screenshot
+    // void Headless_Screenshot(acr_nav::Screenshot&); // dispatch_msg:acr_nav.Headless/acr_nav.Screenshot
+
+    // Headless dispatch handler: resize terminal
+    // void Headless_SetTermSize(acr_nav::SetTermSize& msg); // dispatch_msg:acr_nav.Headless/acr_nav.SetTermSize
+
+    // Headless dispatch handler: navigate to a ctype
+    // void Headless_Navigate(acr_nav::Navigate& msg); // dispatch_msg:acr_nav.Headless/acr_nav.Navigate
+
+    // Headless dispatch handler: set filter
+    // void Headless_SetFilter(acr_nav::SetFilter& msg); // dispatch_msg:acr_nav.Headless/acr_nav.SetFilter
+
+    // Headless dispatch handler: set view mode
+    // void Headless_SetView(acr_nav::SetView& msg); // dispatch_msg:acr_nav.Headless/acr_nav.SetView
+
+    // Headless dispatch handler: go back
+    // void Headless_GoBack(acr_nav::GoBack&); // dispatch_msg:acr_nav.Headless/acr_nav.GoBack
+
+    // Headless dispatch handler: emit summary
+    // void Headless_Summary(acr_nav::Summary&); // dispatch_msg:acr_nav.Headless/acr_nav.Summary
+
+    // Headless dispatch handler: request state dump
+    // void Headless_RequestStateDump(acr_nav::RequestStateDump& msg); // dispatch_msg:acr_nav.Headless/acr_nav.RequestStateDump
+
+    // Headless dispatch handler: unrecognized text input
+    // void Headless_UnkText(algo::strptr line); // dispatch:acr_nav.Headless
     // void Main(); // main:acr_nav
 
     // -------------------------------------------------------------------

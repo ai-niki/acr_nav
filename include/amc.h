@@ -408,6 +408,7 @@ namespace amc { // update-hdr
     // -------------------------------------------------------------------
     // cpp/amc/disp/call.cpp -- Dispatch call
     //
+    void AddCtxProtoArg(amc::FDispatch &dispatch, amc::FFunc &func);
 
     // Generator for call-type dispatch (where we invoke a user function
     // for each case)
@@ -485,6 +486,14 @@ namespace amc { // update-hdr
 
     // Generate Dispatch_Read function
     void Disp_Read(amc::FDispatch &disp);
+
+    // -------------------------------------------------------------------
+    // cpp/amc/disp/textcall.cpp
+    //
+
+    // Generate text-to-handler dispatch: extrn handler declarations,
+    // DispatchText function, and optional UnkText handler.
+    void Disp_TextCall(amc::FDispatch &disp);
 
     // -------------------------------------------------------------------
     // cpp/amc/enum.cpp -- Enumerated types

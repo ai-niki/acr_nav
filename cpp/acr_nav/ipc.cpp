@@ -40,6 +40,16 @@ void acr_nav::IpcInit() {
     atexit(acr_nav::IpcCleanup);
 }
 
+// IPC dispatch handler: request state dump
+void acr_nav::Ipc_RequestStateDump(acr_nav::FIpcconn& conn, acr_nav::RequestStateDump& cmd) {
+    algo_lib::Regx filter;
+    Regx_ReadSql(filter, cmd.filter, true);
+    algo::cstring out;
+    acr_nav::StateDump(out, filter);
+    ssize_t nw = write(conn.outfd.value, out.ch_elems, out.ch_n);
+    (void)nw;
+}
+
 // IpcAccept -- accept incoming connection, allocate FIpcconn, start reading
 void acr_nav::IpcAccept() {
     algo::Fildes client_fd = lib_netio::AcceptUnix(_db.ipc_listen.fildes);
