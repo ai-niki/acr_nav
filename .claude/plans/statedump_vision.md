@@ -195,11 +195,29 @@ Code: `StdinReadCallback()` — edge-triggered epoll callback that drains stdin,
 
 6. *HeadlessMain preserved for standalone headless.* The blocking `read()` loop is simpler and correct when IPC isn't needed. No reason to force everything through epoll.
 
-### Phase 3.2 -- Hardening (next)
+### Phase 3.2 -- Hardening (done)
 
-- Signal handler for SIGTERM to unlink socket (atexit doesn't fire on kill)
-- Stale socket detection: if `bind()` fails, try `connect()` to check if the socket is stale, unlink and retry
-- Second namespace: enable nsipc on another program (e.g. samp_meng) to validate the generator works generically
+**What was built:**
+
+1. *SIGTERM/SIGINT signal handler.* Generated `IpcSignalHandler` in `cpp/amc/ipc.cpp` — calls `IpcCleanup()` then `_exit(1)`. Both async-signal-safe. Hand-written IpcInit installs via `sigaction`. Socket cleaned up on kill, not just normal exit.
+
+2. *BindUnix error checking.* IpcInit now checks `BindUnix()` return value, calls `FatalErrorExit` with socket path on failure.
+
+3. *Zeroterm fix.* IpcCleanup was calling `unlink(ch_elems)` on a non-null-terminated cstring. Fixed generator to use `Zeroterm()`. Hand-written IpcInit also calls `Zeroterm()` after assignment to ensure the string is pre-terminated for the signal handler.
+
+4. *Second namespace: samp_meng.* Full IPC + state dump enabled for the sample matching engine. 29 schema records added (nsdump, nsipc, FIpcconn, Tpool, Llist, fbuf, dispctx, dispatch, command flags). Hand-written `IpcInit`/`IpcAccept`/`Ipc_RequestStateDump` in `cpp/samp_meng/ipc.cpp`. Main() restructured with `-dump`/`-ipc`/normal branching.
+
+**Stale socket detection deferred:** PID-based naming (`/tmp/<ns>.<pid>.sock`) makes collisions nearly impossible. The existing `unlink`-before-`bind` in `BindUnix` handles stale sockets from crashed processes at the same PID. Connect probe adds complexity without value for PID-based paths.
+
+**Lessons learned:**
+
+7. *cstring is NOT null-terminated.* `ch_elems` cannot be passed to C functions that expect `const char*`. Use `Zeroterm()` to null-terminate, or pass `(ch_elems, ch_n)` pairs. This was a latent bug in the original IpcCleanup.
+
+8. *dispatch `textcall:Y` vs `read:Y`.* The `textcall` flag generates `DispatchText(ctx, line)` with a context parameter — needed for IPC dispatch where the handler needs the connection. `read:Y` generates `ReadStrptrMaybe(str, buf)` without context. The original acr_nav dispatch used `textcall:Y`; samp_meng initially had `read:Y` which generated the wrong dispatch functions.
+
+9. *`dispctx` record required.* The dispatch context type (`dmmeta.dispctx`) must be declared for `textcall` dispatches. Without it, `DispatchText` is not generated even when `textcall:Y` is set.
+
+**Key files:** `cpp/amc/ipc.cpp` (generator), `cpp/acr_nav/ipc.cpp`, `cpp/samp_meng/ipc.cpp`, `cpp/samp_meng/samp_meng.cpp`.
 
 ### Phase 3.3 -- TUI + IPC integration
 

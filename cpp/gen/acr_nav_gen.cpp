@@ -8582,7 +8582,14 @@ void acr_nav::cd_ipcconn_eof_Step() {
 
 // --- acr_nav...IpcCleanup
 void acr_nav::IpcCleanup() {
-    unlink(acr_nav::_db.ipc_socket_path.ch_elems);
+    unlink(Zeroterm(acr_nav::_db.ipc_socket_path));
+}
+
+// --- acr_nav...IpcSignalHandler
+void acr_nav::IpcSignalHandler(int sig) {
+    (void)sig;
+    acr_nav::IpcCleanup();
+    _exit(1);
 }
 
 // --- acr_nav...main

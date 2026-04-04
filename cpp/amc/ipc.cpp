@@ -94,7 +94,19 @@ void amc::gen_ns_ipc() {
             func.extrn = false;
             func.ret = "void";
             func.proto = "IpcCleanup()";
-            Ins(&R, func.body, "unlink($ns::_db.ipc_socket_path.ch_elems);");
+            Ins(&R, func.body, "unlink(Zeroterm($ns::_db.ipc_socket_path));");
+        }
+
+        // IpcSignalHandler -- clean up socket on SIGTERM/SIGINT
+        {
+            amc::FFunc &func = amc::ind_func_GetOrCreate(Subst(R, "$ns...IpcSignalHandler"));
+            func.glob = true;
+            func.extrn = false;
+            func.ret = "void";
+            func.proto = "IpcSignalHandler(int sig)";
+            Ins(&R, func.body, "(void)sig;");
+            Ins(&R, func.body, "$ns::IpcCleanup();");
+            Ins(&R, func.body, "_exit(1);");
         }
     }
 }

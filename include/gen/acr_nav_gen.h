@@ -4351,6 +4351,8 @@ void                 IpcProcessLine(acr_nav::FIpcconn& conn, algo::strptr line);
 void                 cd_ipcconn_eof_Step();
 // func:acr_nav...IpcCleanup
 void                 IpcCleanup();
+// func:acr_nav...IpcSignalHandler
+void                 IpcSignalHandler(int sig);
 } // gen:ns_func
 // func:acr_nav...main
 int                  main(int argc, char **argv);

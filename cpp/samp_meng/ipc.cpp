@@ -14,62 +14,62 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// Target: acr_nav (exe) -- TUI schema explorer for browsing ctypes, fields, and cross-references
+// Target: samp_meng (exe) -- Sample matching engine
 // Exceptions: yes
-// Source: cpp/acr_nav/ipc.cpp
+// Source: cpp/samp_meng/ipc.cpp
 //
 
 #include "include/algo.h"
-#include "include/acr_nav.h"
+#include "include/samp_meng.h"
 #include "include/lib_netio.h"
 
 // IpcInit -- create Unix domain socket, bind, listen, register with event loop
-void acr_nav::IpcInit() {
+void samp_meng::IpcInit() {
     algo::Fildes fd = lib_netio::CreateUnixSocket();
     if (!ValidQ(fd)) {
-        FatalErrorExit("acr_nav.socket_create_failed");
+        FatalErrorExit("samp_meng.socket_create_failed");
     }
     tempstr path;
-    path << "/tmp/acr_nav." << getpid() << ".sock";
+    path << "/tmp/samp_meng." << getpid() << ".sock";
     if (!lib_netio::BindUnix(fd, path)) {
-        FatalErrorExit(Zeroterm(tempstr() << "acr_nav.bind_failed  path:" << path));
+        FatalErrorExit(Zeroterm(tempstr() << "samp_meng.bind_failed  path:" << path));
     }
     if (!lib_netio::Listen(fd, 5)) {
-        FatalErrorExit(Zeroterm(tempstr() << "acr_nav.listen_failed  path:" << path));
+        FatalErrorExit(Zeroterm(tempstr() << "samp_meng.listen_failed  path:" << path));
     }
     algo::SetBlockingMode(fd, false);
     _db.ipc_socket_path = path;
     Zeroterm(_db.ipc_socket_path); // ensure null-terminated for signal handler
     _db.ipc_listen.fildes = fd;
-    callback_Set0(_db.ipc_listen, acr_nav::IpcAccept);
+    callback_Set0(_db.ipc_listen, samp_meng::IpcAccept);
     algo::IOEvtFlags flags;
     read_Set(flags, true);
     algo_lib::IohookAdd(_db.ipc_listen, flags);
-    atexit(acr_nav::IpcCleanup);
+    atexit(samp_meng::IpcCleanup);
     struct sigaction sa;
-    sa.sa_handler = acr_nav::IpcSignalHandler;
+    sa.sa_handler = samp_meng::IpcSignalHandler;
     sigemptyset(&sa.sa_mask);
     sa.sa_flags = 0;
     sigaction(SIGTERM, &sa, NULL);
     sigaction(SIGINT, &sa, NULL);
 }
 
-// Ipc_RequestStateDump -- dispatch handler for state dump request
-void acr_nav::Ipc_RequestStateDump(acr_nav::FIpcconn& conn, acr_nav::RequestStateDump& cmd) {
+// Ipc_RequestStateDump -- handle state dump request from IPC client
+void samp_meng::Ipc_RequestStateDump(samp_meng::FIpcconn& conn, samp_meng::RequestStateDump& cmd) {
     algo_lib::Regx filter;
     Regx_ReadSql(filter, cmd.filter, true);
     algo::cstring out;
-    acr_nav::StateDump(out, filter);
+    samp_meng::StateDump(out, filter);
     ssize_t nw = write(conn.outfd.value, out.ch_elems, out.ch_n);
     (void)nw;
 }
 
 // IpcAccept -- accept incoming connection, allocate FIpcconn, start reading
-void acr_nav::IpcAccept() {
+void samp_meng::IpcAccept() {
     algo::Fildes client_fd = lib_netio::AcceptUnix(_db.ipc_listen.fildes);
     if (ValidQ(client_fd)) {
         algo::SetBlockingMode(client_fd, false);
-        acr_nav::FIpcconn& conn = acr_nav::ipcconn_Alloc();
+        samp_meng::FIpcconn& conn = samp_meng::ipcconn_Alloc();
         conn.outfd = client_fd;
         in_BeginRead(conn, client_fd);
         ipcconn_XrefMaybe(conn);

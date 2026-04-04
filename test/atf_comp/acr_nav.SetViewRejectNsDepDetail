@@ -2,7 +2,7 @@ acr_nav.Ack  ack:acr_nav.SetView  ok:N  ctype:""  viewmode:help  navstack_depth:
 
 acr_nav.Ack  ack:acr_nav.Navigate  ok:N  ctype:""  viewmode:help  navstack_depth:0  msg:"namespace-scoped viewmode is context-sensitive"
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1420  n_ctype:1421  n_field:5712  viewmode:help  breadcrumb:""  filtertarget:ctype  hints:"Esc/?:dismiss  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1422  n_ctype:1423  n_field:5722  viewmode:help  breadcrumb:""  filtertarget:ctype  hints:"Esc/?:dismiss  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:83  sel_value:""
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0

@@ -847,7 +847,7 @@ dmmeta.ctypelen  ctype:command.mdbg  len:168  alignment:8  padbytes:20  plaindat
 dmmeta.ctypelen  ctype:command.mysql2ssim  len:72  alignment:8  padbytes:19  plaindata:N
 dmmeta.ctypelen  ctype:command.orgfile  len:96  alignment:8  padbytes:6  plaindata:N
 dmmeta.ctypelen  ctype:command.samp_make  len:88  alignment:8  padbytes:14  plaindata:N
-dmmeta.ctypelen  ctype:command.samp_meng  len:16  alignment:8  padbytes:0  plaindata:N
+dmmeta.ctypelen  ctype:command.samp_meng  len:40  alignment:8  padbytes:7  plaindata:N
 dmmeta.ctypelen  ctype:command.samp_regx  len:56  alignment:8  padbytes:2  plaindata:N
 dmmeta.ctypelen  ctype:command.sandbox  len:144  alignment:8  padbytes:13  plaindata:N
 dmmeta.ctypelen  ctype:command.src_func  len:480  alignment:8  padbytes:5  plaindata:N
@@ -1242,8 +1242,9 @@ dmmeta.ctypelen  ctype:samp_make.FTargrec  len:232  alignment:8  padbytes:0  pla
 dmmeta.ctypelen  ctype:samp_make.FTargsrc  len:224  alignment:8  padbytes:5  plaindata:N
 dmmeta.ctypelen  ctype:samp_meng.CancelOrderMsg  len:10  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:samp_meng.CancelReqMsg  len:10  alignment:1  padbytes:0  plaindata:Y
-dmmeta.ctypelen  ctype:samp_meng.FDb  len:1040  alignment:8  padbytes:20  plaindata:N
+dmmeta.ctypelen  ctype:samp_meng.FDb  len:1160  alignment:8  padbytes:28  plaindata:N
 dmmeta.ctypelen  ctype:samp_meng.FFdin  len:136  alignment:8  padbytes:5  plaindata:N
+dmmeta.ctypelen  ctype:samp_meng.FIpcconn  len:112  alignment:8  padbytes:1  plaindata:N
 dmmeta.ctypelen  ctype:samp_meng.FOrder  len:112  alignment:8  padbytes:12  plaindata:N
 dmmeta.ctypelen  ctype:samp_meng.FOrdq  len:48  alignment:8  padbytes:14  plaindata:N
 dmmeta.ctypelen  ctype:samp_meng.FSymbol  len:40  alignment:8  padbytes:0  plaindata:N
@@ -1259,6 +1260,7 @@ dmmeta.ctypelen  ctype:samp_meng.NewUserMsg  len:6  alignment:1  padbytes:0  pla
 dmmeta.ctypelen  ctype:samp_meng.NewUserReqMsg  len:6  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:samp_meng.OrderTradeMsg  len:22  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:samp_meng.Ordkey  len:16  alignment:8  padbytes:0  plaindata:Y
+dmmeta.ctypelen  ctype:samp_meng.RequestStateDump  len:16  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:samp_meng.Symbol  len:8  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:samp_meng.TextMsg  len:2  alignment:1  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:samp_regx.FDb  len:64  alignment:8  padbytes:7  plaindata:N

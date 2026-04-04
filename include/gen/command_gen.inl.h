@@ -2202,6 +2202,8 @@ inline  command::samp_make_proc::~samp_make_proc() {
 // Set all fields to initial values.
 inline void command::samp_meng_Init(command::samp_meng& parent) {
     parent.in = algo::strptr("data");
+    parent.ipc = bool(false);
+    parent.dump = algo::strptr("");
 }
 
 // --- command.samp_meng..Ctor

@@ -96,7 +96,7 @@ namespace acr_nav { // update-hdr
     //     (user-implemented function, prototype is in amc-generated header)
     // void IpcInit();
 
-    // IPC dispatch handler: request state dump
+    // Ipc_RequestStateDump -- dispatch handler for state dump request
     // void Ipc_RequestStateDump(acr_nav::FIpcconn& conn, acr_nav::RequestStateDump& cmd); // dispatch_msg:acr_nav.Ipc/acr_nav.RequestStateDump
 
     // IpcAccept -- accept incoming connection, allocate FIpcconn, start reading

@@ -405,6 +405,118 @@ inline i32 samp_meng::ind_user_N() {
     return _db.ind_user_n;
 }
 
+// --- samp_meng.FDb.cd_ipcconn_read.EmptyQ
+// Return true if index is empty
+inline bool samp_meng::cd_ipcconn_read_EmptyQ() {
+    return _db.cd_ipcconn_read_head == NULL;
+}
+
+// --- samp_meng.FDb.cd_ipcconn_read.First
+// If index empty, return NULL. Otherwise return pointer to first element in index
+inline samp_meng::FIpcconn* samp_meng::cd_ipcconn_read_First() {
+    samp_meng::FIpcconn *row = NULL;
+    row = _db.cd_ipcconn_read_head;
+    return row;
+}
+
+// --- samp_meng.FDb.cd_ipcconn_read.InLlistQ
+// Return true if row is in the linked list, false otherwise
+inline bool samp_meng::cd_ipcconn_read_InLlistQ(samp_meng::FIpcconn& row) {
+    bool result = false;
+    result = !(row.cd_ipcconn_read_next == (samp_meng::FIpcconn*)-1);
+    return result;
+}
+
+// --- samp_meng.FDb.cd_ipcconn_read.Last
+// If index empty, return NULL. Otherwise return pointer to last element in index
+inline samp_meng::FIpcconn* samp_meng::cd_ipcconn_read_Last() {
+    samp_meng::FIpcconn *row = NULL;
+    row = _db.cd_ipcconn_read_head ? _db.cd_ipcconn_read_head->cd_ipcconn_read_prev : NULL;
+    return row;
+}
+
+// --- samp_meng.FDb.cd_ipcconn_read.N
+// Return number of items in the linked list
+inline i32 samp_meng::cd_ipcconn_read_N() {
+    return _db.cd_ipcconn_read_n;
+}
+
+// --- samp_meng.FDb.cd_ipcconn_read.Next
+// Return pointer to next element in the list
+inline samp_meng::FIpcconn* samp_meng::cd_ipcconn_read_Next(samp_meng::FIpcconn &row) {
+    return row.cd_ipcconn_read_next;
+}
+
+// --- samp_meng.FDb.cd_ipcconn_read.Prev
+// Return pointer to previous element in the list
+inline samp_meng::FIpcconn* samp_meng::cd_ipcconn_read_Prev(samp_meng::FIpcconn &row) {
+    return row.cd_ipcconn_read_prev;
+}
+
+// --- samp_meng.FDb.cd_ipcconn_read.qLast
+// Return reference to last element in the index. No bounds checking.
+inline samp_meng::FIpcconn& samp_meng::cd_ipcconn_read_qLast() {
+    samp_meng::FIpcconn *row = NULL;
+    row = _db.cd_ipcconn_read_head ? _db.cd_ipcconn_read_head->cd_ipcconn_read_prev : NULL;
+    return *row;
+}
+
+// --- samp_meng.FDb.cd_ipcconn_eof.EmptyQ
+// Return true if index is empty
+inline bool samp_meng::cd_ipcconn_eof_EmptyQ() {
+    return _db.cd_ipcconn_eof_head == NULL;
+}
+
+// --- samp_meng.FDb.cd_ipcconn_eof.First
+// If index empty, return NULL. Otherwise return pointer to first element in index
+inline samp_meng::FIpcconn* samp_meng::cd_ipcconn_eof_First() {
+    samp_meng::FIpcconn *row = NULL;
+    row = _db.cd_ipcconn_eof_head;
+    return row;
+}
+
+// --- samp_meng.FDb.cd_ipcconn_eof.InLlistQ
+// Return true if row is in the linked list, false otherwise
+inline bool samp_meng::cd_ipcconn_eof_InLlistQ(samp_meng::FIpcconn& row) {
+    bool result = false;
+    result = !(row.cd_ipcconn_eof_next == (samp_meng::FIpcconn*)-1);
+    return result;
+}
+
+// --- samp_meng.FDb.cd_ipcconn_eof.Last
+// If index empty, return NULL. Otherwise return pointer to last element in index
+inline samp_meng::FIpcconn* samp_meng::cd_ipcconn_eof_Last() {
+    samp_meng::FIpcconn *row = NULL;
+    row = _db.cd_ipcconn_eof_head ? _db.cd_ipcconn_eof_head->cd_ipcconn_eof_prev : NULL;
+    return row;
+}
+
+// --- samp_meng.FDb.cd_ipcconn_eof.N
+// Return number of items in the linked list
+inline i32 samp_meng::cd_ipcconn_eof_N() {
+    return _db.cd_ipcconn_eof_n;
+}
+
+// --- samp_meng.FDb.cd_ipcconn_eof.Next
+// Return pointer to next element in the list
+inline samp_meng::FIpcconn* samp_meng::cd_ipcconn_eof_Next(samp_meng::FIpcconn &row) {
+    return row.cd_ipcconn_eof_next;
+}
+
+// --- samp_meng.FDb.cd_ipcconn_eof.Prev
+// Return pointer to previous element in the list
+inline samp_meng::FIpcconn* samp_meng::cd_ipcconn_eof_Prev(samp_meng::FIpcconn &row) {
+    return row.cd_ipcconn_eof_prev;
+}
+
+// --- samp_meng.FDb.cd_ipcconn_eof.qLast
+// Return reference to last element in the index. No bounds checking.
+inline samp_meng::FIpcconn& samp_meng::cd_ipcconn_eof_qLast() {
+    samp_meng::FIpcconn *row = NULL;
+    row = _db.cd_ipcconn_eof_head ? _db.cd_ipcconn_eof_head->cd_ipcconn_eof_prev : NULL;
+    return *row;
+}
+
 // --- samp_meng.FDb.fdin_curs.Reset
 // cursor points to valid item
 inline void samp_meng::_db_fdin_curs_Reset(_db_fdin_curs &curs, samp_meng::FDb &parent) {
@@ -538,6 +650,64 @@ inline samp_meng::FUser& samp_meng::_db_user_curs_Access(_db_user_curs &curs) {
     return user_qFind(u64(curs.index));
 }
 
+// --- samp_meng.FDb.cd_ipcconn_read_curs.Reset
+// cursor points to valid item
+inline void samp_meng::_db_cd_ipcconn_read_curs_Reset(_db_cd_ipcconn_read_curs &curs, samp_meng::FDb &parent) {
+    curs.row = parent.cd_ipcconn_read_head;
+    curs.head = &parent.cd_ipcconn_read_head;
+}
+
+// --- samp_meng.FDb.cd_ipcconn_read_curs.ValidQ
+// cursor points to valid item
+inline bool samp_meng::_db_cd_ipcconn_read_curs_ValidQ(_db_cd_ipcconn_read_curs &curs) {
+    return curs.row != NULL;
+}
+
+// --- samp_meng.FDb.cd_ipcconn_read_curs.Next
+// proceed to next item
+inline void samp_meng::_db_cd_ipcconn_read_curs_Next(_db_cd_ipcconn_read_curs &curs) {
+    samp_meng::FIpcconn *next = (*curs.row).cd_ipcconn_read_next;
+    curs.row = next;
+    if (curs.row == *curs.head) {
+        curs.row = NULL;
+    }
+}
+
+// --- samp_meng.FDb.cd_ipcconn_read_curs.Access
+// item access
+inline samp_meng::FIpcconn& samp_meng::_db_cd_ipcconn_read_curs_Access(_db_cd_ipcconn_read_curs &curs) {
+    return *curs.row;
+}
+
+// --- samp_meng.FDb.cd_ipcconn_eof_curs.Reset
+// cursor points to valid item
+inline void samp_meng::_db_cd_ipcconn_eof_curs_Reset(_db_cd_ipcconn_eof_curs &curs, samp_meng::FDb &parent) {
+    curs.row = parent.cd_ipcconn_eof_head;
+    curs.head = &parent.cd_ipcconn_eof_head;
+}
+
+// --- samp_meng.FDb.cd_ipcconn_eof_curs.ValidQ
+// cursor points to valid item
+inline bool samp_meng::_db_cd_ipcconn_eof_curs_ValidQ(_db_cd_ipcconn_eof_curs &curs) {
+    return curs.row != NULL;
+}
+
+// --- samp_meng.FDb.cd_ipcconn_eof_curs.Next
+// proceed to next item
+inline void samp_meng::_db_cd_ipcconn_eof_curs_Next(_db_cd_ipcconn_eof_curs &curs) {
+    samp_meng::FIpcconn *next = (*curs.row).cd_ipcconn_eof_next;
+    curs.row = next;
+    if (curs.row == *curs.head) {
+        curs.row = NULL;
+    }
+}
+
+// --- samp_meng.FDb.cd_ipcconn_eof_curs.Access
+// item access
+inline samp_meng::FIpcconn& samp_meng::_db_cd_ipcconn_eof_curs_Access(_db_cd_ipcconn_eof_curs &curs) {
+    return *curs.row;
+}
+
 // --- samp_meng.FFdin.in.Max
 // Return max. number of bytes in the buffer.
 inline i32 samp_meng::in_Max(samp_meng::FFdin& fdin) {
@@ -560,6 +730,30 @@ inline  samp_meng::FFdin::FFdin() {
 // --- samp_meng.FFdin..Dtor
 inline  samp_meng::FFdin::~FFdin() {
     samp_meng::FFdin_Uninit(*this);
+}
+
+// --- samp_meng.FIpcconn.in.Max
+// Return max. number of bytes in the buffer.
+inline i32 samp_meng::in_Max(samp_meng::FIpcconn& ipcconn) {
+    return ipcconn.in_max;
+}
+
+// --- samp_meng.FIpcconn.in.N
+// Return number of bytes in the buffer.
+inline i32 samp_meng::in_N(samp_meng::FIpcconn& ipcconn) {
+    return ipcconn.in_end - ipcconn.in_start;
+}
+
+// --- samp_meng.FIpcconn..Ctor
+inline  samp_meng::FIpcconn::FIpcconn() {
+    samp_meng::FIpcconn_Init(*this);
+    // added because samp_meng.FIpcconn.in (Fbuf) does not need initialization
+    // coverity[uninit_member]
+}
+
+// --- samp_meng.FIpcconn..Dtor
+inline  samp_meng::FIpcconn::~FIpcconn() {
+    samp_meng::FIpcconn_Uninit(*this);
 }
 
 // --- samp_meng.I64Price8.value.qSetDouble
@@ -1210,6 +1404,45 @@ inline  samp_meng::InCase::InCase(samp_meng_InCaseEnum arg) {
     this->value = u32(arg);
 }
 
+// --- samp_meng.IpcCase.value.GetEnum
+// Get value of field as enum type
+inline samp_meng_IpcCaseEnum samp_meng::value_GetEnum(const samp_meng::IpcCase& parent) {
+    return samp_meng_IpcCaseEnum(parent.value);
+}
+
+// --- samp_meng.IpcCase.value.SetEnum
+// Set value of field from enum type.
+inline void samp_meng::value_SetEnum(samp_meng::IpcCase& parent, samp_meng_IpcCaseEnum rhs) {
+    parent.value = u32(rhs);
+}
+
+// --- samp_meng.IpcCase.value.Cast
+inline  samp_meng::IpcCase::operator samp_meng_IpcCaseEnum() const {
+    return samp_meng_IpcCaseEnum((*this).value);
+}
+
+// --- samp_meng.IpcCase..Init
+// Set all fields to initial values.
+inline void samp_meng::IpcCase_Init(samp_meng::IpcCase& parent) {
+    parent.value = u32(0);
+}
+
+// --- samp_meng.IpcCase..Ctor
+inline  samp_meng::IpcCase::IpcCase() {
+    samp_meng::IpcCase_Init(*this);
+}
+
+// --- samp_meng.IpcCase..FieldwiseCtor
+inline  samp_meng::IpcCase::IpcCase(u32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- samp_meng.IpcCase..EnumCtor
+inline  samp_meng::IpcCase::IpcCase(samp_meng_IpcCaseEnum arg) {
+    this->value = u32(arg);
+}
+
 // --- samp_meng.MassCancelReqMsg.base.Castdown
 // Check if samp_meng::MsgHeader is an instance of MassCancelReqMsg by checking the type field
 // If it is, return the pointer of target type.
@@ -1752,6 +1985,10 @@ inline  samp_meng::OrderTradeMsg::OrderTradeMsg(u64 in_order, u32 in_qty, samp_m
  {
     this->type = u8(4);
     this->length = u8((ssizeof(*this) + (0)) / (1));
+}
+
+// --- samp_meng.RequestStateDump..Ctor
+inline  samp_meng::RequestStateDump::RequestStateDump() {
 }
 
 // --- samp_meng.TextMsg.base.Castdown

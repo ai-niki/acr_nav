@@ -20,7 +20,6 @@
 //
 
 #include "include/algo.h"
-#include "include/algo.h"
 #include "include/samp_meng.h"
 
 void samp_meng::In_TextMsg(samp_meng::TextMsg &) {
@@ -148,10 +147,26 @@ void samp_meng::cd_fdin_read_Step() {
 }
 
 void samp_meng::Main() {
-    samp_meng::FFdin &fdin = fdin_Alloc();
-    fdin_XrefMaybe(fdin);
-    algo::Fildes fd(0);
-    algo::SetBlockingMode(fd,false);
-    in_BeginRead(fdin,fd);
-    samp_meng::MainLoop();
+    bool do_dump = ch_N(_db.cmdline.dump) > 0;
+    if (_db.cmdline.ipc) {
+        samp_meng::IpcInit();
+    }
+    if (do_dump) {
+        algo_lib::Regx filter;
+        Regx_ReadSql(filter, _db.cmdline.dump, true);
+        algo::cstring out;
+        samp_meng::StateDump(out, filter);
+        prlog(out);
+    } else if (_db.cmdline.ipc) {
+        // IPC-only mode: no stdin, just listen for socket connections
+        samp_meng::MainLoop();
+    } else {
+        // Normal mode: read messages from stdin
+        samp_meng::FFdin &fdin = fdin_Alloc();
+        fdin_XrefMaybe(fdin);
+        algo::Fildes fd(0);
+        algo::SetBlockingMode(fd, false);
+        in_BeginRead(fdin, fd);
+        samp_meng::MainLoop();
+    }
 }
