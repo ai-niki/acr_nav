@@ -602,6 +602,7 @@ struct FDb { // acr_nav.FDb
     i32                        cd_ipcconn_read_n;                // zero-terminated doubly linked list
     acr_nav::FIpcconn*         cd_ipcconn_eof_head;              // zero-terminated doubly linked list
     i32                        cd_ipcconn_eof_n;                 // zero-terminated doubly linked list
+    algo_lib::FIohook          stdin_iohook;                     // Iohook for stdin in headless+ipc mode
     acr_nav::trace             trace;                            //
 };
 

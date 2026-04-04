@@ -177,19 +177,62 @@ Activation: `-ipc` flag enters `MainLoop()` as a pure IPC server. Headless/TUI m
 
 4. *Custom event loops bypass IPC.* HeadlessMain uses blocking `read()` in a while loop. TUI mode uses its own rendering loop. Neither calls `algo_lib::MainLoop()` / `giveup_time_Step()`. IPC step functions only fire from MainLoop. Integration requires reworking those loops.
 
-### Phase 3.1 -- IPC + headless integration (next)
+### Phase 3.1 -- IPC + headless integration (done)
 
-Wire the IPC listen socket into HeadlessMain's event loop. Replace the blocking `read()` loop with non-blocking stdin + `algo_lib::MainLoop()`, or poll the IPC socket fd alongside stdin in the existing loop. Then an agent can send headless commands (SendKey, Navigate) on stdin AND poll StateDump via the IPC socket on the same running instance. This is the "live debugger demo" -- watch pool counts change as you drive the program.
+When `-headless -ipc` are both set, stdin is registered as a non-blocking FIohook with epoll alongside the IPC listen socket. Both are polled by `algo_lib::MainLoop()`. Stdin lines dispatch through `DispatchHeadlessCommand()` (all 9 command types). IPC connections dispatch through generated `IpcProcessLine()` (RequestStateDump).
 
-**Why this is highest value:** `-ipc` alone gives you a bare server with loaded data but no application state. Combined with headless mode, you inspect a program that's actually doing work -- panels populated, navstack growing, filters applied. That's what agent testing needs.
+**What was built:**
 
-**Scope:** Modify `HeadlessMain()` in `cpp/acr_nav/main.cpp` to integrate with algo_lib's event loop when `-ipc` is active. The IPC infrastructure (socket, fbuf, steps) is already there -- it just needs the main loop to poll it.
+Schema: `acr_nav.FDb.stdin_iohook` (Val FIohook) for stdin epoll registration.
 
-### Phase 3.2 -- Hardening
+Code: `StdinReadCallback()` — edge-triggered epoll callback that drains stdin, feeds lines through `DispatchHeadlessCommand()`. `HeadlessIpcInit()` — sets stdin to non-blocking, registers iohook, initializes panels. `Main()` branching: new `ipc && headless` branch before standalone `ipc`, calls `HeadlessIpcInit()` then `MainLoop()`.
+
+**Key files:** `cpp/acr_nav/main.cpp` (StdinReadCallback, HeadlessIpcInit, Main branching).
+
+**Lessons learned:**
+
+5. *Edge-triggered epoll requires complete drain.* The callback must read until EAGAIN or EOF. If a quit command sets `_db.running = false` mid-drain, the callback must still call `ReqExitMainLoop()` before returning, or MainLoop hangs waiting for an epoll event that will never fire.
+
+6. *HeadlessMain preserved for standalone headless.* The blocking `read()` loop is simpler and correct when IPC isn't needed. No reason to force everything through epoll.
+
+### Phase 3.2 -- Hardening (next)
 
 - Signal handler for SIGTERM to unlink socket (atexit doesn't fire on kill)
 - Stale socket detection: if `bind()` fails, try `connect()` to check if the socket is stale, unlink and retry
 - Second namespace: enable nsipc on another program (e.g. samp_meng) to validate the generator works generically
+
+### Phase 3.3 -- TUI + IPC integration
+
+Enable IPC on a running TUI instance so an external process can connect and poll StateDump while the user navigates interactively. This is A's side of the "live debugger demo."
+
+Replace the TUI's blocking `ReadKeyName()` loop (`cpp/acr_nav/main.cpp:754-766`) with epoll-driven `MainLoop()`. Same pattern as Phase 3.1: register stdin as a non-blocking FIohook, register the IPC listen socket alongside it, render after each key dispatch.
+
+**Harder than Phase 3.1 because:**
+
+- **Raw terminal mode.** `ReadKeyName()` parses multi-byte ANSI escape sequences (arrows, function keys). A single keypress may arrive as 1-6 bytes across multiple reads. The callback must accumulate bytes and parse sequences, not assume one read = one key.
+- **SIGWINCH.** Currently the signal handler sets a flag and interrupts blocking `read()` (SA_RESTART disabled). With epoll, SIGWINCH must either use `signalfd` or set the flag and let the next epoll wakeup handle it.
+- **Rendering cycle.** Must render after each key dispatch, not on a timer. The callback processes a key, then writes the rendered frame to stdout.
+
+**Scope:** Modify the TUI branch in `Main()`. When `-ipc` is set, use `MainLoop()` instead of the blocking `ReadKeyName()` loop. Add a `TuiKeyCallback()` that reads raw bytes, parses escape sequences, calls `ProcessKey()`, and renders. When `-ipc` is not set, the existing blocking loop is preserved (simpler, correct, no need to change).
+
+**Result:** `acr_nav -ipc` in TUI mode — user navigates normally, external process connects to socket and polls state. The program being inspected doesn't know or care that it's being watched.
+
+### Phase 3.4 -- Live data viewmode (B's side)
+
+A new viewmode in acr_nav that connects to another running instance's IPC socket and displays its pool state. This is B's side of the "live debugger demo."
+
+B connects to A's socket (`/tmp/acr_nav.<pid>.sock`), sends `RequestStateDump`, parses the ssim response, and displays it in the navigator. B already knows A's types — they're in the shared schema (dmmeta). No dynamic schema loading needed.
+
+**What's needed:**
+
+- A `-connect:<socket_path>` command-line flag (or discover via `ls /tmp/acr_nav.*.sock`)
+- A poll timer that sends `RequestStateDump` at ~100ms intervals
+- A viewmode that shows live pool records instead of schema structure
+- Parse incoming ssim tuples into displayable rows, grouped by ctype
+
+**What's free:** B loads all of dmmeta at startup. `acr_nav.FPanel`, `acr_nav.FNavstack`, `acr_nav.FCtype` are known types. The ssim format is the same format acr_nav already parses. The navigator already knows how to display ctypes and their fields.
+
+**Result:** Two terminal panes. Left: acr_nav A, user navigating. Right: acr_nav B, showing A's FNavstack growing, FPanel.sel updating, FFilter changing — live. The schema is the instrumentation.
 
 ### Phase 4 -- Input interface (`dmmeta.rtquery`)
 

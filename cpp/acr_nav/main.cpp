@@ -682,6 +682,70 @@ static void DispatchHeadlessCommand(algo::strptr line, int lineno) {
 
 // -----------------------------------------------------------------------------
 
+static algo::LineBuf _stdin_linebuf;
+static int _stdin_lineno;
+
+// Epoll callback for stdin in headless+ipc mode.
+// Edge-triggered: must drain the fd completely on each invocation.
+static void StdinReadCallback() {
+    bool done = false;
+    bool shutdown = false;
+    while (!done) {
+        char buf[4096];
+        ssize_t nr = read(STDIN_FILENO, buf, sizeof(buf));
+        if (nr > 0) {
+            algo::LinebufBegin(_stdin_linebuf, algo::memptr((u8*)buf, nr), false);
+            algo::strptr line;
+            while (acr_nav::_db.running && algo::LinebufNext(_stdin_linebuf, line)) {
+                ++_stdin_lineno;
+                DispatchHeadlessCommand(line, _stdin_lineno);
+            }
+            // Quit command sets _db.running = false -- stop draining
+            done = !acr_nav::_db.running;
+            shutdown = done;
+        } else if (nr == 0) {
+            // EOF -- flush partial line, emit final output, request exit
+            algo::LinebufBegin(_stdin_linebuf, algo::memptr(NULL, 0), true);
+            algo::strptr line;
+            while (algo::LinebufNext(_stdin_linebuf, line)) {
+                ++_stdin_lineno;
+                DispatchHeadlessCommand(line, _stdin_lineno);
+            }
+            HeadlessOutput();
+            algo_lib::ReqExitMainLoop();
+            done = true;
+        } else {
+            // nr < 0
+            if (errno == EAGAIN || errno == EWOULDBLOCK) {
+                done = true; // no more data right now
+            } else {
+                HeadlessOutput();
+                algo_lib::ReqExitMainLoop();
+                done = true;
+            }
+        }
+    }
+    if (shutdown) {
+        HeadlessOutput();
+        algo_lib::ReqExitMainLoop();
+    }
+}
+
+// Set up stdin as a non-blocking iohook for headless+ipc combined mode
+static void HeadlessIpcInit() {
+    InitPanels();
+    acr_nav::_db.running = true;
+    algo::SetBlockingMode(algo::Fildes(STDIN_FILENO), false);
+    acr_nav::_db.stdin_iohook.fildes = algo::Fildes(STDIN_FILENO);
+    acr_nav::_db.stdin_iohook.nodelete = true;
+    callback_Set0(acr_nav::_db.stdin_iohook, StdinReadCallback);
+    algo::IOEvtFlags flags;
+    read_Set(flags, true);
+    algo_lib::IohookAdd(acr_nav::_db.stdin_iohook, flags);
+}
+
+// -----------------------------------------------------------------------------
+
 static void HeadlessMain() {
     InitPanels();
     acr_nav::_db.running = true;
@@ -730,6 +794,9 @@ void acr_nav::Main() {
         algo::cstring out;
         StateDump(out, filter);
         prlog(out);
+    } else if (_db.cmdline.ipc && headless) {
+        HeadlessIpcInit();
+        acr_nav::MainLoop();
     } else if (_db.cmdline.ipc) {
         acr_nav::MainLoop();
     } else if (headless) {

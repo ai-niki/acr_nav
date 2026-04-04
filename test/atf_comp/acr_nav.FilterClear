@@ -1,4 +1,4 @@
-acr_nav.Screen  mode:filter  focus:ctype_list  filter:abc  navstack_depth:0  n_sel_ctype:1  n_ctype:1421  n_field:5709  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"Enter:accept  Tab:target  Esc:cancel"  sel_nav_col:0
+acr_nav.Screen  mode:filter  focus:ctype_list  filter:abc  navstack_depth:0  n_sel_ctype:1  n_ctype:1421  n_field:5710  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"Enter:accept  Tab:target  Esc:cancel"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:lib_sqlite
 acr_nav.VisibleLeftItem  row:0  value:lib_sqlite  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:7  sel_value:"Upstream (lib_sqlite imports from):"
@@ -10,7 +10,7 @@ acr_nav.VisibleLine  row:4  value:""
 acr_nav.VisibleLine  row:5  value:"Downstream (imports from lib_sqlite):"
 acr_nav.VisibleLine  row:6  value:"  (none)"
 
-acr_nav.Screen  mode:filter  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1420  n_ctype:1421  n_field:5709  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"Enter:accept  Tab:target  Esc:cancel"  sel_nav_col:0
+acr_nav.Screen  mode:filter  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1420  n_ctype:1421  n_field:5710  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"Enter:accept  Tab:target  Esc:cancel"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:83  sel_value:""
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
@@ -88,7 +88,7 @@ acr_nav.VisibleLine  row:34  value:"            fm      9 fields"
 acr_nav.VisibleLine  row:35  value:"        abt_md      8 fields"
 acr_nav.VisibleLine  row:36  value:"        acr_in      8 fields"
 
-acr_nav.Screen  mode:filter  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1420  n_ctype:1421  n_field:5709  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"Enter:accept  Tab:target  Esc:cancel"  sel_nav_col:0
+acr_nav.Screen  mode:filter  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1420  n_ctype:1421  n_field:5710  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"Enter:accept  Tab:target  Esc:cancel"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:83  sel_value:""
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0

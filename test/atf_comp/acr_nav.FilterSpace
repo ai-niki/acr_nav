@@ -1,4 +1,4 @@
-acr_nav.Screen  mode:filter  focus:ctype_list  filter:"ns de"  navstack_depth:0  n_sel_ctype:0  n_ctype:1421  n_field:5709  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"Enter:accept  Tab:target  Esc:cancel"  sel_nav_col:0
+acr_nav.Screen  mode:filter  focus:ctype_list  filter:"ns de"  navstack_depth:0  n_sel_ctype:0  n_ctype:1421  n_field:5710  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"Enter:accept  Tab:target  Esc:cancel"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:11  sel_value:"Upstream (abt imports from):"
 acr_nav.VisibleLine  row:0  value:"Upstream (abt imports from):"
@@ -13,7 +13,7 @@ acr_nav.VisibleLine  row:8  value:""
 acr_nav.VisibleLine  row:9  value:"Downstream (imports from abt):"
 acr_nav.VisibleLine  row:10  value:"  (none)"
 
-acr_nav.Screen  mode:filter  focus:ctype_list  filter:"ns de"  navstack_depth:0  n_sel_ctype:0  n_ctype:1421  n_field:5709  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"Enter:accept  Tab:target  Esc:cancel"  sel_nav_col:0
+acr_nav.Screen  mode:filter  focus:ctype_list  filter:"ns de"  navstack_depth:0  n_sel_ctype:0  n_ctype:1421  n_field:5710  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"Enter:accept  Tab:target  Esc:cancel"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:11  sel_value:"Upstream (abt imports from):"
 acr_nav.VisibleLine  row:0  value:"Upstream (abt imports from):"
