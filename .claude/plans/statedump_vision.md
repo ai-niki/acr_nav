@@ -238,6 +238,32 @@ B connects to A's socket (`/tmp/acr_nav.<pid>.sock`), sends `RequestStateDump`, 
 
 Declare program commands in ssimfiles, generate dispatch scaffolding. Currently the IPC dispatch uses direct `RequestStateDump_ReadStrptrMaybe()` -- adding a `dispatch_msg` record is a silent no-op. Refactor to dispatch `call:Y` so dispatch_msg records drive code generation. Investigate whether `dmmeta.dispatch` already covers this (10 dispatch records exist; `atf_amc.Ssimfiles` with `read:Y` generates exactly the "try-deserialize-call-handler" loop).
 
+### Phase 5 -- Second namespace: prove it generalizes
+
+Enable `nsdump` + `nsipc` on a second program to validate the generators work beyond acr_nav. acr_nav was the development vehicle — Phase 5 proves the capability is generic.
+
+**Candidate:** A long-running server or stateful program where pool inspection has real diagnostic value (see "Where the value is highest" section). `samp_meng` is a minimal option for smoke-testing the generators, but a program with meaningful runtime state is more convincing.
+
+**What "prove it works" means:**
+
+- Add `dmmeta.nsdump` and `dmmeta.nsipc` records for the target namespace
+- Add the IPC structural records (FIpcconn ctype, FDb fields, fstep, dispatch) following the acr_nav pattern
+- Write `IpcInit()` and `IpcAccept()` (extern functions, ~25 lines each — same as `cpp/acr_nav/ipc.cpp`)
+- `amc` regenerates — StateDump and IPC infrastructure appear in the target's `cpp/gen/`
+- Build, run with `-ipc`, connect from another process, get StateDump response
+- Document any generator changes needed (ideally zero — if the generator needs acr_nav-specific fixes, it's not generic yet)
+
+**Success criteria:** Adding state dump + IPC to a new program requires only ssim records + two small extern functions. Zero generator changes. The capability is a schema-level opt-in, not a code-level integration project.
+
+### Beyond Phase 5 -- Possible extensions
+
+Ideas that don't have phases yet. Each would need a use case before committing:
+
+- **Richer query filtering.** Current filter is a ctype-name regex. Field-level predicates (e.g., "show FConnection where state:idle") would let agents ask sharper questions. But this edges toward a runtime query interpreter — an anti-pattern per the vision. The consumer-side filtering via grep/agent is the intended model. Only revisit if consumer-side proves insufficient in practice.
+- **`dmmeta.rtquery` as semantic marker.** Even without Phase 4's full dispatch generation, a simple marker record saying "this program accepts RequestStateDump over IPC" would let agents discover capabilities via `acr dmmeta.rtquery ns:acr_nav` without reading source code.
+- **Differential dumps.** Send only what changed since the last poll, not the full state. Useful when B polls A at high frequency and the state is large. Would require sequence numbers or checksums per pool. Premature until Phase 3.4 reveals whether full dumps are actually a bottleneck.
+- **IpcInit/IpcAccept generation.** Currently these are extern (hand-written) because they call `lib_netio` which lives behind the gen/hand-written header boundary. If the generator could emit them directly (e.g., by adding `lib_netio` includes to the generated header), the two extern functions disappear and onboarding a new namespace becomes pure ssim records — zero hand-written code.
+
 ## Generator mechanics (verified, updated 2026-04-03)
 
 95 generators exist in `data/amcdb/gen.ssim`. Two added for state dump: `gen:ns_state_dump` (Phase 1+2) and `gen:ns_ipc` (Phase 3), both `perns:Y`. Adding a new generator requires: 1 ssimfile record, 1 C++ function, 1 targsrc record. Uniform `void()` contract. Generator ordering matters: `ns_ipc` must come after `ns_state_dump` (depends on StateDump existing) and before `ns_funcindex` (which prints function bodies).
