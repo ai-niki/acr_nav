@@ -68,6 +68,9 @@ namespace lib_netio { // update-hdr
     // Unlinks the path first in case a stale socket file exists
     bool BindUnix(algo::Fildes sock, strptr path);
 
+    // Wrapper for connect() to Unix domain socket path
+    bool ConnectUnix(algo::Fildes sock, strptr path);
+
     // send GETLINK netlink request
     bool RequestLinkDump(algo::Fildes sock);
 

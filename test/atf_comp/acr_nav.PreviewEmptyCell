@@ -1,14 +1,14 @@
 acr_nav.Ack  ack:acr_nav.Navigate  ok:Y  ctype:dmmeta.Field  viewmode:preview  navstack_depth:0  msg:""
 
-acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:0  n_sel_ctype:1422  n_ctype:1423  n_field:5722  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:1
+acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:0  n_sel_ctype:1422  n_ctype:1423  n_field:5729  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:1
 acr_nav.PanelState  panel:ctype_list  sel_row:91  scroll_offset:55  n_items:213  sel_value:dmmeta.Field
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:5722  sel_value:"                                                                            Val                                                                                                                                                     "
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:5729  sel_value:"                                                                            Val                                                                                                                                                     "
 
-acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:1  n_sel_ctype:1422  n_ctype:1423  n_field:5722  viewmode:preview  breadcrumb:"dmmeta.Field › dmmeta.Ctype"  filtertarget:ctype  hints:"↑↓←→  Backspace:back  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:1  n_sel_ctype:1422  n_ctype:1423  n_field:5729  viewmode:preview  breadcrumb:"dmmeta.Field › dmmeta.Ctype"  filtertarget:ctype  hints:"↑↓←→  Backspace:back  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:59  scroll_offset:55  n_items:213  sel_value:dmmeta.Ctype
 acr_nav.PanelState  panel:content  sel_row:880  scroll_offset:845  n_items:1423  sel_value:"dev.Arch                       System architecture                                                                                         "
 
-acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:1  n_sel_ctype:1422  n_ctype:1423  n_field:5722  viewmode:preview  breadcrumb:"dmmeta.Field › dmmeta.Ctype"  filtertarget:ctype  hints:"↑↓←→  Backspace:back  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:1  n_sel_ctype:1422  n_ctype:1423  n_field:5729  viewmode:preview  breadcrumb:"dmmeta.Field › dmmeta.Ctype"  filtertarget:ctype  hints:"↑↓←→  Backspace:back  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:59  scroll_offset:55  n_items:213  sel_value:dmmeta.Ctype
 acr_nav.VisibleLeftItem  row:55  value:dmmeta.Cppkeyword  kind:ctype  collapsed:N  n_match:0  n_record:84
 acr_nav.VisibleLeftItem  row:56  value:dmmeta.Cpptype  kind:ctype  collapsed:N  n_match:0  n_record:404

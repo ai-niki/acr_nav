@@ -622,6 +622,12 @@ struct FDb { // acr_nav.FDb
     i32                        cd_ipcconn_eof_n;                 // zero-terminated doubly linked list
     algo_lib::FIohook          stdin_iohook;                     // Iohook for stdin in headless+ipc mode
     i32                        headless_lineno;                  //   0  Current headless input line number for error reporting
+    algo_lib::FIohook          live_iohook;                      // Iohook for connected live-data socket
+    algo::cstring              live_data;                        // Last complete dump response (raw ssim lines)
+    i32                        live_generation;                  //   0  Incremented on each poll response
+    bool                       live_connected;                   //   false  True when live socket is connected
+    algo::cstring              live_error;                       // Connection error message
+    bool                       live_poll_pending;                //   false  True when request sent but response not yet received
     acr_nav::trace             trace;                            //
 };
 
@@ -4267,6 +4273,10 @@ void                 viewmode_graph_ensure_content(acr_nav::FCtype&);
 // func:acr_nav...viewmode_help_ensure_content
 // this function is 'extrn' and implemented by user
 void                 viewmode_help_ensure_content(acr_nav::FCtype&);
+// User-implemented function from gstatic:acr_nav.FDb.viewmode
+// func:acr_nav...viewmode_inspect_ensure_content
+// this function is 'extrn' and implemented by user
+void                 viewmode_inspect_ensure_content(acr_nav::FCtype&);
 // User-implemented function from gstatic:acr_nav.FDb.viewmode
 // func:acr_nav...viewmode_nsdep_ensure_content
 // this function is 'extrn' and implemented by user

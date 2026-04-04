@@ -2,11 +2,11 @@ acr_nav.Ack  ack:acr_nav.Navigate  ok:Y  ctype:dmmeta.Ctype  viewmode:fields  na
 
 acr_nav.Ack  ack:acr_nav.SetView  ok:Y  ctype:dmmeta.Ctype  viewmode:xref  navstack_depth:0  msg:""
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1422  n_ctype:1423  n_field:5722  viewmode:xref  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1422  n_ctype:1423  n_field:5729  viewmode:xref  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:59  scroll_offset:23  n_items:213  sel_value:dmmeta.Ctype
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:64  sel_value:abt_md.FCtype.base
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1422  n_ctype:1423  n_field:5722  viewmode:xref  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1422  n_ctype:1423  n_field:5729  viewmode:xref  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:59  scroll_offset:23  n_items:213  sel_value:dmmeta.Ctype
 acr_nav.VisibleLeftItem  row:23  value:atf_amc  kind:ns  collapsed:Y  n_match:99  n_record:0
 acr_nav.VisibleLeftItem  row:24  value:atf_ci  kind:ns  collapsed:Y  n_match:15  n_record:0

@@ -60,8 +60,21 @@ void acr_nav::Ipc_RequestStateDump(acr_nav::FIpcconn& conn, acr_nav::RequestStat
     Regx_ReadSql(filter, cmd.filter, true);
     algo::cstring out;
     acr_nav::StateDump(out, filter);
-    ssize_t nw = write(conn.outfd.value, out.ch_elems, out.ch_n);
-    (void)nw;
+    out << "\n";  // empty line = end-of-response sentinel
+    // Non-blocking fd requires write loop for large responses
+    const char *p = out.ch_elems;
+    int remaining = out.ch_n;
+    while (remaining > 0) {
+        ssize_t nw = write(conn.outfd.value, p, remaining);
+        if (nw > 0) {
+            p += nw;
+            remaining -= nw;
+        } else if (nw < 0 && (errno == EAGAIN || errno == EWOULDBLOCK)) {
+            continue; // local socket drains fast
+        } else {
+            break; // connection error
+        }
+    }
 }
 
 // IpcAccept -- accept incoming connection, allocate FIpcconn, start reading

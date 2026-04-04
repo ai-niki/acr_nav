@@ -1,4 +1,4 @@
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1422  n_ctype:1423  n_field:5722  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1422  n_ctype:1423  n_field:5729  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:11  scroll_offset:0  n_items:83  sel_value:algo
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
@@ -34,12 +34,12 @@ acr_nav.VisibleLine  row:2  value:"  dmmeta      2 fields"
 acr_nav.VisibleLine  row:3  value:""
 acr_nav.VisibleLine  row:4  value:"Downstream (imports from algo):"
 acr_nav.VisibleLine  row:5  value:"      dmmeta    201 fields"
-acr_nav.VisibleLine  row:6  value:"     command    157 fields"
+acr_nav.VisibleLine  row:6  value:"     command    158 fields"
 acr_nav.VisibleLine  row:7  value:"      gclidb    122 fields"
 acr_nav.VisibleLine  row:8  value:"         dev    121 fields"
 acr_nav.VisibleLine  row:9  value:"        http     79 fields"
 acr_nav.VisibleLine  row:10  value:"    algo_lib     69 fields"
-acr_nav.VisibleLine  row:11  value:"     acr_nav     53 fields"
+acr_nav.VisibleLine  row:11  value:"     acr_nav     55 fields"
 acr_nav.VisibleLine  row:12  value:"         amc     49 fields"
 acr_nav.VisibleLine  row:13  value:"        gcli     49 fields"
 acr_nav.VisibleLine  row:14  value:"       atfdb     34 fields"
@@ -56,7 +56,7 @@ acr_nav.VisibleLine  row:24  value:"      report     12 fields"
 acr_nav.VisibleLine  row:25  value:"     src_hdr     11 fields"
 acr_nav.VisibleLine  row:26  value:"      httpdb     10 fields"
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1422  n_ctype:1423  n_field:5722  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1422  n_ctype:1423  n_field:5729  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:11  scroll_offset:5  n_items:83  sel_value:algo
 acr_nav.VisibleLeftItem  row:5  value:acr_dm  kind:ns  collapsed:Y  n_match:6  n_record:0
 acr_nav.VisibleLeftItem  row:6  value:acr_ed  kind:ns  collapsed:Y  n_match:19  n_record:0
@@ -72,9 +72,9 @@ acr_nav.VisibleLine  row:2  value:"  dmmeta      2 fields"
 acr_nav.VisibleLine  row:3  value:""
 acr_nav.VisibleLine  row:4  value:"Downstream (imports from algo):"
 acr_nav.VisibleLine  row:5  value:"      dmmeta    201 fields"
-acr_nav.VisibleLine  row:6  value:"     command    157 fields"
+acr_nav.VisibleLine  row:6  value:"     command    158 fields"
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1422  n_ctype:1423  n_field:5722  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1422  n_ctype:1423  n_field:5729  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:11  scroll_offset:5  n_items:83  sel_value:algo
 acr_nav.VisibleLeftItem  row:5  value:acr_dm  kind:ns  collapsed:Y  n_match:6  n_record:0
 acr_nav.VisibleLeftItem  row:6  value:acr_ed  kind:ns  collapsed:Y  n_match:19  n_record:0
@@ -90,5 +90,5 @@ acr_nav.VisibleLine  row:2  value:"  dmmeta      2 fields"
 acr_nav.VisibleLine  row:3  value:""
 acr_nav.VisibleLine  row:4  value:"Downstream (imports from algo):"
 acr_nav.VisibleLine  row:5  value:"      dmmeta    201 fields"
-acr_nav.VisibleLine  row:6  value:"     command    157 fields"
+acr_nav.VisibleLine  row:6  value:"     command    158 fields"
 

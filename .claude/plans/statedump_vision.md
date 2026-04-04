@@ -247,22 +247,58 @@ Replaced the blocking `ReadKeyName()` loop with epoll-driven `MainLoop()` when `
 
 **Key files:** `cpp/acr_nav/main.cpp` (TuiIpcInit, DecodeKeyByte, TuiStdinReadCallback, TuiRepaint), `cpp/amc/state_dump.cpp` (FDb singleton dump).
 
-### Phase 3.4 -- Live data viewmode (B's side)
+### Phase 3.4 -- Live data viewmode (B's side) (done, MVP)
 
-A new viewmode in acr_nav that connects to another running instance's IPC socket and displays its pool state. This is B's side of the "live debugger demo."
+A new `inspect` viewmode in acr_nav that connects to another running instance's IPC socket and displays its pool state live. This is B's side of the "live debugger demo."
 
-B connects to A's socket (`/tmp/acr_nav.<pid>.sock`), sends `RequestStateDump`, parses the ssim response, and displays it in the navigator. B already knows A's types — they're in the shared schema (dmmeta). No dynamic schema loading needed.
+**What was built:**
 
-**What's needed:**
+Schema: `-connect` command flag (socket path), 7 `FDb.live_*` fields (iohook, data, generation, connected, error, poll_pending), `inspect` viewmode (in tab cycle after `graph`), userfunc for ensure_content hook. `ConnectUnix()` added to `lib_netio`.
 
-- A `-connect:<socket_path>` command-line flag (or discover via `ls /tmp/acr_nav.*.sock`)
-- A poll timer that sends `RequestStateDump` at ~100ms intervals
-- A viewmode that shows live pool records instead of schema structure
-- Parse incoming ssim tuples into displayable rows, grouped by ctype
+Client: `LiveConnect()` creates Unix socket and connects to A. `LivePollCallback()` sends `RequestStateDump filter:%` every 100ms with backpressure (skips if previous response pending). `LiveReadCallback()` drains socket into staging buffer, scans for `\n\n` end-of-response sentinel, swaps complete response into `live_data`, increments generation, triggers repaint.
 
-**What's free:** B loads all of dmmeta at startup. `acr_nav.FPanel`, `acr_nav.FNavstack`, `acr_nav.FCtype` are known types. The ssim format is the same format acr_nav already parses. The navigator already knows how to display ctypes and their fields.
+Server fix: `Ipc_RequestStateDump` now writes in a loop (non-blocking fd truncated 219KB responses at ~212KB socket buffer limit) and appends `\n\n` sentinel for response framing.
 
-**Result:** Two terminal panes. Left: acr_nav A, user navigating. Right: acr_nav B, showing A's FNavstack growing, FPanel.sel updating, FFilter changing — live. The schema is the instrumentation.
+Viewmode: `viewmode_inspect_ensure_content` filters `live_data` by selected ctype prefix, shows matching records + PoolCensus lines. Cache key: `inspect:<generation>:<ctype>`. Color: `line_key` for type prefix, `line_comment` for census.
+
+UX: `-connect` mode auto-filters left panel to `acr_nav.*` ctypes, dismisses help overlay, auto-switches to inspect viewmode. No keybind (viewmode activates automatically in connect mode).
+
+**Usage:**
+```bash
+# Terminal A
+acr_nav -ipc
+
+# Terminal B
+acr_nav -connect /tmp/acr_nav.<pid>.sock
+```
+
+B shows A's pool state updating live. Select `acr_nav.FPanel` to see panel selection state, `acr_nav.LeftItem` to see A's left panel contents, `acr_nav.FDb` for global state.
+
+**Verified:** 63 component tests pass. Manual live test: navigate in A, B updates within 100ms.
+
+**Key files:** `cpp/acr_nav/main.cpp` (LiveConnect, LivePollCallback, LiveReadCallback, TuiLiveInit), `cpp/acr_nav/content.cpp` (viewmode_inspect_ensure_content), `cpp/acr_nav/ipc.cpp` (response framing + write loop), `cpp/lib_netio/socket.cpp` (ConnectUnix).
+
+**Lessons learned:**
+
+12. *Non-blocking write truncates large responses.* `IpcAccept` sets client fd non-blocking. Single `write()` of 219KB exceeds the ~212KB socket buffer — returns partial write, sentinel never sent. Fix: write loop that retries on EAGAIN. Local Unix sockets drain fast enough that busy-wait is acceptable.
+
+13. *LineBuf is per-buffer, not per-stream.* `LineBuf` processes lines within a single contiguous buffer. Creating a new LineBuf per `read()` call loses partial lines split across reads. Fix: accumulate raw bytes into a persistent staging cstring, scan for sentinel after drain.
+
+14. *Response framing is mandatory for stream sockets.* Unix domain SOCK_STREAM doesn't preserve message boundaries. Without an end-of-response marker, the client cannot distinguish partial from complete responses. Fix: empty-line sentinel (`\n\n`) appended by server, detected by client.
+
+### Phase 3.4.1 -- Inspect viewmode UX gaps (identified)
+
+The current MVP works but has UX issues discovered during testing:
+
+**Gap A: Left panel shows all schema ctypes.** In `-connect` mode, the left panel is pre-filtered to `acr_nav.*` but still shows all 39 acr_nav ctypes including ones with thousands of static records (FCtype 1423, FField 5729) that don't change at runtime. The user has to know which ctypes carry runtime state (FPanel, LeftItem, FDb, FViewmode) vs static schema data.
+
+**Fix (option 1 — census-driven left panel):** Don't load schema from disk in `-connect` mode. Parse `report.PoolCensus` lines from the live dump to build left panel items dynamically: pool name + record count. Left panel becomes `FPanel (2)`, `LeftItem (83)`, `FViewmode (10)`, etc. User sees exactly what pools exist and how many records each has. Most invasive change — requires alternative left panel data source.
+
+**Fix (option 2 — filter by census):** Still load schema, but filter left panel to only show ctypes that appear in the remote dump's census with n_record > 0 and n_record < some threshold (to hide FCtype 1423, FField 5729). Less invasive but heuristic-based.
+
+**Gap B: No way to see "all runtime state at once."** The user must select individual ctypes to see their records. A summary view showing all small pools (n_record < 100) on one screen would be more useful for live debugging.
+
+**Gap C: Static schema data dominates.** `acr_nav.FCtype` (1423 records) and `acr_nav.FField` (5729 records) are loaded from disk at startup and never change. They dominate the dump. A future optimization: exclude static pools from the dump (pools whose contents are loaded from ssimfiles and never modified). Requires schema metadata to identify static-load pools.
 
 ### Phase 4 -- Input interface (`dmmeta.rtquery`)
 

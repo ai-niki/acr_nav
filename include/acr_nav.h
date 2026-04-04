@@ -53,6 +53,11 @@ namespace acr_nav { // update-hdr
     // void viewmode_xref_ensure_content(acr_nav::FCtype &); // gstatic/acr_navdb.viewmode:xref
     // void viewmode_help_ensure_content(acr_nav::FCtype &); // gstatic/acr_navdb.viewmode:help
     // void viewmode_detail_ensure_content(acr_nav::FCtype &); // gstatic/acr_navdb.viewmode:detail
+
+    // Populate inspect viewmode content_row with lines from the live state dump,
+    // filtered by the selected ctype.  Shows matching records, FDb lines, and
+    // pool-census reports for the ctype.
+    // void viewmode_inspect_ensure_content(acr_nav::FCtype &ct); // gstatic/acr_navdb.viewmode:inspect
     // void viewmode_nsdep_detail_ensure_content(acr_nav::FCtype &ct); // gstatic/acr_navdb.viewmode:nsdep_detail
 
     // Load metadata records for a single field from detailsrc ssimfiles.
@@ -136,6 +141,8 @@ namespace acr_nav { // update-hdr
 
     // Headless dispatch handler: unrecognized text input
     // void Headless_UnkText(algo::strptr line); // dispatch:acr_nav.Headless
+    void LiveConnect();
+    //     (user-implemented function, prototype is in amc-generated header)
     // void Main(); // main:acr_nav
 
     // -------------------------------------------------------------------
@@ -187,6 +194,7 @@ namespace acr_nav { // update-hdr
     // void navaction_toggle_xref(); // gstatic/acr_navdb.navaction:toggle_xref
     // void navaction_toggle_graph(); // gstatic/acr_navdb.navaction:toggle_graph
     // void navaction_toggle_nsdep_detail(); // gstatic/acr_navdb.navaction:toggle_nsdep_detail
+    // void navaction_toggle_inspect(); // gstatic/acr_navdb.navaction:toggle_inspect
     // void navaction_filter_accept(); // gstatic/acr_navdb.navaction:filter_accept
     // void navaction_filter_start(); // gstatic/acr_navdb.navaction:filter_start
     // void navaction_filter_cancel(); // gstatic/acr_navdb.navaction:filter_cancel

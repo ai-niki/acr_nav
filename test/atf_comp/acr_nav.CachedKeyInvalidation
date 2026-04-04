@@ -1,26 +1,26 @@
 acr_nav.Ack  ack:acr_nav.Navigate  ok:Y  ctype:dmmeta.Ctype  viewmode:preview  navstack_depth:0  msg:""
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1422  n_ctype:1423  n_field:5722  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1422  n_ctype:1423  n_field:5729  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:59  scroll_offset:23  n_items:213  sel_value:dmmeta.Ctype
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:1423  sel_value:"                                                                                                                                           "
 
 acr_nav.Ack  ack:acr_nav.Navigate  ok:Y  ctype:dmmeta.Field  viewmode:preview  navstack_depth:1  msg:""
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:1  n_sel_ctype:1422  n_ctype:1423  n_field:5722  viewmode:preview  breadcrumb:"dmmeta.Ctype › dmmeta.Field"  filtertarget:ctype  hints:"↑↓←→  Backspace:back  /:filter  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:1  n_sel_ctype:1422  n_ctype:1423  n_field:5729  viewmode:preview  breadcrumb:"dmmeta.Ctype › dmmeta.Field"  filtertarget:ctype  hints:"↑↓←→  Backspace:back  /:filter  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:91  scroll_offset:56  n_items:213  sel_value:dmmeta.Field
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:5722  sel_value:"                                                                            Val                                                                                                                                                     "
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:5729  sel_value:"                                                                            Val                                                                                                                                                     "
 
 acr_nav.Ack  ack:acr_nav.Navigate  ok:Y  ctype:dmmeta.Anonfld  viewmode:preview  navstack_depth:2  msg:""
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:2  n_sel_ctype:1422  n_ctype:1423  n_field:5722  viewmode:nsdep  breadcrumb:"dmmeta.Ctype › dmmeta.Field › dmmeta"  filtertarget:ctype  hints:"↑↓←→  Backspace:back  /:filter  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:2  n_sel_ctype:1422  n_ctype:1423  n_field:5729  viewmode:nsdep  breadcrumb:"dmmeta.Ctype › dmmeta.Field › dmmeta"  filtertarget:ctype  hints:"↑↓←→  Backspace:back  /:filter  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:37  scroll_offset:37  n_items:213  sel_value:dmmeta
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:36  sel_value:"Upstream (dmmeta imports from):"
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:2  n_sel_ctype:1422  n_ctype:1423  n_field:5722  viewmode:preview  breadcrumb:"dmmeta.Ctype › dmmeta.Field › dmmeta.Anonfld"  filtertarget:ctype  hints:"↑↓←→  Backspace:back  /:filter  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:2  n_sel_ctype:1422  n_ctype:1423  n_field:5729  viewmode:preview  breadcrumb:"dmmeta.Ctype › dmmeta.Field › dmmeta.Anonfld"  filtertarget:ctype  hints:"↑↓←→  Backspace:back  /:filter  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:38  scroll_offset:37  n_items:213  sel_value:dmmeta.Anonfld
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:124  sel_value:"acr.ReadMode.read_mode                                      "
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:2  n_sel_ctype:1422  n_ctype:1423  n_field:5722  viewmode:preview  breadcrumb:"dmmeta.Ctype › dmmeta.Field › dmmeta.Anonfld"  filtertarget:ctype  hints:"↑↓←→  Backspace:back  /:filter  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:2  n_sel_ctype:1422  n_ctype:1423  n_field:5729  viewmode:preview  breadcrumb:"dmmeta.Ctype › dmmeta.Field › dmmeta.Anonfld"  filtertarget:ctype  hints:"↑↓←→  Backspace:back  /:filter  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:38  scroll_offset:37  n_items:213  sel_value:dmmeta.Anonfld
 acr_nav.VisibleLeftItem  row:37  value:dmmeta  kind:ns  collapsed:N  n_match:130  n_record:0
 acr_nav.VisibleLeftItem  row:38  value:dmmeta.Anonfld  kind:ctype  collapsed:N  n_match:0  n_record:124

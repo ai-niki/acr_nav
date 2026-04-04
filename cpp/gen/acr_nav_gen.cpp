@@ -59,6 +59,7 @@ const char *acr_nav_help =
 "    -in         string  \"data\"  Input directory or filename, - for stdin\n"
 "    -dump       string  \"\"      Dump state matching regex and exit\n"
 "    -ipc                        Enable IPC socket for runtime inspection\n"
+"    -connect    string  \"\"      Socket path of running instance for live inspection\n"
 "    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
 "    -help                       Print help and exit; alias -h\n"
@@ -4083,8 +4084,9 @@ static void acr_nav::viewmode_LoadStatic() {
         { "acr_navdb.viewmode  viewmode:codegen  title:\"Generated code\"  next:graph  empty_msg:\"no generated code\"  has_fields:N  is_overlay:N  need_ssimfile:N  is_reverse:N  status_hint:\"Tab:view  ?:help  q:quit\"  scope_ns:N  comment:\"amc-generated C++ struct for selected ctype\"", acr_nav::viewmode_codegen_ensure_content }
         ,{ "acr_navdb.viewmode  viewmode:detail  title:Detail  next:fields  empty_msg:\"press d on a field\"  has_fields:N  is_overlay:Y  need_ssimfile:N  is_reverse:N  status_hint:\"d/Esc:dismiss  ?:help  q:quit\"  scope_ns:N  comment:\"Per-field metadata from across dmmeta tables\"", acr_nav::viewmode_detail_ensure_content }
         ,{ "acr_navdb.viewmode  viewmode:fields  title:Fields  next:xref  empty_msg:\"no fields\"  has_fields:Y  is_overlay:N  need_ssimfile:N  is_reverse:N  status_hint:\"Enter:follow  Tab:view  d:detail  ?:help  q:quit\"  scope_ns:N  comment:\"Forward fields of selected ctype\"", acr_nav::viewmode_fields_ensure_content }
-        ,{ "acr_navdb.viewmode  viewmode:graph  title:Graph  next:fields  empty_msg:\"no access paths\"  has_fields:N  is_overlay:N  need_ssimfile:N  is_reverse:N  status_hint:\"Enter:follow  Tab:view  ?:help  q:quit\"  scope_ns:N  comment:\"Interactive access path diagram\"", acr_nav::viewmode_graph_ensure_content }
+        ,{ "acr_navdb.viewmode  viewmode:graph  title:Graph  next:inspect  empty_msg:\"no access paths\"  has_fields:N  is_overlay:N  need_ssimfile:N  is_reverse:N  status_hint:\"Enter:follow  Tab:view  ?:help  q:quit\"  scope_ns:N  comment:\"Interactive access path diagram\"", acr_nav::viewmode_graph_ensure_content }
         ,{ "acr_navdb.viewmode  viewmode:help  title:Help  next:fields  empty_msg:\"\"  has_fields:N  is_overlay:Y  need_ssimfile:N  is_reverse:N  status_hint:\"Esc/?:dismiss  q:quit\"  scope_ns:N  comment:\"Keybinding help\"", acr_nav::viewmode_help_ensure_content }
+        ,{ "acr_navdb.viewmode  viewmode:inspect  title:Inspect  next:fields  empty_msg:\"not connected (-connect)\"  has_fields:N  is_overlay:N  need_ssimfile:N  is_reverse:N  status_hint:\"Tab:view  ?:help  q:quit\"  scope_ns:N  comment:\"Live state dump from connected instance\"", acr_nav::viewmode_inspect_ensure_content }
         ,{ "acr_navdb.viewmode  viewmode:nsdep  title:\"Namespace dependencies\"  next:nsdep_detail  empty_msg:\"no cross-ns deps\"  has_fields:N  is_overlay:N  need_ssimfile:N  is_reverse:N  status_hint:\"Enter:jump  Tab:view  ?:help  q:quit\"  scope_ns:Y  comment:\"Cross-namespace field dependencies for selected namespace\"", acr_nav::viewmode_nsdep_ensure_content }
         ,{ "acr_navdb.viewmode  viewmode:nsdep_detail  title:\"Namespace deps (detail)\"  next:nsdep  empty_msg:\"no cross-ns deps\"  has_fields:N  is_overlay:N  need_ssimfile:N  is_reverse:N  status_hint:\"Enter:follow  Tab:view  ?:help  q:quit\"  scope_ns:Y  comment:\"Per-field cross-namespace dependencies grouped by namespace\"", acr_nav::viewmode_nsdep_detail_ensure_content }
         ,{ "acr_navdb.viewmode  viewmode:preview  title:Preview  next:codegen  empty_msg:\"no ssimfile\"  has_fields:N  is_overlay:N  need_ssimfile:Y  is_reverse:N  status_hint:\"Enter:follow  Tab:view  ?:help  q:quit\"  scope_ns:N  comment:\"Ssimfile record content preview\"", acr_nav::viewmode_preview_ensure_content }
@@ -5471,6 +5473,9 @@ void acr_nav::FDb_Init() {
     _db.cd_ipcconn_eof_head = NULL; // (acr_nav.FDb.cd_ipcconn_eof)
     _db.cd_ipcconn_eof_n = 0; // (acr_nav.FDb.cd_ipcconn_eof)
     _db.headless_lineno = i32(0);
+    _db.live_generation = i32(0);
+    _db.live_connected = bool(false);
+    _db.live_poll_pending = bool(false);
 
     acr_nav::InitReflection();
     navaction_LoadStatic(); // gen:ns_gstatic  gstatic:acr_nav.FDb.navaction  load acr_nav.FNavaction records
@@ -8238,6 +8243,16 @@ void acr_nav::StateDump(algo::cstring& out, algo_lib::Regx& filter) {
         PrintAttrSpaceReset(out, "ipc_socket_path", temp);
         i32_Print(acr_nav::_db.headless_lineno, temp);
         PrintAttrSpaceReset(out, "headless_lineno", temp);
+        algo::cstring_Print(acr_nav::_db.live_data, temp);
+        PrintAttrSpaceReset(out, "live_data", temp);
+        i32_Print(acr_nav::_db.live_generation, temp);
+        PrintAttrSpaceReset(out, "live_generation", temp);
+        bool_Print(acr_nav::_db.live_connected, temp);
+        PrintAttrSpaceReset(out, "live_connected", temp);
+        algo::cstring_Print(acr_nav::_db.live_error, temp);
+        PrintAttrSpaceReset(out, "live_error", temp);
+        bool_Print(acr_nav::_db.live_poll_pending, temp);
+        PrintAttrSpaceReset(out, "live_poll_pending", temp);
         acr_nav::trace_Print(acr_nav::_db.trace, temp);
         PrintAttrSpaceReset(out, "trace", temp);
         out << '\n';

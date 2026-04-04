@@ -116,6 +116,20 @@ bool lib_netio::BindUnix(algo::Fildes sock, strptr path) {
 
 //------------------------------------------------------------------------------
 
+// Wrapper for connect() to Unix domain socket path
+bool lib_netio::ConnectUnix(algo::Fildes sock, strptr path) {
+    sockaddr_un sa;
+    algo::ZeroBytes(sa);
+    sa.sun_family = AF_UNIX;
+    int maxlen = sizeof(sa.sun_path) - 1;
+    int copylen = i32_Min(elems_N(path), maxlen);
+    memcpy(sa.sun_path, path.elems, copylen);
+    sa.sun_path[copylen] = 0;
+    return connect(sock.value, (sockaddr *)&sa, sizeof sa) == 0;
+}
+
+//------------------------------------------------------------------------------
+
 // send GETLINK netlink request
 bool lib_netio::RequestLinkDump(algo::Fildes sock) {
     // address

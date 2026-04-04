@@ -86,6 +86,7 @@ dmmeta.userfunc  userfunc:acr_nav...viewmode_detail_ensure_content  acrkey:gstat
 dmmeta.userfunc  userfunc:acr_nav...viewmode_fields_ensure_content  acrkey:gstatic/acr_navdb.viewmode:fields  cppname:acr_nav.viewmode_fields_ensure_content  comment:""
 dmmeta.userfunc  userfunc:acr_nav...viewmode_graph_ensure_content  acrkey:gstatic/acr_navdb.viewmode:graph  cppname:acr_nav.viewmode_graph_ensure_content  comment:""
 dmmeta.userfunc  userfunc:acr_nav...viewmode_help_ensure_content  acrkey:gstatic/acr_navdb.viewmode:help  cppname:acr_nav.viewmode_help_ensure_content  comment:""
+dmmeta.userfunc  userfunc:acr_nav...viewmode_inspect_ensure_content  acrkey:gstatic/acr_navdb.viewmode:inspect  cppname:acr_nav.viewmode_inspect_ensure_content  comment:""
 dmmeta.userfunc  userfunc:acr_nav...viewmode_nsdep_detail_ensure_content  acrkey:gstatic/acr_navdb.viewmode:nsdep_detail  cppname:acr_nav.viewmode_nsdep_detail_ensure_content  comment:""
 dmmeta.userfunc  userfunc:acr_nav...viewmode_nsdep_ensure_content  acrkey:gstatic/acr_navdb.viewmode:nsdep  cppname:acr_nav.viewmode_nsdep_ensure_content  comment:""
 dmmeta.userfunc  userfunc:acr_nav...viewmode_preview_ensure_content  acrkey:gstatic/acr_navdb.viewmode:preview  cppname:acr_nav.viewmode_preview_ensure_content  comment:""

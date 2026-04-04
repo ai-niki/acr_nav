@@ -571,6 +571,7 @@ inline void command::acr_nav_Init(command::acr_nav& parent) {
     parent.in = algo::strptr("data");
     parent.dump = algo::strptr("");
     parent.ipc = bool(false);
+    parent.connect = algo::strptr("");
 }
 
 // --- command.acr_nav..Ctor

@@ -171,6 +171,7 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_headless      : ret = "headless";  break;
         case command_FieldId_dump          : ret = "dump";  break;
         case command_FieldId_ipc           : ret = "ipc";  break;
+        case command_FieldId_connect       : ret = "connect";  break;
         case command_FieldId_in_dir        : ret = "in_dir";  break;
         case command_FieldId_out_dir       : ret = "out_dir";  break;
         case command_FieldId_proto         : ret = "proto";  break;
@@ -1032,6 +1033,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR7('c','o','m','m','e','n','t'): {
                     value_SetEnum(parent,command_FieldId_comment); ret = true; break;
+                }
+                case LE_STR7('c','o','n','n','e','c','t'): {
+                    value_SetEnum(parent,command_FieldId_connect); ret = true; break;
                 }
                 case LE_STR7('c','o','v','f','a','s','t'): {
                     value_SetEnum(parent,command_FieldId_covfast); ret = true; break;
@@ -7221,6 +7225,9 @@ bool command::acr_nav_ReadFieldMaybe(command::acr_nav& parent, algo::strptr fiel
         case command_FieldId_ipc: {
             retval = bool_ReadStrptrMaybe(parent.ipc, strval);
         } break;
+        case command_FieldId_connect: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.connect, strval);
+        } break;
         default: {
             retval = false;
             algo_lib::AppendErrtext("comment", "unrecognized attr");
@@ -7293,6 +7300,12 @@ void command::acr_nav_PrintArgv(command::acr_nav& row, algo::cstring& str) {
         str << " -ipc:";
         strptr_PrintBash(temp,str);
     }
+    if (!(row.connect == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.connect, temp);
+        str << " -connect:";
+        strptr_PrintBash(temp,str);
+    }
 }
 
 // --- command.acr_nav..NArgs
@@ -7317,6 +7330,9 @@ i32 command::acr_nav_NArgs(command::FieldId field, algo::strptr& out_dflt, bool*
             *out_anon = false;
             retval=0;
             out_dflt="Y";
+        } break;
+        case command_FieldId_connect: { //
+            *out_anon = false;
         } break;
         default:
         retval=-1; // unrecognized
@@ -7484,6 +7500,12 @@ void command::acr_nav_ToArgv(command::acr_nav_proc& parent, algo::StringAry& arg
         cstring *arg = &ary_Alloc(args);
         *arg << "-ipc:";
         bool_Print(parent.cmd.ipc, *arg);
+    }
+
+    if (parent.cmd.connect != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-connect:";
+        cstring_Print(parent.cmd.connect, *arg);
     }
     for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
         ary_Alloc(args) << "-verbose";

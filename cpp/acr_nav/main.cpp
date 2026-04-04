@@ -21,6 +21,7 @@
 
 #include "include/algo.h"
 #include "include/acr_nav.h"
+#include "include/lib_netio.h"
 #include <termios.h>
 #include <poll.h>
 #include <signal.h>
@@ -61,6 +62,7 @@ static int acr_nav_keybuf_n = 0;
 static algo_lib::FTimehook acr_nav_esc_timer;
 static bool acr_nav_esc_timer_armed = false;
 static algo_lib::FTimehook acr_nav_sigwinch_timer;
+static algo_lib::FTimehook acr_nav_live_poll_timer;
 
 static void SigwinchHandler(int) {
     acr_nav_sigwinch = 1;
@@ -951,6 +953,122 @@ static void TuiIpcInit() {
 
 // -----------------------------------------------------------------------------
 
+static algo::cstring live_staging_buf;
+
+static void LiveReadCallback() {
+    // Drain socket into staging buffer (raw bytes)
+    bool disconnected = false;
+    bool done = false;
+    while (!done) {
+        char buf[8192];
+        ssize_t nr = read(acr_nav::_db.live_iohook.fildes.value, buf, sizeof(buf));
+        if (nr > 0) {
+            live_staging_buf << algo::strptr(buf, nr);
+        } else if (nr == 0) {
+            disconnected = true;
+            done = true;
+        } else {
+            if (errno == EAGAIN || errno == EWOULDBLOCK) {
+                done = true;
+            } else {
+                disconnected = true;
+                done = true;
+            }
+        }
+    }
+    // Scan staging buffer for empty-line sentinel ("\n\n")
+    bool got_complete_response = false;
+    i32 sentinel_pos = algo::FindStr(live_staging_buf, strptr("\n\n"));
+    if (sentinel_pos >= 0) {
+        // Everything before sentinel is the complete response
+        acr_nav::_db.live_data = ch_FirstN(live_staging_buf, sentinel_pos);
+        // Keep anything after sentinel+2 for next response (shouldn't happen with backpressure)
+        algo::cstring remainder(ch_RestFrom(live_staging_buf, sentinel_pos + 2));
+        live_staging_buf = remainder;
+        acr_nav::_db.live_generation++;
+        acr_nav::_db.live_poll_pending = false;
+        got_complete_response = true;
+    }
+    if (disconnected) {
+        ch_RemoveAll(live_staging_buf);
+        acr_nav::_db.live_connected = false;
+        acr_nav::_db.live_error = "live: server disconnected";
+        acr_nav::_db.live_generation++;
+    }
+    if ((got_complete_response || disconnected) && acr_nav::_db.running) {
+        TuiRepaint();
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+static void LivePollCallback() {
+    if (acr_nav::_db.running && acr_nav::_db.live_connected && !acr_nav::_db.live_poll_pending) {
+        static const char req[] = "acr_nav.RequestStateDump  filter:%\n";
+        ssize_t nw = write(acr_nav::_db.live_iohook.fildes.value, req, sizeof(req) - 1);
+        if (nw > 0) {
+            acr_nav::_db.live_poll_pending = true;
+        } else if (nw < 0 && errno != EAGAIN && errno != EWOULDBLOCK) {
+            acr_nav::_db.live_connected = false;
+            acr_nav::_db.live_error = "live: connection lost (write failed)";
+            acr_nav::_db.live_generation++;
+            TuiRepaint();
+        }
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+void acr_nav::LiveConnect() {
+    algo::Fildes fd = lib_netio::CreateUnixSocket();
+    bool ok = ValidQ(fd);
+    if (ok) {
+        ok = lib_netio::ConnectUnix(fd, acr_nav::_db.cmdline.connect);
+    }
+    if (ok) {
+        algo::SetBlockingMode(fd, false);
+        acr_nav::_db.live_iohook.fildes = fd;
+        acr_nav::_db.live_iohook.nodelete = true;
+        callback_Set0(acr_nav::_db.live_iohook, LiveReadCallback);
+        algo::IOEvtFlags flags;
+        read_Set(flags, true);
+        algo_lib::IohookAdd(acr_nav::_db.live_iohook, flags);
+        acr_nav::_db.live_connected = true;
+    }
+    if (!ok) {
+        acr_nav::_db.live_error = tempstr() << "live: connect failed: " << acr_nav::_db.cmdline.connect;
+        if (ValidQ(fd)) {
+            close(fd.value);
+        }
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+static void TuiLiveInit() {
+    TuiIpcInit();  // Sets up stdin iohook, raw mode, sigwinch/esc timers, calls TuiRepaint
+    // InitPanels (called inside TuiIpcInit) pushes help overlay; dismiss it in connect mode
+    acr_nav::_db.startup_help = false;
+    acr_nav::PopOverlay();
+    // Filter left panel to acr_nav ctypes and rebuild
+    acr_nav::_db.filter = "acr_nav.";
+    acr_nav::BuildLeftItemsReset();
+    acr_nav::LiveConnect();
+    if (acr_nav::_db.live_connected) {
+        hook_Set0(acr_nav_live_poll_timer, LivePollCallback);
+        algo_lib::ThInitRecur(acr_nav_live_poll_timer, algo::ToSchedTime(0.100));
+        algo_lib::bh_timehook_Insert(acr_nav_live_poll_timer);
+    }
+    // Auto-switch to inspect viewmode and repaint
+    acr_nav::FViewmode *inspect_vm = acr_nav::ind_viewmode_Find("inspect");
+    if (inspect_vm) {
+        acr_nav::_db.p_cur_viewmode = inspect_vm;
+    }
+    TuiRepaint();
+}
+
+// -----------------------------------------------------------------------------
+
 static void HeadlessMain() {
     InitPanels();
     acr_nav::_db.running = true;
@@ -992,6 +1110,7 @@ void acr_nav::Main() {
         acr_nav::IpcInit();
     }
     bool do_dump = ch_N(_db.cmdline.dump) > 0;
+    bool do_connect = ch_N(_db.cmdline.connect) > 0;
     bool headless = _db.cmdline.headless || !isatty(STDOUT_FILENO);
     if (do_dump) {
         algo_lib::Regx filter;
@@ -999,6 +1118,23 @@ void acr_nav::Main() {
         algo::cstring out;
         StateDump(out, filter);
         prlog(out);
+    } else if (do_connect && !headless) {
+        TuiLiveInit();
+        acr_nav::MainLoop();
+        if (acr_nav::_db.live_connected) {
+            algo_lib::bh_timehook_Remove(acr_nav_live_poll_timer);
+            close(acr_nav::_db.live_iohook.fildes.value);
+        }
+        algo_lib::bh_timehook_Remove(acr_nav_esc_timer);
+        algo_lib::bh_timehook_Remove(acr_nav_sigwinch_timer);
+        struct sigaction sa;
+        sa.sa_handler = SIG_DFL;
+        sigemptyset(&sa.sa_mask);
+        sa.sa_flags = 0;
+        sigaction(SIGWINCH, &sa, NULL);
+        ExitRawMode();
+    } else if (do_connect && headless) {
+        prlog("acr_nav.warning  msg:\"-connect requires TUI, ignoring\"");
     } else if (_db.cmdline.ipc && headless) {
         HeadlessIpcInit();
         acr_nav::MainLoop();

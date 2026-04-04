@@ -580,6 +580,59 @@ void acr_nav::viewmode_help_ensure_content(acr_nav::FCtype &) {
 void acr_nav::viewmode_detail_ensure_content(acr_nav::FCtype &) {
 }
 
+// Populate inspect viewmode content_row with lines from the live state dump,
+// filtered by the selected ctype.  Shows matching records, FDb lines, and
+// pool-census reports for the ctype.
+void acr_nav::viewmode_inspect_ensure_content(acr_nav::FCtype &ct) {
+    acr_nav::FViewmode &vm = *acr_nav::ind_viewmode_Find("inspect");
+    tempstr gen_key;
+    gen_key << "inspect:" << acr_nav::_db.live_generation << ":" << ct.ctype;
+    if (vm.cached_key != gen_key) {
+        ClearViewmodeLines(vm);
+        vm.cached_key = gen_key;
+        if (!acr_nav::_db.live_connected) {
+            tempstr msg;
+            if (ch_N(acr_nav::_db.live_error) > 0) {
+                msg << acr_nav::_db.live_error;
+            } else {
+                msg << "not connected (use -connect <socket>)";
+            }
+            acr_nav::content_row_Alloc(vm).text = msg;
+        } else if (acr_nav::_db.live_generation == 0) {
+            acr_nav::content_row_Alloc(vm).text = "waiting for first poll response...";
+        } else {
+            tempstr prefix;
+            prefix << ct.ctype << "  ";
+            tempstr census_match;
+            census_match << "ctype:" << ct.ctype;
+            int line_idx = 0;
+            ind_beg(Line_curs, line, acr_nav::_db.live_data) {
+                bool is_record = algo::StartsWithQ(line, strptr(prefix));
+                bool is_census = algo::StartsWithQ(line, strptr("report.PoolCensus"))
+                    && algo::FindStr(line, strptr(census_match)) >= 0;
+                if (is_record || is_census) {
+                    acr_nav::content_row_Alloc(vm).text = line;
+                    if (is_census) {
+                        AddSpan(vm, line_idx, 0, elems_N(line), acr_nav::ind_navstyle_Find("line_comment"));
+                    } else {
+                        int space_pos = algo::FindChar(line, ' ');
+                        if (space_pos >= 0) {
+                            AddSpan(vm, line_idx, 0, space_pos, acr_nav::ind_navstyle_Find("line_key"));
+                        }
+                    }
+                    line_idx++;
+                }
+            } ind_end;
+            if (line_idx == 0) {
+                acr_nav::content_row_Alloc(vm).text = "no records in dump for this type";
+            }
+        }
+        tempstr hdr;
+        hdr << ct.ctype << " (gen " << acr_nav::_db.live_generation << ")";
+        vm.header = hdr;
+    }
+}
+
 // Add a field to the namespace field group matching 'ns'.
 // Creates a new group if none exists and capacity allows.
 static void AddNsFieldGroup(NsFieldGroup *groups, int &n_group, int max_groups,
