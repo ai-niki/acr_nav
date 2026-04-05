@@ -146,10 +146,21 @@ void amc::gen_ns_state_dump() {
                 Set(R, "$name", name_Get(field));
                 Set(R, "$Cpptype", field.p_arg->cpp_type);
                 Set(R, "$ctype", field.p_arg->ctype);
+                bool is_finput = field.c_finput != NULL;
+                Set(R, "$is_finput", is_finput ? "true" : "false");
                 Ins(&R, func.body, "census.ctype = \"$ctype\";");
                 Ins(&R, func.body, "census.n_record = $ns::$name_N();");
+                Ins(&R, func.body, "census.is_finput = $is_finput;");
                 Ins(&R, func.body, "report::PoolCensus_Print(census, out);");
                 Ins(&R, func.body, "out << '\\n';");
+                // Finput pools: skip record dump on wildcard filter (accepts_all).
+                // Non-finput pools: dump records whenever the filter matches.
+                tempstr guard;
+                guard << "if (Regx_Match(filter, strptr(\"$ctype\"))";
+                if (is_finput) {
+                    guard << " && !accepts_all_Get(filter.flags)";
+                }
+                guard << ") {";
                 // Check if the pool's arg ctype has a cfmt with print:Y
                 bool printable = false;
                 ind_beg(amc::ctype_zs_cfmt_curs, cfmt, *field.p_arg) {
@@ -159,7 +170,7 @@ void amc::gen_ns_state_dump() {
                     }
                 }ind_end;
                 if (printable) {
-                    Ins(&R, func.body, "if (Regx_Match(filter, strptr(\"$ctype\"))) {");
+                    Ins(&R, func.body, Subst(R, guard));
                     Ins(&R, func.body, "    ind_beg($ns::_db_$name_curs, rec, $ns::_db) {");
                     Ins(&R, func.body, "        $Cpptype_Print(rec, out);");
                     Ins(&R, func.body, "        out << '\\n';");
@@ -180,7 +191,7 @@ void amc::gen_ns_state_dump() {
                         }
                     }ind_end;
                     if (n_emittable > 0) {
-                        Ins(&R, func.body, "if (Regx_Match(filter, strptr(\"$ctype\"))) {");
+                        Ins(&R, func.body, Subst(R, guard));
                         Ins(&R, func.body, "    ind_beg($ns::_db_$name_curs, rec, $ns::_db) {");
                         Ins(&R, func.body, "        algo::tempstr temp;");
                         Ins(&R, func.body, "        out << \"$ctype\";");

@@ -80,6 +80,7 @@ inline  report::IndexCensus::IndexCensus() {
 // Set all fields to initial values.
 inline void report::PoolCensus_Init(report::PoolCensus& parent) {
     parent.n_record = i32(0);
+    parent.is_finput = bool(false);
 }
 
 // --- report.PoolCensus..Ctor

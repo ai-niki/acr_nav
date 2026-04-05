@@ -33,58 +33,59 @@ enum report_FieldIdEnum {                   // report.FieldId.value
      report_FieldId_field             = 0
     ,report_FieldId_ctype             = 1
     ,report_FieldId_n_record          = 2
-    ,report_FieldId_n_target          = 3
-    ,report_FieldId_time              = 4
-    ,report_FieldId_hitrate           = 5
-    ,report_FieldId_pch_hitrate       = 6
-    ,report_FieldId_n_warn            = 7
-    ,report_FieldId_n_err             = 8
-    ,report_FieldId_n_install         = 9
-    ,report_FieldId_n_select          = 10
-    ,report_FieldId_n_insert          = 11
-    ,report_FieldId_n_delete          = 12
-    ,report_FieldId_n_ignore          = 13
-    ,report_FieldId_n_update          = 14
-    ,report_FieldId_n_file_mod        = 15
-    ,report_FieldId_records           = 16
-    ,report_FieldId_errors            = 17
-    ,report_FieldId_n_cppfile         = 18
-    ,report_FieldId_n_cppline         = 19
-    ,report_FieldId_n_ctype           = 20
-    ,report_FieldId_n_func            = 21
-    ,report_FieldId_n_xref            = 22
-    ,report_FieldId_n_filemod         = 23
-    ,report_FieldId_ntest             = 24
-    ,report_FieldId_nselect           = 25
-    ,report_FieldId_npass             = 26
-    ,report_FieldId_nskip             = 27
-    ,report_FieldId_nrun              = 28
-    ,report_FieldId_nwrite            = 29
-    ,report_FieldId_nerr              = 30
-    ,report_FieldId_ninsert           = 31
-    ,report_FieldId_success           = 32
-    ,report_FieldId_n_test_total      = 33
-    ,report_FieldId_n_test_run        = 34
-    ,report_FieldId_starttime         = 35
-    ,report_FieldId_elapsed_sec       = 36
-    ,report_FieldId_preproc_size      = 37
-    ,report_FieldId_hit               = 38
-    ,report_FieldId_cached_file       = 39
-    ,report_FieldId_copy_file_range   = 40
-    ,report_FieldId_pch_hit           = 41
-    ,report_FieldId_pch_file          = 42
-    ,report_FieldId_source            = 43
-    ,report_FieldId_pch_source        = 44
-    ,report_FieldId_n_line            = 45
-    ,report_FieldId_n_static          = 46
-    ,report_FieldId_n_inline          = 47
-    ,report_FieldId_n_mysteryfunc     = 48
-    ,report_FieldId_n_baddecl         = 49
-    ,report_FieldId_comment           = 50
-    ,report_FieldId_value             = 51
+    ,report_FieldId_is_finput         = 3
+    ,report_FieldId_n_target          = 4
+    ,report_FieldId_time              = 5
+    ,report_FieldId_hitrate           = 6
+    ,report_FieldId_pch_hitrate       = 7
+    ,report_FieldId_n_warn            = 8
+    ,report_FieldId_n_err             = 9
+    ,report_FieldId_n_install         = 10
+    ,report_FieldId_n_select          = 11
+    ,report_FieldId_n_insert          = 12
+    ,report_FieldId_n_delete          = 13
+    ,report_FieldId_n_ignore          = 14
+    ,report_FieldId_n_update          = 15
+    ,report_FieldId_n_file_mod        = 16
+    ,report_FieldId_records           = 17
+    ,report_FieldId_errors            = 18
+    ,report_FieldId_n_cppfile         = 19
+    ,report_FieldId_n_cppline         = 20
+    ,report_FieldId_n_ctype           = 21
+    ,report_FieldId_n_func            = 22
+    ,report_FieldId_n_xref            = 23
+    ,report_FieldId_n_filemod         = 24
+    ,report_FieldId_ntest             = 25
+    ,report_FieldId_nselect           = 26
+    ,report_FieldId_npass             = 27
+    ,report_FieldId_nskip             = 28
+    ,report_FieldId_nrun              = 29
+    ,report_FieldId_nwrite            = 30
+    ,report_FieldId_nerr              = 31
+    ,report_FieldId_ninsert           = 32
+    ,report_FieldId_success           = 33
+    ,report_FieldId_n_test_total      = 34
+    ,report_FieldId_n_test_run        = 35
+    ,report_FieldId_starttime         = 36
+    ,report_FieldId_elapsed_sec       = 37
+    ,report_FieldId_preproc_size      = 38
+    ,report_FieldId_hit               = 39
+    ,report_FieldId_cached_file       = 40
+    ,report_FieldId_copy_file_range   = 41
+    ,report_FieldId_pch_hit           = 42
+    ,report_FieldId_pch_file          = 43
+    ,report_FieldId_source            = 44
+    ,report_FieldId_pch_source        = 45
+    ,report_FieldId_n_line            = 46
+    ,report_FieldId_n_static          = 47
+    ,report_FieldId_n_inline          = 48
+    ,report_FieldId_n_mysteryfunc     = 49
+    ,report_FieldId_n_baddecl         = 50
+    ,report_FieldId_comment           = 51
+    ,report_FieldId_value             = 52
 };
 
-enum { report_FieldIdEnum_N = 52 };
+enum { report_FieldIdEnum_N = 53 };
 
 namespace report { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -184,8 +185,9 @@ void                 IndexCensus_Print(report::IndexCensus& row, algo::cstring& 
 
 // --- report.PoolCensus
 struct PoolCensus { // report.PoolCensus: Pool census: ctype name and live record count
-    algo::Smallstr100   ctype;      // Fully qualified ctype name
-    i32                 n_record;   //   0  Live record count
+    algo::Smallstr100   ctype;       // Fully qualified ctype name
+    i32                 n_record;    //   0  Live record count
+    bool                is_finput;   //   false  Pool loaded from ssimfile at startup
     // func:report.PoolCensus..Ctor
     inline               PoolCensus() __attribute__((nothrow));
 };

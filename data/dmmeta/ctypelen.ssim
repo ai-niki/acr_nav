@@ -139,7 +139,7 @@ dmmeta.ctypelen  ctype:acr_my.FSsimfile  len:154  alignment:1  padbytes:0  plain
 dmmeta.ctypelen  ctype:acr_nav.Ack  len:232  alignment:8  padbytes:5  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.ContentRow  len:432  alignment:8  padbytes:4  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FCtype  len:328  alignment:8  padbytes:13  plaindata:N
-dmmeta.ctypelen  ctype:acr_nav.FDb  len:4864  alignment:8  padbytes:116  plaindata:N
+dmmeta.ctypelen  ctype:acr_nav.FDb  len:4864  alignment:8  padbytes:115  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FDetailsrc  len:216  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FField  len:704  alignment:8  padbytes:6  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FFiltertarget  len:344  alignment:8  padbytes:0  plaindata:N
@@ -163,7 +163,7 @@ dmmeta.ctypelen  ctype:acr_nav.Naventry  len:352  alignment:8  padbytes:6  plain
 dmmeta.ctypelen  ctype:acr_nav.Navigate  len:206  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:acr_nav.OverlayEntry  len:60  alignment:4  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:acr_nav.PanelState  len:80  alignment:8  padbytes:0  plaindata:N
-dmmeta.ctypelen  ctype:acr_nav.PoolEntry  len:108  alignment:4  padbytes:2  plaindata:Y
+dmmeta.ctypelen  ctype:acr_nav.PoolEntry  len:112  alignment:4  padbytes:5  plaindata:Y
 dmmeta.ctypelen  ctype:acr_nav.PreviewNavCol  len:168  alignment:4  padbytes:2  plaindata:Y
 dmmeta.ctypelen  ctype:acr_nav.RequestStateDump  len:16  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.Screen  len:288  alignment:8  padbytes:12  plaindata:N
@@ -1226,7 +1226,7 @@ dmmeta.ctypelen  ctype:orgfile.FTimefmt  len:255  alignment:1  padbytes:0  plain
 dmmeta.ctypelen  ctype:orgfile.dedup  len:48  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:orgfile.move  len:48  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:report.IndexCensus  len:208  alignment:4  padbytes:0  plaindata:Y
-dmmeta.ctypelen  ctype:report.PoolCensus  len:108  alignment:4  padbytes:2  plaindata:Y
+dmmeta.ctypelen  ctype:report.PoolCensus  len:112  alignment:4  padbytes:5  plaindata:Y
 dmmeta.ctypelen  ctype:report.abt  len:68  alignment:4  padbytes:4  plaindata:Y
 dmmeta.ctypelen  ctype:report.acr  len:24  alignment:4  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:report.acr_check  len:8  alignment:4  padbytes:0  plaindata:Y

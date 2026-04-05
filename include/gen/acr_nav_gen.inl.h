@@ -2935,6 +2935,7 @@ inline  acr_nav::PanelState::PanelState() {
 // Set all fields to initial values.
 inline void acr_nav::PoolEntry_Init(acr_nav::PoolEntry& parent) {
     parent.n_record = i32(0);
+    parent.is_finput = bool(false);
 }
 
 // --- acr_nav.PoolEntry..Ctor

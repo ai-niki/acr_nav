@@ -1,14 +1,14 @@
 acr_nav.Ack  ack:acr_nav.Navigate  ok:Y  ctype:dmmeta.Ctype  viewmode:graph  navstack_depth:0  msg:""
 
-acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:1  n_sel_ctype:1424  n_ctype:1425  n_field:5738  viewmode:graph  breadcrumb:"dmmeta.Ctype › algo.Smallstr100"  filtertarget:ctype  hints:"↑↓←→  Backspace:back  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:1  n_sel_ctype:1422  n_ctype:1423  n_field:5731  viewmode:graph  breadcrumb:"dmmeta.Ctype › algo.Smallstr100"  filtertarget:ctype  hints:"↑↓←→  Backspace:back  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:183  scroll_offset:148  n_items:438  sel_value:algo.Smallstr100
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:4  sel_value:"╔ algo.Smallstr100"
 
-acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:0  n_sel_ctype:1424  n_ctype:1425  n_field:5738  viewmode:graph  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:0  n_sel_ctype:1422  n_ctype:1423  n_field:5731  viewmode:graph  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:284  scroll_offset:248  n_items:438  sel_value:dmmeta.Ctype
 acr_nav.PanelState  panel:content  sel_row:1  scroll_offset:0  n_items:103  sel_value:"                          ╟ Val ctype ────────▶ algo.Smallstr100"
 
-acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:0  n_sel_ctype:1424  n_ctype:1425  n_field:5738  viewmode:graph  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:0  n_sel_ctype:1422  n_ctype:1423  n_field:5731  viewmode:graph  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:284  scroll_offset:248  n_items:438  sel_value:dmmeta.Ctype
 acr_nav.VisibleLeftItem  row:248  value:atf_amc  kind:ns  collapsed:Y  n_match:99  n_record:0
 acr_nav.VisibleLeftItem  row:249  value:atf_ci  kind:ns  collapsed:Y  n_match:15  n_record:0
@@ -36,7 +36,7 @@ acr_nav.VisibleLeftItem  row:270  value:dmmeta.Ccmp  kind:ctype  collapsed:N  n_
 acr_nav.VisibleLeftItem  row:271  value:dmmeta.Cdflt  kind:ctype  collapsed:N  n_match:0  n_record:22
 acr_nav.VisibleLeftItem  row:272  value:dmmeta.Cextern  kind:ctype  collapsed:N  n_match:0  n_record:56
 acr_nav.VisibleLeftItem  row:273  value:dmmeta.Cfast  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.VisibleLeftItem  row:274  value:dmmeta.Cfmt  kind:ctype  collapsed:N  n_match:0  n_record:823
+acr_nav.VisibleLeftItem  row:274  value:dmmeta.Cfmt  kind:ctype  collapsed:N  n_match:0  n_record:822
 acr_nav.VisibleLeftItem  row:275  value:dmmeta.Cget  kind:ctype  collapsed:N  n_match:0  n_record:0
 acr_nav.VisibleLeftItem  row:276  value:dmmeta.Charset  kind:ctype  collapsed:N  n_match:0  n_record:23
 acr_nav.VisibleLeftItem  row:277  value:dmmeta.Chash  kind:ctype  collapsed:N  n_match:0  n_record:240
@@ -46,7 +46,7 @@ acr_nav.VisibleLeftItem  row:280  value:dmmeta.Cppkeyword  kind:ctype  collapsed
 acr_nav.VisibleLeftItem  row:281  value:dmmeta.Cpptype  kind:ctype  collapsed:N  n_match:0  n_record:404
 acr_nav.VisibleLeftItem  row:282  value:dmmeta.Csize  kind:ctype  collapsed:N  n_match:0  n_record:32
 acr_nav.VisibleLeftItem  row:283  value:dmmeta.Cstr  kind:ctype  collapsed:N  n_match:0  n_record:141
-acr_nav.VisibleLeftItem  row:284  value:dmmeta.Ctype  kind:ctype  collapsed:N  n_match:0  n_record:1425
+acr_nav.VisibleLeftItem  row:284  value:dmmeta.Ctype  kind:ctype  collapsed:N  n_match:0  n_record:1423
 acr_nav.PanelState  panel:content  sel_row:1  scroll_offset:0  n_items:103  sel_value:"                          ╟ Val ctype ────────▶ algo.Smallstr100"
 acr_nav.VisibleLine  row:0  value:"                          ╔ dmmeta.Ctype"
 acr_nav.VisibleLine  row:1  value:"                          ╟ Val ctype ────────▶ algo.Smallstr100"
@@ -81,7 +81,7 @@ acr_nav.VisibleLine  row:29  value:"                          ╟ Pkey ctype ─
 acr_nav.VisibleLine  row:30  value:"                          ║"
 acr_nav.VisibleLine  row:31  value:"                          ╟ Pkey ctype ───────▶ dmmeta.Cfast"
 acr_nav.VisibleLine  row:32  value:"                          ║"
-acr_nav.VisibleLine  row:33  value:"                          ╟ Pkey ctype ───────▶ dmmeta.Cfmt (823)"
+acr_nav.VisibleLine  row:33  value:"                          ╟ Pkey ctype ───────▶ dmmeta.Cfmt (822)"
 acr_nav.VisibleLine  row:34  value:"                          ║"
 acr_nav.VisibleLine  row:35  value:"                          ╟ Pkey ctype ───────▶ dmmeta.Cget"
 acr_nav.VisibleLine  row:36  value:"                          ║"

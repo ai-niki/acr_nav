@@ -1008,7 +1008,13 @@ static void LiveReadCallback() {
 static void LivePollCallback() {
     if (acr_nav::_db.running && acr_nav::_db.live_connected && !acr_nav::_db.live_poll_pending) {
         tempstr req;
-        req << acr_nav::_db.live_ns << ".RequestStateDump  filter:%\n";
+        req << acr_nav::_db.live_ns << ".RequestStateDump  filter:";
+        if (acr_nav::_db.live_show_static) {
+            req << acr_nav::_db.live_ns << ".%";
+        } else {
+            req << "%";
+        }
+        req << "\n";
         algo::strptr req_str(req);
         ssize_t nw = write(acr_nav::_db.live_iohook.fildes.value, req_str.elems, req_str.n_elems);
         if (nw > 0) {

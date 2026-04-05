@@ -186,14 +186,13 @@ void acr_nav::BuildLiveLeftItems() {
     bool found_fdb = false;
     ind_beg(Line_curs, line, acr_nav::_db.live_data) {
         if (algo::StartsWithQ(line, strptr("report.PoolCensus"))) {
-            algo::Tuple tuple;
-            if (algo::Tuple_ReadStrptr(tuple, line, false)) {
-                algo::strptr ct = algo::attr_GetString(tuple, "ctype");
-                algo::strptr nr = algo::attr_GetString(tuple, "n_record");
-                if (elems_N(ct) > 0) {
+            report::PoolCensus census;
+            if (report::PoolCensus_ReadStrptrMaybe(census, line)) {
+                if (ch_N(census.ctype) > 0) {
                     acr_nav::PoolEntry &pe = acr_nav::pool_entry_Alloc();
-                    pe.ctype = ct;
-                    pe.n_record = algo::ParseI32(nr, 0);
+                    pe.ctype = census.ctype;
+                    pe.n_record = census.n_record;
+                    pe.is_finput = census.is_finput;
                 }
             }
         } else if (!found_fdb && algo::StartsWithQ(line, strptr(fdb_line_prefix))) {
@@ -217,15 +216,20 @@ void acr_nav::BuildLiveLeftItems() {
     hdr.ctype = "";
     hdr.ns = acr_nav::_db.live_ns;
     hdr.n_record = n;
-    // Pool rows
+    // Pool rows (skip finput pools when live_show_static is false)
+    int n_visible = 0;
     for (int i = 0; i < n; i++) {
         acr_nav::PoolEntry &pe = acr_nav::pool_entry_qFind(i);
-        acr_nav::LeftItem &item = acr_nav::left_item_Alloc();
-        item.ctype = pe.ctype;
-        item.ns = "";
-        item.n_record = pe.n_record;
+        bool show = !pe.is_finput || acr_nav::_db.live_show_static;
+        if (show) {
+            acr_nav::LeftItem &item = acr_nav::left_item_Alloc();
+            item.ctype = pe.ctype;
+            item.ns = "";
+            item.n_record = pe.n_record;
+            n_visible++;
+        }
     }
-    acr_nav::_db.n_visible_ctype = n;
+    acr_nav::_db.n_visible_ctype = n_visible;
     // Restore selection
     int idx = FindLeftItemByCtype(saved_ctype);
     if (idx >= 0) {
@@ -707,6 +711,12 @@ void acr_nav::navaction_toggle_xref() {
 void acr_nav::navaction_toggle_graph() {
 }
 void acr_nav::navaction_toggle_nsdep_detail() {
+}
+void acr_nav::navaction_filter_static() {
+    if (acr_nav::_db.live_mode) {
+        acr_nav::_db.live_show_static = !acr_nav::_db.live_show_static;
+        BuildLiveLeftItems();
+    }
 }
 
 // -----------------------------------------------------------------------------

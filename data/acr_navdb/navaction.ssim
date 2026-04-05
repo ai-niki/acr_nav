@@ -7,6 +7,7 @@ acr_navdb.navaction  navaction:filter_cancel  helpgroup:""  sort_order:0  passiv
 acr_navdb.navaction  navaction:filter_clear  helpgroup:""  sort_order:11  passive:N  need_no_overlay:N  dismiss_viewmode:""  target_viewmode:""  comment:"Clear filter text"
 acr_navdb.navaction  navaction:filter_cycle_target  helpgroup:""  sort_order:13  passive:N  need_no_overlay:N  dismiss_viewmode:""  target_viewmode:""  comment:"Cycle filter target (Tab in filter mode)"
 acr_navdb.navaction  navaction:filter_start  helpgroup:search  sort_order:10  passive:N  need_no_overlay:Y  dismiss_viewmode:""  target_viewmode:""  comment:"Enter filter input mode"
+acr_navdb.navaction  navaction:filter_static  helpgroup:view  sort_order:18  passive:N  need_no_overlay:Y  dismiss_viewmode:""  target_viewmode:""  comment:"Toggle static pool visibility in inspect"
 acr_navdb.navaction  navaction:follow_ref  helpgroup:navigation  sort_order:10  passive:N  need_no_overlay:Y  dismiss_viewmode:""  target_viewmode:""  comment:"Follow reference to target ctype"
 acr_navdb.navaction  navaction:go_back  helpgroup:navigation  sort_order:11  passive:N  need_no_overlay:N  dismiss_viewmode:""  target_viewmode:""  comment:"Return to previous ctype"
 acr_navdb.navaction  navaction:go_bottom  helpgroup:movement  sort_order:15  passive:Y  need_no_overlay:N  dismiss_viewmode:""  target_viewmode:""  comment:"Jump to last item"

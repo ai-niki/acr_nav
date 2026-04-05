@@ -1,26 +1,26 @@
-report.PoolCensus  ctype:acr_nav.FCtype  n_record:1425
-report.PoolCensus  ctype:acr_nav.FDetailsrc  n_record:5
-report.PoolCensus  ctype:acr_nav.FHelpgroup  n_record:5
-report.PoolCensus  ctype:acr_nav.FField  n_record:5738
-report.PoolCensus  ctype:acr_nav.FNs  n_record:85
-report.PoolCensus  ctype:acr_nav.FReftype  n_record:35
-report.PoolCensus  ctype:acr_nav.FNavaction  n_record:28
-report.PoolCensus  ctype:acr_nav.FKeybind  n_record:42
-report.PoolCensus  ctype:acr_nav.FPanel  n_record:2
-report.PoolCensus  ctype:acr_nav.FNavmode  n_record:2
-report.PoolCensus  ctype:acr_nav.Naventry  n_record:0
-report.PoolCensus  ctype:acr_nav.FNavstyle  n_record:22
-report.PoolCensus  ctype:acr_nav.FReftypestyle  n_record:35
-report.PoolCensus  ctype:acr_nav.FSsimfile  n_record:260
-report.PoolCensus  ctype:acr_nav.FViewmode  n_record:10
-report.PoolCensus  ctype:acr_nav.LeftItem  n_record:83
-report.PoolCensus  ctype:acr_nav.FFiltertarget  n_record:5
-report.PoolCensus  ctype:acr_nav.OverlayEntry  n_record:1
-report.PoolCensus  ctype:acr_nav.PoolEntry  n_record:0
+report.PoolCensus  ctype:acr_nav.FCtype  n_record:1423  is_finput:Y
+report.PoolCensus  ctype:acr_nav.FDetailsrc  n_record:5  is_finput:Y
+report.PoolCensus  ctype:acr_nav.FHelpgroup  n_record:5  is_finput:Y
+report.PoolCensus  ctype:acr_nav.FField  n_record:5731  is_finput:Y
+report.PoolCensus  ctype:acr_nav.FNs  n_record:85  is_finput:Y
+report.PoolCensus  ctype:acr_nav.FReftype  n_record:35  is_finput:Y
+report.PoolCensus  ctype:acr_nav.FNavaction  n_record:29  is_finput:N
+report.PoolCensus  ctype:acr_nav.FKeybind  n_record:43  is_finput:Y
+report.PoolCensus  ctype:acr_nav.FPanel  n_record:2  is_finput:Y
+report.PoolCensus  ctype:acr_nav.FNavmode  n_record:2  is_finput:Y
+report.PoolCensus  ctype:acr_nav.Naventry  n_record:0  is_finput:N
+report.PoolCensus  ctype:acr_nav.FNavstyle  n_record:22  is_finput:Y
+report.PoolCensus  ctype:acr_nav.FReftypestyle  n_record:35  is_finput:Y
+report.PoolCensus  ctype:acr_nav.FSsimfile  n_record:260  is_finput:Y
+report.PoolCensus  ctype:acr_nav.FViewmode  n_record:10  is_finput:N
+report.PoolCensus  ctype:acr_nav.LeftItem  n_record:83  is_finput:N
+report.PoolCensus  ctype:acr_nav.FFiltertarget  n_record:5  is_finput:Y
+report.PoolCensus  ctype:acr_nav.OverlayEntry  n_record:1  is_finput:N
+report.PoolCensus  ctype:acr_nav.PoolEntry  n_record:0  is_finput:N
 report.IndexCensus  field:acr_nav.FDb.cd_ipcconn_read  ctype:acr_nav.FIpcconn  n_record:0
 report.IndexCensus  field:acr_nav.FDb.cd_ipcconn_eof  ctype:acr_nav.FIpcconn  n_record:0
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1424  n_ctype:1425  n_field:5738  viewmode:help  breadcrumb:""  filtertarget:ctype  hints:"Esc/?:dismiss  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1422  n_ctype:1423  n_field:5731  viewmode:help  breadcrumb:""  filtertarget:ctype  hints:"Esc/?:dismiss  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:83  sel_value:""
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
@@ -59,7 +59,7 @@ acr_nav.VisibleLeftItem  row:33  value:atfdb  kind:ns  collapsed:Y  n_match:16  
 acr_nav.VisibleLeftItem  row:34  value:bash2html  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:35  value:command  kind:ns  collapsed:Y  n_match:48  n_record:0
 acr_nav.VisibleLeftItem  row:36  value:dev  kind:ns  collapsed:Y  n_match:48  n_record:0
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:23  sel_value:"── Movement keys ───────────────────"
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:24  sel_value:"── Movement keys ───────────────────"
 acr_nav.VisibleLine  row:0  value:"── Movement keys ───────────────────"
 acr_nav.VisibleLine  row:1  value:"  ↑/k/↓/j             Move selection up/down"
 acr_nav.VisibleLine  row:2  value:"  PgUp/b/PgDown/Space  Page up/down"
@@ -77,10 +77,11 @@ acr_nav.VisibleLine  row:13  value:"  f                   Toggle fields view"
 acr_nav.VisibleLine  row:14  value:"  v                   Toggle access path graph view"
 acr_nav.VisibleLine  row:15  value:"  x                   Toggle cross-reference view"
 acr_nav.VisibleLine  row:16  value:"  D                   Toggle detailed namespace dependency view"
-acr_nav.VisibleLine  row:17  value:"── Search and filter keys ──────────"
-acr_nav.VisibleLine  row:18  value:"  /                   Enter filter input mode"
-acr_nav.VisibleLine  row:19  value:"  Escape              Dismiss overlay or clear filter"
-acr_nav.VisibleLine  row:20  value:"── Help and quit ───────────────────"
-acr_nav.VisibleLine  row:21  value:"  ?                   Toggle help panel"
-acr_nav.VisibleLine  row:22  value:"  q                   Exit acr_nav"
+acr_nav.VisibleLine  row:17  value:"  s                   Toggle static pool visibility in inspect"
+acr_nav.VisibleLine  row:18  value:"── Search and filter keys ──────────"
+acr_nav.VisibleLine  row:19  value:"  /                   Enter filter input mode"
+acr_nav.VisibleLine  row:20  value:"  Escape              Dismiss overlay or clear filter"
+acr_nav.VisibleLine  row:21  value:"── Help and quit ───────────────────"
+acr_nav.VisibleLine  row:22  value:"  ?                   Toggle help panel"
+acr_nav.VisibleLine  row:23  value:"  q                   Exit acr_nav"
 

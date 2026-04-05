@@ -635,6 +635,7 @@ struct FDb { // acr_nav.FDb
     acr_nav::PoolEntry*        pool_entry_elems;                 // pointer to elements
     u32                        pool_entry_n;                     // number of elements in array
     u32                        pool_entry_max;                   // max. capacity of array before realloc
+    bool                       live_show_static;                 //   false  Show finput pools in inspect mode
     acr_nav::trace             trace;                            //
 };
 
@@ -3739,8 +3740,9 @@ void                 PanelState_Print(acr_nav::PanelState& row, algo::cstring& s
 // --- acr_nav.PoolEntry
 // create: acr_nav.FDb.pool_entry (Tary)
 struct PoolEntry { // acr_nav.PoolEntry: Parsed PoolCensus entry from live state dump
-    algo::Smallstr100   ctype;      // Fully qualified ctype name
-    i32                 n_record;   //   0  Record count from PoolCensus
+    algo::Smallstr100   ctype;       // Fully qualified ctype name
+    i32                 n_record;    //   0  Record count from PoolCensus
+    bool                is_finput;   //   false  Pool is finput-backed (static data)
     // func:acr_nav.PoolEntry..Ctor
     inline               PoolEntry() __attribute__((nothrow));
 };
@@ -4291,6 +4293,10 @@ void                 navaction_filter_cycle_target();
 // func:acr_nav...navaction_filter_start
 // this function is 'extrn' and implemented by user
 void                 navaction_filter_start();
+// User-implemented function from gstatic:acr_nav.FDb.navaction
+// func:acr_nav...navaction_filter_static
+// this function is 'extrn' and implemented by user
+void                 navaction_filter_static();
 // User-implemented function from gstatic:acr_nav.FDb.navaction
 // func:acr_nav...navaction_follow_ref
 // this function is 'extrn' and implemented by user

@@ -1,10 +1,10 @@
 acr_nav.Ack  ack:acr_nav.Navigate  ok:Y  ctype:dmmeta.Anonfld  viewmode:fields  navstack_depth:0  msg:""
 
-acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:0  n_sel_ctype:1424  n_ctype:1425  n_field:5738  viewmode:nsdep_detail  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:0  n_sel_ctype:1422  n_ctype:1423  n_field:5731  viewmode:nsdep_detail  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:37  scroll_offset:2  n_items:213  sel_value:dmmeta
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:614  sel_value:"Upstream (dmmeta imports from): 315 fields, 4 namespaces"
 
-acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:0  n_sel_ctype:1424  n_ctype:1425  n_field:5738  viewmode:nsdep_detail  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:0  n_sel_ctype:1422  n_ctype:1423  n_field:5731  viewmode:nsdep_detail  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:37  scroll_offset:2  n_items:213  sel_value:dmmeta
 acr_nav.VisibleLeftItem  row:2  value:abt_md  kind:ns  collapsed:Y  n_match:29  n_record:0
 acr_nav.VisibleLeftItem  row:3  value:acr  kind:ns  collapsed:Y  n_match:34  n_record:0

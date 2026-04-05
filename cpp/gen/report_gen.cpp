@@ -42,6 +42,7 @@ const char* report::value_ToCstr(const report::FieldId& parent) {
         case report_FieldId_field          : ret = "field";  break;
         case report_FieldId_ctype          : ret = "ctype";  break;
         case report_FieldId_n_record       : ret = "n_record";  break;
+        case report_FieldId_is_finput      : ret = "is_finput";  break;
         case report_FieldId_n_target       : ret = "n_target";  break;
         case report_FieldId_time           : ret = "time";  break;
         case report_FieldId_hitrate        : ret = "hitrate";  break;
@@ -254,6 +255,10 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
         }
         case 9: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('i','s','_','f','i','n','p','u'): {
+                    if (memcmp(rhs.elems+8,"t",1)==0) { value_SetEnum(parent,report_FieldId_is_finput); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('n','_','b','a','d','d','e','c'): {
                     if (memcmp(rhs.elems+8,"l",1)==0) { value_SetEnum(parent,report_FieldId_n_baddecl); ret = true; break; }
                     break;
@@ -451,6 +456,9 @@ bool report::PoolCensus_ReadFieldMaybe(report::PoolCensus& parent, algo::strptr 
         case report_FieldId_n_record: {
             retval = i32_ReadStrptrMaybe(parent.n_record, strval);
         } break;
+        case report_FieldId_is_finput: {
+            retval = bool_ReadStrptrMaybe(parent.is_finput, strval);
+        } break;
         default: {
             retval = false;
             algo_lib::AppendErrtext("comment", "unrecognized attr");
@@ -486,6 +494,9 @@ void report::PoolCensus_Print(report::PoolCensus& row, algo::cstring& str) {
 
     i32_Print(row.n_record, temp);
     PrintAttrSpaceReset(str,"n_record", temp);
+
+    bool_Print(row.is_finput, temp);
+    PrintAttrSpaceReset(str,"is_finput", temp);
 }
 
 // --- report.abt..ReadFieldMaybe

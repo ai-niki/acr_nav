@@ -62,6 +62,7 @@ dmmeta.userfunc  userfunc:acr_nav...navaction_filter_cancel  acrkey:gstatic/acr_
 dmmeta.userfunc  userfunc:acr_nav...navaction_filter_clear  acrkey:gstatic/acr_navdb.navaction:filter_clear  cppname:acr_nav.navaction_filter_clear  comment:""
 dmmeta.userfunc  userfunc:acr_nav...navaction_filter_cycle_target  acrkey:gstatic/acr_navdb.navaction:filter_cycle_target  cppname:acr_nav.navaction_filter_cycle_target  comment:""
 dmmeta.userfunc  userfunc:acr_nav...navaction_filter_start  acrkey:gstatic/acr_navdb.navaction:filter_start  cppname:acr_nav.navaction_filter_start  comment:""
+dmmeta.userfunc  userfunc:acr_nav...navaction_filter_static  acrkey:gstatic/acr_navdb.navaction:filter_static  cppname:acr_nav.navaction_filter_static  comment:""
 dmmeta.userfunc  userfunc:acr_nav...navaction_follow_ref  acrkey:gstatic/acr_navdb.navaction:follow_ref  cppname:acr_nav.navaction_follow_ref  comment:""
 dmmeta.userfunc  userfunc:acr_nav...navaction_go_back  acrkey:gstatic/acr_navdb.navaction:go_back  cppname:acr_nav.navaction_go_back  comment:""
 dmmeta.userfunc  userfunc:acr_nav...navaction_go_bottom  acrkey:gstatic/acr_navdb.navaction:go_bottom  cppname:acr_nav.navaction_go_bottom  comment:""
