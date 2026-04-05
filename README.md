@@ -78,13 +78,13 @@ acr_nav -ipc                      acr_nav -connect /tmp/acr_nav.<pid>.sock
 
 B polls A every 100ms. Left panel shows live pools with record counts. Enter follows references between pools. `s` toggles static (finput) pool visibility. FDb singleton gets a vertical detail card.
 
-The `/statedump` skill connects to a running instance and reads its pool state — Claude can launch a program with `-ipc`, inspect runtime state, diagnose issues, and verify fixes without stopping the process.
-
 Design notes: [`.claude/plans/statedump_vision.md`](.claude/plans/statedump_vision.md)
 
 ### Agent testing
 
-Two Claude Code skills ship with the repo:
+Three Claude Code skills ship with the repo:
+
+**`/statedump`** — connects to a running instance via IPC socket, reads pool state, and reconstructs a text diagram of the UI. Used during development to inspect runtime state without stopping the process.
 
 **`/agent-test`** — exploratory testing via parallel subagents. Each agent drives acr_nav through the headless protocol, probing combinations across orthogonal state axes (navmode × viewmode × filter × navstack depth). Findings get captured as `atf_comp` regression tests.
 
