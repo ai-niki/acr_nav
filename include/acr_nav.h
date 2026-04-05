@@ -194,7 +194,6 @@ namespace acr_nav { // update-hdr
     // void navaction_toggle_xref(); // gstatic/acr_navdb.navaction:toggle_xref
     // void navaction_toggle_graph(); // gstatic/acr_navdb.navaction:toggle_graph
     // void navaction_toggle_nsdep_detail(); // gstatic/acr_navdb.navaction:toggle_nsdep_detail
-    // void navaction_toggle_inspect(); // gstatic/acr_navdb.navaction:toggle_inspect
     // void navaction_filter_accept(); // gstatic/acr_navdb.navaction:filter_accept
     // void navaction_filter_start(); // gstatic/acr_navdb.navaction:filter_start
     // void navaction_filter_cancel(); // gstatic/acr_navdb.navaction:filter_cancel

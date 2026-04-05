@@ -8255,6 +8255,54 @@ void acr_nav::StateDump(algo::cstring& out, algo_lib::Regx& filter) {
         PrintAttrSpaceReset(out, "live_poll_pending", temp);
         acr_nav::trace_Print(acr_nav::_db.trace, temp);
         PrintAttrSpaceReset(out, "trace", temp);
+        if (acr_nav::_db.p_cur_panel) {
+            algo::Smallstr50_Print(acr_nav::_db.p_cur_panel->panel, temp);
+        }
+        PrintAttrSpaceReset(out, "p_cur_panel", temp);
+        if (acr_nav::_db.p_left_panel) {
+            algo::Smallstr50_Print(acr_nav::_db.p_left_panel->panel, temp);
+        }
+        PrintAttrSpaceReset(out, "p_left_panel", temp);
+        if (acr_nav::_db.p_right_panel) {
+            algo::Smallstr50_Print(acr_nav::_db.p_right_panel->panel, temp);
+        }
+        PrintAttrSpaceReset(out, "p_right_panel", temp);
+        if (acr_nav::_db.p_cur_mode) {
+            algo::Smallstr50_Print(acr_nav::_db.p_cur_mode->navmode, temp);
+        }
+        PrintAttrSpaceReset(out, "p_cur_mode", temp);
+        if (acr_nav::_db.p_filter_mode) {
+            algo::Smallstr50_Print(acr_nav::_db.p_filter_mode->navmode, temp);
+        }
+        PrintAttrSpaceReset(out, "p_filter_mode", temp);
+        if (acr_nav::_db.p_cur_viewmode) {
+            algo::Smallstr50_Print(acr_nav::_db.p_cur_viewmode->viewmode, temp);
+        }
+        PrintAttrSpaceReset(out, "p_cur_viewmode", temp);
+        if (acr_nav::_db.p_default_viewmode) {
+            algo::Smallstr50_Print(acr_nav::_db.p_default_viewmode->viewmode, temp);
+        }
+        PrintAttrSpaceReset(out, "p_default_viewmode", temp);
+        if (acr_nav::_db.p_detail_field) {
+            algo::Smallstr100_Print(acr_nav::_db.p_detail_field->field, temp);
+        }
+        PrintAttrSpaceReset(out, "p_detail_field", temp);
+        if (acr_nav::_db.p_cur_filtertarget) {
+            algo::Smallstr50_Print(acr_nav::_db.p_cur_filtertarget->filtertarget, temp);
+        }
+        PrintAttrSpaceReset(out, "p_cur_filtertarget", temp);
+        if (acr_nav::_db.p_default_filtertarget) {
+            algo::Smallstr50_Print(acr_nav::_db.p_default_filtertarget->filtertarget, temp);
+        }
+        PrintAttrSpaceReset(out, "p_default_filtertarget", temp);
+        if (acr_nav::_db.p_nsdep_ns) {
+            algo::Smallstr16_Print(acr_nav::_db.p_nsdep_ns->ns, temp);
+        }
+        PrintAttrSpaceReset(out, "p_nsdep_ns", temp);
+        if (acr_nav::_db.p_pre_nsdep_viewmode) {
+            algo::Smallstr50_Print(acr_nav::_db.p_pre_nsdep_viewmode->viewmode, temp);
+        }
+        PrintAttrSpaceReset(out, "p_pre_nsdep_viewmode", temp);
         out << '\n';
     }
     census.ctype = "acr_nav.FCtype";

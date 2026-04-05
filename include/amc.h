@@ -1718,7 +1718,7 @@ namespace amc { // update-hdr
     // that emits a pool census (record count per pool) plus filtered record dump.
     // Pools whose arg ctype has a cfmt with print:Y use the cfmt printer.
     // Pools without cfmt get field-by-field serialization.
-    // Only Lary and Inlary pools are covered — Tpool/Lpool/Sbrk have no cursor.
+    // Lary, Inlary, and Tary pools are covered — Tpool/Lpool/Sbrk have no cursor.
     //     (user-implemented function, prototype is in amc-generated header)
     // void gen_ns_state_dump(); // gstatic/amcdb.gen:ns_state_dump
 

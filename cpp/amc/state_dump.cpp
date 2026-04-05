@@ -42,11 +42,25 @@ static bool StateDumpFieldQ(amc::FField& field) {
     return good;
 }
 
+// For a Ptr field, resolve the pkey field of the target ctype
+// by following the Base chain to find a ctype with c_pkeyfield set.
+// Ptr fields use direct member access (ptr->pkeyname) rather than
+// FieldvalExpr, since !FldfuncQ guarantees simple member access.
+static amc::FField *ResolvePtrPkey(amc::FField& ptr_field) {
+    amc::FCtype *ctype = ptr_field.p_arg;
+    while (ctype && !ctype->c_pkeyfield) {
+        amc::FCtype *base = amc::GetBaseType(*ctype, NULL);
+        if (!base) break;
+        ctype = base;
+    }
+    return ctype ? ctype->c_pkeyfield : NULL;
+}
+
 // For each namespace with an nsdump record, generate a StateDump function
 // that emits a pool census (record count per pool) plus filtered record dump.
 // Pools whose arg ctype has a cfmt with print:Y use the cfmt printer.
 // Pools without cfmt get field-by-field serialization.
-// Only Lary and Inlary pools are covered — Tpool/Lpool/Sbrk have no cursor.
+// Lary, Inlary, and Tary pools are covered — Tpool/Lpool/Sbrk have no cursor.
 void amc::gen_ns_state_dump() {
     amc::FNs &ns = *amc::_db.c_ns;
     if (ns.c_nsdump && ns.c_globfld) {
@@ -74,6 +88,16 @@ void amc::gen_ns_state_dump() {
                     }
                 }
             }ind_end;
+            // Ptr fields — count those with resolvable pkey
+            ind_beg(amc::ctype_c_field_curs, fdb_field, *fdb) {
+                if (fdb_field.reftype == dmmeta_Reftype_reftype_Ptr
+                    && !FldfuncQ(fdb_field)) {
+                    amc::FField *pkeyfield = ResolvePtrPkey(fdb_field);
+                    if (pkeyfield && amc::HasStringPrintQ(*pkeyfield->p_arg)) {
+                        n_emittable++;
+                    }
+                }
+            }ind_end;
             if (n_emittable > 0) {
                 Ins(&R, func.body, "if (Regx_Match(filter, strptr(\"$Fdbctype\"))) {");
                 Ins(&R, func.body, "    algo::tempstr temp;");
@@ -91,6 +115,21 @@ void amc::gen_ns_state_dump() {
                             tempstr access(FieldvalExpr(fdb, fdb_field, Subst(R, "$ns::_db")));
                             Set(R, "$access", access);
                             Ins(&R, func.body, "    $Ftype_Print($access, temp);");
+                            Ins(&R, func.body, "    PrintAttrSpaceReset(out, \"$fname\", temp);");
+                        }
+                    }
+                }ind_end;
+                // Ptr fields — emit pkey of pointed-to record (empty for NULL)
+                ind_beg(amc::ctype_c_field_curs, fdb_field, *fdb) {
+                    if (fdb_field.reftype == dmmeta_Reftype_reftype_Ptr && !FldfuncQ(fdb_field)) {
+                        amc::FField *pkeyfield = ResolvePtrPkey(fdb_field);
+                        if (pkeyfield && amc::HasStringPrintQ(*pkeyfield->p_arg)) {
+                            Set(R, "$fname", name_Get(fdb_field));
+                            Set(R, "$Pkeytype", pkeyfield->p_arg->cpp_type);
+                            Set(R, "$pkeyname", name_Get(*pkeyfield));
+                            Ins(&R, func.body, "    if ($ns::_db.$fname) {");
+                            Ins(&R, func.body, "        $Pkeytype_Print($ns::_db.$fname->$pkeyname, temp);");
+                            Ins(&R, func.body, "    }");
                             Ins(&R, func.body, "    PrintAttrSpaceReset(out, \"$fname\", temp);");
                         }
                     }

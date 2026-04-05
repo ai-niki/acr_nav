@@ -334,9 +334,9 @@ Ideas that don't have phases yet. Each would need a use case before committing:
 
 Discovered during Phase 3.3 live testing: external process connected to running TUI via IPC, could see FPanel records and FDb scalar fields, but could not determine which ctype the user was looking at. Three categories of state are invisible to the current generator.
 
-### Gap 1: Ptr fields on FDb — "what am I looking at"
+### Gap 1: Ptr fields on FDb — "what am I looking at" (DONE)
 
-`StateDumpFieldQ` accepts only Val, Smallstr, Bitfld, Regx reftypes. Ptr fields are excluded. acr_nav.FDb has 12 Ptr fields that carry the most diagnostic value:
+Generator in `cpp/amc/state_dump.cpp` now has a `ResolvePtrPkey` helper that emits Ptr field pkeys (NULL-guarded) in the FDb singleton dump section. All 12 Ptr fields on acr_nav.FDb are now visible in the state dump:
 
 | Field | What it tells you |
 |---|---|
@@ -348,21 +348,9 @@ Discovered during Phase 3.3 live testing: external process connected to running 
 | `p_nsdep_ns` | Namespace in nsdep dependency view |
 | `p_pre_nsdep_viewmode` | Viewmode saved before nsdep context switch |
 
-**Fix:** For Ptr fields, emit the pkey of the pointed-to record (or empty string for NULL). The pkey is a Smallstr on the target ctype — always printable. Generator change: add Ptr to `StateDumpFieldQ`, emit `pkey_Get(*field)` guarded by NULL check.
+### Gap 2: Tary pools — navstack, left_item, overlay_stack (ALREADY DONE)
 
-### Gap 2: Tary pools — navstack, left_item, overlay_stack
-
-Generator only handles Lary and Inlary pools (line 65-66 of `state_dump.cpp`). Three Tary fields on FDb are skipped:
-
-| Field | Arg type | What it tells you |
-|---|---|---|
-| `navstack` | `acr_nav.Naventry` | Navigation history (filter, mode, scroll, viewmode per level) |
-| `left_item` | `acr_nav.LeftItem` | Display list — **which ctype is at row N** |
-| `overlay_stack` | `acr_nav.OverlayEntry` | Stacked overlay viewmodes |
-
-Tary has `_N()` and cursors, same as Lary. All three arg types have only Val/Smallstr fields (no cfmt) — field-by-field serialization works. `left_item` is the key gap: it maps row indices to ctype names, closing the "sel_row:272 = which ctype?" question.
-
-**Fix:** Add `dmmeta_Reftype_reftype_Tary` to the reftype check at line 65. Tary uses the same `_N()` and `_db_<name>_curs` patterns as Lary. Minimal generator change.
+The code at lines 104-106 of `state_dump.cpp` already handles Tary alongside Lary and Inlary. Census and detailed dump both work for navstack (Naventry), left_item (LeftItem), and overlay_stack (OverlayEntry). `left_item` maps row indices to ctype names, closing the "sel_row:272 = which ctype?" question.
 
 ### Gap 3: Tpool pools — no cursor
 
@@ -372,7 +360,7 @@ Tary has `_N()` and cursors, same as Lary. All three arg types have only Val/Sma
 
 ### Priority
 
-Gap 2 (Tary) is the easiest fix and highest value — one line change in the generator adds `left_item` which directly answers navigation questions. Gap 1 (Ptr) is medium effort, high value — requires NULL-guarded pkey emission. Gap 3 (Tpool) is deferred.
+Gap 1 (Ptr) and Gap 2 (Tary) are both done. Gap 3 (Tpool) remains deferred — low priority since IPC connections are infrastructure, not diagnostic state.
 
 ## Generator mechanics (verified, updated 2026-04-04)
 
