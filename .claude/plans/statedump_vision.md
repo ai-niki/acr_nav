@@ -25,10 +25,11 @@ amc knows every pool in FDb via the `zd_inst` linked list (discovery in `cpp/amc
 The dump output is ssim: labeled key:value pairs, one record per line, type-prefixed:
 
 ```
-report.PoolCensus  ctype:acr_nav.FCtype    n_record:42
-report.PoolCensus  ctype:acr_nav.FPanel    n_record:2
-acr_nav.FCtype     ctype:dmmeta.Field      comment:""  ...
-acr_nav.FPanel     side:left  sel:7  ...
+report.PoolCensus   ctype:acr_nav.FCtype    n_record:42
+report.PoolCensus   ctype:acr_nav.FPanel    n_record:2
+report.IndexCensus  field:acr_nav.FDb.cd_ipcconn_read  ctype:acr_nav.FIpcconn  n_record:0
+acr_nav.FCtype      ctype:dmmeta.Field      comment:""  ...
+acr_nav.FPanel      side:left  sel:7  ...
 ```
 
 Filterable at the consumer with no server-side query language:
@@ -36,7 +37,8 @@ Filterable at the consumer with no server-side query language:
 ```bash
 acr_nav -dump:".*" | grep "^acr_nav.FCtype"       # filter by ctype
 acr_nav -dump:".*" | grep "reftype:Lary"           # filter by field value
-acr_nav -dump:".*" | grep "n_record:0"             # find empty pools
+acr_nav -dump:".*" | grep "n_record:0"             # find empty pools/indexes
+acr_nav -dump:".*" | grep "IndexCensus"            # all index queue depths
 ```
 
 For complex predicates or cross-record correlation, the agent processes the dump programmatically -- reads ssim tuples, builds its own view, runs whatever analysis it needs. This is exactly how acr itself works: load everything, filter client-side. No runtime query engine needed; the query engine is the consumer.
@@ -259,7 +261,7 @@ Client: `LiveConnect()` creates Unix socket and connects to A. `LivePollCallback
 
 Server fix: `Ipc_RequestStateDump` now writes in a loop (non-blocking fd truncated 219KB responses at ~212KB socket buffer limit) and appends `\n\n` sentinel for response framing.
 
-Viewmode: `viewmode_inspect_ensure_content` filters `live_data` by selected ctype prefix, shows matching records + PoolCensus lines. Cache key: `inspect:<generation>:<ctype>`. Color: `line_key` for type prefix, `line_comment` for census.
+Viewmode: `viewmode_inspect_ensure_content` filters `live_data` by selected ctype prefix, shows matching records + PoolCensus + IndexCensus lines. Cache key: `inspect:<generation>:<ctype>`. Color: `line_key` for type prefix, `line_comment` for census.
 
 UX: `-connect` mode auto-filters left panel to `acr_nav.*` ctypes, dismisses help overlay, auto-switches to inspect viewmode. No keybind (viewmode activates automatically in connect mode).
 
@@ -286,6 +288,10 @@ B shows A's pool state updating live. Select `acr_nav.FPanel` to see panel selec
 
 14. *Response framing is mandatory for stream sockets.* Unix domain SOCK_STREAM doesn't preserve message boundaries. Without an end-of-response marker, the client cannot distinguish partial from complete responses. Fix: empty-line sentinel (`\n\n`) appended by server, detected by client.
 
+15. *Report types have no pkey field.* `report.PoolCensus` has only `ctype` + `n_record` — no field named `pool_census`. In `printfmt:Tuple`, all fields print with labels. This is the correct pattern for protocol messages (not database records). `report.IndexCensus` follows suit: `field` + `ctype` + `n_record`, no synthetic pkey.
+
+16. *Guard generated variable declarations.* If a generated variable might be unused for some namespaces (e.g., `idx_census` when a namespace has zero matching index fields), gate the declaration behind a count check. Otherwise `-Wunused-variable` fires. Pattern: count matching fields in a first pass, emit declaration + loop only if count > 0.
+
 ### Phase 3.4.1 -- Inspect viewmode redesign (done)
 
 Replaced the hacky MVP with a proper pool-driven inspect mode:
@@ -309,22 +315,13 @@ Replaced the hacky MVP with a proper pool-driven inspect mode:
 
 Declare program commands in ssimfiles, generate dispatch scaffolding. Currently the IPC dispatch uses direct `RequestStateDump_ReadStrptrMaybe()` -- adding a `dispatch_msg` record is a silent no-op. Refactor to dispatch `call:Y` so dispatch_msg records drive code generation. Investigate whether `dmmeta.dispatch` already covers this (10 dispatch records exist; `atf_amc.Ssimfiles` with `read:Y` generates exactly the "try-deserialize-call-handler" loop).
 
-### Phase 5 -- Second namespace: prove it generalizes
+### Phase 5 -- Second namespace: prove it generalizes on a meaningful app
 
-Enable `nsdump` + `nsipc` on a second program to validate the generators work beyond acr_nav. acr_nav was the development vehicle — Phase 5 proves the capability is generic.
+`samp_meng` (Phase 3.2) validated that the generators work on a second namespace — zero generator changes required, only ssim records + two extern functions. But samp_meng is a minimal smoke test, not a program where pool inspection has real diagnostic value.
 
-**Candidate:** A long-running server or stateful program where pool inspection has real diagnostic value (see "Where the value is highest" section). `samp_meng` is a minimal option for smoke-testing the generators, but a program with meaningful runtime state is more convincing.
+Phase 5 requires enabling `nsdump` + `nsipc` on a program with meaningful runtime state — a long-running server or stateful tool where inspectability pays off (see "Where the value is highest" section). The generators are proven generic; what remains is demonstrating diagnostic value on a real workload.
 
-**What "prove it works" means:**
-
-- Add `dmmeta.nsdump` and `dmmeta.nsipc` records for the target namespace
-- Add the IPC structural records (FIpcconn ctype, FDb fields, fstep, dispatch) following the acr_nav pattern
-- Write `IpcInit()` and `IpcAccept()` (extern functions, ~25 lines each — same as `cpp/acr_nav/ipc.cpp`)
-- `amc` regenerates — StateDump and IPC infrastructure appear in the target's `cpp/gen/`
-- Build, run with `-ipc`, connect from another process, get StateDump response
-- Document any generator changes needed (ideally zero — if the generator needs acr_nav-specific fixes, it's not generic yet)
-
-**Success criteria:** Adding state dump + IPC to a new program requires only ssim records + two small extern functions. Zero generator changes. The capability is a schema-level opt-in, not a code-level integration project.
+**Candidate criteria:** multiple pools with dynamic record counts, state that accumulates over time, diagnostic scenarios where census answers questions that logs cannot.
 
 ### Beyond Phase 5 -- Possible extensions
 
@@ -411,7 +408,7 @@ Index-type coverage (via `report.IndexCensus`):
 | Ptrary | Yes (unconditional) | **Yes** | Census only; records in owning pool |
 | Bheap | Yes (unconditional) | **Yes** | Census only; records in owning pool |
 | Llist | Conditional (`havecount:Y`) | **Yes** | Census for 64/78 FDb fields |
-| Thash | No | No | Hash index internals, low priority |
+| Thash | Yes (unconditional) | No | Redundant with PoolCensus (count == pool count) |
 | Atree | No | No | Tree index internals, low priority |
 
 FDb scalar/pointer field coverage:
@@ -428,7 +425,8 @@ FDb scalar/pointer field coverage:
 
 **Tpool record dump (Gap 6 residual):** Census tells you queue depths but not record contents. Options: (a) iterate Llist cursors for Tpool-backed ctypes, accepting partial view; (b) add Tpool cursor to amc (invasive); (c) defer until a use case demands it.
 **Count fields on FDb:** Low priority. Emittable as i32 via StateDumpFieldQ extension.
-**Thash/Atree census:** Would show hash table sizes / tree sizes. Low priority — these are infrastructure indexes.
+**Thash census:** Has `_N()` but count is redundant with PoolCensus (every indexed record is also in a pool). Only useful for detecting indexing inconsistencies (count mismatch between pool and hash). Not worth the noise for diagnostics.
+**Atree census:** No `_N()` accessor. Would require tree traversal. Low priority.
 
 ## Generator mechanics (verified, updated 2026-04-04)
 
