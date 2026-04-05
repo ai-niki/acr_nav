@@ -36,6 +36,10 @@ using acr_nav::SelectedNs;
 using acr_nav::RightPanelLineCount;
 using acr_nav::DecimalDigits;
 
+// Forward declarations
+static void EmitSectionHeader(acr_nav::FViewmode &vm, algo::strptr title);
+static void FormatDetailCard(acr_nav::FViewmode &vm, algo::Tuple &tuple, algo::strptr field_name);
+
 // Load ssimfile content into the preview viewmode's line Tary, stripping the tuple head from each line.
 // Format a single row of attr values into an aligned column string.
 static void FormatPreviewRow(cstring &out, algo::Tuple &tuple, int *display_wid, int n_col, int *col_byte_pos) {
@@ -654,40 +658,63 @@ void acr_nav::viewmode_inspect_ensure_content(acr_nav::FCtype &ct) {
             } ind_end;
             // Detect nav columns and build header
             if (n_records > 0) {
-                DetectNavColumns(vm, &ct, col_name, display_wid, n_col, true);
-                vm.pkey_wid = (n_col > 0) ? display_wid[0] : 0;
-                int comment_col = -1;
-                BuildPreviewHeader(vm, col_name, display_wid, n_col, comment_col);
-                // Pass 2: format records, append census/index lines
-                ind_beg(Line_curs, line, acr_nav::_db.live_data) {
-                    if (algo::StartsWithQ(line, strptr(prefix))) {
-                        algo::Tuple tuple;
-                        if (algo::Tuple_ReadStrptr(tuple, line, false)) {
-                            tempstr row;
-                            int col_byte_pos[64];
-                            FormatPreviewRow(row, tuple, display_wid, n_col, col_byte_pos);
-                            acr_nav::content_row_Alloc(vm).text = row;
-                            int li = acr_nav::content_row_N(vm) - 1;
-                            if (n_col > 0) {
-                                int pkey_end = (n_col > 1) ? col_byte_pos[1] - 2 : ch_N(row);
-                                AddSpan(vm, li, 0, pkey_end, acr_nav::ind_navstyle_Find("line_key"));
+                bool is_fdb = algo::EndsWithQ(ct.ctype, strptr(".FDb"));
+                if (is_fdb) {
+                    // FDb singleton: detail card format (one field per line, no h-scroll)
+                    ind_beg(Line_curs, line, acr_nav::_db.live_data) {
+                        if (algo::StartsWithQ(line, strptr(prefix))) {
+                            algo::Tuple tuple;
+                            if (algo::Tuple_ReadStrptr(tuple, line, false)) {
+                                FormatDetailCard(vm, tuple, strptr());
                             }
-                            if (comment_col >= 0) {
-                                AddSpan(vm, li, col_byte_pos[comment_col], ch_N(row), acr_nav::ind_navstyle_Find("line_comment"));
+                        } else {
+                            bool is_census = algo::StartsWithQ(line, strptr("report.PoolCensus"))
+                                && algo::FindStr(line, strptr(census_match)) >= 0;
+                            bool is_idx = algo::StartsWithQ(line, strptr("report.IndexCensus"))
+                                && algo::FindStr(line, strptr(census_match)) >= 0;
+                            if (is_census || is_idx) {
+                                acr_nav::content_row_Alloc(vm).text = line;
+                                int li = acr_nav::content_row_N(vm) - 1;
+                                AddSpan(vm, li, 0, elems_N(line), acr_nav::ind_navstyle_Find("line_comment"));
                             }
                         }
-                    } else {
-                        bool is_census = algo::StartsWithQ(line, strptr("report.PoolCensus"))
-                            && algo::FindStr(line, strptr(census_match)) >= 0;
-                        bool is_idx = algo::StartsWithQ(line, strptr("report.IndexCensus"))
-                            && algo::FindStr(line, strptr(census_match)) >= 0;
-                        if (is_census || is_idx) {
-                            acr_nav::content_row_Alloc(vm).text = line;
-                            int li = acr_nav::content_row_N(vm) - 1;
-                            AddSpan(vm, li, 0, elems_N(line), acr_nav::ind_navstyle_Find("line_comment"));
+                    } ind_end;
+                } else {
+                    DetectNavColumns(vm, &ct, col_name, display_wid, n_col, true);
+                    vm.pkey_wid = (n_col > 0) ? display_wid[0] : 0;
+                    int comment_col = -1;
+                    BuildPreviewHeader(vm, col_name, display_wid, n_col, comment_col);
+                    // Pass 2: format records, append census/index lines
+                    ind_beg(Line_curs, line, acr_nav::_db.live_data) {
+                        if (algo::StartsWithQ(line, strptr(prefix))) {
+                            algo::Tuple tuple;
+                            if (algo::Tuple_ReadStrptr(tuple, line, false)) {
+                                tempstr row;
+                                int col_byte_pos[64];
+                                FormatPreviewRow(row, tuple, display_wid, n_col, col_byte_pos);
+                                acr_nav::content_row_Alloc(vm).text = row;
+                                int li = acr_nav::content_row_N(vm) - 1;
+                                if (n_col > 0) {
+                                    int pkey_end = (n_col > 1) ? col_byte_pos[1] - 2 : ch_N(row);
+                                    AddSpan(vm, li, 0, pkey_end, acr_nav::ind_navstyle_Find("line_key"));
+                                }
+                                if (comment_col >= 0) {
+                                    AddSpan(vm, li, col_byte_pos[comment_col], ch_N(row), acr_nav::ind_navstyle_Find("line_comment"));
+                                }
+                            }
+                        } else {
+                            bool is_census = algo::StartsWithQ(line, strptr("report.PoolCensus"))
+                                && algo::FindStr(line, strptr(census_match)) >= 0;
+                            bool is_idx = algo::StartsWithQ(line, strptr("report.IndexCensus"))
+                                && algo::FindStr(line, strptr(census_match)) >= 0;
+                            if (is_census || is_idx) {
+                                acr_nav::content_row_Alloc(vm).text = line;
+                                int li = acr_nav::content_row_N(vm) - 1;
+                                AddSpan(vm, li, 0, elems_N(line), acr_nav::ind_navstyle_Find("line_comment"));
+                            }
                         }
-                    }
-                } ind_end;
+                    } ind_end;
+                }
             } else {
                 // No records — still check for census lines
                 int n_census = 0;
