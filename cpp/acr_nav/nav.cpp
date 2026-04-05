@@ -173,8 +173,14 @@ void acr_nav::BuildLiveLeftItems() {
         saved_ctype = acr_nav::left_item_qFind(saved_row).ctype;
     }
     acr_nav::left_item_RemoveAll();
-    // Parse PoolCensus lines into pool_entry Tary
+    // Parse PoolCensus lines into pool_entry Tary.
+    // Also detect FDb singleton (not a pool, so no PoolCensus line).
     acr_nav::pool_entry_RemoveAll();
+    tempstr fdb_prefix;
+    fdb_prefix << acr_nav::_db.live_ns << ".FDb";
+    tempstr fdb_line_prefix;
+    fdb_line_prefix << fdb_prefix << "  ";
+    bool found_fdb = false;
     ind_beg(Line_curs, line, acr_nav::_db.live_data) {
         if (algo::StartsWithQ(line, strptr("report.PoolCensus"))) {
             algo::Tuple tuple;
@@ -187,6 +193,11 @@ void acr_nav::BuildLiveLeftItems() {
                     pe.n_record = algo::ParseI32(nr, 0);
                 }
             }
+        } else if (!found_fdb && algo::StartsWithQ(line, strptr(fdb_line_prefix))) {
+            acr_nav::PoolEntry &pe = acr_nav::pool_entry_Alloc();
+            pe.ctype = fdb_prefix;
+            pe.n_record = 1;
+            found_fdb = true;
         }
     } ind_end;
     // Sort alphabetically by ctype name
