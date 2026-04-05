@@ -2780,8 +2780,15 @@ inline  acr_nav::IpcCase::IpcCase(acr_nav_IpcCaseEnum arg) {
     this->value = u32(arg);
 }
 
+// --- acr_nav.LeftItem..Init
+// Set all fields to initial values.
+inline void acr_nav::LeftItem_Init(acr_nav::LeftItem& parent) {
+    parent.n_record = i32(0);
+}
+
 // --- acr_nav.LeftItem..Ctor
 inline  acr_nav::LeftItem::LeftItem() {
+    acr_nav::LeftItem_Init(*this);
 }
 
 // --- acr_nav.LineColorSpan..Init

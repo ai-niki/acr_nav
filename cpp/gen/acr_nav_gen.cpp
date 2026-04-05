@@ -5476,6 +5476,7 @@ void acr_nav::FDb_Init() {
     _db.live_generation = i32(0);
     _db.live_connected = bool(false);
     _db.live_poll_pending = bool(false);
+    _db.live_ns = algo::strptr("");
 
     acr_nav::InitReflection();
     navaction_LoadStatic(); // gen:ns_gstatic  gstatic:acr_nav.FDb.navaction  load acr_nav.FNavaction records
@@ -8253,6 +8254,8 @@ void acr_nav::StateDump(algo::cstring& out, algo_lib::Regx& filter) {
         PrintAttrSpaceReset(out, "live_error", temp);
         bool_Print(acr_nav::_db.live_poll_pending, temp);
         PrintAttrSpaceReset(out, "live_poll_pending", temp);
+        algo::Smallstr16_Print(acr_nav::_db.live_ns, temp);
+        PrintAttrSpaceReset(out, "live_ns", temp);
         acr_nav::trace_Print(acr_nav::_db.trace, temp);
         PrintAttrSpaceReset(out, "trace", temp);
         if (acr_nav::_db.p_cur_panel) {
@@ -8670,6 +8673,8 @@ void acr_nav::StateDump(algo::cstring& out, algo_lib::Regx& filter) {
             PrintAttrSpaceReset(out, "ctype", temp);
             algo::Smallstr16_Print(rec.ns, temp);
             PrintAttrSpaceReset(out, "ns", temp);
+            i32_Print(rec.n_record, temp);
+            PrintAttrSpaceReset(out, "n_record", temp);
             out << '\n';
         }ind_end;
     }

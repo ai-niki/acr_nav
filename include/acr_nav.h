@@ -150,6 +150,7 @@ namespace acr_nav { // update-hdr
     //
     void BuildLeftItems();
     void BuildLeftItemsReset();
+    void BuildLiveLeftItems();
 
     // Used by show_help toggle, show_detail toggle, and startup help dismiss.
     void PopOverlay();

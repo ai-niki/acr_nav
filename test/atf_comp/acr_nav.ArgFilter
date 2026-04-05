@@ -1,4 +1,4 @@
-acr_nav.Screen  mode:filter  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1422  n_ctype:1423  n_field:5729  viewmode:nsdep  breadcrumb:""  filtertarget:arg  hints:"Enter:accept  Tab:target  Esc:cancel"  sel_nav_col:0
+acr_nav.Screen  mode:filter  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1422  n_ctype:1423  n_field:5731  viewmode:nsdep  breadcrumb:""  filtertarget:arg  hints:"Enter:accept  Tab:target  Esc:cancel"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:83  sel_value:""
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
@@ -49,7 +49,7 @@ acr_nav.VisibleLine  row:7  value:"        dmmeta    110 fields"
 acr_nav.VisibleLine  row:8  value:"      algo_lib     79 fields"
 acr_nav.VisibleLine  row:9  value:"           amc     78 fields"
 acr_nav.VisibleLine  row:10  value:"           acr     62 fields"
-acr_nav.VisibleLine  row:11  value:"       acr_nav     58 fields"
+acr_nav.VisibleLine  row:11  value:"       acr_nav     59 fields"
 acr_nav.VisibleLine  row:12  value:"         kafka     53 fields"
 acr_nav.VisibleLine  row:13  value:"        report     44 fields"
 acr_nav.VisibleLine  row:14  value:"           ams     38 fields"
@@ -76,7 +76,7 @@ acr_nav.VisibleLine  row:34  value:"            fm      9 fields"
 acr_nav.VisibleLine  row:35  value:"        abt_md      8 fields"
 acr_nav.VisibleLine  row:36  value:"        acr_in      8 fields"
 
-acr_nav.Screen  mode:filter  focus:ctype_list  filter:cstring  navstack_depth:0  n_sel_ctype:258  n_ctype:1423  n_field:5729  viewmode:nsdep  breadcrumb:""  filtertarget:arg  hints:"Enter:accept  Tab:target  Esc:cancel"  sel_nav_col:0
+acr_nav.Screen  mode:filter  focus:ctype_list  filter:cstring  navstack_depth:0  n_sel_ctype:258  n_ctype:1423  n_field:5731  viewmode:nsdep  breadcrumb:""  filtertarget:arg  hints:"Enter:accept  Tab:target  Esc:cancel"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:60  sel_value:abt
 acr_nav.VisibleLeftItem  row:0  value:abt  kind:ns  collapsed:Y  n_match:6  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt_md  kind:ns  collapsed:Y  n_match:8  n_record:0
@@ -128,7 +128,7 @@ acr_nav.VisibleLine  row:8  value:""
 acr_nav.VisibleLine  row:9  value:"Downstream (imports from abt):"
 acr_nav.VisibleLine  row:10  value:"  (none)"
 
-acr_nav.Screen  mode:filter  focus:ctype_list  filter:cstring  navstack_depth:0  n_sel_ctype:258  n_ctype:1423  n_field:5729  viewmode:nsdep  breadcrumb:""  filtertarget:arg  hints:"Enter:accept  Tab:target  Esc:cancel"  sel_nav_col:0
+acr_nav.Screen  mode:filter  focus:ctype_list  filter:cstring  navstack_depth:0  n_sel_ctype:258  n_ctype:1423  n_field:5731  viewmode:nsdep  breadcrumb:""  filtertarget:arg  hints:"Enter:accept  Tab:target  Esc:cancel"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:60  sel_value:abt
 acr_nav.VisibleLeftItem  row:0  value:abt  kind:ns  collapsed:Y  n_match:6  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt_md  kind:ns  collapsed:Y  n_match:8  n_record:0

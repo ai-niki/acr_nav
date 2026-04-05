@@ -996,6 +996,9 @@ static void LiveReadCallback() {
         acr_nav::_db.live_generation++;
     }
     if ((got_complete_response || disconnected) && acr_nav::_db.running) {
+        if (ch_N(acr_nav::_db.live_ns) > 0) {
+            acr_nav::BuildLiveLeftItems();
+        }
         TuiRepaint();
     }
 }
@@ -1004,8 +1007,10 @@ static void LiveReadCallback() {
 
 static void LivePollCallback() {
     if (acr_nav::_db.running && acr_nav::_db.live_connected && !acr_nav::_db.live_poll_pending) {
-        static const char req[] = "acr_nav.RequestStateDump  filter:%\n";
-        ssize_t nw = write(acr_nav::_db.live_iohook.fildes.value, req, sizeof(req) - 1);
+        tempstr req;
+        req << acr_nav::_db.live_ns << ".RequestStateDump  filter:%\n";
+        algo::strptr req_str(req);
+        ssize_t nw = write(acr_nav::_db.live_iohook.fildes.value, req_str.elems, req_str.n_elems);
         if (nw > 0) {
             acr_nav::_db.live_poll_pending = true;
         } else if (nw < 0 && errno != EAGAIN && errno != EWOULDBLOCK) {
@@ -1050,9 +1055,12 @@ static void TuiLiveInit() {
     // InitPanels (called inside TuiIpcInit) pushes help overlay; dismiss it in connect mode
     acr_nav::_db.startup_help = false;
     acr_nav::PopOverlay();
-    // Filter left panel to acr_nav ctypes and rebuild
-    acr_nav::_db.filter = "acr_nav.";
-    acr_nav::BuildLeftItemsReset();
+    // Parse namespace from socket path: /tmp/<ns>.<pid>.sock
+    algo::strptr filename = algo::StripDirName(acr_nav::_db.cmdline.connect);
+    acr_nav::_db.live_ns = algo::Pathcomp(filename, ".LL");
+    // Start with empty left panel — populated by first PoolCensus response
+    acr_nav::left_item_RemoveAll();
+    acr_nav::_db.n_visible_ctype = 0;
     acr_nav::LiveConnect();
     if (acr_nav::_db.live_connected) {
         hook_Set0(acr_nav_live_poll_timer, LivePollCallback);

@@ -403,13 +403,20 @@ static void RenderLeftCell(RenderCtx &ctx, int row) {
     if (left_idx < ctx.n_left) {
         left_sel = (left_idx == acr_nav::_db.p_left_panel->sel_row);
         acr_nav::LeftItem &item = acr_nav::left_item_qFind(left_idx);
+        bool live_mode = ch_N(acr_nav::_db.live_ns) > 0;
         if (ch_N(item.ctype) == 0) {
             // Namespace header row
             acr_nav::FNs *ns = acr_nav::ind_ns_Find(item.ns);
-            int count = ns ? ns->n_match : 0;
-            left_cell << (ns && ns->collapsed ? " \xe2\x96\xb8 " : " \xe2\x96\xbe ");
-            left_cell << (ns ? NsDisplayName(*ns) : algo::strptr("other"));
-            left_cell << " (" << count << ")";
+            if (live_mode) {
+                // Live mode: always expanded, show pool count
+                left_cell << " \xe2\x96\xbe " << acr_nav::_db.live_ns;
+                left_cell << " (" << acr_nav::_db.n_visible_ctype << " pools)";
+            } else {
+                int count = ns ? ns->n_match : 0;
+                left_cell << (ns && ns->collapsed ? " \xe2\x96\xb8 " : " \xe2\x96\xbe ");
+                left_cell << (ns ? NsDisplayName(*ns) : algo::strptr("other"));
+                left_cell << " (" << count << ")";
+            }
         } else {
             // Ctype row: indented, namespace prefix stripped
             algo::strptr full(item.ctype);
@@ -419,9 +426,13 @@ static void RenderLeftCell(RenderCtx &ctx, int row) {
                 stripped = full;
             }
             left_cell << "    " << stripped;
-            acr_nav::FCtype *ct = acr_nav::ind_ctype_Find(item.ctype);
-            if (ct) {
-                PrintRecordCount(left_cell, *ct);
+            if (live_mode) {
+                left_cell << " (" << item.n_record << ")";
+            } else {
+                acr_nav::FCtype *ct = acr_nav::ind_ctype_Find(item.ctype);
+                if (ct) {
+                    PrintRecordCount(left_cell, *ct);
+                }
             }
         }
     }
@@ -643,27 +654,44 @@ void acr_nav::Render(cstring &buf, acr_nav::FCtype *sel_ct) {
     // Left panel width: fits longest row across all matching namespaces
     // (regardless of collapse state, so width is stable on expand/collapse)
     int max_name = 0;
-    ind_beg(acr_nav::_db_ns_curs, ns, acr_nav::_db) {
-        if (ns.n_match > 0) {
-            // Namespace header: " X label (count)"
-            int label_len = ch_N(NsDisplayName(ns));
-            int count = ns.n_match;
-            int hdr_wid = 4 + label_len + 3 + DecimalDigits(count);
-            max_name = i32_Max(max_name, hdr_wid);
-            // Ctype rows: "    TypeName (N)" = 4 + stripped name + count width
-            for (int i = 0; i < acr_nav::c_ctype_N(ns); i++) {
-                acr_nav::FCtype *ct = acr_nav::c_ctype_Find(ns, i);
-                if (ct && ch_N(ct->ctype) > 0) {
-                    algo::strptr stripped = algo::Pathcomp(ct->ctype, ".LR");
-                    int count_wid = 0;
-                    if (ct->c_ssimfile && ct->c_ssimfile->n_record > 0) {
-                        count_wid = 3 + DecimalDigits(ct->c_ssimfile->n_record);
-                    }
-                    max_name = i32_Max(max_name, 4 + elems_N(stripped) + count_wid);
-                }
+    if (ch_N(acr_nav::_db.live_ns) > 0) {
+        // Live mode: compute width from left_item array (PoolCensus-driven)
+        for (int i = 0; i < acr_nav::left_item_N(); i++) {
+            acr_nav::LeftItem &item = acr_nav::left_item_qFind(i);
+            if (ch_N(item.ctype) == 0) {
+                // Namespace header: " V ns (N pools)"
+                int hdr_wid = 4 + ch_N(acr_nav::_db.live_ns) + 2 + DecimalDigits(acr_nav::_db.n_visible_ctype) + 7;
+                max_name = i32_Max(max_name, hdr_wid);
+            } else {
+                // Pool row: "    TypeName (N)"
+                algo::strptr stripped = algo::Pathcomp(algo::strptr(item.ctype), ".LR");
+                int count_wid = 3 + DecimalDigits(item.n_record);
+                max_name = i32_Max(max_name, 4 + elems_N(stripped) + count_wid);
             }
         }
-    } ind_end;
+    } else {
+        ind_beg(acr_nav::_db_ns_curs, ns, acr_nav::_db) {
+            if (ns.n_match > 0) {
+                // Namespace header: " X label (count)"
+                int label_len = ch_N(NsDisplayName(ns));
+                int count = ns.n_match;
+                int hdr_wid = 4 + label_len + 3 + DecimalDigits(count);
+                max_name = i32_Max(max_name, hdr_wid);
+                // Ctype rows: "    TypeName (N)" = 4 + stripped name + count width
+                for (int i = 0; i < acr_nav::c_ctype_N(ns); i++) {
+                    acr_nav::FCtype *ct = acr_nav::c_ctype_Find(ns, i);
+                    if (ct && ch_N(ct->ctype) > 0) {
+                        algo::strptr stripped = algo::Pathcomp(ct->ctype, ".LR");
+                        int count_wid = 0;
+                        if (ct->c_ssimfile && ct->c_ssimfile->n_record > 0) {
+                            count_wid = 3 + DecimalDigits(ct->c_ssimfile->n_record);
+                        }
+                        max_name = i32_Max(max_name, 4 + elems_N(stripped) + count_wid);
+                    }
+                }
+            }
+        } ind_end;
+    }
     int min_left = i32_Min(acr_nav::_db.p_left_panel->min_width, wid / 2);
     int left_wid = i32_Max(min_left, i32_Min(max_name + 2, wid * 40 / 100));
     int right_wid = i32_Max(1, wid - left_wid);

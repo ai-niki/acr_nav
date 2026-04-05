@@ -628,6 +628,7 @@ struct FDb { // acr_nav.FDb
     bool                       live_connected;                   //   false  True when live socket is connected
     algo::cstring              live_error;                       // Connection error message
     bool                       live_poll_pending;                //   false  True when request sent but response not yet received
+    algo::Smallstr16           live_ns;                          //   ""  Namespace of connected app (parsed from socket path)
     acr_nav::trace             trace;                            //
 };
 
@@ -3551,12 +3552,16 @@ inline void          IpcCase_Init(acr_nav::IpcCase& parent);
 // --- acr_nav.LeftItem
 // create: acr_nav.FDb.left_item (Tary)
 struct LeftItem { // acr_nav.LeftItem: One display row in the left panel
-    algo::Smallstr100   ctype;   // Ctype key (empty for namespace header)
-    algo::Smallstr16    ns;      // Namespace key (set for namespace headers)
+    algo::Smallstr100   ctype;      // Ctype key (empty for namespace header)
+    algo::Smallstr16    ns;         // Namespace key (set for namespace headers)
+    i32                 n_record;   //   0  Pool record count from PoolCensus (live mode)
     // func:acr_nav.LeftItem..Ctor
     inline               LeftItem() __attribute__((nothrow));
 };
 
+// Set all fields to initial values.
+// func:acr_nav.LeftItem..Init
+inline void          LeftItem_Init(acr_nav::LeftItem& parent);
 
 // --- acr_nav.LineColorSpan
 // create: acr_nav.FViewmode.cspan (Tary)
