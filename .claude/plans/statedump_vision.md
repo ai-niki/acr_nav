@@ -4,21 +4,21 @@ This is an amc-level capability, not specific to any one tool.
 
 ## The idea
 
-Headless mode in acr_nav serializes curated projections (Screen, PanelState, VisibleField) as ssimfile records. But every amc-generated program already has typed pools in `_db`. If amc could generate a generic state-dump function, any OpenACR program could expose its full in-memory state on demand -- headless mode for free, from the schema.
+Headless mode in acr_nav serializes curated projections (Screen, PanelState, VisibleField) as ssimfile records. But every amc-generated program already has typed pools in `_db`. amc now generates a generic state-dump function (`dmmeta.nsdump`), so any OpenACR program can expose its full in-memory state on demand -- headless mode for free, from the schema.
 
 This is the "freeze a running program and look at its tables" idea turned into a general capability.
 
 **End goal framing:** "make any amc program a glass box." Not SQL at runtime -- that would require a runtime query interpreter (an anti-pattern: interpreter adds complexity, not factorization). Instead: the program emits structured text; the consumer (agent or unix tools) filters and queries client-side. The query engine is the consumer.
 
 **Value:** High for programs under active development. Mature tools (amc, acr) are already debugged -- the payoff is for new servers and services being built, where Claude Code needs to inspect evolving runtime state daily.
-**Size:** Medium. Phase 1 (pool census) is a single amc generator. Phase 2 (filtered dump) adds serialization. Phase 3 (IPC transport) enables live inspection.
+**Status:** Phases 1-3.4.1 done. Two generators (`ns_state_dump`, `ns_ipc`), two namespaces (acr_nav, samp_meng), live inspect viewmode working. Remaining: UX polish (Phase 3.4.2), input interface (Phase 4), meaningful second app (Phase 5).
 **Primary consumer:** Claude Code as agent -- inspecting programs at runtime during development, and auto-testing them similar to acr_nav headless. Any new amc program built with Claude Code benefits automatically -- no adoption curve.
 
 ## What generalizes cleanly (output/dump side)
 
-amc knows every pool in FDb via the `zd_inst` linked list (discovery in `cpp/amc/gen.cpp:460`, `gen_detectinst()` checks `reftype.inst` flag). ~120 pool-typed fields (inst:Y reftypes) exist across all FDb structs — Lary accounts for ~116 of these. A new `amcdb.gen` phase could generate a state-dump function -- one record in `gen.ssim`, one generator, every program gets it. Passes the factorization test.
+amc knows every pool in FDb via the `zd_inst` linked list (discovery in `cpp/amc/gen.cpp:460`, `gen_detectinst()` checks `reftype.inst` flag). ~120 pool-typed fields (inst:Y reftypes) exist across all FDb structs — Lary accounts for ~116 of these. `amcdb.gen gen:ns_state_dump` generates a StateDump function for any namespace with `dmmeta.nsdump` — one record in `gen.ssim`, one generator. Passes the factorization test.
 
-**Print gap (verified 2026-04-02):** Print is NOT generated for every ctype. Only 830 of 1468 ctypes have `cfmt` entries with `print:Y`. 619 have no cfmt at all (mostly extern types like DIR, SSL_CTX). 19 explicitly opt out. MVP approach: census (counts) for all pools, record dump only for ctypes that have cfmt. Full dump would require field-by-field serialization independent of cfmt -- Phase 2 work.
+**Print gap:** Only 830/1468 ctypes have `cfmt print:Y`. Solved in Phase 2: cfmt for pools that have it, field-by-field serialization for the rest.
 
 ## Consumer-side filtering
 
@@ -41,9 +41,7 @@ acr_nav -dump:".*" | grep "n_record:0"             # find empty pools/indexes
 acr_nav -dump:".*" | grep "IndexCensus"            # all index queue depths
 ```
 
-For complex predicates or cross-record correlation, the agent processes the dump programmatically -- reads ssim tuples, builds its own view, runs whatever analysis it needs. This is exactly how acr itself works: load everything, filter client-side. No runtime query engine needed; the query engine is the consumer.
-
-The ssim format makes this natural: every field is labeled, every line is self-describing, type prefixes enable reliable filtering. No schema knowledge required at grep-time.
+For complex predicates, the agent processes the dump programmatically. Same model as acr: load everything, filter client-side.
 
 ## What doesn't generalize (input/step side)
 
@@ -58,7 +56,7 @@ dmmeta.rtquery  rtquery:acr_nav.Navigate      → generates dispatch case  — i
 
 amc would generate the dispatch scaffolding (try-deserialize-call-handler loop); the handler bodies remain hand-written. Value: the interface becomes machine-readable -- `acr dmmeta.rtquery ns:acr_nav` tells an agent what commands a program accepts without reading source code.
 
-**Check first, before creating any schema records:** `dmmeta.dispatch` + `dmmeta.dispatch_case` may already cover this. The dispatch system generates exactly this kind of "try each message type" loop — verified: `atf_amc.Ssimfiles` uses dispatch with `read:Y` and generates `_ReadStrptrMaybe` dispatch identical to what `rtquery` would produce. `rtquery` might be nothing more than a semantic marker (flagging dispatch cases as "agent interface") on an existing mechanism. Do not design a new table before exhausting `dmmeta.dispatch`.
+**Check first:** `dmmeta.dispatch` + `dmmeta.dispatch_case` may already cover this. Verified: `atf_amc.Ssimfiles` with `read:Y` generates exactly the "try-deserialize-call-handler" loop. `rtquery` might be just a semantic marker on existing dispatch.
 
 ## Where the value is highest
 
@@ -78,7 +76,7 @@ For mature batch tools (amc, acr, abt), the value is lower -- they already work.
 
 ## Curated vs raw
 
-Raw pool dumps are the truth -- curated views are opinions that drift. But raw dumps of a real server (thousands of records, runtime artifacts like file descriptors and computed caches) are a firehose. ACR answer: generate the raw dump (free from schema), let programs also define curated views as additional ctypes. Both, not either/or. The curated views are just more records -- they pass the factorization test.
+Generate the raw dump (free from schema); programs can also define curated views as additional ctypes. Both, not either/or. Curated views are just more records — they pass the factorization test.
 
 ## Tpool traversal (verified)
 
@@ -97,13 +95,13 @@ Depends on program type and phase:
 | TUI (live) | IPC socket -- B connects to running A, polls StateDump | socket response |
 | Long-running server | IPC socket or SIGUSR1 | socket response or file |
 
-**IPC transport (`dmmeta.nsipc`):** For live inspection of a running program, a Unix domain socket is the right mechanism. A listens on a well-known socket path. B connects, sends `acr_nav.StateDump` commands, reads responses. Multiple clients can connect. A's event loop polls the socket fd alongside the keyboard fd -- no new thread, no blocking.
+**IPC transport (`dmmeta.nsipc`):** For live inspection of a running program, a Unix domain socket is the right mechanism. A listens on a well-known socket path. B connects, sends `acr_nav.RequestStateDump` commands, reads responses. Multiple clients can connect. A's event loop polls the socket fd alongside the keyboard fd -- no new thread, no blocking.
 
 Two records, two concerns:
 
 ```
 dmmeta.nsdump  ns:acr_nav                     # generates StateDump()        — what to dump
-dmmeta.nsipc   ns:acr_nav  transport:socket   # generates socket listener    — how to trigger
+dmmeta.nsipc   ns:acr_nav                     # generates socket listener    — how to trigger
 ```
 
 amc generates the socket setup and poll integration. The developer wires it into their event loop -- one call in the poll branch, same pattern as the existing keyboard dispatch.
@@ -123,17 +121,11 @@ This is the "freeze a running program and look at its tables" mental model made 
 
 ## acr_nav as runtime explorer
 
-acr_nav already consumes ssim as its data model -- schema records ARE ssim (dmmeta.ctype, dmmeta.field). State dump output IS ssim (different ctypes, same format).
+acr_nav already consumes ssim as its data model. State dump output is also ssim. acr_nav can load a state dump as a live data layer alongside the schema: same navigator, two views — schema structure on the left, live instances on the right. One tool, complete picture.
 
-acr_nav could load a state dump as a live data layer alongside the schema: same navigator, two views -- schema structure on the left, live instances on the right. "FCtype has 42 records at runtime -- navigate into them." The tool already knows how to display ctypes and their fields; live data populates the counts with real numbers.
+**Proven in Phase 3.4:** acr_nav loads all of dmmeta at startup, so B already knows A's ctypes. The `inspect` viewmode displays live pool data. The recursive case works: one acr_nav inspecting another shares the same type system.
 
-acr_nav for schema structure + acr_nav+statedump for runtime instances = one tool, complete picture.
-
-**What's actually free:** acr_nav loads all of dmmeta at startup -- every program's ctypes, not just its own. So B already knows `acr_nav.FPanel`, `acr_nav.FNavstack`, `acr_nav.FCtype` etc. No dynamic schema loading needed. The format is the same ssim that acr_nav already parses.
-
-**What's real work:** a new "live data" viewmode in acr_nav that displays live records alongside schema records. Currently acr_nav shows schema structure; it doesn't have a view for "here are the live instances of this type." That viewmode is the implementation cost -- not schema loading, not format conversion.
-
-The recursive case: one acr_nav inspecting another running acr_nav. B displays A's FPanel, FNavstack, FFilter records live. B already knows these types -- they're its own schema. The inspector and the inspected share the same type system. This is the cheapest case -- same program, schema trivially shared.
+**Remaining work:** columnar formatting, reference-following, static pool filtering (see Phase 3.4.2).
 
 ## Phased implementation
 
@@ -163,9 +155,9 @@ Socket path: `/tmp/<ns>.<pid>.sock`. PID-based for multi-instance safety. Discov
 
 Protocol: ssim over Linebuf. Client sends `<ns>.RequestStateDump filter:"<regex>"\n`, server responds with StateDump output.
 
-Activation: `-ipc` flag enters `MainLoop()` as a pure IPC server. Headless/TUI modes do NOT integrate IPC yet (they have custom event loops that bypass algo_lib's epoll).
+Activation: `-ipc` flag enters `MainLoop()` as a pure IPC server. Headless and TUI integration added in Phases 3.1 and 3.3.
 
-**Verified:** Single client, multi-client (2 simultaneous), 63 component tests pass.
+**Verified:** Single client, multi-client (2 simultaneous), 66 component tests pass.
 
 **Key files:** `cpp/amc/ipc.cpp` (generator), `cpp/acr_nav/ipc.cpp` (hand-written IpcInit/IpcAccept), `cpp/lib_netio/socket.cpp` (CreateUnixSocket, BindUnix, AcceptUnix).
 
@@ -181,89 +173,47 @@ Activation: `-ipc` flag enters `MainLoop()` as a pure IPC server. Headless/TUI m
 
 ### Phase 3.1 -- IPC + headless integration (done)
 
-When `-headless -ipc` are both set, stdin is registered as a non-blocking FIohook with epoll alongside the IPC listen socket. Both are polled by `algo_lib::MainLoop()`. Stdin lines dispatch through `DispatchHeadlessCommand()` (all 9 command types). IPC connections dispatch through generated `IpcProcessLine()` (RequestStateDump).
+When `-headless -ipc` are both set, stdin is registered as a non-blocking FIohook with epoll alongside the IPC listen socket. Both polled by `algo_lib::MainLoop()`. Stdin dispatches through `DispatchHeadlessCommand()`; IPC through generated `IpcProcessLine()`. Standalone headless (without `-ipc`) preserves the simpler blocking `read()` loop.
 
-**What was built:**
-
-Schema: `acr_nav.FDb.stdin_iohook` (Val FIohook) for stdin epoll registration.
-
-Code: `StdinReadCallback()` — edge-triggered epoll callback that drains stdin, feeds lines through `DispatchHeadlessCommand()`. `HeadlessIpcInit()` — sets stdin to non-blocking, registers iohook, initializes panels. `Main()` branching: new `ipc && headless` branch before standalone `ipc`, calls `HeadlessIpcInit()` then `MainLoop()`.
-
-**Key files:** `cpp/acr_nav/main.cpp` (StdinReadCallback, HeadlessIpcInit, Main branching).
+**Key files:** `cpp/acr_nav/main.cpp` (StdinReadCallback, HeadlessIpcInit).
 
 **Lessons learned:**
 
-5. *Edge-triggered epoll requires complete drain.* The callback must read until EAGAIN or EOF. If a quit command sets `_db.running = false` mid-drain, the callback must still call `ReqExitMainLoop()` before returning, or MainLoop hangs waiting for an epoll event that will never fire.
+5. *Edge-triggered epoll requires complete drain.* Read until EAGAIN or EOF. If a quit command sets `_db.running = false` mid-drain, must still call `ReqExitMainLoop()` or MainLoop hangs.
 
-6. *HeadlessMain preserved for standalone headless.* The blocking `read()` loop is simpler and correct when IPC isn't needed. No reason to force everything through epoll.
+### Phase 3.2 -- Hardening + second namespace (done)
 
-### Phase 3.2 -- Hardening (done)
+Signal handler (generated `IpcSignalHandler`, async-signal-safe cleanup), BindUnix error checking, Zeroterm fix for socket path. Second namespace `samp_meng` enabled — 29 schema records, zero generator changes, hand-written IpcInit/IpcAccept/Ipc_RequestStateDump.
 
-**What was built:**
+**Stale socket detection deferred:** PID-based naming makes collisions nearly impossible; `unlink`-before-`bind` handles stale sockets.
 
-1. *SIGTERM/SIGINT signal handler.* Generated `IpcSignalHandler` in `cpp/amc/ipc.cpp` — calls `IpcCleanup()` then `_exit(1)`. Both async-signal-safe. Hand-written IpcInit installs via `sigaction`. Socket cleaned up on kill, not just normal exit.
-
-2. *BindUnix error checking.* IpcInit now checks `BindUnix()` return value, calls `FatalErrorExit` with socket path on failure.
-
-3. *Zeroterm fix.* IpcCleanup was calling `unlink(ch_elems)` on a non-null-terminated cstring. Fixed generator to use `Zeroterm()`. Hand-written IpcInit also calls `Zeroterm()` after assignment to ensure the string is pre-terminated for the signal handler.
-
-4. *Second namespace: samp_meng.* Full IPC + state dump enabled for the sample matching engine. 29 schema records added (nsdump, nsipc, FIpcconn, Tpool, Llist, fbuf, dispctx, dispatch, command flags). Hand-written `IpcInit`/`IpcAccept`/`Ipc_RequestStateDump` in `cpp/samp_meng/ipc.cpp`. Main() restructured with `-dump`/`-ipc`/normal branching.
-
-**Stale socket detection deferred:** PID-based naming (`/tmp/<ns>.<pid>.sock`) makes collisions nearly impossible. The existing `unlink`-before-`bind` in `BindUnix` handles stale sockets from crashed processes at the same PID. Connect probe adds complexity without value for PID-based paths.
+**Key files:** `cpp/amc/ipc.cpp`, `cpp/acr_nav/ipc.cpp`, `cpp/samp_meng/ipc.cpp`.
 
 **Lessons learned:**
 
-7. *cstring is NOT null-terminated.* `ch_elems` cannot be passed to C functions that expect `const char*`. Use `Zeroterm()` to null-terminate, or pass `(ch_elems, ch_n)` pairs. This was a latent bug in the original IpcCleanup.
+7. *cstring is NOT null-terminated.* Use `Zeroterm()` before passing to C functions expecting `const char*`.
 
-8. *dispatch `textcall:Y` vs `read:Y`.* The `textcall` flag generates `DispatchText(ctx, line)` with a context parameter — needed for IPC dispatch where the handler needs the connection. `read:Y` generates `ReadStrptrMaybe(str, buf)` without context. The original acr_nav dispatch used `textcall:Y`; samp_meng initially had `read:Y` which generated the wrong dispatch functions.
+8. *dispatch `textcall:Y` vs `read:Y`.* `textcall` generates `DispatchText(ctx, line)` with context parameter — needed for IPC where the handler needs the connection. `read:Y` generates `ReadStrptrMaybe` without context.
 
-9. *`dispctx` record required.* The dispatch context type (`dmmeta.dispctx`) must be declared for `textcall` dispatches. Without it, `DispatchText` is not generated even when `textcall:Y` is set.
-
-**Key files:** `cpp/amc/ipc.cpp` (generator), `cpp/acr_nav/ipc.cpp`, `cpp/samp_meng/ipc.cpp`, `cpp/samp_meng/samp_meng.cpp`.
+9. *`dispctx` record required* for `textcall` dispatches. Without it, `DispatchText` is not generated.
 
 ### Phase 3.3 -- TUI + IPC integration (done)
 
-Enable IPC on a running TUI instance so an external process can connect and poll StateDump while the user navigates interactively. This is A's side of the "live debugger demo."
+A's side of the "live debugger demo." When `-ipc` is set, replaces blocking `ReadKeyName()` with epoll-driven `MainLoop()`. `DecodeKeyByte()` is a non-blocking VT100 state machine; `TuiStdinReadCallback()` drains bytes and batches repaints. 50ms timehooks handle bare-ESC detection and SIGWINCH. Blocking TUI loop preserved when `-ipc` is not set.
 
-**What was built:**
+**Also added:** FDb singleton dump in `gen_ns_state_dump()` — scalar Val/Ptr fields from `_db` itself, before the pool loop.
 
-Replaced the blocking `ReadKeyName()` loop with epoll-driven `MainLoop()` when `-ipc` is set. Same pattern as Phase 3.1: stdin registered as non-blocking FIohook alongside the IPC listen socket.
-
-- `DecodeKeyByte()` — non-blocking byte-at-a-time VT100 state machine replacing blocking `ReadKeyName()`. State encoded in `acr_nav_keybuf[4]` + `acr_nav_keybuf_n`. Handles ESC sequences across epoll wakeups.
-- `TuiStdinReadCallback()` — edge-triggered drain callback. Feeds bytes to DecodeKeyByte, batches repaints (one render per drain cycle regardless of key count).
-- `TuiIpcInit()` — combined setup: raw mode, non-blocking stdin iohook, SIGWINCH timehook, ESC timeout timehook, initial render.
-- `TuiRepaint()` — shared repaint helper called from stdin callback, SIGWINCH check, and ESC timeout.
-- 50ms `FTimehook` for bare-ESC detection (replaces `ByteAvailable()`'s `poll(fd, 50ms)`).
-- 50ms recurrent `FTimehook` for SIGWINCH (signal interrupts `epoll_wait` but doesn't trigger stdin callback; timehook catches the flag).
-- Blocking TUI loop preserved unchanged when `-ipc` is not set.
-
-**Also added:** FDb singleton dump in `gen_ns_state_dump()`. StateDump now emits scalar Val fields from `_db` itself (filter, running, term dimensions, viewmode state, etc.), not just pool records. Same field-by-field serialization, applied to the global singleton before the pool loop.
-
-**Verified:** All 63 component tests pass. Live test: `acr_nav -ipc` in TUI, external process connects via socket and reads FDb state + FPanel state + pool census while user navigates.
+**Key files:** `cpp/acr_nav/main.cpp` (TuiIpcInit, DecodeKeyByte, TuiStdinReadCallback), `cpp/amc/state_dump.cpp`.
 
 **Lessons learned:**
 
-10. *amc binary must be rebuilt before `amc` run.* When modifying a generator in `cpp/amc/`, the installed `amc` binary is stale. Must `abt -build -install amc` before `amc` to pick up generator changes. `ai` does bootstrap but may use the old binary for the first `amc` pass.
+10. *Rebuild amc before running amc.* When modifying a generator, `abt -build -install amc` first. `ai` bootstraps but may use the stale binary for the first pass.
 
-11. *Edge-triggered stdin requires complete drain.* Same as Phase 3.1's `StdinReadCallback`, but with raw bytes instead of line-buffered commands. Partial escape sequences persist across reads via `acr_nav_keybuf`.
-
-**Key files:** `cpp/acr_nav/main.cpp` (TuiIpcInit, DecodeKeyByte, TuiStdinReadCallback, TuiRepaint), `cpp/amc/state_dump.cpp` (FDb singleton dump).
+11. *Raw byte drain.* Same edge-triggered pattern as Phase 3.1, but with raw bytes. Partial ESC sequences persist across reads via `acr_nav_keybuf`.
 
 ### Phase 3.4 -- Live data viewmode (B's side) (done, MVP)
 
-A new `inspect` viewmode in acr_nav that connects to another running instance's IPC socket and displays its pool state live. This is B's side of the "live debugger demo."
-
-**What was built:**
-
-Schema: `-connect` command flag (socket path), 7 `FDb.live_*` fields (iohook, data, generation, connected, error, poll_pending), `inspect` viewmode (in tab cycle after `graph`), userfunc for ensure_content hook. `ConnectUnix()` added to `lib_netio`.
-
-Client: `LiveConnect()` creates Unix socket and connects to A. `LivePollCallback()` sends `RequestStateDump filter:%` every 100ms with backpressure (skips if previous response pending). `LiveReadCallback()` drains socket into staging buffer, scans for `\n\n` end-of-response sentinel, swaps complete response into `live_data`, increments generation, triggers repaint.
-
-Server fix: `Ipc_RequestStateDump` now writes in a loop (non-blocking fd truncated 219KB responses at ~212KB socket buffer limit) and appends `\n\n` sentinel for response framing.
-
-Viewmode: `viewmode_inspect_ensure_content` filters `live_data` by selected ctype prefix, shows matching records + PoolCensus + IndexCensus lines. Cache key: `inspect:<generation>:<ctype>`. Color: `line_key` for type prefix, `line_comment` for census.
-
-UX: `-connect` mode auto-filters left panel to `acr_nav.*` ctypes, dismisses help overlay, auto-switches to inspect viewmode. No keybind (viewmode activates automatically in connect mode).
+B's side of the "live debugger demo." `inspect` viewmode connects to A's IPC socket, polls `RequestStateDump` every 100ms with backpressure, displays pool state live.
 
 **Usage:**
 ```bash
@@ -274,23 +224,23 @@ acr_nav -ipc
 acr_nav -connect /tmp/acr_nav.<pid>.sock
 ```
 
-B shows A's pool state updating live. Select `acr_nav.FPanel` to see panel selection state, `acr_nav.LeftItem` to see A's left panel contents, `acr_nav.FDb` for global state.
+B shows A's pool state updating live. Select `acr_nav.FPanel` for panel state, `acr_nav.FDb` for global state.
 
-**Verified:** 63 component tests pass. Manual live test: navigate in A, B updates within 100ms.
+Client: `LiveConnect()` + `LivePollCallback()` (100ms with backpressure) + `LiveReadCallback()` (drains to staging buffer, scans for `\n\n` sentinel). Server: write loop for non-blocking fd + `\n\n` response framing.
 
-**Key files:** `cpp/acr_nav/main.cpp` (LiveConnect, LivePollCallback, LiveReadCallback, TuiLiveInit), `cpp/acr_nav/content.cpp` (viewmode_inspect_ensure_content), `cpp/acr_nav/ipc.cpp` (response framing + write loop), `cpp/lib_netio/socket.cpp` (ConnectUnix).
+**Key files:** `cpp/acr_nav/main.cpp` (LiveConnect, LivePollCallback, LiveReadCallback), `cpp/acr_nav/content.cpp` (viewmode_inspect_ensure_content), `cpp/acr_nav/ipc.cpp` (response framing), `cpp/lib_netio/socket.cpp` (ConnectUnix).
 
 **Lessons learned:**
 
-12. *Non-blocking write truncates large responses.* `IpcAccept` sets client fd non-blocking. Single `write()` of 219KB exceeds the ~212KB socket buffer — returns partial write, sentinel never sent. Fix: write loop that retries on EAGAIN. Local Unix sockets drain fast enough that busy-wait is acceptable.
+12. *Non-blocking write truncates.* Single `write()` exceeds ~212KB socket buffer. Fix: write loop retrying on EAGAIN.
 
-13. *LineBuf is per-buffer, not per-stream.* `LineBuf` processes lines within a single contiguous buffer. Creating a new LineBuf per `read()` call loses partial lines split across reads. Fix: accumulate raw bytes into a persistent staging cstring, scan for sentinel after drain.
+13. *LineBuf is per-buffer, not per-stream.* Fix: accumulate into persistent staging cstring, scan for sentinel after drain.
 
-14. *Response framing is mandatory for stream sockets.* Unix domain SOCK_STREAM doesn't preserve message boundaries. Without an end-of-response marker, the client cannot distinguish partial from complete responses. Fix: empty-line sentinel (`\n\n`) appended by server, detected by client.
+14. *Response framing is mandatory for SOCK_STREAM.* Fix: `\n\n` sentinel appended by server, detected by client.
 
-15. *Report types have no pkey field.* `report.PoolCensus` has only `ctype` + `n_record` — no field named `pool_census`. In `printfmt:Tuple`, all fields print with labels. This is the correct pattern for protocol messages (not database records). `report.IndexCensus` follows suit: `field` + `ctype` + `n_record`, no synthetic pkey.
+15. *Report types have no pkey field.* `report.PoolCensus` and `report.IndexCensus` are protocol messages, not database records.
 
-16. *Guard generated variable declarations.* If a generated variable might be unused for some namespaces (e.g., `idx_census` when a namespace has zero matching index fields), gate the declaration behind a count check. Otherwise `-Wunused-variable` fires. Pattern: count matching fields in a first pass, emit declaration + loop only if count > 0.
+16. *Guard generated variable declarations.* Gate behind count check to avoid `-Wunused-variable` for namespaces with zero matching fields.
 
 ### Phase 3.4.1 -- Inspect viewmode redesign (done)
 
@@ -334,7 +284,7 @@ Ideas that don't have phases yet. Each would need a use case before committing:
 
 ## StateDump coverage gaps (identified 2026-04-04)
 
-Discovered during Phase 3.3 live testing: external process connected to running TUI via IPC, could see FPanel records and FDb scalar fields, but could not determine which ctype the user was looking at. Three categories of state are invisible to the current generator.
+Discovered during Phase 3.3 live testing. Systematic audit of all FDb field reftypes to identify what StateDump misses.
 
 ### Gap 1: Ptr fields on FDb — "what am I looking at" (DONE)
 
@@ -343,46 +293,37 @@ Generator in `cpp/amc/state_dump.cpp` now has a `ResolvePtrPkey` helper that emi
 | Field | What it tells you |
 |---|---|
 | `p_cur_panel` | Which panel is focused |
+| `p_left_panel` | Left panel (ctype list) |
+| `p_right_panel` | Right panel (content) |
 | `p_cur_mode` | Browse or filter mode |
+| `p_filter_mode` | Cached pointer to filter navmode |
 | `p_cur_viewmode` | Current view (fields, summary, detail, xref, etc.) |
+| `p_default_viewmode` | Default viewmode (fields) |
 | `p_detail_field` | Which field is being detailed (null outside detail view) |
 | `p_cur_filtertarget` | What the filter targets (ctype, field, ns, etc.) |
+| `p_default_filtertarget` | Cached pointer to ctype filtertarget |
 | `p_nsdep_ns` | Namespace in nsdep dependency view |
 | `p_pre_nsdep_viewmode` | Viewmode saved before nsdep context switch |
 
-### Gap 2: Tary pools — navstack, left_item, overlay_stack (ALREADY DONE)
+### Gap 2: Tary pools (ALREADY DONE)
 
-The code at lines 104-106 of `state_dump.cpp` already handles Tary alongside Lary and Inlary. Census and detailed dump both work for navstack (Naventry), left_item (LeftItem), and overlay_stack (OverlayEntry). `left_item` maps row indices to ctype names, closing the "sel_row:272 = which ctype?" question.
+Generator handles Tary alongside Lary and Inlary. Census and dump both work for navstack, left_item, overlay_stack.
 
-### Gap 3: Upptr fields on FDb — N/A
+### Gaps 3, 7: Upptr/Delptr on FDb — N/A
 
-Zero Upptr fields exist on any FDb. 249 Upptr fields exist on non-FDb ctypes but those are covered when the owning pool's records are dumped. No action needed.
+Zero Upptr and zero Delptr fields exist on any FDb. Covered when owning pool's records are dumped.
 
-### Gap 4: Ptrary index census (DONE)
+### Gaps 4, 5: Ptrary + Bheap index census (DONE)
 
-Ptrary (array of pointers) has `_N()` and cursors. These are secondary indexes (sorted views, filtered subsets), not pools — records are owned by Lary pools. Census via `report.IndexCensus` emits field name + ctype + count. No record dump (would duplicate pool dump). 15 FDb fields across all programs; zero on current nsdump namespaces (acr_nav, samp_meng). Code is ready for future programs.
-
-### Gap 5: Bheap index census (DONE)
-
-Bheap (binary heap / priority queue) has `_N()` and cursors. Also a secondary index. Census via `report.IndexCensus`. Useful for queue depth diagnostics (e.g., `bh_timehook` in algo_lib). 16 FDb fields across all programs; zero on current nsdump namespaces.
+Secondary indexes (not pools — records owned by Lary pools). Census via `report.IndexCensus` emits field + ctype + count. 15 Ptrary + 16 Bheap FDb fields across all programs; zero on current nsdump namespaces. Code ready for future programs.
 
 ### Gap 6: Tpool pools — census via Llist counts
 
-`ipcconn` (FIpcconn) is in Tpool. Tpool generates no cursor — free-list allocator, can alloc/delete but not scan. Records are reachable via Llist (cd_ipcconn_read, cd_ipcconn_eof). Already documented in "Tpool traversal" section above.
-
-Census is addressed by Gap 8: Llist `havecount:Y` fields emit `report.IndexCensus` lines showing how many records are in each queue. For acr_nav: `cd_ipcconn_read n_record:N` + `cd_ipcconn_eof n_record:M` tells you how many connections are in each state.
-
-Record dump deferred: Llist iteration gives a partial view — records not yet on any list (between alloc and insert) would be missed. Census counts are the reliable signal.
-
-### Gap 7: Delptr fields on FDb — N/A
-
-Zero Delptr fields exist on any FDb (3 total across all ctypes, all on non-FDb types). No action needed.
+Tpool has no cursor (free-list allocator). Records reachable via Llist. Census addressed by Gap 8: Llist `havecount:Y` fields emit IndexCensus lines. Record dump deferred — Llist iteration is partial view (misses records between alloc and list insert).
 
 ### Gap 8: Llist index census (DONE)
 
-Llist fields with `havecount:Y` emit `report.IndexCensus` lines via the same generator section as Ptrary/Bheap. 78 Llist FDb fields total, 64 with `havecount:Y`. For acr_nav: 2 fields (cd_ipcconn_read, cd_ipcconn_eof). For samp_meng: 4 fields (cd_fdin_read, cd_fdin_eof, cd_ipcconn_read, cd_ipcconn_eof).
-
-**Implementation:** New `report.IndexCensus` ctype (3 fields: `field`, `ctype`, `n_record`; no pkey — matches `report.PoolCensus` pattern). Generator section added after pool loop in `cpp/amc/state_dump.cpp`. Consumer updated in `cpp/acr_nav/content.cpp` to display IndexCensus lines in inspect viewmode with same styling as PoolCensus.
+Llist fields with `havecount:Y` emit `report.IndexCensus` lines. 78 Llist FDb fields total, 64 with `havecount:Y`. New `report.IndexCensus` ctype (fields: `field`, `ctype`, `n_record`). Consumer in `cpp/acr_nav/content.cpp` displays in inspect viewmode.
 
 ### Coverage summary (updated 2026-04-05)
 
