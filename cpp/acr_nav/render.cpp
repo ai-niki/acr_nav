@@ -90,7 +90,7 @@ struct RenderCtx {
     int                 n_right;
     int                 scroll;
     int                 preview_h_scroll;
-    bool                is_hscroll_preview;
+    bool                is_hscroll;
     acr_nav::FNavstyle *p_title_focus;
     acr_nav::FNavstyle *p_title_nofocus;
     acr_nav::FNavstyle *p_sel_focus;
@@ -110,7 +110,7 @@ struct RenderCtx {
               , int n_right_
               , int scroll_
               , int preview_h_scroll_
-              , bool is_hscroll_preview_
+              , bool is_hscroll_
               , acr_nav::FNavstyle *p_title_focus_
               , acr_nav::FNavstyle *p_title_nofocus_
               , acr_nav::FNavstyle *p_sel_focus_
@@ -121,7 +121,7 @@ struct RenderCtx {
         , left_focused(left_focused_), show_breadcrumb(show_breadcrumb_), visible(visible_)
         , has_fields(has_fields_), in_xref(in_xref_)
         , n_left(n_left_), n_right(n_right_), scroll(scroll_)
-        , preview_h_scroll(preview_h_scroll_), is_hscroll_preview(is_hscroll_preview_)
+        , preview_h_scroll(preview_h_scroll_), is_hscroll(is_hscroll_)
         , p_title_focus(p_title_focus_), p_title_nofocus(p_title_nofocus_)
         , p_sel_focus(p_sel_focus_), p_sel_nofocus(p_sel_nofocus_)
         , p_statusbar(p_statusbar_)
@@ -367,7 +367,7 @@ static void RenderColumnHeader(RenderCtx &ctx) {
     if (!ctx.has_fields) {
         algo::strptr line_header = RightPanelLineHeader();
         if (ch_N(line_header) > 0) {
-            if (ctx.is_hscroll_preview) {
+            if (ctx.is_hscroll) {
                 int hdr_skip = DisplayToByte(line_header, ctx.preview_h_scroll);
                 hdr << " " << algo::strptr(line_header.elems + hdr_skip,
                                             line_header.n_elems - hdr_skip);
@@ -385,8 +385,7 @@ static void RenderColumnHeader(RenderCtx &ctx) {
     TruncPad(hdr, ctx.right_wid);
     acr_nav::FNavstyle &base_hdr_style = !ctx.left_focused ? *ctx.p_title_focus : *ctx.p_title_nofocus;
     EmitStyle(ctx.buf, base_hdr_style);
-    if (!ctx.has_fields && acr_nav::_db.p_cur_viewmode == acr_nav::ind_viewmode_Find("preview")
-        && acr_nav::nav_col_N(*acr_nav::_db.p_cur_viewmode) > 0) {
+    if (!ctx.has_fields && acr_nav::nav_col_N(*acr_nav::_db.p_cur_viewmode) > 0) {
         EmitStyledPreviewHeader(ctx.buf, strptr(hdr), *acr_nav::_db.p_cur_viewmode, base_hdr_style, ctx.preview_h_scroll);
     } else {
         ctx.buf << hdr;
@@ -446,16 +445,16 @@ static void RenderLeftCell(RenderCtx &ctx, int row) {
 // Compute the preview nav-cell overlay region for the selected row.
 // Sets ov_start/ov_end to byte offsets within the right cell, *p_ov_style to the
 // overlay style.  When no overlay applies, ov_start and ov_end remain -1.
-static void DetectPreviewOverlay(RenderCtx &ctx, int right_data_idx, int skip_bytes, bool right_sel, int &ov_start, int &ov_end, acr_nav::FNavstyle **p_ov_style) {
+static void DetectNavOverlay(RenderCtx &ctx, int right_data_idx, int skip_bytes, bool right_sel, int &ov_start, int &ov_end, acr_nav::FNavstyle **p_ov_style) {
     ov_start = -1;
     ov_end = -1;
     *p_ov_style = nullptr;
-    acr_nav::FViewmode &pvm = *acr_nav::ind_viewmode_Find("preview");
+    acr_nav::FViewmode &vm = *acr_nav::_db.p_cur_viewmode;
     if (right_sel && !ctx.left_focused
-        && acr_nav::_db.p_cur_viewmode == &pvm) {
-        int n_nav = acr_nav::nav_col_N(pvm);
-        if (n_nav > 0 && acr_nav::_db.sel_nav_col < n_nav) {
-            acr_nav::PreviewNavCol &nc = acr_nav::nav_col_qFind(pvm, acr_nav::_db.sel_nav_col);
+        && acr_nav::nav_col_N(vm) > 0) {
+        int n_nav = acr_nav::nav_col_N(vm);
+        if (acr_nav::_db.sel_nav_col < n_nav) {
+            acr_nav::PreviewNavCol &nc = acr_nav::nav_col_qFind(vm, acr_nav::_db.sel_nav_col);
             algo::strptr data_line = RightPanelLineFind(right_data_idx);
             int ov_raw_s = DisplayToByte(data_line, nc.col_start);
             int ov_raw_e = DisplayToByte(data_line, nc.col_start + nc.col_wid);
@@ -482,7 +481,7 @@ static void RenderRightCell(RenderCtx &ctx, int row, int &span_cursor) {
         right_sel = (right_data_idx == acr_nav::_db.p_right_panel->sel_row);
         if (!ctx.has_fields) {
             algo::strptr orig_line = RightPanelLineFind(right_data_idx);
-            if (ctx.is_hscroll_preview) {
+            if (ctx.is_hscroll) {
                 skip_bytes = DisplayToByte(orig_line, ctx.preview_h_scroll);
                 right_cell << " " << algo::strptr(orig_line.elems + skip_bytes,
                                                    orig_line.n_elems - skip_bytes);
@@ -523,7 +522,7 @@ static void RenderRightCell(RenderCtx &ctx, int row, int &span_cursor) {
         int ov_start = -1;
         int ov_end = -1;
         acr_nav::FNavstyle *ov_style = nullptr;
-        DetectPreviewOverlay(ctx, right_data_idx, skip_bytes, right_sel, ov_start, ov_end, &ov_style);
+        DetectNavOverlay(ctx, right_data_idx, skip_bytes, right_sel, ov_start, ov_end, &ov_style);
         EmitStyledLine(ctx.buf, strptr(right_cell), right_focused_sel, *acr_nav::_db.p_cur_viewmode, right_data_idx, span_cursor, right_focused_sel ? ctx.p_sel_focus : nullptr, ov_start, ov_end, ov_style, skip_bytes);
         ctx.buf << "\x1b[0m\x1b[K\r\n";
     } else {
@@ -608,15 +607,15 @@ static void RenderStatusBar(RenderCtx &ctx) {
 // Scroll offset always lands on a column boundary: the leftmost visible column
 // starts at position 0 with no partial-column whitespace on the left.
 // h only changes when the selected column is not fully visible.
-static void AdjustPreviewHScroll(int right_wid) {
-    acr_nav::FViewmode &pvm = *acr_nav::ind_viewmode_Find("preview");
-    int h = pvm.preview_h_scroll;
-    if (acr_nav::_db.p_cur_viewmode == &pvm) {
+static void AdjustHScroll(int right_wid) {
+    acr_nav::FViewmode &vm = *acr_nav::_db.p_cur_viewmode;
+    int h = vm.preview_h_scroll;
+    int n_nav = acr_nav::nav_col_N(vm);
+    if (n_nav > 0) {
         int avail = right_wid - 1;  // -1 for leading space in right_cell
-        int n_nav = acr_nav::nav_col_N(pvm);
-        if (pvm.total_content_wid > avail && avail > 0 && n_nav > 0) {
+        if (vm.total_content_wid > avail && avail > 0) {
             int sel = i32_Min(acr_nav::_db.sel_nav_col, n_nav - 1);
-            acr_nav::PreviewNavCol &nc = acr_nav::nav_col_qFind(pvm, sel);
+            acr_nav::PreviewNavCol &nc = acr_nav::nav_col_qFind(vm, sel);
             // Selected column off-screen left: snap to its start
             if (nc.col_start < h) {
                 h = nc.col_start;
@@ -627,20 +626,22 @@ static void AdjustPreviewHScroll(int right_wid) {
                 int min_start = nc.col_start + nc.col_wid - avail;
                 h = nc.col_start;  // fallback: start at selected column
                 for (int i = 0; i < n_nav; i++) {
-                    int cs = acr_nav::nav_col_qFind(pvm, i).col_start;
+                    int cs = acr_nav::nav_col_qFind(vm, i).col_start;
                     if (cs >= min_start) {
                         h = i32_Min(cs, nc.col_start);
                         break;
                     }
                 }
             }
-            int max_scroll = pvm.total_content_wid - avail;
+            int max_scroll = vm.total_content_wid - avail;
             h = i32_Max(0, i32_Min(h, max_scroll));
         } else {
             h = 0;
         }
+    } else {
+        h = 0;
     }
-    pvm.preview_h_scroll = h;
+    vm.preview_h_scroll = h;
 }
 
 // -----------------------------------------------------------------------------
@@ -695,15 +696,15 @@ void acr_nav::Render(cstring &buf, acr_nav::FCtype *sel_ct) {
     int min_left = i32_Min(acr_nav::_db.p_left_panel->min_width, wid / 2);
     int left_wid = i32_Max(min_left, i32_Min(max_name + 2, wid * 40 / 100));
     int right_wid = i32_Max(1, wid - left_wid);
-    AdjustPreviewHScroll(right_wid);
+    AdjustHScroll(right_wid);
     bool has_fields = acr_nav::_db.p_cur_viewmode->has_fields;
+    acr_nav::FViewmode &cur_vm = *acr_nav::_db.p_cur_viewmode;
     int preview_h_scroll = 0;
-    acr_nav::FViewmode &preview_vm = *acr_nav::ind_viewmode_Find("preview");
-    bool is_hscroll_preview = (!has_fields
-        && acr_nav::_db.p_cur_viewmode == &preview_vm
-        && preview_vm.preview_h_scroll > 0);
-    if (is_hscroll_preview) {
-        preview_h_scroll = preview_vm.preview_h_scroll;
+    bool is_hscroll = (!has_fields
+        && acr_nav::nav_col_N(cur_vm) > 0
+        && cur_vm.preview_h_scroll > 0);
+    if (is_hscroll) {
+        preview_h_scroll = cur_vm.preview_h_scroll;
     }
     acr_nav::FNavstyle *p_title_focus   = acr_nav::ind_navstyle_Find("title_focus");
     acr_nav::FNavstyle *p_title_nofocus = acr_nav::ind_navstyle_Find("title_nofocus");
@@ -721,7 +722,7 @@ void acr_nav::Render(cstring &buf, acr_nav::FCtype *sel_ct) {
                   , /*n_right=*/RightPanelItemCount(sel_ct)
                   , /*scroll=*/acr_nav::_db.p_left_panel->scroll_offset
                   , /*preview_h_scroll=*/preview_h_scroll
-                  , /*is_hscroll_preview=*/is_hscroll_preview
+                  , /*is_hscroll=*/is_hscroll
                   , p_title_focus, p_title_nofocus, p_sel_focus, p_sel_nofocus, p_statusbar);
     RenderTitleBar(ctx);
     RenderContentArea(ctx);

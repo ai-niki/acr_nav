@@ -65,6 +65,28 @@ static void FormatPreviewRow(cstring &out, algo::Tuple &tuple, int *display_wid,
     }
 }
 
+// Measure one tuple's contribution to column names and widths.
+// On first call (n_col==0), populate col_name from attribute names.
+// On every call, update display_wid with max attribute display widths.
+static void MeasureTupleColumns(algo::Tuple &tuple, algo::cstring *col_name, int *display_wid, int &n_col) {
+    if (n_col == 0) {
+        ind_beg(algo::Tuple_attrs_curs, attr, tuple) {
+            if (n_col < 64) {
+                col_name[n_col] = attr.name;
+                display_wid[n_col] = ch_N(attr.name);
+                n_col++;
+            }
+        } ind_end;
+    }
+    int ci = 0;
+    ind_beg(algo::Tuple_attrs_curs, attr, tuple) {
+        if (ci < n_col) {
+            display_wid[ci] = i32_Max(display_wid[ci], ch_N(attr.value) - Utf8ExtraBytes(strptr(attr.value)));
+            ci++;
+        }
+    } ind_end;
+}
+
 // First-pass scan of mmap'd ssimfile: determine column names from the first tuple,
 // compute max display widths across all rows.
 static void MeasurePreviewColumns(algo_lib::MmapFile &file, algo::cstring *col_name, int *display_wid, int &n_col) {
@@ -72,28 +94,25 @@ static void MeasurePreviewColumns(algo_lib::MmapFile &file, algo::cstring *col_n
     ind_beg(Line_curs, line, file.text) {
         algo::Tuple tuple;
         if (algo::Tuple_ReadStrptr(tuple, line, false)) {
-            if (n_col == 0) {
-                ind_beg(algo::Tuple_attrs_curs, attr, tuple) {
-                    if (n_col < 64) {
-                        col_name[n_col] = attr.name;
-                        display_wid[n_col] = ch_N(attr.name);
-                        n_col++;
-                    }
-                } ind_end;
-            }
-            int ci = 0;
-            ind_beg(algo::Tuple_attrs_curs, attr, tuple) {
-                if (ci < n_col) {
-                    display_wid[ci] = i32_Max(display_wid[ci], ch_N(attr.value) - Utf8ExtraBytes(strptr(attr.value)));
-                    ci++;
-                }
-            } ind_end;
+            MeasureTupleColumns(tuple, col_name, display_wid, n_col);
         }
     } ind_end;
 }
 
+// Check whether a ctype appears as a pool in the live state dump.
+static bool FindPoolEntry(algo::strptr ctype_key) {
+    for (int i = 0; i < acr_nav::pool_entry_N(); i++) {
+        if (algo::strptr_Eq(acr_nav::pool_entry_qFind(i).ctype, ctype_key)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 // Build PreviewNavCol entries for each column, detect FK targets for navigable columns.
-static void DetectNavColumns(acr_nav::FViewmode &vm, acr_nav::FCtype *field_base, algo::cstring *col_name, int *display_wid, int n_col) {
+// live_mode: FK detection checks pool_entry membership (Ptr fields navigable).
+// !live_mode: FK detection checks reftype.up and ssimfile existence.
+static void DetectNavColumns(acr_nav::FViewmode &vm, acr_nav::FCtype *field_base, algo::cstring *col_name, int *display_wid, int n_col, bool live_mode) {
     int col_pos = 0;
     for (int c = 0; c < n_col; c++) {
         if (c > 0) {
@@ -107,7 +126,13 @@ static void DetectNavColumns(acr_nav::FViewmode &vm, acr_nav::FCtype *field_base
         tempstr qname;
         qname << field_base->ctype << "." << col_name[c];
         acr_nav::FField *fld = acr_nav::ind_field_Find(qname);
-        if (fld && fld->p_reftype->up && FindSsimfile(*fld->p_arg)) {
+        bool navigable = false;
+        if (fld) {
+            navigable = live_mode
+                ? FindPoolEntry(fld->p_arg->ctype)
+                : (fld->p_reftype->up && FindSsimfile(*fld->p_arg));
+        }
+        if (navigable) {
             nc.target_ctype = fld->p_arg->ctype;
         }
         col_pos += display_wid[c];
@@ -178,7 +203,7 @@ static void LoadPreview(acr_nav::FCtype &ctype) {
             int display_wid[64];
             algo::cstring col_name[64];
             MeasurePreviewColumns(file, col_name, display_wid, n_col);
-            DetectNavColumns(vm, ssimfile->p_ctype, col_name, display_wid, n_col);
+            DetectNavColumns(vm, ssimfile->p_ctype, col_name, display_wid, n_col, false);
             vm.pkey_wid = (n_col > 0) ? display_wid[0] : 0;
             int comment_col = -1;
             BuildPreviewHeader(vm, col_name, display_wid, n_col, comment_col);
@@ -580,15 +605,19 @@ void acr_nav::viewmode_help_ensure_content(acr_nav::FCtype &) {
 void acr_nav::viewmode_detail_ensure_content(acr_nav::FCtype &) {
 }
 
-// Populate inspect viewmode content_row with lines from the live state dump,
-// filtered by the selected ctype.  Shows matching records, FDb lines, and
-// pool-census reports for the ctype.
+// Populate inspect viewmode with columnar-formatted records from the live state dump.
+// Two-pass pipeline: measure column widths, then format aligned rows.
+// Census/index lines appended as unformatted comments after records.
 void acr_nav::viewmode_inspect_ensure_content(acr_nav::FCtype &ct) {
     acr_nav::FViewmode &vm = *acr_nav::ind_viewmode_Find("inspect");
     tempstr gen_key;
     gen_key << "inspect:" << acr_nav::_db.live_generation << ":" << ct.ctype;
     if (vm.cached_key != gen_key) {
+        tempstr pending(acr_nav::_db.preview_nav_pending);
+        acr_nav::_db.preview_nav_pending = "";
         ClearViewmodeLines(vm);
+        vm.header = "";
+        vm.preview_h_scroll = 0;
         vm.cached_key = gen_key;
         if (!acr_nav::_db.live_connected) {
             tempstr msg;
@@ -605,33 +634,94 @@ void acr_nav::viewmode_inspect_ensure_content(acr_nav::FCtype &ct) {
             prefix << ct.ctype << "  ";
             tempstr census_match;
             census_match << "ctype:" << ct.ctype;
-            int line_idx = 0;
+            // Pass 1: measure column widths from record lines
+            int n_col = 0;
+            int display_wid[64];
+            algo::cstring col_name[64];
+            int n_records = 0;
+            int n_census = 0;
             ind_beg(Line_curs, line, acr_nav::_db.live_data) {
                 bool is_record = algo::StartsWithQ(line, strptr(prefix));
+                if (is_record) {
+                    algo::Tuple tuple;
+                    if (algo::Tuple_ReadStrptr(tuple, line, false)) {
+                        MeasureTupleColumns(tuple, col_name, display_wid, n_col);
+                        n_records++;
+                    }
+                } else {
+                    bool is_census = algo::StartsWithQ(line, strptr("report.PoolCensus"))
+                        && algo::FindStr(line, strptr(census_match)) >= 0;
+                    bool is_idx = algo::StartsWithQ(line, strptr("report.IndexCensus"))
+                        && algo::FindStr(line, strptr(census_match)) >= 0;
+                    if (is_census || is_idx) {
+                        n_census++;
+                    }
+                }
+            } ind_end;
+            // Detect nav columns and build header
+            if (n_records > 0) {
+                DetectNavColumns(vm, &ct, col_name, display_wid, n_col, true);
+                vm.pkey_wid = (n_col > 0) ? display_wid[0] : 0;
+                int comment_col = -1;
+                BuildPreviewHeader(vm, col_name, display_wid, n_col, comment_col);
+                // Pass 2: format record rows with aligned columns
+                ind_beg(Line_curs, line, acr_nav::_db.live_data) {
+                    if (algo::StartsWithQ(line, strptr(prefix))) {
+                        algo::Tuple tuple;
+                        if (algo::Tuple_ReadStrptr(tuple, line, false)) {
+                            tempstr row;
+                            int col_byte_pos[64];
+                            FormatPreviewRow(row, tuple, display_wid, n_col, col_byte_pos);
+                            acr_nav::content_row_Alloc(vm).text = row;
+                            int li = acr_nav::content_row_N(vm) - 1;
+                            if (n_col > 0) {
+                                int pkey_end = (n_col > 1) ? col_byte_pos[1] - 2 : ch_N(row);
+                                AddSpan(vm, li, 0, pkey_end, acr_nav::ind_navstyle_Find("line_key"));
+                            }
+                            if (comment_col >= 0) {
+                                AddSpan(vm, li, col_byte_pos[comment_col], ch_N(row), acr_nav::ind_navstyle_Find("line_comment"));
+                            }
+                        }
+                    }
+                } ind_end;
+            }
+            // Append census/index lines as unformatted comments
+            ind_beg(Line_curs, line, acr_nav::_db.live_data) {
                 bool is_census = algo::StartsWithQ(line, strptr("report.PoolCensus"))
                     && algo::FindStr(line, strptr(census_match)) >= 0;
                 bool is_idx = algo::StartsWithQ(line, strptr("report.IndexCensus"))
                     && algo::FindStr(line, strptr(census_match)) >= 0;
-                if (is_record || is_census || is_idx) {
+                if (is_census || is_idx) {
                     acr_nav::content_row_Alloc(vm).text = line;
-                    if (is_census || is_idx) {
-                        AddSpan(vm, line_idx, 0, elems_N(line), acr_nav::ind_navstyle_Find("line_comment"));
-                    } else {
-                        int space_pos = algo::FindChar(line, ' ');
-                        if (space_pos >= 0) {
-                            AddSpan(vm, line_idx, 0, space_pos, acr_nav::ind_navstyle_Find("line_key"));
-                        }
-                    }
-                    line_idx++;
+                    int li = acr_nav::content_row_N(vm) - 1;
+                    AddSpan(vm, li, 0, elems_N(line), acr_nav::ind_navstyle_Find("line_comment"));
                 }
             } ind_end;
-            if (line_idx == 0) {
+            if (n_records == 0 && n_census == 0) {
                 acr_nav::content_row_Alloc(vm).text = "no records in dump for this type";
             }
+            // Apply deferred follow-ref match
+            if (ch_N(pending) > 0 && vm.pkey_wid > 0) {
+                int n_lines = acr_nav::content_row_N(vm);
+                for (int i = 0; i < n_lines; i++) {
+                    algo::strptr row = acr_nav::content_row_qFind(vm, i).text;
+                    int end = i32_Min(DisplayToByte(row, vm.pkey_wid), elems_N(row));
+                    algo::strptr pkey_raw(row.elems, end);
+                    tempstr pkey;
+                    pkey << algo::TrimmedRight(pkey_raw);
+                    if (algo::strptr_Eq(strptr(pkey), algo::TrimmedRight(strptr(pending)))) {
+                        acr_nav::_db.p_right_panel->sel_row = i;
+                        break;
+                    }
+                }
+            }
         }
-        tempstr hdr;
-        hdr << ct.ctype << " (gen " << acr_nav::_db.live_generation << ")";
-        vm.header = hdr;
+    }
+    if (acr_nav::_db.sel_nav_col_pending >= 0) {
+        acr_nav::_db.sel_nav_col = acr_nav::_db.sel_nav_col_pending;
+        acr_nav::_db.sel_nav_col_pending = -1;
+    } else if (acr_nav::nav_col_N(vm) > 0 && acr_nav::_db.sel_nav_col >= acr_nav::nav_col_N(vm)) {
+        acr_nav::_db.sel_nav_col = 0;
     }
 }
 

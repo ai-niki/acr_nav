@@ -109,43 +109,46 @@ static void InsertionSortNsByName(acr_nav::FNs **ns_arr, int n_ns) {
 // -----------------------------------------------------------------------------
 
 void acr_nav::BuildLeftItems() {
-    acr_nav::left_item_RemoveAll();
-    acr_nav::_db.n_visible_ctype = 0;
-    algo_lib::Regx filter_regx;
-    bool has_filter = ch_N(acr_nav::_db.filter) > 0;
-    if (has_filter) {
-        tempstr pattern;
-        pattern << "%" << acr_nav::_db.filter << "%";
-        algo::MakeLower(pattern);
-        algo_lib::Regx_ReadSql(filter_regx, pattern, false);
-    }
-    acr_nav::_db.filter_regx = filter_regx;
-    acr_nav::FFiltertarget &ft = *acr_nav::_db.p_cur_filtertarget;
-    // Collect namespaces with matching ctypes, sorted alphabetically.
-    // FNs records are loaded from data/ in file order; explicit sort guarantees
-    // stable display regardless of load order.
-    acr_nav::FNs *ns_arr[256]; // fixed capacity; silently truncates if exceeded
-    int n_ns = 0;
-    CollectMatchingNamespaces(ns_arr, n_ns, filter_regx, has_filter, ft);
-    InsertionSortNsByName(ns_arr, n_ns);
-    // Build display list
-    for (int ni = 0; ni < n_ns; ni++) {
-        acr_nav::FNs &ns = *ns_arr[ni];
-        // Namespace header
-        acr_nav::LeftItem &hdr = acr_nav::left_item_Alloc();
-        hdr.ctype = "";
-        hdr.ns = ns.ns;
-        acr_nav::_db.n_visible_ctype += ns.n_match;
-        // Ctype rows (if expanded)
-        if (!ns.collapsed) {
-            for (int i = 0; i < acr_nav::c_ctype_N(ns); i++) {
-                acr_nav::FCtype *ct = acr_nav::c_ctype_Find(ns, i);
-                if (ct && ch_N(ct->ctype) > 0) {
-                    bool match = !has_filter || CtypeMatchesFilter(*ct, filter_regx, ft);
-                    if (match) {
-                        acr_nav::LeftItem &item = acr_nav::left_item_Alloc();
-                        item.ctype = ct->ctype;
-                        item.ns = "";
+    // live mode: pool list maintained by BuildLiveLeftItems
+    if (!acr_nav::_db.live_mode) {
+        acr_nav::left_item_RemoveAll();
+        acr_nav::_db.n_visible_ctype = 0;
+        algo_lib::Regx filter_regx;
+        bool has_filter = ch_N(acr_nav::_db.filter) > 0;
+        if (has_filter) {
+            tempstr pattern;
+            pattern << "%" << acr_nav::_db.filter << "%";
+            algo::MakeLower(pattern);
+            algo_lib::Regx_ReadSql(filter_regx, pattern, false);
+        }
+        acr_nav::_db.filter_regx = filter_regx;
+        acr_nav::FFiltertarget &ft = *acr_nav::_db.p_cur_filtertarget;
+        // Collect namespaces with matching ctypes, sorted alphabetically.
+        // FNs records are loaded from data/ in file order; explicit sort guarantees
+        // stable display regardless of load order.
+        acr_nav::FNs *ns_arr[256]; // fixed capacity; silently truncates if exceeded
+        int n_ns = 0;
+        CollectMatchingNamespaces(ns_arr, n_ns, filter_regx, has_filter, ft);
+        InsertionSortNsByName(ns_arr, n_ns);
+        // Build display list
+        for (int ni = 0; ni < n_ns; ni++) {
+            acr_nav::FNs &ns = *ns_arr[ni];
+            // Namespace header
+            acr_nav::LeftItem &hdr = acr_nav::left_item_Alloc();
+            hdr.ctype = "";
+            hdr.ns = ns.ns;
+            acr_nav::_db.n_visible_ctype += ns.n_match;
+            // Ctype rows (if expanded)
+            if (!ns.collapsed) {
+                for (int i = 0; i < acr_nav::c_ctype_N(ns); i++) {
+                    acr_nav::FCtype *ct = acr_nav::c_ctype_Find(ns, i);
+                    if (ct && ch_N(ct->ctype) > 0) {
+                        bool match = !has_filter || CtypeMatchesFilter(*ct, filter_regx, ft);
+                        if (match) {
+                            acr_nav::LeftItem &item = acr_nav::left_item_Alloc();
+                            item.ctype = ct->ctype;
+                            item.ns = "";
+                        }
                     }
                 }
             }

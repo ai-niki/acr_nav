@@ -54,9 +54,9 @@ namespace acr_nav { // update-hdr
     // void viewmode_help_ensure_content(acr_nav::FCtype &); // gstatic/acr_navdb.viewmode:help
     // void viewmode_detail_ensure_content(acr_nav::FCtype &); // gstatic/acr_navdb.viewmode:detail
 
-    // Populate inspect viewmode content_row with lines from the live state dump,
-    // filtered by the selected ctype.  Shows matching records, FDb lines, and
-    // pool-census reports for the ctype.
+    // Populate inspect viewmode with columnar-formatted records from the live state dump.
+    // Two-pass pipeline: measure column widths, then format aligned rows.
+    // Census/index lines appended as unformatted comments after records.
     // void viewmode_inspect_ensure_content(acr_nav::FCtype &ct); // gstatic/acr_navdb.viewmode:inspect
     // void viewmode_nsdep_detail_ensure_content(acr_nav::FCtype &ct); // gstatic/acr_navdb.viewmode:nsdep_detail
 

@@ -11,7 +11,7 @@ This is the "freeze a running program and look at its tables" idea turned into a
 **End goal framing:** "make any amc program a glass box." Not SQL at runtime -- that would require a runtime query interpreter (an anti-pattern: interpreter adds complexity, not factorization). Instead: the program emits structured text; the consumer (agent or unix tools) filters and queries client-side. The query engine is the consumer.
 
 **Value:** High for programs under active development. Mature tools (amc, acr) are already debugged -- the payoff is for new servers and services being built, where Claude Code needs to inspect evolving runtime state daily.
-**Status:** Phases 1-3.4.1 done. Two generators (`ns_state_dump`, `ns_ipc`), two namespaces (acr_nav, samp_meng), live inspect viewmode working. Remaining: UX polish (Phase 3.4.2), input interface (Phase 4), meaningful second app (Phase 5).
+**Status:** Phases 1-3.4.2 done. Two generators (`ns_state_dump`, `ns_ipc`), two namespaces (acr_nav, samp_meng), live inspect viewmode with columnar formatting and reference following. Remaining: input interface (Phase 4), meaningful second app (Phase 5).
 **Primary consumer:** Claude Code as agent -- inspecting programs at runtime during development, and auto-testing them similar to acr_nav headless. Any new amc program built with Claude Code benefits automatically -- no adoption curve.
 
 ## What generalizes cleanly (output/dump side)
@@ -253,11 +253,15 @@ Replaced the hacky MVP with a proper pool-driven inspect mode:
 
 **Key files:** `cpp/acr_nav/nav.cpp` (BuildLiveLeftItems), `cpp/acr_nav/main.cpp` (TuiLiveInit, LivePollCallback), `cpp/acr_nav/render.cpp` (live mode rendering + width).
 
-### Phase 3.4.2 -- Inspect viewmode UX polish (identified)
+### Phase 3.4.2 -- Inspect viewmode UX polish (done)
 
-**Gap A: Columnar formatting.** Inspect view shows raw ssim lines. Preview mode parses tuples into aligned columns via `FormatPreviewRow`. Inspect should reuse this infrastructure — parse each record into columns, compute column widths, align. This makes live state as readable as ssimfile preview.
+**Gap A: Columnar formatting.** Inspect view now parses live data tuples and formats aligned columns, reusing `FormatPreviewRow`, `BuildPreviewHeader`, and a shared `MeasureTupleColumns` helper extracted from preview mode. Two-pass pipeline: measure column widths across matching records, then format. Census/IndexCensus lines appended as unformatted comments below records.
 
-**Gap B: Follow references from inspect view.** Preview mode supports nav_col — pressing Enter on a field value follows a pkey reference to the target ctype. Inspect could do the same since the ctype's fields are in the local schema: identify which columns are foreign keys, enable Enter-follow. In inspect mode, following a reference jumps to that pool's live records (e.g., click FPanel's `p_cur_viewmode` to jump to the FViewmode pool). This turns inspect into a live state navigator, not just a viewer.
+**Gap B: Follow references from inspect view.** `DetectNavColumns` parameterized with `bool live_mode` — in live mode, FK detection checks pool_entry membership instead of ssimfile existence, making Ptr fields navigable when their target pool exists. `BuildLeftItems` guarded for live mode (SESE wrap), so `RevealCtype` → `NavigateToTarget` works for both modes with zero duplication. Enter-follow jumps between live pools; Backspace returns via navstack.
+
+**Rendering generalization:** Four hardcoded preview viewmode identity checks in render.cpp replaced with `nav_col_N(*p_cur_viewmode) > 0` capability checks: h-scroll activation, h-scroll adjustment, nav-cell overlay, and styled column header. Any viewmode with nav_col entries now gets columnar rendering.
+
+**Key files:** `cpp/acr_nav/content.cpp` (MeasureTupleColumns, FindPoolEntry, DetectNavColumns live_mode, viewmode_inspect_ensure_content), `cpp/acr_nav/render.cpp` (AdjustHScroll, DetectNavOverlay, RenderColumnHeader, Render), `cpp/acr_nav/nav.cpp` (BuildLeftItems live guard).
 
 **Gap C: Static schema data dominates dump.** `acr_nav.FCtype` (1423 records) and `acr_nav.FField` (5729 records) are loaded from disk at startup and never change. They dominate the dump output. A future optimization: exclude static pools from the dump via schema metadata identifying static-load pools.
 
