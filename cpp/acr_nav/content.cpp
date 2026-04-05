@@ -101,12 +101,11 @@ static void MeasurePreviewColumns(algo_lib::MmapFile &file, algo::cstring *col_n
 
 // Check whether a ctype appears as a pool in the live state dump.
 static bool FindPoolEntry(algo::strptr ctype_key) {
-    for (int i = 0; i < acr_nav::pool_entry_N(); i++) {
-        if (algo::strptr_Eq(acr_nav::pool_entry_qFind(i).ctype, ctype_key)) {
-            return true;
-        }
+    bool ret = false;
+    for (int i = 0; i < acr_nav::pool_entry_N() && !ret; i++) {
+        ret = algo::strptr_Eq(acr_nav::pool_entry_qFind(i).ctype, ctype_key);
     }
-    return false;
+    return ret;
 }
 
 // Build PreviewNavCol entries for each column, detect FK targets for navigable columns.
@@ -184,6 +183,25 @@ static void FormatPreviewRows(acr_nav::FViewmode &vm, algo_lib::MmapFile &file, 
     } ind_end;
 }
 
+// Scan pkey column for a match against pending, auto-select matching row.
+static void ApplyPendingNavMatch(acr_nav::FViewmode &vm, algo::strptr pending) {
+    if (ch_N(pending) > 0 && vm.pkey_wid > 0) {
+        int n_lines = acr_nav::content_row_N(vm);
+        bool found = false;
+        for (int i = 0; i < n_lines && !found; i++) {
+            algo::strptr row = acr_nav::content_row_qFind(vm, i).text;
+            int end = i32_Min(DisplayToByte(row, vm.pkey_wid), elems_N(row));
+            algo::strptr pkey_raw(row.elems, end);
+            tempstr pkey;
+            pkey << algo::TrimmedRight(pkey_raw);
+            found = algo::strptr_Eq(strptr(pkey), algo::TrimmedRight(pending));
+            if (found) {
+                acr_nav::_db.p_right_panel->sel_row = i;
+            }
+        }
+    }
+}
+
 static void LoadPreview(acr_nav::FCtype &ctype) {
     acr_nav::FViewmode &vm = *acr_nav::ind_viewmode_Find("preview");
     tempstr pending(acr_nav::_db.preview_nav_pending);
@@ -208,21 +226,7 @@ static void LoadPreview(acr_nav::FCtype &ctype) {
             int comment_col = -1;
             BuildPreviewHeader(vm, col_name, display_wid, n_col, comment_col);
             FormatPreviewRows(vm, file, display_wid, n_col, comment_col);
-            // Apply deferred follow-ref match
-            if (ch_N(pending) > 0 && vm.pkey_wid > 0) {
-                int n_lines = acr_nav::content_row_N(vm);
-                for (int i = 0; i < n_lines; i++) {
-                    algo::strptr row = acr_nav::content_row_qFind(vm, i).text;
-                    int end = i32_Min(DisplayToByte(row, vm.pkey_wid), elems_N(row));
-                    algo::strptr pkey_raw(row.elems, end);
-                    tempstr pkey;
-                    pkey << algo::TrimmedRight(pkey_raw);
-                    if (algo::strptr_Eq(strptr(pkey), algo::TrimmedRight(strptr(pending)))) {
-                        acr_nav::_db.p_right_panel->sel_row = i;
-                        break;
-                    }
-                }
-            }
+            ApplyPendingNavMatch(vm, pending);
         }
     }
     if (acr_nav::_db.sel_nav_col_pending >= 0) {
@@ -639,22 +643,12 @@ void acr_nav::viewmode_inspect_ensure_content(acr_nav::FCtype &ct) {
             int display_wid[64];
             algo::cstring col_name[64];
             int n_records = 0;
-            int n_census = 0;
             ind_beg(Line_curs, line, acr_nav::_db.live_data) {
-                bool is_record = algo::StartsWithQ(line, strptr(prefix));
-                if (is_record) {
+                if (algo::StartsWithQ(line, strptr(prefix))) {
                     algo::Tuple tuple;
                     if (algo::Tuple_ReadStrptr(tuple, line, false)) {
                         MeasureTupleColumns(tuple, col_name, display_wid, n_col);
                         n_records++;
-                    }
-                } else {
-                    bool is_census = algo::StartsWithQ(line, strptr("report.PoolCensus"))
-                        && algo::FindStr(line, strptr(census_match)) >= 0;
-                    bool is_idx = algo::StartsWithQ(line, strptr("report.IndexCensus"))
-                        && algo::FindStr(line, strptr(census_match)) >= 0;
-                    if (is_census || is_idx) {
-                        n_census++;
                     }
                 }
             } ind_end;
@@ -664,7 +658,7 @@ void acr_nav::viewmode_inspect_ensure_content(acr_nav::FCtype &ct) {
                 vm.pkey_wid = (n_col > 0) ? display_wid[0] : 0;
                 int comment_col = -1;
                 BuildPreviewHeader(vm, col_name, display_wid, n_col, comment_col);
-                // Pass 2: format record rows with aligned columns
+                // Pass 2: format records, append census/index lines
                 ind_beg(Line_curs, line, acr_nav::_db.live_data) {
                     if (algo::StartsWithQ(line, strptr(prefix))) {
                         algo::Tuple tuple;
@@ -682,46 +676,45 @@ void acr_nav::viewmode_inspect_ensure_content(acr_nav::FCtype &ct) {
                                 AddSpan(vm, li, col_byte_pos[comment_col], ch_N(row), acr_nav::ind_navstyle_Find("line_comment"));
                             }
                         }
+                    } else {
+                        bool is_census = algo::StartsWithQ(line, strptr("report.PoolCensus"))
+                            && algo::FindStr(line, strptr(census_match)) >= 0;
+                        bool is_idx = algo::StartsWithQ(line, strptr("report.IndexCensus"))
+                            && algo::FindStr(line, strptr(census_match)) >= 0;
+                        if (is_census || is_idx) {
+                            acr_nav::content_row_Alloc(vm).text = line;
+                            int li = acr_nav::content_row_N(vm) - 1;
+                            AddSpan(vm, li, 0, elems_N(line), acr_nav::ind_navstyle_Find("line_comment"));
+                        }
                     }
                 } ind_end;
-            }
-            // Append census/index lines as unformatted comments
-            ind_beg(Line_curs, line, acr_nav::_db.live_data) {
-                bool is_census = algo::StartsWithQ(line, strptr("report.PoolCensus"))
-                    && algo::FindStr(line, strptr(census_match)) >= 0;
-                bool is_idx = algo::StartsWithQ(line, strptr("report.IndexCensus"))
-                    && algo::FindStr(line, strptr(census_match)) >= 0;
-                if (is_census || is_idx) {
-                    acr_nav::content_row_Alloc(vm).text = line;
-                    int li = acr_nav::content_row_N(vm) - 1;
-                    AddSpan(vm, li, 0, elems_N(line), acr_nav::ind_navstyle_Find("line_comment"));
-                }
-            } ind_end;
-            if (n_records == 0 && n_census == 0) {
-                acr_nav::content_row_Alloc(vm).text = "no records in dump for this type";
-            }
-            // Apply deferred follow-ref match
-            if (ch_N(pending) > 0 && vm.pkey_wid > 0) {
-                int n_lines = acr_nav::content_row_N(vm);
-                for (int i = 0; i < n_lines; i++) {
-                    algo::strptr row = acr_nav::content_row_qFind(vm, i).text;
-                    int end = i32_Min(DisplayToByte(row, vm.pkey_wid), elems_N(row));
-                    algo::strptr pkey_raw(row.elems, end);
-                    tempstr pkey;
-                    pkey << algo::TrimmedRight(pkey_raw);
-                    if (algo::strptr_Eq(strptr(pkey), algo::TrimmedRight(strptr(pending)))) {
-                        acr_nav::_db.p_right_panel->sel_row = i;
-                        break;
+            } else {
+                // No records — still check for census lines
+                int n_census = 0;
+                ind_beg(Line_curs, line, acr_nav::_db.live_data) {
+                    bool is_census = algo::StartsWithQ(line, strptr("report.PoolCensus"))
+                        && algo::FindStr(line, strptr(census_match)) >= 0;
+                    bool is_idx = algo::StartsWithQ(line, strptr("report.IndexCensus"))
+                        && algo::FindStr(line, strptr(census_match)) >= 0;
+                    if (is_census || is_idx) {
+                        acr_nav::content_row_Alloc(vm).text = line;
+                        int li = acr_nav::content_row_N(vm) - 1;
+                        AddSpan(vm, li, 0, elems_N(line), acr_nav::ind_navstyle_Find("line_comment"));
+                        n_census++;
                     }
+                } ind_end;
+                if (n_census == 0) {
+                    acr_nav::content_row_Alloc(vm).text = "no records in dump for this type";
                 }
             }
+            ApplyPendingNavMatch(vm, pending);
         }
     }
     if (acr_nav::_db.sel_nav_col_pending >= 0) {
         acr_nav::_db.sel_nav_col = acr_nav::_db.sel_nav_col_pending;
         acr_nav::_db.sel_nav_col_pending = -1;
     } else if (acr_nav::nav_col_N(vm) > 0 && acr_nav::_db.sel_nav_col >= acr_nav::nav_col_N(vm)) {
-        acr_nav::_db.sel_nav_col = 0;
+        acr_nav::_db.sel_nav_col = i32_Min(acr_nav::_db.sel_nav_col, acr_nav::nav_col_N(vm) - 1);
     }
 }
 
