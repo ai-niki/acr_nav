@@ -47,6 +47,8 @@ Component tests live in `test/atf_comp/acr_nav.*` and run with `normalize comp`.
 
 ## Runtime State Inspection
 
+https://github.com/user-attachments/assets/48735f43-f5bd-4c75-a954-98c7a65de735
+
 amc generates a `StateDump()` function that walks every pool in `_db` and emits records as ssim. One opt-in record per namespace:
 
 ```
