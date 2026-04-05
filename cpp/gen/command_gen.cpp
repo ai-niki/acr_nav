@@ -21300,12 +21300,6 @@ bool command::samp_meng_ReadFieldMaybe(command::samp_meng& parent, algo::strptr 
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
         } break;
-        case command_FieldId_ipc: {
-            retval = bool_ReadStrptrMaybe(parent.ipc, strval);
-        } break;
-        case command_FieldId_dump: {
-            retval = algo::cstring_ReadStrptrMaybe(parent.dump, strval);
-        } break;
         default: {
             retval = false;
             algo_lib::AppendErrtext("comment", "unrecognized attr");
@@ -21360,18 +21354,6 @@ void command::samp_meng_PrintArgv(command::samp_meng& row, algo::cstring& str) {
         str << " -in:";
         strptr_PrintBash(temp,str);
     }
-    if (!(row.ipc == false)) {
-        ch_RemoveAll(temp);
-        bool_Print(row.ipc, temp);
-        str << " -ipc:";
-        strptr_PrintBash(temp,str);
-    }
-    if (!(row.dump == "")) {
-        ch_RemoveAll(temp);
-        cstring_Print(row.dump, temp);
-        str << " -dump:";
-        strptr_PrintBash(temp,str);
-    }
 }
 
 // --- command.samp_meng..NArgs
@@ -21384,17 +21366,10 @@ i32 command::samp_meng_NArgs(command::FieldId field, algo::strptr& out_dflt, boo
         case command_FieldId_in: { //
             *out_anon = false;
         } break;
-        case command_FieldId_ipc: { // bool: no argument required but value may be specified as ipc:Y
-            *out_anon = false;
-            retval=0;
-            out_dflt="Y";
-        } break;
-        case command_FieldId_dump: { //
-            *out_anon = false;
-        } break;
         default:
         retval=-1; // unrecognized
     }
+    (void)out_dflt;//only to avoid -Wunused-parameter
     return retval;
 }
 
@@ -21540,18 +21515,6 @@ void command::samp_meng_ToArgv(command::samp_meng_proc& parent, algo::StringAry&
         cstring *arg = &ary_Alloc(args);
         *arg << "-in:";
         cstring_Print(parent.cmd.in, *arg);
-    }
-
-    if (parent.cmd.ipc != false) {
-        cstring *arg = &ary_Alloc(args);
-        *arg << "-ipc:";
-        bool_Print(parent.cmd.ipc, *arg);
-    }
-
-    if (parent.cmd.dump != "") {
-        cstring *arg = &ary_Alloc(args);
-        *arg << "-dump:";
-        cstring_Print(parent.cmd.dump, *arg);
     }
     for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
         ary_Alloc(args) << "-verbose";

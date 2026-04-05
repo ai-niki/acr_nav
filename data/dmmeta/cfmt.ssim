@@ -775,7 +775,6 @@ dmmeta.cfmt  cfmt:samp_meng.NewSymbolReqMsg.String  printfmt:Tuple  read:Y  prin
 dmmeta.cfmt  cfmt:samp_meng.NewUserMsg.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
 dmmeta.cfmt  cfmt:samp_meng.NewUserReqMsg.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
 dmmeta.cfmt  cfmt:samp_meng.OrderTradeMsg.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
-dmmeta.cfmt  cfmt:samp_meng.RequestStateDump.String  printfmt:Tuple  read:Y  print:N  sep:""  genop:Y  comment:""
 dmmeta.cfmt  cfmt:samp_meng.Symbol.String  printfmt:Raw  read:Y  print:Y  sep:""  genop:Y  comment:""
 dmmeta.cfmt  cfmt:samp_meng.TextMsg.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
 dmmeta.cfmt  cfmt:sampdb.Gitfile.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""

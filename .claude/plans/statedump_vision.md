@@ -11,7 +11,7 @@ This is the "freeze a running program and look at its tables" idea turned into a
 **End goal framing:** "make any amc program a glass box." Not SQL at runtime -- that would require a runtime query interpreter (an anti-pattern: interpreter adds complexity, not factorization). Instead: the program emits structured text; the consumer (agent or unix tools) filters and queries client-side. The query engine is the consumer.
 
 **Value:** High for programs under active development. Mature tools (amc, acr) are already debugged -- the payoff is for new servers and services being built, where Claude Code needs to inspect evolving runtime state daily.
-**Status:** Phases 1-3.4.2 done. Two generators (`ns_state_dump`, `ns_ipc`), two namespaces (acr_nav, samp_meng), live inspect viewmode with columnar formatting and reference following. Remaining: input interface (Phase 4), meaningful second app (Phase 5).
+**Status:** Phases 1-3.4.2 done. Two generators (`ns_state_dump`, `ns_ipc`), one namespace (acr_nav), live inspect viewmode with columnar formatting and reference following. Remaining: input interface (Phase 4), meaningful second app (Phase 5). samp_meng integration removed — it was a smoke test, not a diagnostic showcase.
 **Primary consumer:** Claude Code as agent -- inspecting programs at runtime during development, and auto-testing them similar to acr_nav headless. Any new amc program built with Claude Code benefits automatically -- no adoption curve.
 
 ## What generalizes cleanly (output/dump side)
@@ -181,13 +181,13 @@ When `-headless -ipc` are both set, stdin is registered as a non-blocking FIohoo
 
 5. *Edge-triggered epoll requires complete drain.* Read until EAGAIN or EOF. If a quit command sets `_db.running = false` mid-drain, must still call `ReqExitMainLoop()` or MainLoop hangs.
 
-### Phase 3.2 -- Hardening + second namespace (done)
+### Phase 3.2 -- Hardening (done)
 
-Signal handler (generated `IpcSignalHandler`, async-signal-safe cleanup), BindUnix error checking, Zeroterm fix for socket path. Second namespace `samp_meng` enabled — 29 schema records, zero generator changes, hand-written IpcInit/IpcAccept/Ipc_RequestStateDump.
+Signal handler (generated `IpcSignalHandler`, async-signal-safe cleanup), BindUnix error checking, Zeroterm fix for socket path. Previously validated on `samp_meng` as second namespace (zero generator changes required); samp_meng integration since removed as it was a smoke test, not a diagnostic showcase.
 
 **Stale socket detection deferred:** PID-based naming makes collisions nearly impossible; `unlink`-before-`bind` handles stale sockets.
 
-**Key files:** `cpp/amc/ipc.cpp`, `cpp/acr_nav/ipc.cpp`, `cpp/samp_meng/ipc.cpp`.
+**Key files:** `cpp/amc/ipc.cpp`, `cpp/acr_nav/ipc.cpp`.
 
 **Lessons learned:**
 
@@ -271,7 +271,7 @@ Declare program commands in ssimfiles, generate dispatch scaffolding. Currently 
 
 ### Phase 5 -- Second namespace: prove it generalizes on a meaningful app
 
-`samp_meng` (Phase 3.2) validated that the generators work on a second namespace — zero generator changes required, only ssim records + two extern functions. But samp_meng is a minimal smoke test, not a program where pool inspection has real diagnostic value.
+Phase 3.2 validated that the generators work on a second namespace (samp_meng) — zero generator changes required, only ssim records + two extern functions. That integration was removed since samp_meng was a smoke test, not a program where pool inspection has real diagnostic value.
 
 Phase 5 requires enabling `nsdump` + `nsipc` on a program with meaningful runtime state — a long-running server or stateful tool where inspectability pays off (see "Where the value is highest" section). The generators are proven generic; what remains is demonstrating diagnostic value on a real workload.
 

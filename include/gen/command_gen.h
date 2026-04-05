@@ -5418,9 +5418,7 @@ void                 samp_make_proc_Uninit(command::samp_make_proc& parent) __at
 // --- command.samp_meng
 // access: command.samp_meng_proc.samp_meng (Exec)
 struct samp_meng { // command.samp_meng
-    algo::cstring   in;     //   "data"  Input directory or filename, - for stdin
-    bool            ipc;    //   false  Enable IPC socket for runtime inspection
-    algo::cstring   dump;   //   ""  Dump state matching regex and exit
+    algo::cstring   in;   //   "data"  Input directory or filename, - for stdin
     // func:command.samp_meng..Ctor
     inline               samp_meng() __attribute__((nothrow));
 };

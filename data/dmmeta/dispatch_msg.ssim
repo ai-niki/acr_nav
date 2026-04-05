@@ -36,4 +36,3 @@ dmmeta.dispatch_msg  dispatch_msg:samp_meng.In/samp_meng.NewOrderReqMsg  comment
 dmmeta.dispatch_msg  dispatch_msg:samp_meng.In/samp_meng.NewSymbolReqMsg  comment:""
 dmmeta.dispatch_msg  dispatch_msg:samp_meng.In/samp_meng.NewUserReqMsg  comment:""
 dmmeta.dispatch_msg  dispatch_msg:samp_meng.In/samp_meng.TextMsg  comment:""
-dmmeta.dispatch_msg  dispatch_msg:samp_meng.Ipc/samp_meng.RequestStateDump  comment:""

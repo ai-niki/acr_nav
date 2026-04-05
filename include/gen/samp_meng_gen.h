@@ -43,11 +43,10 @@ enum samp_meng_FieldIdEnum {          // samp_meng.FieldId.value
     ,samp_meng_FieldId_symbol   = 8
     ,samp_meng_FieldId_qty      = 9
     ,samp_meng_FieldId_ioc      = 10
-    ,samp_meng_FieldId_filter   = 11
-    ,samp_meng_FieldId_text     = 12
+    ,samp_meng_FieldId_text     = 11
 };
 
-enum { samp_meng_FieldIdEnum_N = 13 };
+enum { samp_meng_FieldIdEnum_N = 12 };
 
 
 // --- samp_meng_InCaseEnum
@@ -62,15 +61,6 @@ enum samp_meng_InCaseEnum {                              // samp_meng.InCase.val
 };
 
 enum { samp_meng_InCaseEnum_N = 6 };
-
-
-// --- samp_meng_IpcCaseEnum
-
-enum samp_meng_IpcCaseEnum {                             // samp_meng.IpcCase.value
-     samp_meng_IpcCase_samp_meng_RequestStateDump   = 1
-};
-
-enum { samp_meng_IpcCaseEnum_N = 1 };
 
 
 // --- samp_meng_MsgHeader_type_Enum
@@ -126,8 +116,6 @@ namespace samp_meng { struct NewOrderReqMsg; }
 namespace samp_meng { struct NewSymbolReqMsg; }
 namespace samp_meng { struct NewUserReqMsg; }
 namespace samp_meng { struct TextMsg; }
-namespace samp_meng { struct FIpcconn; }
-namespace samp_meng { struct RequestStateDump; }
 namespace samp_meng { struct CancelOrderMsg; }
 namespace samp_meng { struct NewOrderMsg; }
 namespace samp_meng { struct NewSymbolMsg; }
@@ -138,8 +126,6 @@ namespace samp_meng { struct _db_cd_fdin_eof_curs; }
 namespace samp_meng { struct _db_symbol_curs; }
 namespace samp_meng { struct _db_cd_fdin_read_curs; }
 namespace samp_meng { struct _db_user_curs; }
-namespace samp_meng { struct _db_cd_ipcconn_read_curs; }
-namespace samp_meng { struct _db_cd_ipcconn_eof_curs; }
 namespace samp_meng { struct ordq_bh_order_curs; }
 namespace samp_meng { struct symbol_c_ordq_curs; }
 namespace samp_meng { struct user_zd_order_curs; }
@@ -153,7 +139,6 @@ namespace samp_meng { struct FOrder; }
 namespace samp_meng { struct Symbol; }
 namespace samp_meng { struct FieldId; }
 namespace samp_meng { struct InCase; }
-namespace samp_meng { struct IpcCase; }
 namespace samp_meng { struct MsgHeaderMsgsCase; }
 namespace samp_meng { struct MsgHeader_curs; }
 namespace samp_meng { extern struct samp_meng::FDb _db; }
@@ -307,14 +292,6 @@ struct FDb { // samp_meng.FDb: In-memory database
     i32                    ind_user_buckets_n;         // number of elements in bucket array
     i32                    ind_user_n;                 // number of elements in the hash table
     u64                    next_order_id;              //   1
-    algo_lib::FIohook      ipc_listen;                 // Listen socket iohook
-    algo::cstring          ipc_socket_path;            // Bound socket path
-    u64                    ipcconn_blocksize;          // # bytes per block
-    samp_meng::FIpcconn*   ipcconn_free;               //
-    samp_meng::FIpcconn*   cd_ipcconn_read_head;       // zero-terminated doubly linked list
-    i32                    cd_ipcconn_read_n;          // zero-terminated doubly linked list
-    samp_meng::FIpcconn*   cd_ipcconn_eof_head;        // zero-terminated doubly linked list
-    i32                    cd_ipcconn_eof_n;           // zero-terminated doubly linked list
     samp_meng::trace       trace;                      //
 };
 
@@ -702,126 +679,6 @@ void                 ind_user_Reserve(int n) __attribute__((nothrow));
 // func:samp_meng.FDb.ind_user.AbsReserve
 void                 ind_user_AbsReserve(int n) __attribute__((nothrow));
 
-// Allocate memory for new default row.
-// If out of memory, process is killed.
-// func:samp_meng.FDb.ipcconn.Alloc
-samp_meng::FIpcconn& ipcconn_Alloc() __attribute__((__warn_unused_result__, nothrow));
-// Allocate memory for new element. If out of memory, return NULL.
-// func:samp_meng.FDb.ipcconn.AllocMaybe
-samp_meng::FIpcconn* ipcconn_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-// Remove row from all global and cross indices, then deallocate row
-// func:samp_meng.FDb.ipcconn.Delete
-void                 ipcconn_Delete(samp_meng::FIpcconn &row) __attribute__((nothrow));
-// Allocate space for one element
-// If no memory available, return NULL.
-// func:samp_meng.FDb.ipcconn.AllocMem
-void*                ipcconn_AllocMem() __attribute__((__warn_unused_result__, nothrow));
-// Remove mem from all global and cross indices, then deallocate mem
-// func:samp_meng.FDb.ipcconn.FreeMem
-void                 ipcconn_FreeMem(samp_meng::FIpcconn &row) __attribute__((nothrow));
-// Preallocate memory for N more elements
-// Return number of elements actually reserved.
-// func:samp_meng.FDb.ipcconn.Reserve
-u64                  ipcconn_Reserve(u64 n_elems) __attribute__((nothrow));
-// Allocate block of given size, break up into small elements and append to free list.
-// Return number of elements reserved.
-// func:samp_meng.FDb.ipcconn.ReserveMem
-u64                  ipcconn_ReserveMem(u64 size) __attribute__((nothrow));
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-// func:samp_meng.FDb.ipcconn.XrefMaybe
-bool                 ipcconn_XrefMaybe(samp_meng::FIpcconn &row);
-
-// Return true if index is empty
-// func:samp_meng.FDb.cd_ipcconn_read.EmptyQ
-inline bool          cd_ipcconn_read_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
-// If index empty, return NULL. Otherwise return pointer to first element in index
-// func:samp_meng.FDb.cd_ipcconn_read.First
-inline samp_meng::FIpcconn* cd_ipcconn_read_First() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return true if row is in the linked list, false otherwise
-// func:samp_meng.FDb.cd_ipcconn_read.InLlistQ
-inline bool          cd_ipcconn_read_InLlistQ(samp_meng::FIpcconn& row) __attribute__((__warn_unused_result__, nothrow));
-// Insert row into linked list. If row is already in linked list, do nothing.
-// func:samp_meng.FDb.cd_ipcconn_read.Insert
-void                 cd_ipcconn_read_Insert(samp_meng::FIpcconn& row) __attribute__((nothrow));
-// If index empty, return NULL. Otherwise return pointer to last element in index
-// func:samp_meng.FDb.cd_ipcconn_read.Last
-inline samp_meng::FIpcconn* cd_ipcconn_read_Last() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return number of items in the linked list
-// func:samp_meng.FDb.cd_ipcconn_read.N
-inline i32           cd_ipcconn_read_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return pointer to next element in the list
-// func:samp_meng.FDb.cd_ipcconn_read.Next
-inline samp_meng::FIpcconn* cd_ipcconn_read_Next(samp_meng::FIpcconn &row) __attribute__((__warn_unused_result__, nothrow));
-// Return pointer to previous element in the list
-// func:samp_meng.FDb.cd_ipcconn_read.Prev
-inline samp_meng::FIpcconn* cd_ipcconn_read_Prev(samp_meng::FIpcconn &row) __attribute__((__warn_unused_result__, nothrow));
-// Remove element from index. If element is not in index, do nothing.
-// func:samp_meng.FDb.cd_ipcconn_read.Remove
-void                 cd_ipcconn_read_Remove(samp_meng::FIpcconn& row) __attribute__((nothrow));
-// Empty the index. (The rows are not deleted)
-// func:samp_meng.FDb.cd_ipcconn_read.RemoveAll
-void                 cd_ipcconn_read_RemoveAll() __attribute__((nothrow));
-// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-// Call FirstChanged trigger.
-// func:samp_meng.FDb.cd_ipcconn_read.RemoveFirst
-samp_meng::FIpcconn* cd_ipcconn_read_RemoveFirst() __attribute__((nothrow));
-// If linked list is empty, return NULL.
-// Otherwise return head item and advance head to the next item.
-// func:samp_meng.FDb.cd_ipcconn_read.RotateFirst
-samp_meng::FIpcconn* cd_ipcconn_read_RotateFirst() __attribute__((nothrow));
-// Return reference to last element in the index. No bounds checking.
-// func:samp_meng.FDb.cd_ipcconn_read.qLast
-inline samp_meng::FIpcconn& cd_ipcconn_read_qLast() __attribute__((__warn_unused_result__, nothrow));
-// func:samp_meng.FDb.cd_ipcconn_read.Step
-// this function is 'extrn' and implemented by user
-void                 cd_ipcconn_read_Step() __attribute__((nothrow));
-
-// Return true if index is empty
-// func:samp_meng.FDb.cd_ipcconn_eof.EmptyQ
-inline bool          cd_ipcconn_eof_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
-// If index empty, return NULL. Otherwise return pointer to first element in index
-// func:samp_meng.FDb.cd_ipcconn_eof.First
-inline samp_meng::FIpcconn* cd_ipcconn_eof_First() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return true if row is in the linked list, false otherwise
-// func:samp_meng.FDb.cd_ipcconn_eof.InLlistQ
-inline bool          cd_ipcconn_eof_InLlistQ(samp_meng::FIpcconn& row) __attribute__((__warn_unused_result__, nothrow));
-// Insert row into linked list. If row is already in linked list, do nothing.
-// func:samp_meng.FDb.cd_ipcconn_eof.Insert
-void                 cd_ipcconn_eof_Insert(samp_meng::FIpcconn& row) __attribute__((nothrow));
-// If index empty, return NULL. Otherwise return pointer to last element in index
-// func:samp_meng.FDb.cd_ipcconn_eof.Last
-inline samp_meng::FIpcconn* cd_ipcconn_eof_Last() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return number of items in the linked list
-// func:samp_meng.FDb.cd_ipcconn_eof.N
-inline i32           cd_ipcconn_eof_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return pointer to next element in the list
-// func:samp_meng.FDb.cd_ipcconn_eof.Next
-inline samp_meng::FIpcconn* cd_ipcconn_eof_Next(samp_meng::FIpcconn &row) __attribute__((__warn_unused_result__, nothrow));
-// Return pointer to previous element in the list
-// func:samp_meng.FDb.cd_ipcconn_eof.Prev
-inline samp_meng::FIpcconn* cd_ipcconn_eof_Prev(samp_meng::FIpcconn &row) __attribute__((__warn_unused_result__, nothrow));
-// Remove element from index. If element is not in index, do nothing.
-// func:samp_meng.FDb.cd_ipcconn_eof.Remove
-void                 cd_ipcconn_eof_Remove(samp_meng::FIpcconn& row) __attribute__((nothrow));
-// Empty the index. (The rows are not deleted)
-// func:samp_meng.FDb.cd_ipcconn_eof.RemoveAll
-void                 cd_ipcconn_eof_RemoveAll() __attribute__((nothrow));
-// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-// Call FirstChanged trigger.
-// func:samp_meng.FDb.cd_ipcconn_eof.RemoveFirst
-samp_meng::FIpcconn* cd_ipcconn_eof_RemoveFirst() __attribute__((nothrow));
-// If linked list is empty, return NULL.
-// Otherwise return head item and advance head to the next item.
-// func:samp_meng.FDb.cd_ipcconn_eof.RotateFirst
-samp_meng::FIpcconn* cd_ipcconn_eof_RotateFirst() __attribute__((nothrow));
-// Return reference to last element in the index. No bounds checking.
-// func:samp_meng.FDb.cd_ipcconn_eof.qLast
-inline samp_meng::FIpcconn& cd_ipcconn_eof_qLast() __attribute__((__warn_unused_result__, nothrow));
-// func:samp_meng.FDb.cd_ipcconn_eof.Step
-// this function is 'extrn' and implemented by user
-void                 cd_ipcconn_eof_Step() __attribute__((nothrow));
-
 // cursor points to valid item
 // func:samp_meng.FDb.fdin_curs.Reset
 inline void          _db_fdin_curs_Reset(_db_fdin_curs &curs, samp_meng::FDb &parent) __attribute__((nothrow));
@@ -882,30 +739,6 @@ inline void          _db_user_curs_Next(_db_user_curs &curs) __attribute__((noth
 // item access
 // func:samp_meng.FDb.user_curs.Access
 inline samp_meng::FUser& _db_user_curs_Access(_db_user_curs &curs) __attribute__((nothrow));
-// cursor points to valid item
-// func:samp_meng.FDb.cd_ipcconn_read_curs.Reset
-inline void          _db_cd_ipcconn_read_curs_Reset(_db_cd_ipcconn_read_curs &curs, samp_meng::FDb &parent) __attribute__((nothrow));
-// cursor points to valid item
-// func:samp_meng.FDb.cd_ipcconn_read_curs.ValidQ
-inline bool          _db_cd_ipcconn_read_curs_ValidQ(_db_cd_ipcconn_read_curs &curs) __attribute__((nothrow));
-// proceed to next item
-// func:samp_meng.FDb.cd_ipcconn_read_curs.Next
-inline void          _db_cd_ipcconn_read_curs_Next(_db_cd_ipcconn_read_curs &curs) __attribute__((nothrow));
-// item access
-// func:samp_meng.FDb.cd_ipcconn_read_curs.Access
-inline samp_meng::FIpcconn& _db_cd_ipcconn_read_curs_Access(_db_cd_ipcconn_read_curs &curs) __attribute__((nothrow));
-// cursor points to valid item
-// func:samp_meng.FDb.cd_ipcconn_eof_curs.Reset
-inline void          _db_cd_ipcconn_eof_curs_Reset(_db_cd_ipcconn_eof_curs &curs, samp_meng::FDb &parent) __attribute__((nothrow));
-// cursor points to valid item
-// func:samp_meng.FDb.cd_ipcconn_eof_curs.ValidQ
-inline bool          _db_cd_ipcconn_eof_curs_ValidQ(_db_cd_ipcconn_eof_curs &curs) __attribute__((nothrow));
-// proceed to next item
-// func:samp_meng.FDb.cd_ipcconn_eof_curs.Next
-inline void          _db_cd_ipcconn_eof_curs_Next(_db_cd_ipcconn_eof_curs &curs) __attribute__((nothrow));
-// item access
-// func:samp_meng.FDb.cd_ipcconn_eof_curs.Access
-inline samp_meng::FIpcconn& _db_cd_ipcconn_eof_curs_Access(_db_cd_ipcconn_eof_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:samp_meng.FDb..Init
 void                 FDb_Init();
@@ -1019,111 +852,6 @@ void                 in_WriteReserve(samp_meng::FFdin& fdin, u8 *in, i32 in_n) _
 void                 FFdin_Init(samp_meng::FFdin& fdin);
 // func:samp_meng.FFdin..Uninit
 void                 FFdin_Uninit(samp_meng::FFdin& fdin) __attribute__((nothrow));
-
-// --- samp_meng.FIpcconn
-// create: samp_meng.FDb.ipcconn (Tpool)
-// global access: cd_ipcconn_read (Llist)
-// global access: cd_ipcconn_eof (Llist)
-struct FIpcconn { // samp_meng.FIpcconn: Per-client IPC connection
-    samp_meng::FIpcconn*   ipcconn_next;           // Pointer to next free element int tpool
-    samp_meng::FIpcconn*   cd_ipcconn_read_next;   // zslist link; -1 means not-in-list
-    samp_meng::FIpcconn*   cd_ipcconn_read_prev;   // previous element
-    samp_meng::FIpcconn*   cd_ipcconn_eof_next;    // zslist link; -1 means not-in-list
-    samp_meng::FIpcconn*   cd_ipcconn_eof_prev;    // previous element
-    u8*                    in_elems;               //   NULL  pointer to elements of indirect array
-    u32                    in_max;                 //   0  current length of allocated array
-    i32                    in_start;               // beginning of valid bytes (in bytes)
-    i32                    in_end;                 // end of valid bytes (in bytes)
-    i32                    in_msglen;              // current message length
-    algo::Errcode          in_err;                 // system error code
-    algo_lib::FIohook      in_iohook;              // edge-triggered hook for the buffer
-    bool                   in_eof;                 // no more data will be written to buffer
-    bool                   in_msgvalid;            // current message is valid
-    bool                   in_epoll_enable;        // use epoll?
-    algo::Fildes           outfd;                  // Client socket for writing responses
-    // field samp_meng.FIpcconn.in prevents copy
-    // func:samp_meng.FIpcconn..AssignOp
-    inline samp_meng::FIpcconn& operator =(const samp_meng::FIpcconn &rhs) = delete;
-    // field samp_meng.FIpcconn.in prevents copy
-    // func:samp_meng.FIpcconn..CopyCtor
-    inline               FIpcconn(const samp_meng::FIpcconn &rhs) = delete;
-private:
-    // func:samp_meng.FIpcconn..Ctor
-    inline               FIpcconn() __attribute__((nothrow));
-    // func:samp_meng.FIpcconn..Dtor
-    inline               ~FIpcconn() __attribute__((nothrow));
-    friend samp_meng::FIpcconn& ipcconn_Alloc() __attribute__((__warn_unused_result__, nothrow));
-    friend samp_meng::FIpcconn* ipcconn_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-    friend void                 ipcconn_Delete(samp_meng::FIpcconn &row) __attribute__((nothrow));
-};
-
-// Attach fbuf to Iohook for reading
-// Attach file descriptor and begin reading using edge-triggered epoll.
-// File descriptor becomes owned by samp_meng::FIpcconn.in via FIohook field.
-// Whenever the file descriptor becomes readable, insert ipcconn into cd_ipcconn_read.
-// func:samp_meng.FIpcconn.in.BeginRead
-void                 in_BeginRead(samp_meng::FIpcconn& ipcconn, algo::Fildes fd) __attribute__((nothrow));
-// Set EOF flag
-// func:samp_meng.FIpcconn.in.EndRead
-void                 in_EndRead(samp_meng::FIpcconn& ipcconn) __attribute__((nothrow));
-// Detect incoming message in buffer and return it
-// Look for valid message at current position in the buffer.
-// If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).
-// If there is no message, read once from underlying file descriptor and try again.
-// The message is found by looking for delimiter '\n'.
-// The return value is an aryptr. If ret.elems is non-NULL, the message is valid (possibly empty).
-// If ret.elems is NULL, no message can be extracted from buffer.
-// The returned aryptr excludes the trailing deliminter.
-// SkipMsg will skip both the line and the deliminter.
-// A partial line at the end of input is NOT returned (TODO?)
-//
-// func:samp_meng.FIpcconn.in.GetMsg
-algo::aryptr<char>   in_GetMsg(samp_meng::FIpcconn& ipcconn) __attribute__((nothrow));
-// Set buffer size.
-// Unconditionally reallocate buffer to have size NEW_MAX
-// If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
-// (best to call this before filling the buffer)
-// func:samp_meng.FIpcconn.in.Realloc
-void                 in_Realloc(samp_meng::FIpcconn& ipcconn, int new_max) __attribute__((nothrow));
-// Return max. number of bytes in the buffer.
-// func:samp_meng.FIpcconn.in.Max
-inline i32           in_Max(samp_meng::FIpcconn& ipcconn) __attribute__((nothrow));
-// Return number of bytes in the buffer.
-// func:samp_meng.FIpcconn.in.N
-inline i32           in_N(samp_meng::FIpcconn& ipcconn) __attribute__((__warn_unused_result__, nothrow, pure));
-// Refill buffer. Return false if no further refill possible (input buffer exhausted)
-// func:samp_meng.FIpcconn.in.Refill
-bool                 in_Refill(samp_meng::FIpcconn& ipcconn) __attribute__((nothrow));
-// Empty bfufer
-// Discard contents of the buffer.
-// func:samp_meng.FIpcconn.in.RemoveAll
-void                 in_RemoveAll(samp_meng::FIpcconn& ipcconn) __attribute__((nothrow));
-// Skip N bytes when reading
-// Mark some buffer contents as read.
-//
-// func:samp_meng.FIpcconn.in.SkipBytes
-void                 in_SkipBytes(samp_meng::FIpcconn& ipcconn, int n) __attribute__((nothrow));
-// Skip current message, if any
-// Skip current message, if any.
-// func:samp_meng.FIpcconn.in.SkipMsg
-void                 in_SkipMsg(samp_meng::FIpcconn& ipcconn) __attribute__((nothrow));
-// Attempt to write buffer contents to fbuf, return success
-// Write bytes to the buffer. If the entire block is written, return true,
-// Otherwise return false.
-// Bytes in the buffer are potentially shifted left to make room for the message.
-//
-// func:samp_meng.FIpcconn.in.WriteAll
-bool                 in_WriteAll(samp_meng::FIpcconn& ipcconn, u8 *in, i32 in_n) __attribute__((nothrow));
-// Write buffer contents to fbuf, reallocate as needed
-// Write bytes to the buffer. The entire block is always written
-// func:samp_meng.FIpcconn.in.WriteReserve
-void                 in_WriteReserve(samp_meng::FIpcconn& ipcconn, u8 *in, i32 in_n) __attribute__((nothrow));
-
-// Set all fields to initial values.
-// func:samp_meng.FIpcconn..Init
-void                 FIpcconn_Init(samp_meng::FIpcconn& ipcconn);
-// func:samp_meng.FIpcconn..Uninit
-void                 FIpcconn_Uninit(samp_meng::FIpcconn& ipcconn) __attribute__((nothrow));
 
 // --- samp_meng.I64Price8
 #pragma pack(push,1)
@@ -1684,56 +1412,6 @@ bool                 InCase_ReadStrptrMaybe(samp_meng::InCase &parent, algo::str
 // func:samp_meng.InCase..Init
 inline void          InCase_Init(samp_meng::InCase& parent);
 
-// --- samp_meng.IpcCase
-#pragma pack(push,1)
-struct IpcCase { // samp_meng.IpcCase: Enum for dispatch samp_meng.Ipc
-    u32   value;   //   0
-    // func:samp_meng.IpcCase.value.Cast
-    inline               operator samp_meng_IpcCaseEnum() const __attribute__((nothrow));
-    // func:samp_meng.IpcCase..Ctor
-    inline               IpcCase() __attribute__((nothrow));
-    // func:samp_meng.IpcCase..FieldwiseCtor
-    explicit inline               IpcCase(u32 in_value) __attribute__((nothrow));
-    // func:samp_meng.IpcCase..EnumCtor
-    inline               IpcCase(samp_meng_IpcCaseEnum arg) __attribute__((nothrow));
-};
-#pragma pack(pop)
-
-// Get value of field as enum type
-// func:samp_meng.IpcCase.value.GetEnum
-inline samp_meng_IpcCaseEnum value_GetEnum(const samp_meng::IpcCase& parent) __attribute__((nothrow));
-// Set value of field from enum type.
-// func:samp_meng.IpcCase.value.SetEnum
-inline void          value_SetEnum(samp_meng::IpcCase& parent, samp_meng_IpcCaseEnum rhs) __attribute__((nothrow));
-// Convert numeric value of field to one of predefined string constants.
-// If string is found, return a static C string. Otherwise, return NULL.
-// func:samp_meng.IpcCase.value.ToCstr
-const char*          value_ToCstr(const samp_meng::IpcCase& parent) __attribute__((nothrow));
-// Convert value to a string. First, attempt conversion to a known string.
-// If no string matches, print value as a numeric value.
-// func:samp_meng.IpcCase.value.Print
-void                 value_Print(const samp_meng::IpcCase& parent, algo::cstring &lhs) __attribute__((nothrow));
-// Convert string to field.
-// If the string is invalid, do not modify field and return false.
-// In case of success, return true
-// func:samp_meng.IpcCase.value.SetStrptrMaybe
-bool                 value_SetStrptrMaybe(samp_meng::IpcCase& parent, algo::strptr rhs) __attribute__((nothrow));
-// Convert string to field.
-// If the string is invalid, set numeric value to DFLT
-// func:samp_meng.IpcCase.value.SetStrptr
-void                 value_SetStrptr(samp_meng::IpcCase& parent, algo::strptr rhs, samp_meng_IpcCaseEnum dflt) __attribute__((nothrow));
-// Convert string to field. Return success value
-// func:samp_meng.IpcCase.value.ReadStrptrMaybe
-bool                 value_ReadStrptrMaybe(samp_meng::IpcCase& parent, algo::strptr rhs) __attribute__((nothrow));
-
-// Read fields of samp_meng::IpcCase from an ascii string.
-// The format of the string is the format of the samp_meng::IpcCase's only field
-// func:samp_meng.IpcCase..ReadStrptrMaybe
-bool                 IpcCase_ReadStrptrMaybe(samp_meng::IpcCase &parent, algo::strptr in_str) __attribute__((nothrow));
-// Set all fields to initial values.
-// func:samp_meng.IpcCase..Init
-inline void          IpcCase_Init(samp_meng::IpcCase& parent);
-
 // --- samp_meng.MassCancelReqMsg
 #pragma pack(push,1)
 struct MassCancelReqMsg { // samp_meng.MassCancelReqMsg: From user: cancel mass request
@@ -2250,20 +1928,6 @@ inline void          OrderTradeMsg_Init(samp_meng::OrderTradeMsg& parent);
 // func:samp_meng.OrderTradeMsg..Print
 void                 OrderTradeMsg_Print(samp_meng::OrderTradeMsg& row, algo::cstring& str) __attribute__((nothrow));
 
-// --- samp_meng.RequestStateDump
-struct RequestStateDump { // samp_meng.RequestStateDump: IPC command: request runtime state dump
-    algo::cstring   filter;   // Regex filter on ctype name
-    // func:samp_meng.RequestStateDump..Ctor
-    inline               RequestStateDump() __attribute__((nothrow));
-};
-
-// func:samp_meng.RequestStateDump..ReadFieldMaybe
-bool                 RequestStateDump_ReadFieldMaybe(samp_meng::RequestStateDump& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of samp_meng::RequestStateDump from an ascii string.
-// The format of the string is an ssim Tuple
-// func:samp_meng.RequestStateDump..ReadStrptrMaybe
-bool                 RequestStateDump_ReadStrptrMaybe(samp_meng::RequestStateDump &parent, algo::strptr in_str) __attribute__((nothrow));
-
 // --- samp_meng.TextMsg
 #pragma pack(push,1)
 struct TextMsg { // samp_meng.TextMsg: Debug message
@@ -2382,28 +2046,6 @@ struct _db_user_curs {// cursor
     _db_user_curs(){ parent=NULL; index=0; }
 };
 
-
-struct _db_cd_ipcconn_read_curs {// fcurs:samp_meng.FDb.cd_ipcconn_read/curs
-    typedef samp_meng::FIpcconn ChildType;
-    samp_meng::FIpcconn* row;
-    samp_meng::FIpcconn** head; // address of head element
-    _db_cd_ipcconn_read_curs() {
-        row = NULL;
-        head = NULL;
-    }
-};
-
-
-struct _db_cd_ipcconn_eof_curs {// fcurs:samp_meng.FDb.cd_ipcconn_eof/curs
-    typedef samp_meng::FIpcconn ChildType;
-    samp_meng::FIpcconn* row;
-    samp_meng::FIpcconn** head; // address of head element
-    _db_cd_ipcconn_eof_curs() {
-        row = NULL;
-        head = NULL;
-    }
-};
-
 // Non-destructive heap cursor, returns heap elements in sorted order.
 // A running front of potential smallest entries is kept in the helper heap (curs.temp_%)
 struct ordq_bh_order_curs {
@@ -2500,31 +2142,6 @@ samp_meng::MsgHeaderMsgsCase MsgHeaderMsgs_ReadStrptr(algo::strptr str, algo::By
 // Parse ascii representation of message into binary, appending new data to BUF.
 // func:samp_meng.MsgHeaderMsgs..ReadStrptrMaybe
 bool                 MsgHeaderMsgs_ReadStrptrMaybe(algo::strptr str, algo::ByteAry &buf);
-// User-implemented callback function for dispatch samp_meng.Ipc
-// func:samp_meng.Ipc.samp_meng.RequestStateDump
-// this function is 'extrn' and implemented by user
-void                 Ipc_RequestStateDump(samp_meng::FIpcconn &ctx, samp_meng::RequestStateDump &msg);
-// Dispatch text command to the appropriate handler function.
-// func:samp_meng.Ipc..DispatchText
-bool                 Ipc_DispatchText(samp_meng::FIpcconn &ctx, algo::strptr line);
-// func:samp_meng...StateDump
-void                 StateDump(algo::cstring& out, algo_lib::Regx& filter);
-// func:samp_meng...IpcInit
-// this function is 'extrn' and implemented by user
-void                 IpcInit();
-// func:samp_meng...IpcAccept
-// this function is 'extrn' and implemented by user
-void                 IpcAccept();
-// func:samp_meng...cd_ipcconn_read_Step
-void                 cd_ipcconn_read_Step();
-// func:samp_meng...IpcProcessLine
-void                 IpcProcessLine(samp_meng::FIpcconn& conn, algo::strptr line);
-// func:samp_meng...cd_ipcconn_eof_Step
-void                 cd_ipcconn_eof_Step();
-// func:samp_meng...IpcCleanup
-void                 IpcCleanup();
-// func:samp_meng...IpcSignalHandler
-void                 IpcSignalHandler(int sig);
 } // gen:ns_func
 // func:samp_meng...main
 int                  main(int argc, char **argv);

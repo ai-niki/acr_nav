@@ -33,8 +33,6 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
-#include "include/gen/lib_netio_gen.h"
-#include "include/gen/lib_netio_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 //#pragma endinclude
@@ -43,7 +41,6 @@
 // in dependency order
 lib_json::FDb    lib_json::_db;     // dependency found via dev.targdep
 algo_lib::FDb    algo_lib::_db;     // dependency found via dev.targdep
-lib_netio::FDb   lib_netio::_db;    // dependency found via dev.targdep
 samp_meng::FDb   samp_meng::_db;    // dependency found via dev.targdep
 
 namespace samp_meng {
@@ -52,8 +49,6 @@ const char *samp_meng_help =
 "Usage: samp_meng [options]\n"
 "    OPTION      TYPE    DFLT    COMMENT\n"
 "    -in         string  \"data\"  Input directory or filename, - for stdin\n"
-"    -ipc                        Enable IPC socket for runtime inspection\n"
-"    -dump       string  \"\"      Dump state matching regex and exit\n"
 "    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
 "    -help                       Print help and exit; alias -h\n"
@@ -88,22 +83,6 @@ namespace samp_meng { // gen:ns_print_proto
     inline static void   cd_fdin_read_UpdateCycles() __attribute__((nothrow));
     // func:samp_meng.FDb.cd_fdin_read.Call
     inline static void   cd_fdin_read_Call() __attribute__((nothrow));
-    // First element of index changed.
-    // func:samp_meng.FDb.cd_ipcconn_read.FirstChanged
-    static void          cd_ipcconn_read_FirstChanged() __attribute__((nothrow));
-    // Update cycles count from previous clock capture
-    // func:samp_meng.FDb.cd_ipcconn_read.UpdateCycles
-    inline static void   cd_ipcconn_read_UpdateCycles() __attribute__((nothrow));
-    // func:samp_meng.FDb.cd_ipcconn_read.Call
-    inline static void   cd_ipcconn_read_Call() __attribute__((nothrow));
-    // First element of index changed.
-    // func:samp_meng.FDb.cd_ipcconn_eof.FirstChanged
-    static void          cd_ipcconn_eof_FirstChanged() __attribute__((nothrow));
-    // Update cycles count from previous clock capture
-    // func:samp_meng.FDb.cd_ipcconn_eof.UpdateCycles
-    inline static void   cd_ipcconn_eof_UpdateCycles() __attribute__((nothrow));
-    // func:samp_meng.FDb.cd_ipcconn_eof.Call
-    inline static void   cd_ipcconn_eof_Call() __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     // func:samp_meng.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
@@ -118,14 +97,6 @@ namespace samp_meng { // gen:ns_print_proto
     // Shift existing bytes over to the beginning of the buffer
     // func:samp_meng.FFdin.in.Shift
     static void          in_Shift(samp_meng::FFdin& fdin) __attribute__((nothrow));
-    // Internal function to scan for a message
-    //
-    // func:samp_meng.FIpcconn.in.ScanMsg
-    static void          in_ScanMsg(samp_meng::FIpcconn& ipcconn) __attribute__((nothrow));
-    // Internal function to shift data left
-    // Shift existing bytes over to the beginning of the buffer
-    // func:samp_meng.FIpcconn.in.Shift
-    static void          in_Shift(samp_meng::FIpcconn& ipcconn) __attribute__((nothrow));
     // Find new location for ROW starting at IDX
     // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
     // func:samp_meng.FOrdq.bh_order.Downheap
@@ -500,8 +471,6 @@ void samp_meng::MainLoop() {
 void samp_meng::Step() {
     cd_fdin_eof_Call();
     cd_fdin_read_Call();
-    cd_ipcconn_read_Call();
-    cd_ipcconn_eof_Call();
 }
 
 // --- samp_meng.FDb._db.InitReflection
@@ -522,7 +491,6 @@ static void samp_meng::InitReflection() {
 
     // -- load signatures of existing dispatches --
     algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'samp_meng.In'  signature:'8ccb978398f8888f2ca1f6a371e62ad802b54032'");
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'samp_meng.Ipc'  signature:'3c628820f54a4514bda71e881838b1211356b26d'");
 }
 
 // --- samp_meng.FDb._db.InsertStrptrMaybe
@@ -1672,329 +1640,6 @@ void samp_meng::ind_user_AbsReserve(int n) {
     }
 }
 
-// --- samp_meng.FDb.ipcconn.Alloc
-// Allocate memory for new default row.
-// If out of memory, process is killed.
-samp_meng::FIpcconn& samp_meng::ipcconn_Alloc() {
-    samp_meng::FIpcconn* row = ipcconn_AllocMaybe();
-    if (UNLIKELY(row == NULL)) {
-        FatalErrorExit("samp_meng.out_of_mem  field:samp_meng.FDb.ipcconn  comment:'Alloc failed'");
-    }
-    return *row;
-}
-
-// --- samp_meng.FDb.ipcconn.AllocMaybe
-// Allocate memory for new element. If out of memory, return NULL.
-samp_meng::FIpcconn* samp_meng::ipcconn_AllocMaybe() {
-    samp_meng::FIpcconn *row = (samp_meng::FIpcconn*)ipcconn_AllocMem();
-    if (row) {
-        new (row) samp_meng::FIpcconn; // call constructor
-    }
-    return row;
-}
-
-// --- samp_meng.FDb.ipcconn.Delete
-// Remove row from all global and cross indices, then deallocate row
-void samp_meng::ipcconn_Delete(samp_meng::FIpcconn &row) {
-    row.~FIpcconn();
-    ipcconn_FreeMem(row);
-}
-
-// --- samp_meng.FDb.ipcconn.AllocMem
-// Allocate space for one element
-// If no memory available, return NULL.
-void* samp_meng::ipcconn_AllocMem() {
-    samp_meng::FIpcconn *row = _db.ipcconn_free;
-    if (UNLIKELY(!row)) {
-        ipcconn_Reserve(1);
-        row = _db.ipcconn_free;
-    }
-    if (row) {
-        _db.ipcconn_free = row->ipcconn_next;
-    }
-    return row;
-}
-
-// --- samp_meng.FDb.ipcconn.FreeMem
-// Remove mem from all global and cross indices, then deallocate mem
-void samp_meng::ipcconn_FreeMem(samp_meng::FIpcconn &row) {
-    if (UNLIKELY(row.ipcconn_next != (samp_meng::FIpcconn*)-1)) {
-        FatalErrorExit("samp_meng.tpool_double_delete  pool:samp_meng.FDb.ipcconn  comment:'double deletion caught'");
-    }
-    row.ipcconn_next = _db.ipcconn_free; // insert into free list
-    _db.ipcconn_free  = &row;
-}
-
-// --- samp_meng.FDb.ipcconn.Reserve
-// Preallocate memory for N more elements
-// Return number of elements actually reserved.
-u64 samp_meng::ipcconn_Reserve(u64 n_elems) {
-    u64 ret = 0;
-    while (ret < n_elems) {
-        u64 size = _db.ipcconn_blocksize; // underlying allocator is probably Lpool
-        u64 reserved = ipcconn_ReserveMem(size);
-        ret += reserved;
-        if (reserved == 0) {
-            break;
-        }
-    }
-    return ret;
-}
-
-// --- samp_meng.FDb.ipcconn.ReserveMem
-// Allocate block of given size, break up into small elements and append to free list.
-// Return number of elements reserved.
-u64 samp_meng::ipcconn_ReserveMem(u64 size) {
-    u64 ret = 0;
-    if (size >= sizeof(samp_meng::FIpcconn)) {
-        samp_meng::FIpcconn *mem = (samp_meng::FIpcconn*)algo_lib::malloc_AllocMem(size);
-        ret = mem ? size / sizeof(samp_meng::FIpcconn) : 0;
-        // add newly allocated elements to the free list;
-        for (u64 i=0; i < ret; i++) {
-            mem[i].ipcconn_next = _db.ipcconn_free;
-            _db.ipcconn_free = mem+i;
-        }
-    }
-    return ret;
-}
-
-// --- samp_meng.FDb.ipcconn.XrefMaybe
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool samp_meng::ipcconn_XrefMaybe(samp_meng::FIpcconn &row) {
-    bool retval = true;
-    (void)row;
-    return retval;
-}
-
-// --- samp_meng.FDb.cd_ipcconn_read.Insert
-// Insert row into linked list. If row is already in linked list, do nothing.
-void samp_meng::cd_ipcconn_read_Insert(samp_meng::FIpcconn& row) {
-    if (!cd_ipcconn_read_InLlistQ(row)) {
-        if (_db.cd_ipcconn_read_head) {
-            row.cd_ipcconn_read_next = _db.cd_ipcconn_read_head;
-            row.cd_ipcconn_read_prev = _db.cd_ipcconn_read_head->cd_ipcconn_read_prev;
-            row.cd_ipcconn_read_prev->cd_ipcconn_read_next = &row;
-            row.cd_ipcconn_read_next->cd_ipcconn_read_prev = &row;
-        } else {
-            row.cd_ipcconn_read_next = &row;
-            row.cd_ipcconn_read_prev = &row;
-            _db.cd_ipcconn_read_head = &row;
-        }
-        _db.cd_ipcconn_read_n++;
-        if (_db.cd_ipcconn_read_head == &row) {
-            cd_ipcconn_read_FirstChanged();
-        }
-    }
-}
-
-// --- samp_meng.FDb.cd_ipcconn_read.Remove
-// Remove element from index. If element is not in index, do nothing.
-void samp_meng::cd_ipcconn_read_Remove(samp_meng::FIpcconn& row) {
-    if (cd_ipcconn_read_InLlistQ(row)) {
-        samp_meng::FIpcconn* old_head       = _db.cd_ipcconn_read_head;
-        (void)old_head; // in case it's not used
-        samp_meng::FIpcconn *oldnext = row.cd_ipcconn_read_next;
-        samp_meng::FIpcconn *oldprev = row.cd_ipcconn_read_prev;
-        oldnext->cd_ipcconn_read_prev = oldprev; // remove element from list
-        oldprev->cd_ipcconn_read_next = oldnext;
-        _db.cd_ipcconn_read_n--;  // adjust count
-        if (&row == _db.cd_ipcconn_read_head) {
-            _db.cd_ipcconn_read_head = oldnext==&row ? NULL : oldnext; // adjust list head
-        }
-        row.cd_ipcconn_read_next = (samp_meng::FIpcconn*)-1; // mark element as not-in-list);
-        row.cd_ipcconn_read_prev = NULL; // clear back-pointer
-        if (old_head != _db.cd_ipcconn_read_head) {
-            cd_ipcconn_read_FirstChanged();
-        }
-    }
-}
-
-// --- samp_meng.FDb.cd_ipcconn_read.RemoveAll
-// Empty the index. (The rows are not deleted)
-void samp_meng::cd_ipcconn_read_RemoveAll() {
-    samp_meng::FIpcconn* row = _db.cd_ipcconn_read_head;
-    samp_meng::FIpcconn* head = _db.cd_ipcconn_read_head;
-    _db.cd_ipcconn_read_head = NULL;
-    _db.cd_ipcconn_read_n = 0;
-    bool do_fire = (NULL != row);
-    while (row) {
-        samp_meng::FIpcconn* row_next = row->cd_ipcconn_read_next;
-        row->cd_ipcconn_read_next  = (samp_meng::FIpcconn*)-1;
-        row->cd_ipcconn_read_prev  = NULL;
-        row = row_next != head  ? row_next : NULL;
-    }
-    if (do_fire) {
-        cd_ipcconn_read_FirstChanged();
-    }
-}
-
-// --- samp_meng.FDb.cd_ipcconn_read.RemoveFirst
-// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-// Call FirstChanged trigger.
-samp_meng::FIpcconn* samp_meng::cd_ipcconn_read_RemoveFirst() {
-    samp_meng::FIpcconn *row = NULL;
-    row = _db.cd_ipcconn_read_head;
-    if (row) {
-        bool hasmore = row!=row->cd_ipcconn_read_next;
-        _db.cd_ipcconn_read_head = hasmore ? row->cd_ipcconn_read_next : NULL;
-        row->cd_ipcconn_read_next->cd_ipcconn_read_prev = row->cd_ipcconn_read_prev;
-        row->cd_ipcconn_read_prev->cd_ipcconn_read_next = row->cd_ipcconn_read_next;
-        row->cd_ipcconn_read_prev = NULL;
-        _db.cd_ipcconn_read_n--;
-        row->cd_ipcconn_read_next = (samp_meng::FIpcconn*)-1; // mark as not-in-list
-        cd_ipcconn_read_FirstChanged();
-    }
-    return row;
-}
-
-// --- samp_meng.FDb.cd_ipcconn_read.RotateFirst
-// If linked list is empty, return NULL.
-// Otherwise return head item and advance head to the next item.
-samp_meng::FIpcconn* samp_meng::cd_ipcconn_read_RotateFirst() {
-    samp_meng::FIpcconn *row = NULL;
-    row = _db.cd_ipcconn_read_head;
-    if (row) {
-        _db.cd_ipcconn_read_head = row->cd_ipcconn_read_next;
-    }
-    return row;
-}
-
-// --- samp_meng.FDb.cd_ipcconn_read.FirstChanged
-// First element of index changed.
-static void samp_meng::cd_ipcconn_read_FirstChanged() {
-}
-
-// --- samp_meng.FDb.cd_ipcconn_read.UpdateCycles
-// Update cycles count from previous clock capture
-inline static void samp_meng::cd_ipcconn_read_UpdateCycles() {
-    u64 cur_cycles                      = algo::get_cycles();
-    algo_lib::_db.clock                 = algo::SchedTime(cur_cycles);
-}
-
-// --- samp_meng.FDb.cd_ipcconn_read.Call
-inline static void samp_meng::cd_ipcconn_read_Call() {
-    if (!samp_meng::cd_ipcconn_read_EmptyQ()) { // fstep:samp_meng.FDb.cd_ipcconn_read
-        samp_meng::cd_ipcconn_read_Step(); // steptype:Inline: call function on every step
-        cd_ipcconn_read_UpdateCycles();
-        algo_lib::_db.next_loop = algo_lib::_db.clock;
-    }
-}
-
-// --- samp_meng.FDb.cd_ipcconn_eof.Insert
-// Insert row into linked list. If row is already in linked list, do nothing.
-void samp_meng::cd_ipcconn_eof_Insert(samp_meng::FIpcconn& row) {
-    if (!cd_ipcconn_eof_InLlistQ(row)) {
-        if (_db.cd_ipcconn_eof_head) {
-            row.cd_ipcconn_eof_next = _db.cd_ipcconn_eof_head;
-            row.cd_ipcconn_eof_prev = _db.cd_ipcconn_eof_head->cd_ipcconn_eof_prev;
-            row.cd_ipcconn_eof_prev->cd_ipcconn_eof_next = &row;
-            row.cd_ipcconn_eof_next->cd_ipcconn_eof_prev = &row;
-        } else {
-            row.cd_ipcconn_eof_next = &row;
-            row.cd_ipcconn_eof_prev = &row;
-            _db.cd_ipcconn_eof_head = &row;
-        }
-        _db.cd_ipcconn_eof_n++;
-        if (_db.cd_ipcconn_eof_head == &row) {
-            cd_ipcconn_eof_FirstChanged();
-        }
-    }
-}
-
-// --- samp_meng.FDb.cd_ipcconn_eof.Remove
-// Remove element from index. If element is not in index, do nothing.
-void samp_meng::cd_ipcconn_eof_Remove(samp_meng::FIpcconn& row) {
-    if (cd_ipcconn_eof_InLlistQ(row)) {
-        samp_meng::FIpcconn* old_head       = _db.cd_ipcconn_eof_head;
-        (void)old_head; // in case it's not used
-        samp_meng::FIpcconn *oldnext = row.cd_ipcconn_eof_next;
-        samp_meng::FIpcconn *oldprev = row.cd_ipcconn_eof_prev;
-        oldnext->cd_ipcconn_eof_prev = oldprev; // remove element from list
-        oldprev->cd_ipcconn_eof_next = oldnext;
-        _db.cd_ipcconn_eof_n--;  // adjust count
-        if (&row == _db.cd_ipcconn_eof_head) {
-            _db.cd_ipcconn_eof_head = oldnext==&row ? NULL : oldnext; // adjust list head
-        }
-        row.cd_ipcconn_eof_next = (samp_meng::FIpcconn*)-1; // mark element as not-in-list);
-        row.cd_ipcconn_eof_prev = NULL; // clear back-pointer
-        if (old_head != _db.cd_ipcconn_eof_head) {
-            cd_ipcconn_eof_FirstChanged();
-        }
-    }
-}
-
-// --- samp_meng.FDb.cd_ipcconn_eof.RemoveAll
-// Empty the index. (The rows are not deleted)
-void samp_meng::cd_ipcconn_eof_RemoveAll() {
-    samp_meng::FIpcconn* row = _db.cd_ipcconn_eof_head;
-    samp_meng::FIpcconn* head = _db.cd_ipcconn_eof_head;
-    _db.cd_ipcconn_eof_head = NULL;
-    _db.cd_ipcconn_eof_n = 0;
-    bool do_fire = (NULL != row);
-    while (row) {
-        samp_meng::FIpcconn* row_next = row->cd_ipcconn_eof_next;
-        row->cd_ipcconn_eof_next  = (samp_meng::FIpcconn*)-1;
-        row->cd_ipcconn_eof_prev  = NULL;
-        row = row_next != head  ? row_next : NULL;
-    }
-    if (do_fire) {
-        cd_ipcconn_eof_FirstChanged();
-    }
-}
-
-// --- samp_meng.FDb.cd_ipcconn_eof.RemoveFirst
-// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-// Call FirstChanged trigger.
-samp_meng::FIpcconn* samp_meng::cd_ipcconn_eof_RemoveFirst() {
-    samp_meng::FIpcconn *row = NULL;
-    row = _db.cd_ipcconn_eof_head;
-    if (row) {
-        bool hasmore = row!=row->cd_ipcconn_eof_next;
-        _db.cd_ipcconn_eof_head = hasmore ? row->cd_ipcconn_eof_next : NULL;
-        row->cd_ipcconn_eof_next->cd_ipcconn_eof_prev = row->cd_ipcconn_eof_prev;
-        row->cd_ipcconn_eof_prev->cd_ipcconn_eof_next = row->cd_ipcconn_eof_next;
-        row->cd_ipcconn_eof_prev = NULL;
-        _db.cd_ipcconn_eof_n--;
-        row->cd_ipcconn_eof_next = (samp_meng::FIpcconn*)-1; // mark as not-in-list
-        cd_ipcconn_eof_FirstChanged();
-    }
-    return row;
-}
-
-// --- samp_meng.FDb.cd_ipcconn_eof.RotateFirst
-// If linked list is empty, return NULL.
-// Otherwise return head item and advance head to the next item.
-samp_meng::FIpcconn* samp_meng::cd_ipcconn_eof_RotateFirst() {
-    samp_meng::FIpcconn *row = NULL;
-    row = _db.cd_ipcconn_eof_head;
-    if (row) {
-        _db.cd_ipcconn_eof_head = row->cd_ipcconn_eof_next;
-    }
-    return row;
-}
-
-// --- samp_meng.FDb.cd_ipcconn_eof.FirstChanged
-// First element of index changed.
-static void samp_meng::cd_ipcconn_eof_FirstChanged() {
-}
-
-// --- samp_meng.FDb.cd_ipcconn_eof.UpdateCycles
-// Update cycles count from previous clock capture
-inline static void samp_meng::cd_ipcconn_eof_UpdateCycles() {
-    u64 cur_cycles                      = algo::get_cycles();
-    algo_lib::_db.clock                 = algo::SchedTime(cur_cycles);
-}
-
-// --- samp_meng.FDb.cd_ipcconn_eof.Call
-inline static void samp_meng::cd_ipcconn_eof_Call() {
-    if (!samp_meng::cd_ipcconn_eof_EmptyQ()) { // fstep:samp_meng.FDb.cd_ipcconn_eof
-        samp_meng::cd_ipcconn_eof_Step(); // steptype:Inline: call function on every step
-        cd_ipcconn_eof_UpdateCycles();
-        algo_lib::_db.next_loop = algo_lib::_db.clock;
-    }
-}
-
 // --- samp_meng.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr samp_meng::trace_RowidFind(int t) {
@@ -2078,13 +1723,6 @@ void samp_meng::FDb_Init() {
     }
     memset(_db.ind_user_buckets_elems, 0, sizeof(samp_meng::FUser*)*_db.ind_user_buckets_n); // (samp_meng.FDb.ind_user)
     _db.next_order_id = u64(1);
-    // ipcconn: initialize Tpool
-    _db.ipcconn_free      = NULL;
-    _db.ipcconn_blocksize = algo::BumpToPow2(64 * sizeof(samp_meng::FIpcconn)); // allocate 64-127 elements at a time
-    _db.cd_ipcconn_read_head = NULL; // (samp_meng.FDb.cd_ipcconn_read)
-    _db.cd_ipcconn_read_n = 0; // (samp_meng.FDb.cd_ipcconn_read)
-    _db.cd_ipcconn_eof_head = NULL; // (samp_meng.FDb.cd_ipcconn_eof)
-    _db.cd_ipcconn_eof_n = 0; // (samp_meng.FDb.cd_ipcconn_eof)
 
     samp_meng::InitReflection();
 }
@@ -2360,257 +1998,6 @@ void samp_meng::FFdin_Uninit(samp_meng::FFdin& fdin) {
     }
     fdin.in_elems = NULL;
     fdin.in_max = 0;
-}
-
-// --- samp_meng.FIpcconn.in.BeginRead
-// Attach fbuf to Iohook for reading
-// Attach file descriptor and begin reading using edge-triggered epoll.
-// File descriptor becomes owned by samp_meng::FIpcconn.in via FIohook field.
-// Whenever the file descriptor becomes readable, insert ipcconn into cd_ipcconn_read.
-void samp_meng::in_BeginRead(samp_meng::FIpcconn& ipcconn, algo::Fildes fd) {
-    ipcconn.in_iohook.fildes = fd;
-    callback_Set1(ipcconn.in_iohook, ipcconn, samp_meng::cd_ipcconn_read_Insert);
-    IOEvtFlags flags;
-    read_Set(flags, true);
-    if (ipcconn.in_epoll_enable) {
-        algo_lib::IohookAdd(ipcconn.in_iohook, flags);
-    } else {
-        samp_meng::cd_ipcconn_read_Insert(ipcconn);
-    }
-}
-
-// --- samp_meng.FIpcconn.in.EndRead
-// Set EOF flag
-void samp_meng::in_EndRead(samp_meng::FIpcconn& ipcconn) {
-    if (ValidQ(ipcconn.in_iohook.fildes)) {
-        ipcconn.in_eof = true;
-        samp_meng::cd_ipcconn_read_Insert(ipcconn);
-    }
-}
-
-// --- samp_meng.FIpcconn.in.GetMsg
-// Detect incoming message in buffer and return it
-// Look for valid message at current position in the buffer.
-// If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).
-// If there is no message, read once from underlying file descriptor and try again.
-// The message is found by looking for delimiter '\n'.
-// The return value is an aryptr. If ret.elems is non-NULL, the message is valid (possibly empty).
-// If ret.elems is NULL, no message can be extracted from buffer.
-// The returned aryptr excludes the trailing deliminter.
-// SkipMsg will skip both the line and the deliminter.
-// A partial line at the end of input is NOT returned (TODO?)
-// 
-algo::aryptr<char> samp_meng::in_GetMsg(samp_meng::FIpcconn& ipcconn) {
-    algo::aryptr<char> ret;
-    if (!ipcconn.in_msgvalid) {
-        in_ScanMsg(ipcconn);
-        if (!ipcconn.in_msgvalid) {
-            bool readable = in_Refill(ipcconn);
-            if (readable) {
-                in_ScanMsg(ipcconn);
-            }
-        }
-    }
-    char *hdr = (char*)(ipcconn.in_elems + ipcconn.in_start);
-    if (ipcconn.in_msgvalid) {
-        ret.elems = hdr;
-        ret.n_elems = ipcconn.in_msglen;
-    }
-    if (!ipcconn.in_msgvalid && ipcconn.in_eof) { // all messages processed
-        samp_meng::cd_ipcconn_eof_Insert(ipcconn);
-    }
-    return ret;
-}
-
-// --- samp_meng.FIpcconn.in.Realloc
-// Set buffer size.
-// Unconditionally reallocate buffer to have size NEW_MAX
-// If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
-// (best to call this before filling the buffer)
-void samp_meng::in_Realloc(samp_meng::FIpcconn& ipcconn, int new_max) {
-    new_max = i32_Max(new_max, ipcconn.in_end);
-    u8 *new_mem = ipcconn.in_elems
-    ? (u8*)algo_lib::malloc_ReallocMem(ipcconn.in_elems, ipcconn.in_max, new_max)
-    : (u8*)algo_lib::malloc_AllocMem(new_max);
-    if (UNLIKELY(!new_mem)) {
-        FatalErrorExit("samp_meng.fbuf_nomem  field:samp_meng.FIpcconn.in  comment:'out of memory'");
-    }
-    ipcconn.in_elems = new_mem;
-    ipcconn.in_max = new_max;
-}
-
-// --- samp_meng.FIpcconn.in.Refill
-// Refill buffer. Return false if no further refill possible (input buffer exhausted)
-bool samp_meng::in_Refill(samp_meng::FIpcconn& ipcconn) {
-    bool readable = ValidQ(ipcconn.in_iohook.fildes);
-    if (readable) {
-        int fd     = ipcconn.in_iohook.fildes.value;
-        i32 max    = in_Max(ipcconn);
-        i32 end    = ipcconn.in_end;
-        i32 nbytes = end - ipcconn.in_start; // # bytes currently in buffer
-        i32 nfree  = max - end; // bytes available at the end of buffer
-        if (nbytes == 0 || nfree == 0) { // make more room for reading (or take advantage of free shift)
-            in_Shift(ipcconn);
-            end = ipcconn.in_end;
-            nfree = max - end;
-        }
-        ssize_t ret         = read(fd, ipcconn.in_elems + end, nfree);
-        readable            = !(ret < 0 && errno == EAGAIN);
-        bool error          = ret < 0 && errno != EAGAIN; // detect permanent error on this fd
-        bool eof            = error || (ret == 0 && nfree > 0);
-        ipcconn.in_end += i32_Max(ret,0); // new end of bytes
-        if (error) {
-            ipcconn.in_err = algo::FromErrno(errno); // fetch errno
-        }
-        ipcconn.in_eof |= eof;
-    }
-    if (!readable && ipcconn.in_epoll_enable) {
-        samp_meng::cd_ipcconn_read_Remove(ipcconn);
-    }
-    return readable;
-}
-
-// --- samp_meng.FIpcconn.in.RemoveAll
-// Empty bfufer
-// Discard contents of the buffer.
-void samp_meng::in_RemoveAll(samp_meng::FIpcconn& ipcconn) {
-    ipcconn.in_start    = 0;
-    ipcconn.in_end      = 0;
-    ipcconn.in_msgvalid = false;
-}
-
-// --- samp_meng.FIpcconn.in.ScanMsg
-// Internal function to scan for a message
-// 
-static void samp_meng::in_ScanMsg(samp_meng::FIpcconn& ipcconn) {
-    char *hdr = (char*)(ipcconn.in_elems + ipcconn.in_start);
-    i32 avail = in_N(ipcconn);
-    i32 msglen;
-    bool found = false;
-    // scan for delimiter starting from the previous place where we left off.
-    // at the end, save offset back to ipcconn so we don't have to re-scan.
-    // returned message length **does not include delimiter**.
-    // a line that exceeds buffer length is not returned.
-    for (msglen = ipcconn.in_msglen; msglen < avail; msglen += sizeof(char)) {
-        if (hdr[msglen] == '\n') { // delimiter?
-            found = true;
-            break;
-        }
-    }
-    if (!found && msglen >= in_Max(ipcconn)) {
-        ipcconn.in_eof = true; // cause user to detect eof
-        ipcconn.in_err = algo::FromErrno(E2BIG); // argument list too big -- closest error code
-    }
-    ipcconn.in_msglen = msglen;
-    ipcconn.in_msgvalid = found;
-}
-
-// --- samp_meng.FIpcconn.in.Shift
-// Internal function to shift data left
-// Shift existing bytes over to the beginning of the buffer
-static void samp_meng::in_Shift(samp_meng::FIpcconn& ipcconn) {
-    i32 start = ipcconn.in_start;
-    i32 bytes_n = ipcconn.in_end - start;
-    if (bytes_n > 0) {
-        memmove(ipcconn.in_elems, ipcconn.in_elems + start, bytes_n);
-    }
-    ipcconn.in_end = bytes_n;
-    ipcconn.in_start = 0;
-}
-
-// --- samp_meng.FIpcconn.in.SkipBytes
-// Skip N bytes when reading
-// Mark some buffer contents as read.
-// 
-void samp_meng::in_SkipBytes(samp_meng::FIpcconn& ipcconn, int n) {
-    int avail = ipcconn.in_end - ipcconn.in_start;
-    n = i32_Min(n,avail);
-    ipcconn.in_start += n;
-    ipcconn.in_msgvalid = false;
-}
-
-// --- samp_meng.FIpcconn.in.SkipMsg
-// Skip current message, if any
-// Skip current message, if any.
-void samp_meng::in_SkipMsg(samp_meng::FIpcconn& ipcconn) {
-    if (ipcconn.in_msgvalid) {
-        int skip = ipcconn.in_msglen;
-        skip += ssizeof(char); // delimiter
-        i32 start = ipcconn.in_start;
-        start += skip;
-        ipcconn.in_start = start;
-        ipcconn.in_msgvalid = false;
-        ipcconn.in_msglen   = 0; // reset message length -- important for delimited streams
-    }
-}
-
-// --- samp_meng.FIpcconn.in.WriteAll
-// Attempt to write buffer contents to fbuf, return success
-// Write bytes to the buffer. If the entire block is written, return true,
-// Otherwise return false.
-// Bytes in the buffer are potentially shifted left to make room for the message.
-// 
-bool samp_meng::in_WriteAll(samp_meng::FIpcconn& ipcconn, u8 *in, i32 in_n) {
-    int max = in_Max(ipcconn);
-    // check if message doesn't fit. if so, shift bytes over.
-    if (ipcconn.in_end + in_n > max) {
-        in_Shift(ipcconn);
-    }
-    // now try to write the message.
-    i32 end = ipcconn.in_end;
-    bool fits = end + in_n <= max;
-    if (fits) {
-        if (in_n > 0) {
-            memcpy(ipcconn.in_elems + end, in, in_n);
-            ipcconn.in_end = end + in_n;
-        }
-    }
-    return fits;
-}
-
-// --- samp_meng.FIpcconn.in.WriteReserve
-// Write buffer contents to fbuf, reallocate as needed
-// Write bytes to the buffer. The entire block is always written
-void samp_meng::in_WriteReserve(samp_meng::FIpcconn& ipcconn, u8 *in, i32 in_n) {
-    if (!in_WriteAll(ipcconn, in, in_n)) {
-        in_Realloc(ipcconn, ipcconn.in_max*2);
-        if (!in_WriteAll(ipcconn, in, in_n)) {
-            FatalErrorExit("in: out of memory");
-        }
-    }
-}
-
-// --- samp_meng.FIpcconn..Init
-// Set all fields to initial values.
-void samp_meng::FIpcconn_Init(samp_meng::FIpcconn& ipcconn) {
-    ipcconn.in_elems = NULL; // in: initialize
-    ipcconn.in_max = 0; // in: initialize
-    ipcconn.in_end = 0; // in: initialize
-    ipcconn.in_start = 0; // in: initialize
-    ipcconn.in_eof = false; // in: initialize
-    ipcconn.in_msgvalid = false; // in: initialize
-    ipcconn.in_msglen = 0; // in: initialize
-    ipcconn.in_epoll_enable = true; // in: initialize
-    in_Realloc(ipcconn, 8192);
-    ipcconn.ipcconn_next = (samp_meng::FIpcconn*)-1; // (samp_meng.FDb.ipcconn) not-in-tpool's freelist
-    ipcconn.cd_ipcconn_read_next = (samp_meng::FIpcconn*)-1; // (samp_meng.FDb.cd_ipcconn_read) not-in-list
-    ipcconn.cd_ipcconn_read_prev = NULL; // (samp_meng.FDb.cd_ipcconn_read)
-    ipcconn.cd_ipcconn_eof_next = (samp_meng::FIpcconn*)-1; // (samp_meng.FDb.cd_ipcconn_eof) not-in-list
-    ipcconn.cd_ipcconn_eof_prev = NULL; // (samp_meng.FDb.cd_ipcconn_eof)
-}
-
-// --- samp_meng.FIpcconn..Uninit
-void samp_meng::FIpcconn_Uninit(samp_meng::FIpcconn& ipcconn) {
-    samp_meng::FIpcconn &row = ipcconn; (void)row;
-    cd_ipcconn_read_Remove(row); // remove ipcconn from index cd_ipcconn_read
-    cd_ipcconn_eof_Remove(row); // remove ipcconn from index cd_ipcconn_eof
-
-    // samp_meng.FIpcconn.in.Uninit (Fbuf)  //
-    if (ipcconn.in_elems) {
-        algo_lib::malloc_FreeMem(ipcconn.in_elems, sizeof(char)*ipcconn.in_max); // (samp_meng.FIpcconn.in)
-    }
-    ipcconn.in_elems = NULL;
-    ipcconn.in_max = 0;
 }
 
 // --- samp_meng.I64Price8.value.SetDoubleMaybe
@@ -3189,7 +2576,6 @@ const char* samp_meng::value_ToCstr(const samp_meng::FieldId& parent) {
         case samp_meng_FieldId_symbol      : ret = "symbol";  break;
         case samp_meng_FieldId_qty         : ret = "qty";  break;
         case samp_meng_FieldId_ioc         : ret = "ioc";  break;
-        case samp_meng_FieldId_filter      : ret = "filter";  break;
         case samp_meng_FieldId_text        : ret = "text";  break;
     }
     return ret;
@@ -3261,9 +2647,6 @@ bool samp_meng::value_SetStrptrMaybe(samp_meng::FieldId& parent, algo::strptr rh
         }
         case 6: {
             switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
-                case LE_STR6('f','i','l','t','e','r'): {
-                    value_SetEnum(parent,samp_meng_FieldId_filter); ret = true; break;
-                }
                 case LE_STR6('l','e','n','g','t','h'): {
                     value_SetEnum(parent,samp_meng_FieldId_length); ret = true; break;
                 }
@@ -3426,76 +2809,6 @@ bool samp_meng::value_ReadStrptrMaybe(samp_meng::InCase& parent, algo::strptr rh
 // Read fields of samp_meng::InCase from an ascii string.
 // The format of the string is the format of the samp_meng::InCase's only field
 bool samp_meng::InCase_ReadStrptrMaybe(samp_meng::InCase &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = retval && value_ReadStrptrMaybe(parent, in_str);
-    return retval;
-}
-
-// --- samp_meng.IpcCase.value.ToCstr
-// Convert numeric value of field to one of predefined string constants.
-// If string is found, return a static C string. Otherwise, return NULL.
-const char* samp_meng::value_ToCstr(const samp_meng::IpcCase& parent) {
-    const char *ret = NULL;
-    switch(value_GetEnum(parent)) {
-        case samp_meng_IpcCase_samp_meng_RequestStateDump: ret = "samp_meng.RequestStateDump";  break;
-    }
-    return ret;
-}
-
-// --- samp_meng.IpcCase.value.Print
-// Convert value to a string. First, attempt conversion to a known string.
-// If no string matches, print value as a numeric value.
-void samp_meng::value_Print(const samp_meng::IpcCase& parent, algo::cstring &lhs) {
-    const char *strval = value_ToCstr(parent);
-    if (strval) {
-        lhs << strval;
-    } else {
-        lhs << parent.value;
-    }
-}
-
-// --- samp_meng.IpcCase.value.SetStrptrMaybe
-// Convert string to field.
-// If the string is invalid, do not modify field and return false.
-// In case of success, return true
-bool samp_meng::value_SetStrptrMaybe(samp_meng::IpcCase& parent, algo::strptr rhs) {
-    bool ret = false;
-    switch (elems_N(rhs)) {
-        case 26: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('s','a','m','p','_','m','e','n'): {
-                    if (memcmp(rhs.elems+8,"g.RequestStateDump",18)==0) { value_SetEnum(parent,samp_meng_IpcCase_samp_meng_RequestStateDump); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-    }
-    return ret;
-}
-
-// --- samp_meng.IpcCase.value.SetStrptr
-// Convert string to field.
-// If the string is invalid, set numeric value to DFLT
-void samp_meng::value_SetStrptr(samp_meng::IpcCase& parent, algo::strptr rhs, samp_meng_IpcCaseEnum dflt) {
-    if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
-}
-
-// --- samp_meng.IpcCase.value.ReadStrptrMaybe
-// Convert string to field. Return success value
-bool samp_meng::value_ReadStrptrMaybe(samp_meng::IpcCase& parent, algo::strptr rhs) {
-    bool retval = false;
-    retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
-    if (!retval) { // didn't work? try reading as underlying type
-        retval = u32_ReadStrptrMaybe(parent.value,rhs);
-    }
-    return retval;
-}
-
-// --- samp_meng.IpcCase..ReadStrptrMaybe
-// Read fields of samp_meng::IpcCase from an ascii string.
-// The format of the string is the format of the samp_meng::IpcCase's only field
-bool samp_meng::IpcCase_ReadStrptrMaybe(samp_meng::IpcCase &parent, algo::strptr in_str) {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -4376,38 +3689,6 @@ void samp_meng::OrderTradeMsg_Print(samp_meng::OrderTradeMsg& row, algo::cstring
     PrintAttrSpaceReset(str,"price", temp);
 }
 
-// --- samp_meng.RequestStateDump..ReadFieldMaybe
-bool samp_meng::RequestStateDump_ReadFieldMaybe(samp_meng::RequestStateDump& parent, algo::strptr field, algo::strptr strval) {
-    bool retval = true;
-    samp_meng::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
-    switch(field_id) {
-        case samp_meng_FieldId_filter: {
-            retval = algo::cstring_ReadStrptrMaybe(parent.filter, strval);
-        } break;
-        default: {
-            retval = false;
-            algo_lib::AppendErrtext("comment", "unrecognized attr");
-        } break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    return retval;
-}
-
-// --- samp_meng.RequestStateDump..ReadStrptrMaybe
-// Read fields of samp_meng::RequestStateDump from an ascii string.
-// The format of the string is an ssim Tuple
-bool samp_meng::RequestStateDump_ReadStrptrMaybe(samp_meng::RequestStateDump &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = algo::StripTypeTag(in_str, "samp_meng.RequestStateDump");
-    ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && RequestStateDump_ReadFieldMaybe(parent, attr.name, attr.value);
-    }ind_end;
-    return retval;
-}
-
 // --- samp_meng.TextMsg.base.CopyOut
 // Copy fields out of row
 void samp_meng::parent_CopyOut(samp_meng::TextMsg &row, samp_meng::MsgHeader &out) {
@@ -4512,7 +3793,6 @@ void samp_meng::StaticCheck() {
     algo_assert(_offset_of(samp_meng::Symbol, symbol) + sizeof(((samp_meng::Symbol*)0)->symbol) == sizeof(samp_meng::Symbol));
     algo_assert(_offset_of(samp_meng::FieldId, value) + sizeof(((samp_meng::FieldId*)0)->value) == sizeof(samp_meng::FieldId));
     algo_assert(_offset_of(samp_meng::InCase, value) + sizeof(((samp_meng::InCase*)0)->value) == sizeof(samp_meng::InCase));
-    algo_assert(_offset_of(samp_meng::IpcCase, value) + sizeof(((samp_meng::IpcCase*)0)->value) == sizeof(samp_meng::IpcCase));
     algo_assert(_offset_of(samp_meng::MassCancelReqMsg, user) + sizeof(((samp_meng::MassCancelReqMsg*)0)->user) == sizeof(samp_meng::MassCancelReqMsg));
     algo_assert(_offset_of(samp_meng::MsgHeader, length) + sizeof(((samp_meng::MsgHeader*)0)->length) == sizeof(samp_meng::MsgHeader));
     algo_assert(_offset_of(samp_meng::MsgHeaderMsgsCase, value) + sizeof(((samp_meng::MsgHeaderMsgsCase*)0)->value) == sizeof(samp_meng::MsgHeaderMsgsCase));
@@ -4895,139 +4175,11 @@ bool samp_meng::MsgHeaderMsgs_ReadStrptrMaybe(algo::strptr str, algo::ByteAry &b
     return !(msgtype == samp_meng::MsgHeaderMsgsCase());
 }
 
-// --- samp_meng.Ipc..DispatchText
-// Dispatch text command to the appropriate handler function.
-bool samp_meng::Ipc_DispatchText(samp_meng::FIpcconn &ctx, algo::strptr line) {
-    bool ret = false;
-    tempstr msgtype_str;
-    algo::StringIter iter(line);
-    cstring_ReadCmdarg(msgtype_str, iter, false); // read first word
-    samp_meng::IpcCase msgtype;
-    value_SetStrptrMaybe(msgtype, msgtype_str); // map string -> enum
-    switch (value_GetEnum(msgtype)) {
-        case samp_meng_IpcCase_samp_meng_RequestStateDump: {
-            samp_meng::RequestStateDump msg;
-            if (RequestStateDump_ReadStrptrMaybe(msg, line)) {
-                samp_meng::Ipc_RequestStateDump(ctx, msg);
-                ret = true;
-            }
-        } break;
-
-        default: break;
-    }
-    return ret;
-}
-
-// --- samp_meng...StateDump
-void samp_meng::StateDump(algo::cstring& out, algo_lib::Regx& filter) {
-    report::PoolCensus census;
-    (void)filter;
-    if (Regx_Match(filter, strptr("samp_meng.FDb"))) {
-        algo::tempstr temp;
-        out << "samp_meng.FDb";
-        u64_Print(samp_meng::_db.next_order_id, temp);
-        PrintAttrSpaceReset(out, "next_order_id", temp);
-        algo::cstring_Print(samp_meng::_db.ipc_socket_path, temp);
-        PrintAttrSpaceReset(out, "ipc_socket_path", temp);
-        samp_meng::trace_Print(samp_meng::_db.trace, temp);
-        PrintAttrSpaceReset(out, "trace", temp);
-        out << '\n';
-    }
-    census.ctype = "samp_meng.FFdin";
-    census.n_record = samp_meng::fdin_N();
-    report::PoolCensus_Print(census, out);
-    out << '\n';
-    census.ctype = "samp_meng.FSymbol";
-    census.n_record = samp_meng::symbol_N();
-    report::PoolCensus_Print(census, out);
-    out << '\n';
-    if (Regx_Match(filter, strptr("samp_meng.FSymbol"))) {
-        ind_beg(samp_meng::_db_symbol_curs, rec, samp_meng::_db) {
-            algo::tempstr temp;
-            out << "samp_meng.FSymbol";
-            samp_meng::Symbol_Print(rec.symbol, temp);
-            PrintAttrSpaceReset(out, "symbol", temp);
-            i32_Print(rec.id, temp);
-            PrintAttrSpaceReset(out, "id", temp);
-            out << '\n';
-        }ind_end;
-    }
-    census.ctype = "samp_meng.FUser";
-    census.n_record = samp_meng::user_N();
-    report::PoolCensus_Print(census, out);
-    out << '\n';
-    if (Regx_Match(filter, strptr("samp_meng.FUser"))) {
-        ind_beg(samp_meng::_db_user_curs, rec, samp_meng::_db) {
-            algo::tempstr temp;
-            out << "samp_meng.FUser";
-            i32_Print(rec.user, temp);
-            PrintAttrSpaceReset(out, "user", temp);
-            out << '\n';
-        }ind_end;
-    }
-    report::IndexCensus idx_census;
-    idx_census.field = "samp_meng.FDb.cd_fdin_eof";
-    idx_census.ctype = "samp_meng.FFdin";
-    idx_census.n_record = samp_meng::cd_fdin_eof_N();
-    report::IndexCensus_Print(idx_census, out);
-    out << '\n';
-    idx_census.field = "samp_meng.FDb.cd_fdin_read";
-    idx_census.ctype = "samp_meng.FFdin";
-    idx_census.n_record = samp_meng::cd_fdin_read_N();
-    report::IndexCensus_Print(idx_census, out);
-    out << '\n';
-    idx_census.field = "samp_meng.FDb.cd_ipcconn_read";
-    idx_census.ctype = "samp_meng.FIpcconn";
-    idx_census.n_record = samp_meng::cd_ipcconn_read_N();
-    report::IndexCensus_Print(idx_census, out);
-    out << '\n';
-    idx_census.field = "samp_meng.FDb.cd_ipcconn_eof";
-    idx_census.ctype = "samp_meng.FIpcconn";
-    idx_census.n_record = samp_meng::cd_ipcconn_eof_N();
-    report::IndexCensus_Print(idx_census, out);
-    out << '\n';
-}
-
-// --- samp_meng...cd_ipcconn_read_Step
-void samp_meng::cd_ipcconn_read_Step() {
-    samp_meng::FIpcconn& conn = *samp_meng::cd_ipcconn_read_RotateFirst();
-    algo::strptr line = in_GetMsg(conn);
-    if (line.elems) {
-        samp_meng::IpcProcessLine(conn, line);
-        in_SkipMsg(conn);
-    }
-}
-
-// --- samp_meng...IpcProcessLine
-void samp_meng::IpcProcessLine(samp_meng::FIpcconn& conn, algo::strptr line) {
-    samp_meng::Ipc_DispatchText(conn, line);
-}
-
-// --- samp_meng...cd_ipcconn_eof_Step
-void samp_meng::cd_ipcconn_eof_Step() {
-    samp_meng::FIpcconn& conn = *samp_meng::cd_ipcconn_eof_First();
-    close(conn.outfd.value);
-    samp_meng::ipcconn_Delete(conn);
-}
-
-// --- samp_meng...IpcCleanup
-void samp_meng::IpcCleanup() {
-    unlink(Zeroterm(samp_meng::_db.ipc_socket_path));
-}
-
-// --- samp_meng...IpcSignalHandler
-void samp_meng::IpcSignalHandler(int sig) {
-    (void)sig;
-    samp_meng::IpcCleanup();
-    _exit(1);
-}
-
 // --- samp_meng...main
 int main(int argc, char **argv) {
     try {
         lib_json::FDb_Init();
         algo_lib::FDb_Init();
-        lib_netio::FDb_Init();
         samp_meng::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
@@ -5044,7 +4196,6 @@ int main(int argc, char **argv) {
     }
     try {
         samp_meng::FDb_Uninit();
-        lib_netio::FDb_Uninit();
         algo_lib::FDb_Uninit();
         lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {

@@ -30,20 +30,6 @@ namespace samp_meng { // update-hdr
     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
 
     // -------------------------------------------------------------------
-    // cpp/samp_meng/ipc.cpp
-    //
-
-    // IpcInit -- create Unix domain socket, bind, listen, register with event loop
-    //     (user-implemented function, prototype is in amc-generated header)
-    // void IpcInit();
-
-    // Ipc_RequestStateDump -- handle state dump request from IPC client
-    // void Ipc_RequestStateDump(samp_meng::FIpcconn& conn, samp_meng::RequestStateDump& cmd); // dispatch_msg:samp_meng.Ipc/samp_meng.RequestStateDump
-
-    // IpcAccept -- accept incoming connection, allocate FIpcconn, start reading
-    // void IpcAccept();
-
-    // -------------------------------------------------------------------
     // cpp/samp_meng/samp_meng.cpp -- Main source
     //
     //     (user-implemented function, prototype is in amc-generated header)
