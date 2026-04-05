@@ -8728,6 +8728,17 @@ void acr_nav::StateDump(algo::cstring& out, algo_lib::Regx& filter) {
             out << '\n';
         }ind_end;
     }
+    report::IndexCensus idx_census;
+    idx_census.field = "acr_nav.FDb.cd_ipcconn_read";
+    idx_census.ctype = "acr_nav.FIpcconn";
+    idx_census.n_record = acr_nav::cd_ipcconn_read_N();
+    report::IndexCensus_Print(idx_census, out);
+    out << '\n';
+    idx_census.field = "acr_nav.FDb.cd_ipcconn_eof";
+    idx_census.ctype = "acr_nav.FIpcconn";
+    idx_census.n_record = acr_nav::cd_ipcconn_eof_N();
+    report::IndexCensus_Print(idx_census, out);
+    out << '\n';
 }
 
 // --- acr_nav...cd_ipcconn_read_Step

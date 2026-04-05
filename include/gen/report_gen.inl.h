@@ -65,6 +65,17 @@ inline  report::FieldId::FieldId(report_FieldIdEnum arg) {
     this->value = i32(arg);
 }
 
+// --- report.IndexCensus..Init
+// Set all fields to initial values.
+inline void report::IndexCensus_Init(report::IndexCensus& parent) {
+    parent.n_record = i32(0);
+}
+
+// --- report.IndexCensus..Ctor
+inline  report::IndexCensus::IndexCensus() {
+    report::IndexCensus_Init(*this);
+}
+
 // --- report.PoolCensus..Init
 // Set all fields to initial values.
 inline void report::PoolCensus_Init(report::PoolCensus& parent) {
@@ -236,6 +247,11 @@ inline  report::src_func::src_func() {
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const report::FieldId &row) {// cfmt:report.FieldId.String
     report::FieldId_Print(const_cast<report::FieldId&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const report::IndexCensus &row) {// cfmt:report.IndexCensus.String
+    report::IndexCensus_Print(const_cast<report::IndexCensus&>(row), str);
     return str;
 }
 

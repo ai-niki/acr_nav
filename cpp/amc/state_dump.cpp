@@ -208,5 +208,23 @@ void amc::gen_ns_state_dump() {
                 }
             }
         }ind_end;
+        // IndexCensus: Ptrary, Bheap, Llist (with havecount) fields on FDb
+        Ins(&R, func.body, "report::IndexCensus idx_census;");
+        ind_beg(amc::ctype_c_field_curs, field, *fdb) {
+            bool is_ptrary = field.reftype == dmmeta_Reftype_reftype_Ptrary;
+            bool is_bheap  = field.reftype == dmmeta_Reftype_reftype_Bheap;
+            bool is_llist  = field.reftype == dmmeta_Reftype_reftype_Llist
+                             && field.c_llist && field.c_llist->havecount;
+            if (is_ptrary || is_bheap || is_llist) {
+                Set(R, "$name", name_Get(field));
+                Set(R, "$fieldname", field.field);
+                Set(R, "$ctype", field.p_arg->ctype);
+                Ins(&R, func.body, "idx_census.field = \"$fieldname\";");
+                Ins(&R, func.body, "idx_census.ctype = \"$ctype\";");
+                Ins(&R, func.body, "idx_census.n_record = $ns::$name_N();");
+                Ins(&R, func.body, "report::IndexCensus_Print(idx_census, out);");
+                Ins(&R, func.body, "out << '\\n';");
+            }
+        }ind_end;
     }
 }

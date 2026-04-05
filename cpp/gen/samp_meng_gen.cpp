@@ -4965,6 +4965,27 @@ void samp_meng::StateDump(algo::cstring& out, algo_lib::Regx& filter) {
             out << '\n';
         }ind_end;
     }
+    report::IndexCensus idx_census;
+    idx_census.field = "samp_meng.FDb.cd_fdin_eof";
+    idx_census.ctype = "samp_meng.FFdin";
+    idx_census.n_record = samp_meng::cd_fdin_eof_N();
+    report::IndexCensus_Print(idx_census, out);
+    out << '\n';
+    idx_census.field = "samp_meng.FDb.cd_fdin_read";
+    idx_census.ctype = "samp_meng.FFdin";
+    idx_census.n_record = samp_meng::cd_fdin_read_N();
+    report::IndexCensus_Print(idx_census, out);
+    out << '\n';
+    idx_census.field = "samp_meng.FDb.cd_ipcconn_read";
+    idx_census.ctype = "samp_meng.FIpcconn";
+    idx_census.n_record = samp_meng::cd_ipcconn_read_N();
+    report::IndexCensus_Print(idx_census, out);
+    out << '\n';
+    idx_census.field = "samp_meng.FDb.cd_ipcconn_eof";
+    idx_census.ctype = "samp_meng.FIpcconn";
+    idx_census.n_record = samp_meng::cd_ipcconn_eof_N();
+    report::IndexCensus_Print(idx_census, out);
+    out << '\n';
 }
 
 // --- samp_meng...cd_ipcconn_read_Step

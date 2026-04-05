@@ -1224,6 +1224,7 @@ dmmeta.ctypelen  ctype:orgfile.FFilename  len:104  alignment:8  padbytes:17  pla
 dmmeta.ctypelen  ctype:orgfile.FTimefmt  len:255  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:orgfile.dedup  len:48  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:orgfile.move  len:48  alignment:8  padbytes:0  plaindata:N
+dmmeta.ctypelen  ctype:report.IndexCensus  len:208  alignment:4  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:report.PoolCensus  len:108  alignment:4  padbytes:2  plaindata:Y
 dmmeta.ctypelen  ctype:report.abt  len:68  alignment:4  padbytes:4  plaindata:Y
 dmmeta.ctypelen  ctype:report.acr  len:24  alignment:4  padbytes:0  plaindata:Y

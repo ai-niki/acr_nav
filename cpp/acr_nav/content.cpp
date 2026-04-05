@@ -610,9 +610,11 @@ void acr_nav::viewmode_inspect_ensure_content(acr_nav::FCtype &ct) {
                 bool is_record = algo::StartsWithQ(line, strptr(prefix));
                 bool is_census = algo::StartsWithQ(line, strptr("report.PoolCensus"))
                     && algo::FindStr(line, strptr(census_match)) >= 0;
-                if (is_record || is_census) {
+                bool is_idx = algo::StartsWithQ(line, strptr("report.IndexCensus"))
+                    && algo::FindStr(line, strptr(census_match)) >= 0;
+                if (is_record || is_census || is_idx) {
                     acr_nav::content_row_Alloc(vm).text = line;
-                    if (is_census) {
+                    if (is_census || is_idx) {
                         AddSpan(vm, line_idx, 0, elems_N(line), acr_nav::ind_navstyle_Find("line_comment"));
                     } else {
                         int space_pos = algo::FindChar(line, ' ');

@@ -39,6 +39,7 @@ namespace report { // gen:ns_print_proto
 const char* report::value_ToCstr(const report::FieldId& parent) {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
+        case report_FieldId_field          : ret = "field";  break;
         case report_FieldId_ctype          : ret = "ctype";  break;
         case report_FieldId_n_record       : ret = "n_record";  break;
         case report_FieldId_n_target       : ret = "n_target";  break;
@@ -139,6 +140,9 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
             switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('c','t','y','p','e'): {
                     value_SetEnum(parent,report_FieldId_ctype); ret = true; break;
+                }
+                case LE_STR5('f','i','e','l','d'): {
+                    value_SetEnum(parent,report_FieldId_field); ret = true; break;
                 }
                 case LE_STR5('n','_','e','r','r'): {
                     value_SetEnum(parent,report_FieldId_n_err); ret = true; break;
@@ -378,6 +382,61 @@ bool report::FieldId_ReadStrptrMaybe(report::FieldId &parent, algo::strptr in_st
 // cfmt:report.FieldId.String  printfmt:Raw
 void report::FieldId_Print(report::FieldId& row, algo::cstring& str) {
     report::value_Print(row, str);
+}
+
+// --- report.IndexCensus..ReadFieldMaybe
+bool report::IndexCensus_ReadFieldMaybe(report::IndexCensus& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    report::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case report_FieldId_field: {
+            retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
+        } break;
+        case report_FieldId_ctype: {
+            retval = algo::Smallstr100_ReadStrptrMaybe(parent.ctype, strval);
+        } break;
+        case report_FieldId_n_record: {
+            retval = i32_ReadStrptrMaybe(parent.n_record, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- report.IndexCensus..ReadStrptrMaybe
+// Read fields of report::IndexCensus from an ascii string.
+// The format of the string is an ssim Tuple
+bool report::IndexCensus_ReadStrptrMaybe(report::IndexCensus &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "report.IndexCensus");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && IndexCensus_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- report.IndexCensus..Print
+// print string representation of ROW to string STR
+// cfmt:report.IndexCensus.String  printfmt:Tuple
+void report::IndexCensus_Print(report::IndexCensus& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "report.IndexCensus";
+
+    algo::Smallstr100_Print(row.field, temp);
+    PrintAttrSpaceReset(str,"field", temp);
+
+    algo::Smallstr100_Print(row.ctype, temp);
+    PrintAttrSpaceReset(str,"ctype", temp);
+
+    i32_Print(row.n_record, temp);
+    PrintAttrSpaceReset(str,"n_record", temp);
 }
 
 // --- report.PoolCensus..ReadFieldMaybe

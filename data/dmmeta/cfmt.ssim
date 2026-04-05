@@ -752,6 +752,7 @@ dmmeta.cfmt  cfmt:lib_json.FParser.String  printfmt:Tuple  read:N  print:Y  sep:
 dmmeta.cfmt  cfmt:lib_json.FldKey.String  printfmt:Tuple  read:N  print:Y  sep:""  genop:Y  comment:""
 dmmeta.cfmt  cfmt:orgfile.dedup.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
 dmmeta.cfmt  cfmt:orgfile.move.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+dmmeta.cfmt  cfmt:report.IndexCensus.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
 dmmeta.cfmt  cfmt:report.PoolCensus.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
 dmmeta.cfmt  cfmt:report.abt.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
 dmmeta.cfmt  cfmt:report.acr.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""

@@ -150,6 +150,9 @@ namespace acr_nav { // update-hdr
     //
     void BuildLeftItems();
     void BuildLeftItemsReset();
+
+    // Build left panel from PoolCensus lines in live_data.
+    // Called on each complete poll response in connect mode.
     void BuildLiveLeftItems();
 
     // Used by show_help toggle, show_detail toggle, and startup help dismiss.
