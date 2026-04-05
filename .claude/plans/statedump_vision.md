@@ -11,7 +11,7 @@ This is the "freeze a running program and look at its tables" idea turned into a
 **End goal framing:** "make any amc program a glass box." Not SQL at runtime -- that would require a runtime query interpreter (an anti-pattern: interpreter adds complexity, not factorization). Instead: the program emits structured text; the consumer (agent or unix tools) filters and queries client-side. The query engine is the consumer.
 
 **Value:** High for programs under active development. Mature tools (amc, acr) are already debugged -- the payoff is for new servers and services being built, where Claude Code needs to inspect evolving runtime state daily.
-**Status:** Phases 1-3.4.2 done. Two generators (`ns_state_dump`, `ns_ipc`), one namespace (acr_nav), live inspect viewmode with columnar formatting and reference following. Remaining: input interface (Phase 4), meaningful second app (Phase 5). samp_meng integration removed — it was a smoke test, not a diagnostic showcase.
+**Status:** Phases 1-3.4.3 done. Two generators (`ns_state_dump`, `ns_ipc`), one namespace (acr_nav), live inspect viewmode with columnar formatting, reference following, FDb detail card, and finput pool filtering. Remaining: input interface (Phase 4), meaningful second app (Phase 5). samp_meng integration removed — it was a smoke test, not a diagnostic showcase.
 **Primary consumer:** Claude Code as agent -- inspecting programs at runtime during development, and auto-testing them similar to acr_nav headless. Any new amc program built with Claude Code benefits automatically -- no adoption curve.
 
 ## What generalizes cleanly (output/dump side)
@@ -263,7 +263,21 @@ Replaced the hacky MVP with a proper pool-driven inspect mode:
 
 **Key files:** `cpp/acr_nav/content.cpp` (MeasureTupleColumns, FindPoolEntry, DetectNavColumns live_mode, viewmode_inspect_ensure_content), `cpp/acr_nav/render.cpp` (AdjustHScroll, DetectNavOverlay, RenderColumnHeader, Render), `cpp/acr_nav/nav.cpp` (BuildLeftItems live guard).
 
-**Gap C: Static schema data dominates dump.** `acr_nav.FCtype` (1423 records) and `acr_nav.FField` (5729 records) are loaded from disk at startup and never change. They dominate the dump output. A future optimization: exclude static pools from the dump via schema metadata identifying static-load pools.
+**Gap C: Static schema data dominates dump.** `acr_nav.FCtype` (1423 records) and `acr_nav.FField` (5729 records) are loaded from disk at startup and never change. They dominate the dump output. Solved in Phase 3.4.3 via finput pool filtering.
+
+### Phase 3.4.3 -- FDb detail card and finput filtering (done)
+
+Three UX improvements to the inspect viewmode:
+
+**FDb detail card format.** When FDb is selected in the left panel, the right panel renders a vertical detail card (one field per line, key-aligned) instead of columnar format. FDb is a singleton — columnar layout wastes space. `FormatDetailCard()` handles the vertical layout, skipping the primary key attr when redundant with the section header.
+
+**Finput pool filtering.** Pools backed by finput (loaded from disk at startup: FCtype, FField, FSsimfile, etc.) are static schema data, not interesting runtime state. The state dump generator tags census lines with `is_finput:Y`. On wildcard filter, the dump skips record-level output for finput pools (census line still emitted). In the inspect viewmode, `BuildLiveLeftItems` hides finput pools by default.
+
+**TUI static toggle.** `s` key in browse mode toggles `live_show_static`, making finput pools visible/hidden in the left panel. Bound via `acr_navdb.keybind browse.s → filter_static`. The toggle also switches the RequestStateDump filter between `{ns}.%` (static included) and `%` (default, finput skipped on wildcard).
+
+**Inspect removed from Tab cycle.** Inspect viewmode is only meaningful in live connect mode. Removed from the Tab rotation so it doesn't appear when browsing schema normally.
+
+**Key files:** `cpp/acr_nav/content.cpp` (FormatDetailCard, viewmode_inspect_ensure_content FDb branch), `cpp/acr_nav/nav.cpp` (BuildLiveLeftItems finput guard, navaction_filter_static), `cpp/acr_nav/main.cpp` (LivePollCallback filter logic), `cpp/amc/state_dump.cpp` (finput skip on wildcard, is_finput tag).
 
 ### Phase 4 -- Input interface (`dmmeta.rtquery`)
 

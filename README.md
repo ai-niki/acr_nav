@@ -45,22 +45,42 @@ Two Claude Code skills ship with the repo:
 
 Component tests live in `test/atf_comp/acr_nav.*` and run with `normalize comp`.
 
-## The Bigger Idea
+## Runtime State Inspection
 
-Every amc-generated program has typed pools in `_db`. acr_nav exposes its state through a hand-written headless protocol. But amc already knows every pool via `gen_detectinst()` — it could generate a `StateDump()` function for any opted-in program automatically.
-
-One new record:
+amc generates a `StateDump()` function that walks every pool in `_db` and emits records as ssim. One opt-in record per namespace:
 
 ```
-dmmeta.nsdump  ns:acr_nav
+dmmeta.nsdump  ns:acr_nav    # generates StateDump()
+dmmeta.nsipc   ns:acr_nav    # generates IPC socket listener
 ```
 
-→ amc emits `acr_nav::StateDump(out, filter)` that walks every Lary/Inlary pool, emits a census (ctype name + count) and record-by-record dumps for ctypes with print support. Triggered via `-dump` flag or `acr_nav.StateDump` headless command.
+**Dump on exit** — print state matching a regex and exit:
 
-Any amc program becomes agent-inspectable at runtime — one generator, one opt-in record per namespace.
+```bash
+acr_nav -dump:"acr_nav.FPanel"    # dump FPanel records
+acr_nav -dump:".*"                # dump everything
+```
 
-- Vision: [`.claude/plans/statedump_vision.md`](.claude/plans/statedump_vision.md)
-- MVP plan: [`.claude/plans/statedump_plan.md`](.claude/plans/statedump_plan.md)
+**IPC socket** — query a running instance without restarting it:
+
+```bash
+acr_nav -ipc                      # TUI + IPC socket at /tmp/acr_nav.<pid>.sock
+echo 'acr_nav.RequestStateDump  filter:"acr_nav.FPanel"' \
+  | socat - UNIX-CONNECT:/tmp/acr_nav.$(pgrep acr_nav).sock
+```
+
+**Live inspect** — one acr_nav watching another in real time:
+
+```bash
+# Terminal A                      # Terminal B
+acr_nav -ipc                      acr_nav -connect /tmp/acr_nav.<pid>.sock
+```
+
+B polls A every 100ms. Left panel shows live pools with record counts. Enter follows references between pools. `s` toggles static (finput) pool visibility. FDb singleton gets a vertical detail card.
+
+The generators (`ns_state_dump`, `ns_ipc`) are namespace-generic — any amc program can opt in with two ssim records and two hand-written functions (`IpcInit`, `IpcAccept`).
+
+Design notes: [`.claude/plans/statedump_vision.md`](.claude/plans/statedump_vision.md)
 
 ## Getting Started
 
