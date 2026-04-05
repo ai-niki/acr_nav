@@ -80,6 +80,8 @@ B polls A every 100ms. Left panel shows live pools with record counts. Enter fol
 
 The generators (`ns_state_dump`, `ns_ipc`) are namespace-generic — any amc program can opt in with two ssim records and two hand-written functions (`IpcInit`, `IpcAccept`).
 
+**Claude Code as consumer.** The `/statedump` skill connects to a running instance and reads its pool state. During development, Claude can launch a program with `-ipc`, inspect its runtime state, diagnose issues, and verify fixes — all without stopping the process. The dump is ssim, so Claude parses it the same way it reads any other OpenACR data.
+
 Design notes: [`.claude/plans/statedump_vision.md`](.claude/plans/statedump_vision.md)
 
 ## Getting Started
