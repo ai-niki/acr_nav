@@ -352,15 +352,68 @@ Generator in `cpp/amc/state_dump.cpp` now has a `ResolvePtrPkey` helper that emi
 
 The code at lines 104-106 of `state_dump.cpp` already handles Tary alongside Lary and Inlary. Census and detailed dump both work for navstack (Naventry), left_item (LeftItem), and overlay_stack (OverlayEntry). `left_item` maps row indices to ctype names, closing the "sel_row:272 = which ctype?" question.
 
-### Gap 3: Tpool pools — no cursor
+### Gap 3: Upptr fields on FDb
+
+Same semantics as Ptr (non-owning pointer to a record) but `StateDumpFieldQ` and the Ptr emission loop both filter by `reftype == Ptr`. Upptr fields are invisible. `ResolvePtrPkey` already works for Upptr — same Base chain resolution. Fix: add `reftype == Upptr` to the Ptr counting and emission loops.
+
+### Gap 4: Ptrary pools
+
+Ptrary (array of pointers) has `_N()` and cursors, same iteration pattern as Lary/Tary. Currently not in the pool reftype check at lines 104-106. Fix: add `reftype == Ptrary` to the pool check. Records are pointers into another pool, so census shows how many are indexed; record dump uses the pointed-to ctype's fields.
+
+### Gap 5: Bheap pools
+
+Bheap (binary heap / priority queue) has `_N()` and cursors. Useful for queue depth diagnostics in servers. Fix: add `reftype == Bheap` to the pool check, same as Ptrary.
+
+### Gap 6: Tpool pools — no cursor
 
 `ipcconn` (FIpcconn) is in Tpool. Tpool generates no cursor — free-list allocator, can alloc/delete but not scan. Records are reachable via Llist (cd_ipcconn_read, cd_ipcconn_eof). Already documented in "Tpool traversal" section above.
 
-**Fix (deferred):** Follow Llist access paths from FDb to reach Tpool records. More complex than gaps 1-2. Low priority — IPC connections are infrastructure, not diagnostic state.
+**Fix:** Follow Llist access paths from FDb to reach Tpool records. More complex than gaps 3-5 — requires discovering which Llist fields on FDb point to Tpool-allocated ctypes, then generating cursor-based traversal over those lists. Census would sum Llist counts.
+
+### Gap 7: Delptr fields on FDb
+
+Delptr is a single owned pointer (like Val but starts as NULL, cascade-deleted). Has `_Get()` accessor. Could emit the pointed-to record's pkey (same pattern as Ptr/Upptr) or the full record if it has cfmt.
+
+### Gap 8: Llist fields on FDb — census only
+
+Llist (linked list) is an xref, not a pool — but Llist fields with `havecount:Y` provide `_N()`. Emitting Llist record counts as census lines would show queue depths, ready/pending lists, etc. No record iteration needed for census — just the count.
+
+### Coverage summary
+
+13 reftypes have `inst:Y` (pools). Current coverage and status:
+
+| Pool reftype | Has cursor? | Has `_N()`? | Covered? | Gap |
+|---|---|---|---|---|
+| Lary | Yes | Yes | **Yes** | — |
+| Inlary | Yes | Yes | **Yes** | — |
+| Tary | Yes | Yes | **Yes** | — |
+| Ptrary | Yes | Yes | No | Gap 4 |
+| Bheap | Yes | Yes | No | Gap 5 |
+| Tpool | No | No | No | Gap 6 |
+| Lpool | No | No | No | Infrastructure allocator, skip |
+| Sbrk | No | No | No | Infrastructure allocator, skip |
+| Malloc | No | No | No | Infrastructure allocator, skip |
+| Blkpool | No | No | No | Infrastructure allocator, skip |
+| Global | N/A | N/A | **Yes** | FDb singleton section |
+| Cppstack | N/A | N/A | N/A | Stack-scoped, no runtime records |
+| Others (Fbuf, Opt, Varlen, Delptr) | N/A | N/A | No | Gap 7 for Delptr; rest are infrastructure |
+
+FDb scalar/pointer field coverage:
+
+| Field reftype | Covered? | Gap |
+|---|---|---|
+| Val, Smallstr, Bitfld, Regx | **Yes** | — |
+| Ptr | **Yes** | — |
+| Upptr | No | Gap 3 |
+| Count | No | Emittable as i32 via StateDumpFieldQ if added |
+| Llist (census) | No | Gap 8 |
+| Thash, Atree (xrefs) | No | Indexes, not data — low priority |
 
 ### Priority
 
-Gap 1 (Ptr) and Gap 2 (Tary) are both done. Gap 3 (Tpool) remains deferred — low priority since IPC connections are infrastructure, not diagnostic state.
+**Trivial (one-line each):** Gap 3 (Upptr), Gap 4 (Ptrary), Gap 5 (Bheap) — extend existing checks.
+**Medium:** Gap 7 (Delptr), Gap 8 (Llist census) — small new emission patterns.
+**Complex:** Gap 6 (Tpool via Llist) — requires access path discovery.
 
 ## Generator mechanics (verified, updated 2026-04-04)
 
