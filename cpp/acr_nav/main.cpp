@@ -1122,7 +1122,18 @@ void acr_nav::Main() {
     if (_db.cmdline.ipc) {
         acr_nav::IpcInit();
     }
+    // ch_N check handles non-empty filters; argv scan catches -dump:""
     bool do_dump = ch_N(_db.cmdline.dump) > 0;
+    if (!do_dump) {
+        for (int i = 1; i < algo_lib::_db.argc; i++) {
+            algo::strptr arg(algo_lib::_db.argv[i]);
+            if (arg == strptr("-dump") || StartsWithQ(arg, strptr("-dump:"))
+                || arg == strptr("--dump") || StartsWithQ(arg, strptr("--dump:"))) {
+                do_dump = true;
+                break;
+            }
+        }
+    }
     bool do_connect = ch_N(_db.cmdline.connect) > 0;
     bool headless = _db.cmdline.headless || !isatty(STDOUT_FILENO);
     if (do_dump) {

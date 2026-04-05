@@ -147,7 +147,18 @@ void samp_meng::cd_fdin_read_Step() {
 }
 
 void samp_meng::Main() {
+    // ch_N check handles non-empty filters; argv scan catches -dump:""
     bool do_dump = ch_N(_db.cmdline.dump) > 0;
+    if (!do_dump) {
+        for (int i = 1; i < algo_lib::_db.argc; i++) {
+            algo::strptr arg(algo_lib::_db.argv[i]);
+            if (arg == strptr("-dump") || StartsWithQ(arg, strptr("-dump:"))
+                || arg == strptr("--dump") || StartsWithQ(arg, strptr("--dump:"))) {
+                do_dump = true;
+                break;
+            }
+        }
+    }
     if (_db.cmdline.ipc) {
         samp_meng::IpcInit();
     }
