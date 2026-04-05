@@ -5135,6 +5135,173 @@ inline static void acr_nav::cd_ipcconn_eof_Call() {
     }
 }
 
+// --- acr_nav.FDb.pool_entry.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<acr_nav::PoolEntry> acr_nav::pool_entry_Addary(algo::aryptr<acr_nav::PoolEntry> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.pool_entry_elems && rhs.elems < _db.pool_entry_elems + _db.pool_entry_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("acr_nav.tary_alias  field:acr_nav.FDb.pool_entry  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    pool_entry_Reserve(nnew); // reserve space
+    int at = _db.pool_entry_n;
+    for (int i = 0; i < nnew; i++) {
+        new (_db.pool_entry_elems + at + i) acr_nav::PoolEntry(rhs[i]);
+        _db.pool_entry_n++;
+    }
+    return algo::aryptr<acr_nav::PoolEntry>(_db.pool_entry_elems + at, nnew);
+}
+
+// --- acr_nav.FDb.pool_entry.Alloc
+// Reserve space. Insert element at the end
+// The new element is initialized to a default value
+acr_nav::PoolEntry& acr_nav::pool_entry_Alloc() {
+    pool_entry_Reserve(1);
+    int n  = _db.pool_entry_n;
+    int at = n;
+    acr_nav::PoolEntry *elems = _db.pool_entry_elems;
+    new (elems + at) acr_nav::PoolEntry(); // construct new element, default initializer
+    _db.pool_entry_n = n+1;
+    return elems[at];
+}
+
+// --- acr_nav.FDb.pool_entry.AllocAt
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+acr_nav::PoolEntry& acr_nav::pool_entry_AllocAt(int at) {
+    pool_entry_Reserve(1);
+    int n  = _db.pool_entry_n;
+    if (UNLIKELY(u64(at) >= u64(n+1))) {
+        FatalErrorExit("acr_nav.bad_alloc_at  field:acr_nav.FDb.pool_entry  comment:'index out of range'");
+    }
+    acr_nav::PoolEntry *elems = _db.pool_entry_elems;
+    memmove(elems + at + 1, elems + at, (n - at) * sizeof(acr_nav::PoolEntry));
+    new (elems + at) acr_nav::PoolEntry(); // construct element, default initializer
+    _db.pool_entry_n = n+1;
+    return elems[at];
+}
+
+// --- acr_nav.FDb.pool_entry.AllocN
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<acr_nav::PoolEntry> acr_nav::pool_entry_AllocN(int n_elems) {
+    pool_entry_Reserve(n_elems);
+    int old_n  = _db.pool_entry_n;
+    int new_n = old_n + n_elems;
+    acr_nav::PoolEntry *elems = _db.pool_entry_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) acr_nav::PoolEntry(); // construct new element, default initialize
+    }
+    _db.pool_entry_n = new_n;
+    return algo::aryptr<acr_nav::PoolEntry>(elems + old_n, n_elems);
+}
+
+// --- acr_nav.FDb.pool_entry.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<acr_nav::PoolEntry> acr_nav::pool_entry_AllocNAt(int n_elems, int at) {
+    pool_entry_Reserve(n_elems);
+    int n  = _db.pool_entry_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("acr_nav.bad_alloc_n_at  field:acr_nav.FDb.pool_entry  comment:'index out of range'");
+    }
+    acr_nav::PoolEntry *elems = _db.pool_entry_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(acr_nav::PoolEntry));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) acr_nav::PoolEntry(); // construct new element, default initialize
+    }
+    _db.pool_entry_n = n+n_elems;
+    return algo::aryptr<acr_nav::PoolEntry>(elems+at,n_elems);
+}
+
+// --- acr_nav.FDb.pool_entry.Remove
+// Remove item by index. If index outside of range, do nothing.
+void acr_nav::pool_entry_Remove(u32 i) {
+    u32 lim = _db.pool_entry_n;
+    acr_nav::PoolEntry *elems = _db.pool_entry_elems;
+    if (i < lim) {
+        elems[i].~PoolEntry(); // destroy element
+        memmove(elems + i, elems + (i + 1), sizeof(acr_nav::PoolEntry) * (lim - (i + 1)));
+        _db.pool_entry_n = lim - 1;
+    }
+}
+
+// --- acr_nav.FDb.pool_entry.RemoveAll
+void acr_nav::pool_entry_RemoveAll() {
+    u32 n = _db.pool_entry_n;
+    while (n > 0) {
+        n -= 1;
+        _db.pool_entry_elems[n].~PoolEntry();
+        _db.pool_entry_n = n;
+    }
+}
+
+// --- acr_nav.FDb.pool_entry.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void acr_nav::pool_entry_RemoveLast() {
+    u64 n = _db.pool_entry_n;
+    if (n > 0) {
+        n -= 1;
+        pool_entry_qFind(u64(n)).~PoolEntry();
+        _db.pool_entry_n = n;
+    }
+}
+
+// --- acr_nav.FDb.pool_entry.AbsReserve
+// Make sure N elements fit in array. Process dies if out of memory
+void acr_nav::pool_entry_AbsReserve(int n) {
+    u32 old_max  = _db.pool_entry_max;
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::malloc_ReallocMem(_db.pool_entry_elems, old_max * sizeof(acr_nav::PoolEntry), new_max * sizeof(acr_nav::PoolEntry));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("acr_nav.tary_nomem  field:acr_nav.FDb.pool_entry  comment:'out of memory'");
+        }
+        _db.pool_entry_elems = (acr_nav::PoolEntry*)new_mem;
+        _db.pool_entry_max = new_max;
+    }
+}
+
+// --- acr_nav.FDb.pool_entry.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<acr_nav::PoolEntry> acr_nav::pool_entry_AllocNVal(int n_elems, const acr_nav::PoolEntry& val) {
+    pool_entry_Reserve(n_elems);
+    int old_n  = _db.pool_entry_n;
+    int new_n = old_n + n_elems;
+    acr_nav::PoolEntry *elems = _db.pool_entry_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) acr_nav::PoolEntry(val);
+    }
+    _db.pool_entry_n = new_n;
+    return algo::aryptr<acr_nav::PoolEntry>(elems + old_n, n_elems);
+}
+
+// --- acr_nav.FDb.pool_entry.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void acr_nav::pool_entry_Insary(algo::aryptr<acr_nav::PoolEntry> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.pool_entry_elems && rhs.elems < _db.pool_entry_elems + _db.pool_entry_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("acr_nav.tary_alias  field:acr_nav.FDb.pool_entry  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(_db.pool_entry_elems+1))) {
+        FatalErrorExit("acr_nav.bad_insary  field:acr_nav.FDb.pool_entry  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = _db.pool_entry_n - at;
+    pool_entry_Reserve(nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (_db.pool_entry_elems + at + nnew + i) acr_nav::PoolEntry(_db.pool_entry_elems[at + i]);
+        _db.pool_entry_elems[at + i].~PoolEntry(); // destroy element
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (_db.pool_entry_elems + at + i) acr_nav::PoolEntry(rhs[i]);
+    }
+    _db.pool_entry_n += nnew;
+}
+
 // --- acr_nav.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr acr_nav::trace_RowidFind(int t) {
@@ -5477,6 +5644,10 @@ void acr_nav::FDb_Init() {
     _db.live_connected = bool(false);
     _db.live_poll_pending = bool(false);
     _db.live_ns = algo::strptr("");
+    _db.live_mode = bool(false);
+    _db.pool_entry_elems 	= 0; // (acr_nav.FDb.pool_entry)
+    _db.pool_entry_n     	= 0; // (acr_nav.FDb.pool_entry)
+    _db.pool_entry_max   	= 0; // (acr_nav.FDb.pool_entry)
 
     acr_nav::InitReflection();
     navaction_LoadStatic(); // gen:ns_gstatic  gstatic:acr_nav.FDb.navaction  load acr_nav.FNavaction records
@@ -5486,6 +5657,12 @@ void acr_nav::FDb_Init() {
 // --- acr_nav.FDb..Uninit
 void acr_nav::FDb_Uninit() {
     acr_nav::FDb &row = _db; (void)row;
+
+    // acr_nav.FDb.pool_entry.Uninit (Tary)  //Parsed PoolCensus entries from live data
+    // remove all elements from acr_nav.FDb.pool_entry
+    pool_entry_RemoveAll();
+    // free memory for Tary acr_nav.FDb.pool_entry
+    algo_lib::malloc_FreeMem(_db.pool_entry_elems, sizeof(acr_nav::PoolEntry)*_db.pool_entry_max); // (acr_nav.FDb.pool_entry)
 
     // acr_nav.FDb.overlay_stack.Uninit (Tary)  //Overlay viewmode save/restore stack
     // remove all elements from acr_nav.FDb.overlay_stack
@@ -8256,6 +8433,8 @@ void acr_nav::StateDump(algo::cstring& out, algo_lib::Regx& filter) {
         PrintAttrSpaceReset(out, "live_poll_pending", temp);
         algo::Smallstr16_Print(acr_nav::_db.live_ns, temp);
         PrintAttrSpaceReset(out, "live_ns", temp);
+        bool_Print(acr_nav::_db.live_mode, temp);
+        PrintAttrSpaceReset(out, "live_mode", temp);
         acr_nav::trace_Print(acr_nav::_db.trace, temp);
         PrintAttrSpaceReset(out, "trace", temp);
         if (acr_nav::_db.p_cur_panel) {
@@ -8725,6 +8904,21 @@ void acr_nav::StateDump(algo::cstring& out, algo_lib::Regx& filter) {
             PrintAttrSpaceReset(out, "saved_sel_row", temp);
             i32_Print(rec.saved_scroll_offset, temp);
             PrintAttrSpaceReset(out, "saved_scroll_offset", temp);
+            out << '\n';
+        }ind_end;
+    }
+    census.ctype = "acr_nav.PoolEntry";
+    census.n_record = acr_nav::pool_entry_N();
+    report::PoolCensus_Print(census, out);
+    out << '\n';
+    if (Regx_Match(filter, strptr("acr_nav.PoolEntry"))) {
+        ind_beg(acr_nav::_db_pool_entry_curs, rec, acr_nav::_db) {
+            algo::tempstr temp;
+            out << "acr_nav.PoolEntry";
+            algo::Smallstr100_Print(rec.ctype, temp);
+            PrintAttrSpaceReset(out, "ctype", temp);
+            i32_Print(rec.n_record, temp);
+            PrintAttrSpaceReset(out, "n_record", temp);
             out << '\n';
         }ind_end;
     }

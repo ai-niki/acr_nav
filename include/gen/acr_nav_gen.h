@@ -171,6 +171,7 @@ namespace acr_nav { struct _db_filtertarget_curs; }
 namespace acr_nav { struct _db_overlay_stack_curs; }
 namespace acr_nav { struct _db_cd_ipcconn_read_curs; }
 namespace acr_nav { struct _db_cd_ipcconn_eof_curs; }
+namespace acr_nav { struct _db_pool_entry_curs; }
 namespace acr_nav { struct ns_c_ctype_curs; }
 namespace acr_nav { struct viewmode_cspan_curs; }
 namespace acr_nav { struct viewmode_nav_col_curs; }
@@ -198,6 +199,7 @@ namespace acr_nav { struct LineColorSpan; }
 namespace acr_nav { struct Naventry; }
 namespace acr_nav { struct OverlayEntry; }
 namespace acr_nav { struct PanelState; }
+namespace acr_nav { struct PoolEntry; }
 namespace acr_nav { struct PreviewNavCol; }
 namespace acr_nav { struct Screen; }
 namespace acr_nav { struct TableId; }
@@ -629,6 +631,10 @@ struct FDb { // acr_nav.FDb
     algo::cstring              live_error;                       // Connection error message
     bool                       live_poll_pending;                //   false  True when request sent but response not yet received
     algo::Smallstr16           live_ns;                          //   ""  Namespace of connected app (parsed from socket path)
+    bool                       live_mode;                        //   false  True when in live connect mode
+    acr_nav::PoolEntry*        pool_entry_elems;                 // pointer to elements
+    u32                        pool_entry_n;                     // number of elements in array
+    u32                        pool_entry_max;                   // max. capacity of array before realloc
     acr_nav::trace             trace;                            //
 };
 
@@ -2012,6 +2018,76 @@ inline acr_nav::FIpcconn& cd_ipcconn_eof_qLast() __attribute__((__warn_unused_re
 // this function is 'extrn' and implemented by user
 void                 cd_ipcconn_eof_Step() __attribute__((nothrow));
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:acr_nav.FDb.pool_entry.Addary
+algo::aryptr<acr_nav::PoolEntry> pool_entry_Addary(algo::aryptr<acr_nav::PoolEntry> rhs) __attribute__((nothrow));
+// Reserve space. Insert element at the end
+// The new element is initialized to a default value
+// func:acr_nav.FDb.pool_entry.Alloc
+acr_nav::PoolEntry&  pool_entry_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:acr_nav.FDb.pool_entry.AllocAt
+acr_nav::PoolEntry&  pool_entry_AllocAt(int at) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:acr_nav.FDb.pool_entry.AllocN
+algo::aryptr<acr_nav::PoolEntry> pool_entry_AllocN(int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:acr_nav.FDb.pool_entry.AllocNAt
+algo::aryptr<acr_nav::PoolEntry> pool_entry_AllocNAt(int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:acr_nav.FDb.pool_entry.EmptyQ
+inline bool          pool_entry_EmptyQ() __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+// func:acr_nav.FDb.pool_entry.Find
+inline acr_nav::PoolEntry* pool_entry_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return array pointer by value
+// func:acr_nav.FDb.pool_entry.Getary
+inline algo::aryptr<acr_nav::PoolEntry> pool_entry_Getary() __attribute__((nothrow));
+// Return pointer to last element of array, or NULL if array is empty
+// func:acr_nav.FDb.pool_entry.Last
+inline acr_nav::PoolEntry* pool_entry_Last() __attribute__((nothrow, pure));
+// Return max. number of items in the array
+// func:acr_nav.FDb.pool_entry.Max
+inline i32           pool_entry_Max() __attribute__((nothrow));
+// Return number of items in the array
+// func:acr_nav.FDb.pool_entry.N
+inline i32           pool_entry_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove item by index. If index outside of range, do nothing.
+// func:acr_nav.FDb.pool_entry.Remove
+void                 pool_entry_Remove(u32 i) __attribute__((nothrow));
+// func:acr_nav.FDb.pool_entry.RemoveAll
+void                 pool_entry_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:acr_nav.FDb.pool_entry.RemoveLast
+void                 pool_entry_RemoveLast() __attribute__((nothrow));
+// Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:acr_nav.FDb.pool_entry.Reserve
+inline void          pool_entry_Reserve(int n) __attribute__((nothrow));
+// Make sure N elements fit in array. Process dies if out of memory
+// func:acr_nav.FDb.pool_entry.AbsReserve
+void                 pool_entry_AbsReserve(int n) __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:acr_nav.FDb.pool_entry.qFind
+inline acr_nav::PoolEntry& pool_entry_qFind(u64 t) __attribute__((nothrow));
+// Return reference to last element of array. No bounds checking
+// func:acr_nav.FDb.pool_entry.qLast
+inline acr_nav::PoolEntry& pool_entry_qLast() __attribute__((nothrow));
+// Return row id of specified element
+// func:acr_nav.FDb.pool_entry.rowid_Get
+inline u64           pool_entry_rowid_Get(acr_nav::PoolEntry &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:acr_nav.FDb.pool_entry.AllocNVal
+algo::aryptr<acr_nav::PoolEntry> pool_entry_AllocNVal(int n_elems, const acr_nav::PoolEntry& val) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:acr_nav.FDb.pool_entry.Insary
+void                 pool_entry_Insary(algo::aryptr<acr_nav::PoolEntry> rhs, int at) __attribute__((nothrow));
+
 // cursor points to valid item
 // func:acr_nav.FDb.ctype_curs.Reset
 inline void          _db_ctype_curs_Reset(_db_ctype_curs &curs, acr_nav::FDb &parent) __attribute__((nothrow));
@@ -2249,6 +2325,17 @@ inline void          _db_cd_ipcconn_eof_curs_Next(_db_cd_ipcconn_eof_curs &curs)
 // item access
 // func:acr_nav.FDb.cd_ipcconn_eof_curs.Access
 inline acr_nav::FIpcconn& _db_cd_ipcconn_eof_curs_Access(_db_cd_ipcconn_eof_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:acr_nav.FDb.pool_entry_curs.Next
+inline void          _db_pool_entry_curs_Next(_db_pool_entry_curs &curs) __attribute__((nothrow));
+// func:acr_nav.FDb.pool_entry_curs.Reset
+inline void          _db_pool_entry_curs_Reset(_db_pool_entry_curs &curs, acr_nav::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_nav.FDb.pool_entry_curs.ValidQ
+inline bool          _db_pool_entry_curs_ValidQ(_db_pool_entry_curs &curs) __attribute__((nothrow));
+// item access
+// func:acr_nav.FDb.pool_entry_curs.Access
+inline acr_nav::PoolEntry& _db_pool_entry_curs_Access(_db_pool_entry_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr_nav.FDb..Init
 void                 FDb_Init();
@@ -3649,6 +3736,19 @@ inline void          PanelState_Init(acr_nav::PanelState& parent);
 // func:acr_nav.PanelState..Print
 void                 PanelState_Print(acr_nav::PanelState& row, algo::cstring& str) __attribute__((nothrow));
 
+// --- acr_nav.PoolEntry
+// create: acr_nav.FDb.pool_entry (Tary)
+struct PoolEntry { // acr_nav.PoolEntry: Parsed PoolCensus entry from live state dump
+    algo::Smallstr100   ctype;      // Fully qualified ctype name
+    i32                 n_record;   //   0  Record count from PoolCensus
+    // func:acr_nav.PoolEntry..Ctor
+    inline               PoolEntry() __attribute__((nothrow));
+};
+
+// Set all fields to initial values.
+// func:acr_nav.PoolEntry..Init
+inline void          PoolEntry_Init(acr_nav::PoolEntry& parent);
+
 // --- acr_nav.PreviewNavCol
 // create: acr_nav.FViewmode.nav_col (Tary)
 struct PreviewNavCol { // acr_nav.PreviewNavCol: Navigable column metadata for preview follow-ref
@@ -4106,6 +4206,15 @@ struct _db_cd_ipcconn_eof_curs {// fcurs:acr_nav.FDb.cd_ipcconn_eof/curs
         row = NULL;
         head = NULL;
     }
+};
+
+
+struct _db_pool_entry_curs {// cursor
+    typedef acr_nav::PoolEntry ChildType;
+    acr_nav::PoolEntry* elems;
+    int n_elems;
+    int index;
+    _db_pool_entry_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
 

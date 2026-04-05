@@ -996,7 +996,7 @@ static void LiveReadCallback() {
         acr_nav::_db.live_generation++;
     }
     if ((got_complete_response || disconnected) && acr_nav::_db.running) {
-        if (ch_N(acr_nav::_db.live_ns) > 0) {
+        if (acr_nav::_db.live_mode) {
             acr_nav::BuildLiveLeftItems();
         }
         TuiRepaint();
@@ -1058,6 +1058,11 @@ static void TuiLiveInit() {
     // Parse namespace from socket path: /tmp/<ns>.<pid>.sock
     algo::strptr filename = algo::StripDirName(acr_nav::_db.cmdline.connect);
     acr_nav::_db.live_ns = algo::Pathcomp(filename, ".LL");
+    if (ch_N(acr_nav::_db.live_ns) == 0) {
+        acr_nav::_db.live_error = tempstr() << "live: cannot parse namespace from socket path '"
+            << acr_nav::_db.cmdline.connect << "' (expected /tmp/<ns>.<pid>.sock)";
+    }
+    acr_nav::_db.live_mode = ch_N(acr_nav::_db.live_ns) > 0;
     // Start with empty left panel — populated by first PoolCensus response
     acr_nav::left_item_RemoveAll();
     acr_nav::_db.n_visible_ctype = 0;

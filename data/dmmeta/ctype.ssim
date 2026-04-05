@@ -176,6 +176,7 @@ dmmeta.ctype  ctype:acr_nav.Naventry  comment:"Navigation stack entry. Uses raw 
 dmmeta.ctype  ctype:acr_nav.Navigate  comment:"Headless command: navigate to a ctype by name"
 dmmeta.ctype  ctype:acr_nav.OverlayEntry  comment:"Overlay stack entry: viewmode name + saved right-panel state"
 dmmeta.ctype  ctype:acr_nav.PanelState  comment:"Headless panel state output"
+dmmeta.ctype  ctype:acr_nav.PoolEntry  comment:"Parsed PoolCensus entry from live state dump"
 dmmeta.ctype  ctype:acr_nav.PreviewNavCol  comment:"Navigable column metadata for preview follow-ref"
 dmmeta.ctype  ctype:acr_nav.RequestStateDump  comment:"Headless command: request runtime state dump"
 dmmeta.ctype  ctype:acr_nav.Screen  comment:"Headless screen state output"

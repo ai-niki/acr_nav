@@ -403,14 +403,14 @@ static void RenderLeftCell(RenderCtx &ctx, int row) {
     if (left_idx < ctx.n_left) {
         left_sel = (left_idx == acr_nav::_db.p_left_panel->sel_row);
         acr_nav::LeftItem &item = acr_nav::left_item_qFind(left_idx);
-        bool live_mode = ch_N(acr_nav::_db.live_ns) > 0;
+        bool live_mode = acr_nav::_db.live_mode;
         if (ch_N(item.ctype) == 0) {
             // Namespace header row
             acr_nav::FNs *ns = acr_nav::ind_ns_Find(item.ns);
             if (live_mode) {
                 // Live mode: always expanded, show pool count
                 left_cell << " \xe2\x96\xbe " << acr_nav::_db.live_ns;
-                left_cell << " (" << acr_nav::_db.n_visible_ctype << " pools)";
+                left_cell << " (" << acr_nav::pool_entry_N() << " pools)";
             } else {
                 int count = ns ? ns->n_match : 0;
                 left_cell << (ns && ns->collapsed ? " \xe2\x96\xb8 " : " \xe2\x96\xbe ");
@@ -654,13 +654,13 @@ void acr_nav::Render(cstring &buf, acr_nav::FCtype *sel_ct) {
     // Left panel width: fits longest row across all matching namespaces
     // (regardless of collapse state, so width is stable on expand/collapse)
     int max_name = 0;
-    if (ch_N(acr_nav::_db.live_ns) > 0) {
+    if (acr_nav::_db.live_mode) {
         // Live mode: compute width from left_item array (PoolCensus-driven)
         for (int i = 0; i < acr_nav::left_item_N(); i++) {
             acr_nav::LeftItem &item = acr_nav::left_item_qFind(i);
             if (ch_N(item.ctype) == 0) {
                 // Namespace header: " V ns (N pools)"
-                int hdr_wid = 4 + ch_N(acr_nav::_db.live_ns) + 2 + DecimalDigits(acr_nav::_db.n_visible_ctype) + 7;
+                int hdr_wid = 4 + ch_N(acr_nav::_db.live_ns) + 2 + DecimalDigits(acr_nav::pool_entry_N()) + 7;
                 max_name = i32_Max(max_name, hdr_wid);
             } else {
                 // Pool row: "    TypeName (N)"

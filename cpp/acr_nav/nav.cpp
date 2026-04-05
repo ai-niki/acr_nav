@@ -173,48 +173,45 @@ void acr_nav::BuildLiveLeftItems() {
         saved_ctype = acr_nav::left_item_qFind(saved_row).ctype;
     }
     acr_nav::left_item_RemoveAll();
-    // Collect PoolCensus entries: {ctype, n_record}
-    struct PoolEntry {
-        algo::cstring ctype;
-        i32 n_record;
-    };
-    PoolEntry entries[512];
-    int n_entry = 0;
+    // Parse PoolCensus lines into pool_entry Tary
+    acr_nav::pool_entry_RemoveAll();
     ind_beg(Line_curs, line, acr_nav::_db.live_data) {
-        if (algo::StartsWithQ(line, strptr("report.PoolCensus")) && n_entry < 512) {
+        if (algo::StartsWithQ(line, strptr("report.PoolCensus"))) {
             algo::Tuple tuple;
             if (algo::Tuple_ReadStrptr(tuple, line, false)) {
                 algo::strptr ct = algo::attr_GetString(tuple, "ctype");
                 algo::strptr nr = algo::attr_GetString(tuple, "n_record");
                 if (elems_N(ct) > 0) {
-                    entries[n_entry].ctype = ct;
-                    entries[n_entry].n_record = algo::ParseI32(nr, 0);
-                    n_entry++;
+                    acr_nav::PoolEntry &pe = acr_nav::pool_entry_Alloc();
+                    pe.ctype = ct;
+                    pe.n_record = algo::ParseI32(nr, 0);
                 }
             }
         }
     } ind_end;
     // Sort alphabetically by ctype name
-    for (int i = 1; i < n_entry; i++) {
-        for (int j = i; j > 0 && entries[j - 1].ctype > entries[j].ctype; j--) {
-            PoolEntry tmp = entries[j];
-            entries[j] = entries[j - 1];
-            entries[j - 1] = tmp;
+    int n = acr_nav::pool_entry_N();
+    for (int i = 1; i < n; i++) {
+        for (int j = i; j > 0 && acr_nav::pool_entry_qFind(j - 1).ctype > acr_nav::pool_entry_qFind(j).ctype; j--) {
+            acr_nav::PoolEntry tmp = acr_nav::pool_entry_qFind(j);
+            acr_nav::pool_entry_qFind(j) = acr_nav::pool_entry_qFind(j - 1);
+            acr_nav::pool_entry_qFind(j - 1) = tmp;
         }
     }
     // Namespace header
     acr_nav::LeftItem &hdr = acr_nav::left_item_Alloc();
     hdr.ctype = "";
     hdr.ns = acr_nav::_db.live_ns;
-    hdr.n_record = n_entry;
+    hdr.n_record = n;
     // Pool rows
-    for (int i = 0; i < n_entry; i++) {
+    for (int i = 0; i < n; i++) {
+        acr_nav::PoolEntry &pe = acr_nav::pool_entry_qFind(i);
         acr_nav::LeftItem &item = acr_nav::left_item_Alloc();
-        item.ctype = entries[i].ctype;
+        item.ctype = pe.ctype;
         item.ns = "";
-        item.n_record = entries[i].n_record;
+        item.n_record = pe.n_record;
     }
-    acr_nav::_db.n_visible_ctype = n_entry;
+    acr_nav::_db.n_visible_ctype = n;
     // Restore selection
     int idx = FindLeftItemByCtype(saved_ctype);
     if (idx >= 0) {
@@ -665,7 +662,7 @@ void acr_nav::navaction_quit() {
 
 void acr_nav::navaction_cycle_viewmode() {
     // In connect mode, stay on inspect viewmode
-    if (ch_N(acr_nav::_db.live_ns) == 0) {
+    if (!acr_nav::_db.live_mode) {
         acr_nav::FViewmode *next = acr_nav::ind_viewmode_Find(acr_nav::_db.p_cur_viewmode->next);
         if (next) {
             acr_nav::_db.p_cur_viewmode = next;

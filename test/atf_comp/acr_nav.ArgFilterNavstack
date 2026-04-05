@@ -1,4 +1,4 @@
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:cstring  navstack_depth:0  n_sel_ctype:258  n_ctype:1424  n_field:5734  viewmode:fields  breadcrumb:""  filtertarget:arg  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:cstring  navstack_depth:0  n_sel_ctype:258  n_ctype:1425  n_field:5738  viewmode:fields  breadcrumb:""  filtertarget:arg  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:318  sel_value:abt.FBuilddir
 acr_nav.VisibleLeftItem  row:0  value:abt  kind:ns  collapsed:N  n_match:6  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt.FBuilddir  kind:ctype  collapsed:N  n_match:0  n_record:0
@@ -45,44 +45,44 @@ acr_nav.VisibleField  row:3  field:abt.FBuilddir.lockfile  arg:algo_lib.FLockfil
 acr_nav.VisibleField  row:4  field:abt.FBuilddir.R  arg:algo_lib.Replscope  reftype:Val  style:field_val  navigable:Y  match:N
 acr_nav.VisibleField  row:5  field:abt.FBuilddir.p_compiler  arg:abt.FCompiler  reftype:Upptr  style:field_upref  navigable:Y  match:N
 
-acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:1  n_sel_ctype:1423  n_ctype:1424  n_field:5734  viewmode:fields  breadcrumb:"abt.FBuilddir › dev.Builddir"  filtertarget:ctype  hints:"↑↓←→  Backspace:back  Enter:follow  Tab:view  d:detail  ?:help  q:quit"  sel_nav_col:0
-acr_nav.PanelState  panel:ctype_list  sel_row:853  scroll_offset:818  n_items:1330  sel_value:dev.Builddir
-acr_nav.VisibleLeftItem  row:818  value:command.atf_ci  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.VisibleLeftItem  row:819  value:command.atf_cmdline  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.VisibleLeftItem  row:820  value:command.atf_comp  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.VisibleLeftItem  row:821  value:command.atf_cov  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.VisibleLeftItem  row:822  value:command.atf_exp  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.VisibleLeftItem  row:823  value:command.atf_fuzz  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.VisibleLeftItem  row:824  value:command.atf_gcli  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.VisibleLeftItem  row:825  value:command.atf_nrun  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.VisibleLeftItem  row:826  value:command.atf_unit  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.VisibleLeftItem  row:827  value:command.bash  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.VisibleLeftItem  row:828  value:command.bash2html  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.VisibleLeftItem  row:829  value:command.bash_proc  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.VisibleLeftItem  row:830  value:command.gcache  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.VisibleLeftItem  row:831  value:command.gcli  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.VisibleLeftItem  row:832  value:command.generic  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.VisibleLeftItem  row:833  value:command.generic_proc  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.VisibleLeftItem  row:834  value:command.jkv  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.VisibleLeftItem  row:835  value:command.mdbg  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.VisibleLeftItem  row:836  value:command.mysql2ssim  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.VisibleLeftItem  row:837  value:command.orgfile  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.VisibleLeftItem  row:838  value:command.samp_make  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.VisibleLeftItem  row:839  value:command.samp_meng  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.VisibleLeftItem  row:840  value:command.samp_regx  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.VisibleLeftItem  row:841  value:command.sandbox  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.VisibleLeftItem  row:842  value:command.src_func  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.VisibleLeftItem  row:843  value:command.src_hdr  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.VisibleLeftItem  row:844  value:command.src_lim  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.VisibleLeftItem  row:845  value:command.ssim2csv  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.VisibleLeftItem  row:846  value:command.ssim2mysql  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.VisibleLeftItem  row:847  value:command.ssimfilt  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.VisibleLeftItem  row:848  value:command.strconv  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.VisibleLeftItem  row:849  value:command.sv2ssim  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.VisibleLeftItem  row:850  value:dev  kind:ns  collapsed:N  n_match:48  n_record:0
-acr_nav.VisibleLeftItem  row:851  value:dev.Arch  kind:ctype  collapsed:N  n_match:0  n_record:6
-acr_nav.VisibleLeftItem  row:852  value:dev.Badline  kind:ctype  collapsed:N  n_match:0  n_record:14
-acr_nav.VisibleLeftItem  row:853  value:dev.Builddir  kind:ctype  collapsed:N  n_match:0  n_record:16
+acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:1  n_sel_ctype:1424  n_ctype:1425  n_field:5738  viewmode:fields  breadcrumb:"abt.FBuilddir › dev.Builddir"  filtertarget:ctype  hints:"↑↓←→  Backspace:back  Enter:follow  Tab:view  d:detail  ?:help  q:quit"  sel_nav_col:0
+acr_nav.PanelState  panel:ctype_list  sel_row:854  scroll_offset:819  n_items:1331  sel_value:dev.Builddir
+acr_nav.VisibleLeftItem  row:819  value:command.atf_ci  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:820  value:command.atf_cmdline  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:821  value:command.atf_comp  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:822  value:command.atf_cov  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:823  value:command.atf_exp  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:824  value:command.atf_fuzz  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:825  value:command.atf_gcli  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:826  value:command.atf_nrun  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:827  value:command.atf_unit  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:828  value:command.bash  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:829  value:command.bash2html  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:830  value:command.bash_proc  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:831  value:command.gcache  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:832  value:command.gcli  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:833  value:command.generic  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:834  value:command.generic_proc  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:835  value:command.jkv  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:836  value:command.mdbg  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:837  value:command.mysql2ssim  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:838  value:command.orgfile  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:839  value:command.samp_make  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:840  value:command.samp_meng  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:841  value:command.samp_regx  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:842  value:command.sandbox  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:843  value:command.src_func  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:844  value:command.src_hdr  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:845  value:command.src_lim  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:846  value:command.ssim2csv  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:847  value:command.ssim2mysql  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:848  value:command.ssimfilt  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:849  value:command.strconv  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:850  value:command.sv2ssim  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:851  value:dev  kind:ns  collapsed:N  n_match:48  n_record:0
+acr_nav.VisibleLeftItem  row:852  value:dev.Arch  kind:ctype  collapsed:N  n_match:0  n_record:6
+acr_nav.VisibleLeftItem  row:853  value:dev.Badline  kind:ctype  collapsed:N  n_match:0  n_record:14
+acr_nav.VisibleLeftItem  row:854  value:dev.Builddir  kind:ctype  collapsed:N  n_match:0  n_record:16
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:6  sel_value:dev.Builddir.builddir
 acr_nav.VisibleField  row:0  field:dev.Builddir.builddir  arg:algo.Smallstr50  reftype:Val  style:field_val  navigable:Y  match:N
 acr_nav.VisibleField  row:1  field:dev.Builddir.uname  arg:dev.Uname  reftype:Pkey  style:field_upref  navigable:Y  match:N
@@ -91,7 +91,7 @@ acr_nav.VisibleField  row:3  field:dev.Builddir.cfg  arg:dev.Cfg  reftype:Pkey  
 acr_nav.VisibleField  row:4  field:dev.Builddir.arch  arg:dev.Arch  reftype:Pkey  style:field_upref  navigable:Y  match:N
 acr_nav.VisibleField  row:5  field:dev.Builddir.comment  arg:algo.Comment  reftype:Val  style:field_val  navigable:Y  match:N
 
-acr_nav.Screen  mode:browse  focus:content  filter:cstring  navstack_depth:0  n_sel_ctype:258  n_ctype:1424  n_field:5734  viewmode:fields  breadcrumb:""  filtertarget:arg  hints:"↑↓←→  Enter:follow  Tab:view  d:detail  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:content  filter:cstring  navstack_depth:0  n_sel_ctype:258  n_ctype:1425  n_field:5738  viewmode:fields  breadcrumb:""  filtertarget:arg  hints:"↑↓←→  Enter:follow  Tab:view  d:detail  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:318  sel_value:abt.FBuilddir
 acr_nav.VisibleLeftItem  row:0  value:abt  kind:ns  collapsed:N  n_match:6  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt.FBuilddir  kind:ctype  collapsed:N  n_match:0  n_record:0
@@ -138,7 +138,7 @@ acr_nav.VisibleField  row:3  field:abt.FBuilddir.lockfile  arg:algo_lib.FLockfil
 acr_nav.VisibleField  row:4  field:abt.FBuilddir.R  arg:algo_lib.Replscope  reftype:Val  style:field_val  navigable:Y  match:N
 acr_nav.VisibleField  row:5  field:abt.FBuilddir.p_compiler  arg:abt.FCompiler  reftype:Upptr  style:field_upref  navigable:Y  match:N
 
-acr_nav.Screen  mode:browse  focus:content  filter:cstring  navstack_depth:0  n_sel_ctype:258  n_ctype:1424  n_field:5734  viewmode:fields  breadcrumb:""  filtertarget:arg  hints:"↑↓←→  Enter:follow  Tab:view  d:detail  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:content  filter:cstring  navstack_depth:0  n_sel_ctype:258  n_ctype:1425  n_field:5738  viewmode:fields  breadcrumb:""  filtertarget:arg  hints:"↑↓←→  Enter:follow  Tab:view  d:detail  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:318  sel_value:abt.FBuilddir
 acr_nav.VisibleLeftItem  row:0  value:abt  kind:ns  collapsed:N  n_match:6  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt.FBuilddir  kind:ctype  collapsed:N  n_match:0  n_record:0

@@ -1496,6 +1496,73 @@ inline acr_nav::FIpcconn& acr_nav::cd_ipcconn_eof_qLast() {
     return *row;
 }
 
+// --- acr_nav.FDb.pool_entry.EmptyQ
+// Return true if index is empty
+inline bool acr_nav::pool_entry_EmptyQ() {
+    return _db.pool_entry_n == 0;
+}
+
+// --- acr_nav.FDb.pool_entry.Find
+// Look up row by row id. Return NULL if out of range
+inline acr_nav::PoolEntry* acr_nav::pool_entry_Find(u64 t) {
+    u64 idx = t;
+    u64 lim = _db.pool_entry_n;
+    if (idx >= lim) return NULL;
+    return _db.pool_entry_elems + idx;
+}
+
+// --- acr_nav.FDb.pool_entry.Getary
+// Return array pointer by value
+inline algo::aryptr<acr_nav::PoolEntry> acr_nav::pool_entry_Getary() {
+    return algo::aryptr<acr_nav::PoolEntry>(_db.pool_entry_elems, _db.pool_entry_n);
+}
+
+// --- acr_nav.FDb.pool_entry.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline acr_nav::PoolEntry* acr_nav::pool_entry_Last() {
+    return pool_entry_Find(u64(_db.pool_entry_n-1));
+}
+
+// --- acr_nav.FDb.pool_entry.Max
+// Return max. number of items in the array
+inline i32 acr_nav::pool_entry_Max() {
+    return _db.pool_entry_max;
+}
+
+// --- acr_nav.FDb.pool_entry.N
+// Return number of items in the array
+inline i32 acr_nav::pool_entry_N() {
+    return _db.pool_entry_n;
+}
+
+// --- acr_nav.FDb.pool_entry.Reserve
+// Make sure N *more* elements will fit in array. Process dies if out of memory
+inline void acr_nav::pool_entry_Reserve(int n) {
+    u32 new_n = _db.pool_entry_n + n;
+    if (UNLIKELY(new_n > _db.pool_entry_max)) {
+        pool_entry_AbsReserve(new_n);
+    }
+}
+
+// --- acr_nav.FDb.pool_entry.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline acr_nav::PoolEntry& acr_nav::pool_entry_qFind(u64 t) {
+    return _db.pool_entry_elems[t];
+}
+
+// --- acr_nav.FDb.pool_entry.qLast
+// Return reference to last element of array. No bounds checking
+inline acr_nav::PoolEntry& acr_nav::pool_entry_qLast() {
+    return pool_entry_qFind(u64(_db.pool_entry_n-1));
+}
+
+// --- acr_nav.FDb.pool_entry.rowid_Get
+// Return row id of specified element
+inline u64 acr_nav::pool_entry_rowid_Get(acr_nav::PoolEntry &elem) {
+    u64 id = &elem - _db.pool_entry_elems;
+    return u64(id);
+}
+
 // --- acr_nav.FDb.ctype_curs.Reset
 // cursor points to valid item
 inline void acr_nav::_db_ctype_curs_Reset(_db_ctype_curs &curs, acr_nav::FDb &parent) {
@@ -2002,6 +2069,31 @@ inline void acr_nav::_db_cd_ipcconn_eof_curs_Next(_db_cd_ipcconn_eof_curs &curs)
 // item access
 inline acr_nav::FIpcconn& acr_nav::_db_cd_ipcconn_eof_curs_Access(_db_cd_ipcconn_eof_curs &curs) {
     return *curs.row;
+}
+
+// --- acr_nav.FDb.pool_entry_curs.Next
+// proceed to next item
+inline void acr_nav::_db_pool_entry_curs_Next(_db_pool_entry_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_nav.FDb.pool_entry_curs.Reset
+inline void acr_nav::_db_pool_entry_curs_Reset(_db_pool_entry_curs &curs, acr_nav::FDb &parent) {
+    curs.elems = parent.pool_entry_elems;
+    curs.n_elems = parent.pool_entry_n;
+    curs.index = 0;
+}
+
+// --- acr_nav.FDb.pool_entry_curs.ValidQ
+// cursor points to valid item
+inline bool acr_nav::_db_pool_entry_curs_ValidQ(_db_pool_entry_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- acr_nav.FDb.pool_entry_curs.Access
+// item access
+inline acr_nav::PoolEntry& acr_nav::_db_pool_entry_curs_Access(_db_pool_entry_curs &curs) {
+    return curs.elems[curs.index];
 }
 
 // --- acr_nav.FDetailsrc..Init
@@ -2837,6 +2929,17 @@ inline void acr_nav::PanelState_Init(acr_nav::PanelState& parent) {
 // --- acr_nav.PanelState..Ctor
 inline  acr_nav::PanelState::PanelState() {
     acr_nav::PanelState_Init(*this);
+}
+
+// --- acr_nav.PoolEntry..Init
+// Set all fields to initial values.
+inline void acr_nav::PoolEntry_Init(acr_nav::PoolEntry& parent) {
+    parent.n_record = i32(0);
+}
+
+// --- acr_nav.PoolEntry..Ctor
+inline  acr_nav::PoolEntry::PoolEntry() {
+    acr_nav::PoolEntry_Init(*this);
 }
 
 // --- acr_nav.PreviewNavCol..Init
